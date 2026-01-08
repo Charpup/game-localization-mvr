@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Generated/temporary files
+data/*_output.csv
+data/*_e2e.csv
+data/qa_report*.json
+data/placeholder_map_output.json
+data/placeholder_map_e2e.json
+data/draft_output.csv
+data/final_output.csv
+data/final_bad_output.csv
+data/final_e2e.csv
+data/draft_e2e.csv
+
+# Keep example files
+!data/input.csv
+!data/draft.csv
+!data/final.csv
+!data/placeholder_map.json
+!data/qa_hard_report.json
+!data/translated_good.csv
+!data/translated_bad.csv
+
+# Logs
+*.log
+
+# Test coverage
+.coverage
+htmlcov/
+
+# Temporary
+*.tmp
+*.bak

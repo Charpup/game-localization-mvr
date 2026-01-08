@@ -1,0 +1,52 @@
+# Forbidden Patterns for Game Localization
+# Lines starting with # are comments
+# Each line represents a forbidden pattern (regex supported)
+
+# Offensive or inappropriate content
+fuck
+shit
+damn
+hell
+
+# Machine translation artifacts
+\[机器翻译\]
+\[Machine Translation\]
+\[MT\]
+Google Translate
+DeepL
+
+# Placeholder errors
+\{\s+\w+\s+\}
+\{[^}]{50,}\}
+
+# HTML/XML tags (should be stripped before localization)
+# Note: <tag> pattern disabled to avoid matching our token format
+&[a-z]+;
+
+# Inconsistent quotation marks (use proper CJK quotes)
+"[^"]*"(?![a-zA-Z])
+
+# Half-width punctuation in CJK text (should use full-width)
+[一-龥ぁ-ゔァ-ヴー々〆〤][,;:!?]
+[,;:!?][一-龥ぁ-ゔァ-ヴー々〆〤]
+
+# Trailing/leading whitespace issues
+^\s+
+\s+$
+\s{2,}
+
+# Common typos or problematic patterns
+TODO
+FIXME
+XXX
+\[placeholder\]
+\[待翻译\]
+\[TBD\]
+
+# Mixed language issues (English words in CJK without proper spacing)
+[一-龥][A-Za-z]
+[A-Za-z][一-龥]
+
+# Encoding issues
+�
+\uFFFD

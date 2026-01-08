@@ -1,0 +1,11 @@
+{
+    "report_metadata": {
+        "generated_at": "2026-01-09T01:17:02+08:00",
+        "total_strings_checked": 3,
+        "total_errors": 0,
+        "total_warnings": 0
+    },
+    "errors": [],
+    "warnings": [],
+    "summary": "All strings passed QA checks"
+}

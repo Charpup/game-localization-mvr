@@ -1,0 +1,8 @@
+string_id,source_zh,tokenized_zh,target_text,translator,status,context,max_length
+welcome_msg,欢迎 {0} 来到游戏！,欢迎 ⟦PH_1⟧ 来到游戏！,Welcome to the game!,AI,draft,主菜单欢迎语,50
+level_up,恭喜！你已升至 {level} 级,恭喜！你已升至 ⟦PH_2⟧ 级,Congratulations! You've reached level {level},AI,draft,升级提示,40
+item_count,你有 %d 个物品,你有 ⟦PH_3⟧ 个物品,You have ⟦PH_3⟧ items and ⟦PH_99⟧ coins,AI,draft,背包提示,30
+color_text,<color=#FF00FF>稀有物品</color>获得！,⟦TAG_2⟧稀有物品⟦TAG_1⟧获得！,⟦TAG_2⟧Rare Item obtained!,AI,draft,战利品提示,60
+multi_placeholder,玩家 {playerName} 在 {location} 获得了 {itemName},玩家 ⟦PH_6⟧ 在 ⟦PH_5⟧ 获得了 ⟦PH_4⟧,Player obtained ⟦PH_4⟧ at ⟦PH_5⟧,AI,draft,游戏日志,100
+newline_test,第一行\n第二行,第一行⟦PH_7⟧第二行,First line⟦PH_7⟧Second line,AI,draft,多行文本,50
+printf_style,%s 击败了 %s！,⟦PH_9⟧ 击败了 ⟦PH_8⟧！,⟦PH_9⟧ defeated ⟦PH_8⟧! TODO,AI,draft,战斗日志,80

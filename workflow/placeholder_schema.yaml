@@ -1,0 +1,97 @@
+---
+# Placeholder Schema Definition
+# Defines patterns for detecting and freezing placeholders/tags in localization strings
+
+version: "1.0"
+
+# Placeholder patterns (ordered by priority - more specific first)
+placeholder_patterns:
+  # Unity rich text tags
+  - name: "unity_color_tag"
+    pattern: '<color=#?[0-9A-Fa-f]{6,8}>'
+    type: "TAG"
+    description: "Unity color tags like <color=#FF00FF>"
+  
+  - name: "unity_close_tag"
+    pattern: '</color>'
+    type: "TAG"
+    description: "Unity closing color tag"
+  
+  - name: "unity_size_tag"
+    pattern: '<size=\d+>'
+    type: "TAG"
+    description: "Unity size tags"
+  
+  - name: "unity_close_size"
+    pattern: '</size>'
+    type: "TAG"
+    description: "Unity closing size tag"
+  
+  - name: "unity_bold_tag"
+    pattern: '<b>'
+    type: "TAG"
+    description: "Unity bold tag"
+  
+  - name: "unity_close_bold"
+    pattern: '</b>'
+    type: "TAG"
+    description: "Unity closing bold tag"
+  
+  - name: "unity_italic_tag"
+    pattern: '<i>'
+    type: "TAG"
+    description: "Unity italic tag"
+  
+  - name: "unity_close_italic"
+    pattern: '</i>'
+    type: "TAG"
+    description: "Unity closing italic tag"
+  
+  # C# style placeholders
+  - name: "csharp_numbered"
+    pattern: '\{\d+\}'
+    type: "PH"
+    description: "C# numbered placeholders like {0}, {1}"
+  
+  - name: "csharp_named"
+    pattern: '\{[a-zA-Z_][a-zA-Z0-9_]*\}'
+    type: "PH"
+    description: "C# named placeholders like {playerName}"
+  
+  # C/printf style
+  - name: "printf_string"
+    pattern: '%s'
+    type: "PH"
+    description: "Printf string placeholder"
+  
+  - name: "printf_int"
+    pattern: '%d'
+    type: "PH"
+    description: "Printf integer placeholder"
+  
+  - name: "printf_float"
+    pattern: '%f'
+    type: "PH"
+    description: "Printf float placeholder"
+  
+  - name: "printf_numbered"
+    pattern: '%\d+\$[sdf]'
+    type: "PH"
+    description: "Printf numbered placeholders like %1$s"
+  
+  # Special escape sequences
+  - name: "newline"
+    pattern: '\\n'
+    type: "PH"
+    description: "Newline escape sequence"
+  
+  - name: "tab"
+    pattern: '\\t'
+    type: "PH"
+    description: "Tab escape sequence"
+
+# Validation rules
+validation:
+  preserve_order: false  # Placeholders can be reordered
+  preserve_count: true   # All placeholders must be present
+  case_sensitive: true   # Placeholder names are case-sensitive
