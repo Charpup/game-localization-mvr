@@ -1,0 +1,31 @@
+# 术语候选列表
+# 由 extract_terms.py 自动生成
+
+version: "1.0"
+generated_at: "2026-01-10T01:58:00+08:00"
+
+# 统计信息
+statistics:
+  total_strings: 0
+  unique_terms: 0
+  min_frequency: 2
+
+# 待确认的术语候选
+candidates:
+  - term: "示例术语"
+    frequency: 10
+    string_ids:
+      - "str_001"
+      - "str_002"
+    suggested_translation: "Example Term"
+    category: "未分类"
+    note: "这是一个示例，运行 extract_terms.py 后会被替换"
+
+# 候选生成规则
+extraction_rules:
+  min_frequency: 2          # 最小出现次数
+  min_length: 2             # 最小词长（字符数）
+  max_length: 8             # 最大词长
+  exclude_patterns:         # 排除模式（正则）
+    - "^[0-9]+$"           # 纯数字
+    - "^[a-zA-Z]+$"        # 纯英文

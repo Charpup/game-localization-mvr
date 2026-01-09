@@ -1,0 +1,20 @@
+version: '1.0'
+generated_at: '2026-01-10T02:01:03.639128'
+statistics:
+  total_strings: 7
+  unique_terms: 1
+  total_occurrences: 2
+candidates:
+- term: 获得
+  frequency: 2
+  string_ids:
+  - multi_placeholder
+  - color_text
+  suggested_translation: ''
+  category: 待分类
+  note: ''
+extraction_rules:
+  min_frequency: 2
+  min_length: 2
+  max_length: 8
+  segmentation: jieba

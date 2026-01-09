@@ -1,0 +1,9 @@
+string_id,source_zh,tokenized_zh,target_text,translator,status,context,max_length
+welcome_msg,欢迎 {0} 来到游戏！,欢迎 ⟦PH_1⟧ 来到游戏！,Welcome ⟦PH_1⟧ to the game!,AI,translated,主菜单欢迎语,50
+level_up,恭喜！你已升至 {level} 级,恭喜！你已升至 ⟦PH_2⟧ 级,Congratulations! You've reached level ⟦PH_2⟧,AI,translated,升级提示,40
+item_count,你有 %d 个物品,你有 ⟦PH_3⟧ 个物品,You have ⟦PH_3⟧ items,AI,translated,背包提示,30
+color_text,<color=#FF00FF>稀有物品</color>获得！,⟦TAG_2⟧稀有物品⟦TAG_1⟧获得！,⟦TAG_2⟧Rare Item⟦TAG_1⟧ obtained!,AI,translated,战利品提示,60
+multi_placeholder,玩家 {playerName} 在 {location} 获得了 {itemName},玩家 ⟦PH_6⟧ 在 ⟦PH_5⟧ 获得了 ⟦PH_4⟧,Player ⟦PH_6⟧ obtained ⟦PH_4⟧ at ⟦PH_5⟧,AI,translated,游戏日志,100
+quest_complete,完成任务 {questName} 获得经验值 {exp},完成任务 ⟦PH_7⟧ 获得经验值 ⟦PH_8⟧,Quest ⟦PH_7⟧ completed! Gained ⟦PH_8⟧ experience,AI,translated,任务系统,80
+skill_learn,学习新技能：{skillName},学习新技能：⟦PH_9⟧,Learned new skill: ⟦PH_9⟧,AI,translated,技能系统,50
+equip_item,装备 {itemName} 成功,装备 ⟦PH_10⟧ 成功,Successfully equipped ⟦PH_10⟧,AI,translated,装备系统,40

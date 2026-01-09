@@ -1,0 +1,88 @@
+# 游戏本地化术语表
+# 已确认的专业术语及其翻译
+
+version: "1.0"
+
+# 术语定义
+terms:
+  # 游戏角色相关
+  角色:
+    en: Character
+    category: gameplay
+    note: 游戏中的可控单位
+    examples:
+      - "创建新角色"
+      - "角色等级"
+  
+  玩家:
+    en: Player
+    category: gameplay
+    note: 控制角色的用户
+    examples:
+      - "玩家名称"
+      - "在线玩家"
+  
+  # 物品相关
+  稀有物品:
+    en: Rare Item
+    category: items
+    note: 紫色品质以上的物品
+    examples:
+      - "获得稀有物品"
+      - "稀有物品掉落"
+  
+  装备:
+    en: Equipment
+    category: items
+    note: 可穿戴的物品
+    examples:
+      - "装备武器"
+      - "装备强化"
+  
+  物品:
+    en: Item
+    category: items
+    note: 游戏中的道具
+    examples:
+      - "背包物品"
+      - "消耗物品"
+  
+  # 游戏系统
+  任务:
+    en: Quest
+    category: system
+    note: 玩家可完成的任务
+    examples:
+      - "主线任务"
+      - "任务奖励"
+  
+  技能:
+    en: Skill
+    category: gameplay
+    note: 角色可使用的能力
+    examples:
+      - "学习技能"
+      - "技能冷却"
+  
+  等级:
+    en: Level
+    category: gameplay
+    note: 角色或物品的级别
+    examples:
+      - "等级提升"
+      - "当前等级"
+  
+  经验值:
+    en: Experience
+    category: gameplay
+    note: 用于升级的点数，简称 EXP
+    examples:
+      - "获得经验值"
+      - "经验值条"
+
+# 分类说明
+categories:
+  gameplay: 游戏玩法相关
+  items: 物品道具相关
+  system: 游戏系统相关
+  ui: 界面相关

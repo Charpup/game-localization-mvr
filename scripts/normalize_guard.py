@@ -1,65 +1,89 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Normalize Guard Script
+Normalize Guard Script v2.0
 冻结占位符/标签为 token，生成 draft.csv 和 placeholder_map.json
+
+融合版本：结合 v1.0 的严格验证和 v2.0 的新特性
 
 Usage:
     python normalize_guard.py <input_csv> <output_draft_csv> <output_map_json> <schema_yaml>
+
+Features:
+    - 使用新的 schema v2.0 格式 (patterns, token_format)
+    - Token 重用机制（相同占位符使用相同 token）
+    - 基本平衡检查（括号、标签平衡）
+    - 早期 QA 报告生成
+    - 详细的错误处理和验证
+    - 重复 ID 检测
 """
 
 import csv
 import json
 import re
 import sys
-import yaml
 from pathlib import Path
 from typing import List, Dict, Tuple, Set
 from datetime import datetime
 
+try:
+    import yaml
+except ImportError:
+    print("❌ Error: PyYAML is required. Install with: pip install pyyaml")
+    sys.exit(1)
+
 
 class PlaceholderFreezer:
-    """冻结占位符和标签为 token"""
+    """占位符冻结器 - 使用 schema v2.0"""
     
     def __init__(self, schema_path: str):
         self.schema_path = Path(schema_path)
         self.patterns: List[Dict] = []
+        self.token_format: Dict[str, str] = {}
+        
+        # 计数器
         self.ph_counter = 0
         self.tag_counter = 0
+        
+        # 映射：token_name -> original_text
         self.placeholder_map: Dict[str, str] = {}
+        
+        # 反向映射：original_text -> token_name（用于重用）
+        self.reverse_map: Dict[str, str] = {}
         
         self.load_schema()
     
     def load_schema(self) -> None:
-        """加载 placeholder schema"""
+        """加载 schema v2.0"""
         try:
             with open(self.schema_path, 'r', encoding='utf-8') as f:
                 schema = yaml.safe_load(f)
-                self.patterns = schema.get('placeholder_patterns', [])
-                print(f"✅ Loaded {len(self.patterns)} placeholder patterns from schema")
+                
+                # v2.0 使用 'patterns' 而不是 'placeholder_patterns'
+                self.patterns = schema.get('patterns', [])
+                self.token_format = schema.get('token_format', {
+                    'placeholder': '⟦PH_{n}⟧',
+                    'tag': '⟦TAG_{n}⟧'
+                })
+                
+                if not self.patterns:
+                    print("⚠️  Warning: No patterns found in schema")
+                    print(f"   Schema keys: {list(schema.keys())}")
+                else:
+                    print(f"✅ Loaded {len(self.patterns)} patterns from schema v{schema.get('version', 'unknown')}")
+                
         except FileNotFoundError:
-            print(f"⚠️  Warning: Schema file not found: {self.schema_path}")
-            print("   Using default patterns...")
-            self._load_default_patterns()
+            print(f"❌ Error: Schema file not found: {self.schema_path}")
+            sys.exit(1)
         except Exception as e:
-            print(f"⚠️  Warning: Error loading schema: {str(e)}")
-            print("   Using default patterns...")
-            self._load_default_patterns()
-    
-    def _load_default_patterns(self) -> None:
-        """加载默认占位符模式"""
-        self.patterns = [
-            {'name': 'csharp_numbered', 'pattern': r'\{\d+\}', 'type': 'PH'},
-            {'name': 'csharp_named', 'pattern': r'\{[a-zA-Z_][a-zA-Z0-9_]*\}', 'type': 'PH'},
-            {'name': 'printf_string', 'pattern': r'%s', 'type': 'PH'},
-            {'name': 'printf_int', 'pattern': r'%d', 'type': 'PH'},
-            {'name': 'unity_color_tag', 'pattern': r'<color=#?[0-9A-Fa-f]{6,8}>', 'type': 'TAG'},
-            {'name': 'unity_close_tag', 'pattern': r'</color>', 'type': 'TAG'},
-            {'name': 'newline', 'pattern': r'\\n', 'type': 'PH'},
-        ]
+            print(f"❌ Error loading schema: {str(e)}")
+            sys.exit(1)
     
     def freeze_text(self, text: str) -> Tuple[str, Dict[str, str]]:
         """
         冻结文本中的占位符和标签
+        
+        重要：使用 token 重用机制，相同的占位符重用相同的 token
         
         Returns:
             (tokenized_text, local_map) - token 化的文本和本次冻结的映射
@@ -70,45 +94,47 @@ class PlaceholderFreezer:
         local_map = {}
         result = text
         
-        # 记录所有匹配及其位置
-        matches = []
-        for pattern_def in self.patterns:
-            pattern = pattern_def['pattern']
-            ph_type = pattern_def['type']
-            
-            for match in re.finditer(pattern, text):
-                matches.append({
-                    'start': match.start(),
-                    'end': match.end(),
-                    'text': match.group(),
-                    'type': ph_type,
-                    'name': pattern_def['name']
+        # 编译所有模式的正则表达式
+        compiled_patterns = []
+        for p in self.patterns:
+            try:
+                compiled_patterns.append({
+                    'name': p['name'],
+                    'type': p['type'],
+                    'regex': re.compile(p['regex'])
                 })
+            except re.error as e:
+                print(f"⚠️  Warning: Invalid regex in pattern '{p['name']}': {e}")
         
-        # 按位置排序（从后往前替换，避免位置偏移）
-        matches.sort(key=lambda x: x['start'], reverse=True)
-        
-        # 替换为 token
-        for match in matches:
-            original = match['text']
-            ph_type = match['type']
+        # 按优先级顺序处理每个模式
+        for pattern_def in compiled_patterns:
+            regex = pattern_def['regex']
+            ptype = pattern_def['type']
             
-            # 生成 token 名称
-            if ph_type == 'PH':
-                self.ph_counter += 1
-                token_name = f"PH_{self.ph_counter}"
-            else:  # TAG
-                self.tag_counter += 1
-                token_name = f"TAG_{self.tag_counter}"
+            def repl(match):
+                original = match.group(0)
+                
+                # 检查是否已经冻结过这个字符串（重用 token）
+                if original in self.reverse_map:
+                    token_name = self.reverse_map[original]
+                    return f"⟦{token_name}⟧"
+                
+                # 生成新 token
+                if ptype == 'placeholder':
+                    self.ph_counter += 1
+                    token_name = f"PH_{self.ph_counter}"
+                else:  # tag
+                    self.tag_counter += 1
+                    token_name = f"TAG_{self.tag_counter}"
+                
+                # 记录映射
+                self.placeholder_map[token_name] = original
+                self.reverse_map[original] = token_name
+                local_map[token_name] = original
+                
+                return f"⟦{token_name}⟧"
             
-            token = f"⟦{token_name}⟧"
-            
-            # 替换文本
-            result = result[:match['start']] + token + result[match['end']:]
-            
-            # 记录映射
-            local_map[token_name] = original
-            self.placeholder_map[token_name] = original
+            result = regex.sub(repl, result)
         
         return result, local_map
     
@@ -117,12 +143,36 @@ class PlaceholderFreezer:
         self.ph_counter = 0
         self.tag_counter = 0
         self.placeholder_map = {}
+        self.reverse_map = {}
+
+
+def detect_unbalanced_basic(text: str) -> List[str]:
+    """
+    基本的平衡检查 - 检测明显的不平衡
+    
+    这是保守的健全性检查，用于早期发现问题
+    """
+    issues = []
+    
+    # 花括号平衡
+    if text.count('{') != text.count('}'):
+        issues.append('brace_unbalanced')
+    
+    # 尖括号平衡（粗略检查，标签会在 QA 中详细检查）
+    if text.count('<') != text.count('>'):
+        issues.append('angle_unbalanced')
+    
+    # 方括号平衡
+    if text.count('[') != text.count(']'):
+        issues.append('square_unbalanced')
+    
+    return issues
 
 
 class NormalizeGuard:
     """主处理类：规范化输入并生成 draft.csv 和 placeholder_map.json"""
     
-    def __init__(self, input_path: str, output_draft_path: str, 
+    def __init__(self, input_path: str, output_draft_path: str,
                  output_map_path: str, schema_path: str):
         self.input_path = Path(input_path)
         self.output_draft_path = Path(output_draft_path)
@@ -132,6 +182,7 @@ class NormalizeGuard:
         self.freezer = PlaceholderFreezer(schema_path)
         self.errors: List[str] = []
         self.warnings: List[str] = []
+        self.sanity_errors: List[Dict] = []  # 源文本平衡问题
     
     def validate_input_headers(self, headers: List[str]) -> bool:
         """验证输入文件必需列"""
@@ -146,7 +197,7 @@ class NormalizeGuard:
     def process_csv(self) -> Tuple[bool, List[Dict]]:
         """处理 CSV 文件"""
         try:
-            with open(self.input_path, 'r', encoding='utf-8') as f:
+            with open(self.input_path, 'r', encoding='utf-8-sig', newline='') as f:
                 reader = csv.DictReader(f)
                 headers = reader.fieldnames
                 
@@ -154,11 +205,11 @@ class NormalizeGuard:
                     return False, []
                 
                 processed_rows = []
-                seen_ids = set()
+                seen_ids: Set[str] = set()
                 
                 for idx, row in enumerate(reader, start=2):
-                    string_id = row.get('string_id', '').strip()
-                    source_zh = row.get('source_zh', '').strip()
+                    string_id = (row.get('string_id') or '').strip()
+                    source_zh = row.get('source_zh') or ''
                     
                     # 验证 string_id
                     if not string_id:
@@ -170,6 +221,16 @@ class NormalizeGuard:
                         continue
                     
                     seen_ids.add(string_id)
+                    
+                    # 基本平衡检查
+                    issues = detect_unbalanced_basic(source_zh)
+                    if issues:
+                        self.sanity_errors.append({
+                            'string_id': string_id,
+                            'issues': issues,
+                            'source_zh': source_zh,
+                            'row': idx
+                        })
                     
                     # 冻结占位符
                     tokenized_zh, local_map = self.freezer.freeze_text(source_zh)
@@ -188,7 +249,7 @@ class NormalizeGuard:
                     
                     processed_rows.append(output_row)
                     
-                    # 如果有占位符，打印信息
+                    # 打印冻结信息
                     if local_map:
                         print(f"  Row {idx} ({string_id}): Froze {len(local_map)} placeholders")
                 
@@ -199,6 +260,8 @@ class NormalizeGuard:
             return False, []
         except Exception as e:
             self.errors.append(f"Error processing CSV: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return False, []
     
     def write_draft_csv(self, rows: List[Dict]) -> bool:
@@ -208,12 +271,14 @@ class NormalizeGuard:
                 self.warnings.append("No rows to write")
                 return True
             
-            # 确保列顺序
+            # 确保列顺序：string_id, source_zh, tokenized_zh, 其他列
             fieldnames = ['string_id', 'source_zh', 'tokenized_zh']
-            # 添加其他列
             for key in rows[0].keys():
                 if key not in fieldnames:
                     fieldnames.append(key)
+            
+            # 创建输出目录
+            self.output_draft_path.parent.mkdir(parents=True, exist_ok=True)
             
             with open(self.output_draft_path, 'w', encoding='utf-8', newline='') as f:
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -232,13 +297,18 @@ class NormalizeGuard:
         try:
             output = {
                 'metadata': {
+                    'version': '2.0',
                     'generated_at': datetime.now().isoformat(),
                     'input_file': str(self.input_path),
                     'total_placeholders': len(self.freezer.placeholder_map),
-                    'version': '1.0'
+                    'ph_count': self.freezer.ph_counter,
+                    'tag_count': self.freezer.tag_counter
                 },
                 'mappings': self.freezer.placeholder_map
             }
+            
+            # 创建输出目录
+            self.output_map_path.parent.mkdir(parents=True, exist_ok=True)
             
             with open(self.output_map_path, 'w', encoding='utf-8') as f:
                 json.dump(output, f, indent=2, ensure_ascii=False)
@@ -250,9 +320,48 @@ class NormalizeGuard:
             self.errors.append(f"Error writing placeholder map: {str(e)}")
             return False
     
+    def write_early_qa_report(self, total_rows: int) -> None:
+        """
+        写入早期 QA 报告（如果发现源文本平衡问题）
+        
+        这是一个可选的早期检查，帮助在翻译前发现问题
+        """
+        if not self.sanity_errors:
+            return
+        
+        early_report = {
+            'has_errors': True,
+            'total_rows': total_rows,
+            'error_counts': {
+                'source_unbalanced_basic': len(self.sanity_errors)
+            },
+            'errors': [
+                {
+                    'row': e['row'],
+                    'string_id': e['string_id'],
+                    'type': 'source_unbalanced_basic',
+                    'detail': ', '.join(e['issues']),
+                    'source': e['source_zh']
+                }
+                for e in self.sanity_errors[:200]  # 限制错误数量
+            ],
+            'metadata': {
+                'generated_at': datetime.now().isoformat(),
+                'note': 'Early sanity check - source text balance issues detected'
+            }
+        }
+        
+        # 写入早期报告
+        early_path = self.output_map_path.parent / 'qa_hard_report.json'
+        with open(early_path, 'w', encoding='utf-8') as f:
+            json.dump(early_report, f, ensure_ascii=False, indent=2)
+        
+        print(f"⚠️  Found {len(self.sanity_errors)} source sanity issues")
+        print(f"   Early QA report written: {early_path}")
+    
     def run(self) -> bool:
         """执行规范化流程"""
-        print(f"🚀 Starting normalize guard...")
+        print("🚀 Starting normalize guard v2.0...")
         print(f"   Input: {self.input_path}")
         print(f"   Output draft: {self.output_draft_path}")
         print(f"   Output map: {self.output_map_path}")
@@ -276,6 +385,9 @@ class NormalizeGuard:
         if not success:
             self._print_errors()
             return False
+        
+        # 写入早期 QA 报告（如果有平衡问题）
+        self.write_early_qa_report(len(rows))
         
         # 打印总结
         self._print_summary(rows)
@@ -301,6 +413,9 @@ class NormalizeGuard:
         print(f"   Total placeholders frozen: {len(self.freezer.placeholder_map)}")
         print(f"   PH tokens: {self.freezer.ph_counter}")
         print(f"   TAG tokens: {self.freezer.tag_counter}")
+        
+        if self.sanity_errors:
+            print(f"   ⚠️  Source balance issues: {len(self.sanity_errors)}")
         
         if self.warnings:
             print(f"   Warnings: {len(self.warnings)}")
