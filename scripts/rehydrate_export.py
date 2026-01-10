@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Rehydrate Export Script
+Rehydrate Export Script v2.0
 将 tokenized 文本还原为原始占位符
 
+融合版本：结合 v1.0 的完整性和 v2.0 的简洁性
+
 Usage:
-    python rehydrate_export.py <translated_csv> <placeholder_map_json> <final_csv>
+    python rehydrate_export.py <translated_csv> <placeholder_map_json> <final_csv> [--overwrite]
+
+Features:
+    - 支持 v1.0 和 v2.0 placeholder_map 格式
+    - 多 target 字段支持
+    - 详细的错误处理（fail fast）
+    - 可选覆盖模式（--overwrite 直接修改 target_text）
+    - Token 还原统计
 """
 
 import csv
@@ -12,36 +22,55 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Dict, Set
+from typing import Dict, Set, List
 from datetime import datetime
 
 
 class RehydrateExporter:
-    """Token 还原导出器"""
+    """Token 还原导出器 v2.0"""
     
-    def __init__(self, translated_csv: str, placeholder_map: str, final_csv: str):
+    def __init__(self, translated_csv: str, placeholder_map: str, final_csv: str, 
+                 overwrite_mode: bool = False):
         self.translated_csv = Path(translated_csv)
         self.placeholder_map_path = Path(placeholder_map)
         self.final_csv = Path(final_csv)
+        self.overwrite_mode = overwrite_mode
         
         self.placeholder_map: Dict[str, str] = {}
+        self.map_version = "unknown"
         self.token_pattern = re.compile(r'⟦(PH_\d+|TAG_\d+)⟧')
         
-        self.errors: list = []
+        self.errors: List[str] = []
         self.total_rows = 0
         self.tokens_restored = 0
     
     def load_placeholder_map(self) -> bool:
-        """加载占位符映射"""
+        """加载占位符映射（支持 v1.0 和 v2.0 格式）"""
         try:
             with open(self.placeholder_map_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                self.placeholder_map = data.get('mappings', {})
             
-            print(f"✅ Loaded {len(self.placeholder_map)} placeholder mappings")
+            # 检测格式版本
+            if 'mappings' in data:
+                # v2.0 格式：有 metadata 和 mappings
+                self.placeholder_map = data['mappings']
+                metadata = data.get('metadata', {})
+                self.map_version = metadata.get('version', '2.0')
+                print(f"✅ Loaded placeholder_map v{self.map_version}")
+            else:
+                # v1.0 格式：直接是 dict
+                self.placeholder_map = data
+                self.map_version = "1.0"
+                print(f"✅ Loaded placeholder_map v{self.map_version} (legacy format)")
+            
+            print(f"   Total mappings: {len(self.placeholder_map)}")
             return True
+            
         except FileNotFoundError:
             print(f"❌ Error: Placeholder map not found: {self.placeholder_map_path}")
+            return False
+        except json.JSONDecodeError as e:
+            print(f"❌ Error: Invalid JSON in placeholder map: {e}")
             return False
         except Exception as e:
             print(f"❌ Error loading placeholder map: {str(e)}")
@@ -57,7 +86,7 @@ class RehydrateExporter:
         """
         还原文本中的 token
         
-        如果发现未知 token，直接报错并退出
+        如果发现未知 token，直接报错并返回 None
         """
         if not text:
             return text
@@ -74,11 +103,11 @@ class RehydrateExporter:
         if unknown_tokens:
             error_msg = (
                 f"Row {row_num}, string_id '{string_id}': "
-                f"Unknown token(s) found: {unknown_tokens}\n"
-                f"These tokens are not in placeholder_map.json.\n"
-                f"This should have been caught by QA validation."
+                f"Unknown token(s): {unknown_tokens}"
             )
             print(f"\n❌ FATAL ERROR: {error_msg}")
+            print(f"   These tokens are not in placeholder_map.json.")
+            print(f"   This should have been caught by qa_hard.py validation.")
             self.errors.append(error_msg)
             return None  # 返回 None 表示错误
         
@@ -95,7 +124,7 @@ class RehydrateExporter:
     def process_csv(self) -> bool:
         """处理 CSV 文件"""
         try:
-            with open(self.translated_csv, 'r', encoding='utf-8') as f:
+            with open(self.translated_csv, 'r', encoding='utf-8-sig', newline='') as f:
                 reader = csv.DictReader(f)
                 headers = reader.fieldnames
                 
@@ -117,6 +146,10 @@ class RehydrateExporter:
                     return False
                 
                 print(f"✅ Using '{target_field}' as target translation field")
+                if self.overwrite_mode:
+                    print(f"✅ Overwrite mode: will modify '{target_field}' directly")
+                else:
+                    print(f"✅ Add column mode: will add 'rehydrated_text' column")
                 print()
                 
                 # 处理每一行
@@ -137,7 +170,14 @@ class RehydrateExporter:
                     
                     # 构建输出行
                     output_row = dict(row)
-                    output_row['rehydrated_text'] = rehydrated
+                    
+                    if self.overwrite_mode:
+                        # 覆盖模式：直接修改 target_text
+                        output_row[target_field] = rehydrated
+                    else:
+                        # 添加新列模式
+                        output_row['rehydrated_text'] = rehydrated
+                    
                     processed_rows.append(output_row)
                 
                 # 写入输出文件
@@ -152,17 +192,22 @@ class RehydrateExporter:
             traceback.print_exc()
             return False
     
-    def write_final_csv(self, rows: list, original_headers: list, target_field: str) -> bool:
+    def write_final_csv(self, rows: List[Dict], original_headers: List[str], 
+                       target_field: str) -> bool:
         """写入最终 CSV"""
         try:
-            # 构建输出列：保留所有原始列，添加 rehydrated_text
+            # 构建输出列
             fieldnames = list(original_headers)
-            if 'rehydrated_text' not in fieldnames:
+            
+            if not self.overwrite_mode and 'rehydrated_text' not in fieldnames:
                 # 在 target_field 后面插入 rehydrated_text
                 target_idx = fieldnames.index(target_field)
                 fieldnames.insert(target_idx + 1, 'rehydrated_text')
             
-            with open(self.final_csv, 'w', encoding='utf-8', newline='') as f:
+            # 创建输出目录
+            self.final_csv.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(self.final_csv, 'w', encoding='utf-8-sig', newline='') as f:
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writeheader()
                 writer.writerows(rows)
@@ -176,16 +221,18 @@ class RehydrateExporter:
     
     def print_summary(self) -> None:
         """打印处理总结"""
-        print(f"\n📊 Rehydrate Summary:")
+        print(f"\n📊 Rehydrate Export v2.0 Summary:")
+        print(f"   Placeholder map version: {self.map_version}")
         print(f"   Total rows processed: {self.total_rows}")
         print(f"   Total tokens restored: {self.tokens_restored}")
+        print(f"   Output mode: {'overwrite' if self.overwrite_mode else 'add column'}")
         print(f"   Output file: {self.final_csv}")
         print()
         print(f"✅ Rehydration complete!")
     
     def run(self) -> bool:
         """运行还原流程"""
-        print(f"🚀 Starting rehydrate export...")
+        print(f"🚀 Starting rehydrate export v2.0...")
         print(f"   Input CSV: {self.translated_csv}")
         print(f"   Placeholder map: {self.placeholder_map_path}")
         print(f"   Output CSV: {self.final_csv}")
@@ -212,17 +259,29 @@ class RehydrateExporter:
 
 def main():
     """主入口"""
-    if len(sys.argv) != 4:
-        print("Usage: python rehydrate_export.py <translated_csv> <placeholder_map_json> <final_csv>")
+    # 解析参数
+    args = sys.argv[1:]
+    overwrite_mode = '--overwrite' in args
+    
+    # 移除 --overwrite 标志
+    args = [a for a in args if a != '--overwrite']
+    
+    if len(args) != 3:
+        print("Usage: python rehydrate_export.py <translated_csv> <placeholder_map_json> <final_csv> [--overwrite]")
+        print()
+        print("Options:")
+        print("  --overwrite    Modify target_text directly instead of adding rehydrated_text column")
         print()
         print("Example:")
         print("  python rehydrate_export.py data/translated.csv data/placeholder_map.json data/final.csv")
+        print("  python rehydrate_export.py data/translated.csv data/placeholder_map.json data/final.csv --overwrite")
         sys.exit(1)
     
     exporter = RehydrateExporter(
-        translated_csv=sys.argv[1],
-        placeholder_map=sys.argv[2],
-        final_csv=sys.argv[3]
+        translated_csv=args[0],
+        placeholder_map=args[1],
+        final_csv=args[2],
+        overwrite_mode=overwrite_mode
     )
     
     success = exporter.run()

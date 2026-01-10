@@ -1,21 +1,14 @@
 {
   "metadata": {
-    "generated_at": "2026-01-09T01:42:07.011791",
+    "version": "2.0",
+    "generated_at": "2026-01-11T00:56:09.347700",
     "input_file": "data\\input.csv",
-    "total_placeholders": 11,
-    "version": "1.0"
+    "total_placeholders": 2,
+    "ph_count": 2,
+    "tag_count": 0
   },
   "mappings": {
-    "PH_1": "{0}",
-    "PH_2": "{level}",
-    "PH_3": "%d",
-    "TAG_1": "</color>",
-    "TAG_2": "<color=#FF00FF>",
-    "PH_4": "{itemName}",
-    "PH_5": "{location}",
-    "PH_6": "{playerName}",
-    "PH_7": "\\n",
-    "PH_8": "%s",
-    "PH_9": "%s"
+    "PH_1": "[沉默]",
+    "PH_2": "{0}"
   }
 }

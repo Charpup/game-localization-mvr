@@ -1,0 +1,65 @@
+# LLM API 配置
+# 用于 extract_terms.py --mode llm
+
+llm:
+  # 默认提供商：openai / anthropic / gemini / openrouter
+  provider: "openai"
+  
+  # API 密钥
+  # 留空则从环境变量读取：
+  #   - OpenAI: OPENAI_API_KEY
+  #   - Anthropic: ANTHROPIC_API_KEY
+  #   - Google: GOOGLE_API_KEY
+  api_key: ""
+  
+  # 默认模型
+  model: "gpt-4o-mini"
+  
+  # 可用模型列表（供参考）
+  available_models:
+    openai:
+      - gpt-4o
+      - gpt-4o-mini
+      - gpt-3.5-turbo
+    anthropic:
+      - claude-3-5-sonnet-20241022
+      - claude-3-haiku-20240307
+    gemini:
+      - gemini-2.0-flash
+      - gemini-1.5-pro
+  
+  # 提取参数
+  extraction:
+    max_terms: 100        # 最大提取术语数
+    batch_size: 20        # 每批处理的文本数
+    temperature: 0.3      # 生成温度
+    
+  # 提示词模板
+  prompt_template: |
+    你是一个游戏本地化专家。请从以下游戏文本中提取专业术语（如角色名、技能名、道具名等）。
+    
+    要求：
+    1. 只提取专业术语，不要提取通用词汇
+    2. 返回 JSON 数组格式
+    3. 每个术语包含：term（原文）、category（分类）、note（备注）
+    
+    示例输出：
+    [
+      {"term": "忍者", "category": "角色类型", "note": "游戏职业"},
+      {"term": "火遁", "category": "技能", "note": "火属性技能"}
+    ]
+    
+    待分析文本：
+    {texts}
+
+# 目标语言配置
+language_pair:
+  source: "zh-CN"
+  target: "ru-RU"  # 可修改为其他目标语言
+
+# 翻译参数 (translate_llm.py 使用)
+translation:
+  batch_size: 20          # 每批翻译的行数
+  temperature: 0.3        # 生成温度，越低越稳定
+  max_retries: 3          # API 调用失败重试次数
+  retry_delay: 2          # 重试间隔（秒）

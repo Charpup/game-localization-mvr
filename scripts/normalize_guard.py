@@ -280,7 +280,7 @@ class NormalizeGuard:
             # 创建输出目录
             self.output_draft_path.parent.mkdir(parents=True, exist_ok=True)
             
-            with open(self.output_draft_path, 'w', encoding='utf-8', newline='') as f:
+            with open(self.output_draft_path, 'w', encoding='utf-8-sig', newline='') as f:
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writeheader()
                 writer.writerows(rows)
