@@ -8,7 +8,8 @@ Aggregates LLM usage metrics from trace logs and calculates costs.
 
 Inputs:
   - LLM trace jsonl from runtime_adapter.py (data/llm_trace.jsonl)
-  - Pricing tables (CSV) - supports Chinese and English column names
+  - Pricing config YAML (config/pricing.yaml) - PRIMARY SOURCE
+  - Pricing tables (CSV) - optional supplement, Chinese and English
   - translated/repaired CSVs for line counts (optional)
 
 Outputs:
@@ -18,7 +19,7 @@ Outputs:
 Usage:
   python scripts/metrics_aggregator.py \
     --trace data/llm_trace.jsonl \
-    --pricing_csv "path/to/pricing.csv" \
+    --pricing_yaml config/pricing.yaml \
     --translated data/translated.csv \
     --repaired data/repaired.csv
 
@@ -36,6 +37,11 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Tuple
+
+try:
+    import yaml
+except ImportError:
+    yaml = None
 
 
 # -------------------------
@@ -183,6 +189,49 @@ def normalize_pricing(pricing: Dict[str, dict]) -> Tuple[Dict[str, dict], List[s
     return norm, warnings
 
 
+def load_pricing_yaml(path: str) -> Tuple[Dict[str, dict], List[str]]:
+    """
+    Load pricing from YAML config file.
+    Returns: (pricing_dict, warnings)
+    """
+    if yaml is None:
+        return {}, ["[yaml_error] PyYAML not installed"]
+    
+    if not Path(path).exists():
+        return {}, [f"[yaml_error] File not found: {path}"]
+    
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+    except Exception as e:
+        return {}, [f"[yaml_error] Failed to parse: {e}"]
+    
+    pricing: Dict[str, dict] = {}
+    warnings: List[str] = []
+    
+    models = data.get("models") or {}
+    for model, prices in models.items():
+        input_price = prices.get("input_per_1M")
+        output_price = prices.get("output_per_1M")
+        
+        if input_price is None and output_price is None:
+            warnings.append(f"[yaml_warning] model={model} has no prices")
+            continue
+        
+        pricing[model] = {
+            "prompt_per_1M": float(input_price) if input_price is not None else None,
+            "completion_per_1M": float(output_price) if output_price is not None else None,
+            "prompt_mult": None,
+            "completion_mult": None,
+            "group": None,
+        }
+    
+    # Load surcharges
+    surcharges = data.get("surcharges") or {}
+    
+    return pricing, warnings, surcharges
+
+
 # -------------------------
 # Trace Parsing & Cost
 # -------------------------
@@ -240,22 +289,46 @@ def write_text(path: str, s: str) -> None:
 def main():
     ap = argparse.ArgumentParser(description="Metrics aggregator for LLM usage and costs")
     ap.add_argument("--trace", default="data/llm_trace.jsonl", help="LLM trace JSONL file")
-    ap.add_argument("--pricing_csv", action="append", default=[], help="Pricing CSV file(s)")
+    ap.add_argument("--pricing_yaml", default="config/pricing.yaml", help="Pricing YAML config (primary)")
+    ap.add_argument("--pricing_csv", action="append", default=[], help="Additional pricing CSV file(s)")
     ap.add_argument("--translated", default=None, help="Translated CSV for line count")
     ap.add_argument("--repaired", default=None, help="Repaired CSV for line count")
     ap.add_argument("--out_json", default="data/metrics_summary.json", help="Output JSON")
     ap.add_argument("--out_md", default="data/metrics_report.md", help="Output markdown report")
     ap.add_argument("--currency", default="USD", help="Currency label")
-    ap.add_argument("--surcharge_per_request", type=float, default=0.0, help="Fixed surcharge per request")
-    ap.add_argument("--surcharge_percent", type=float, default=0.0, help="Percentage surcharge (0.0-1.0)")
+    ap.add_argument("--surcharge_per_request", type=float, default=None, help="Fixed surcharge per request (overrides YAML)")
+    ap.add_argument("--surcharge_percent", type=float, default=None, help="Percentage surcharge 0.0-1.0 (overrides YAML)")
     args = ap.parse_args()
     
     print(f"📊 Starting Metrics Aggregator...")
     print(f"   Trace: {args.trace}")
-    print(f"   Pricing CSVs: {len(args.pricing_csv)}")
+    print(f"   Pricing YAML: {args.pricing_yaml}")
+    if args.pricing_csv:
+        print(f"   Pricing CSVs: {len(args.pricing_csv)}")
     print()
     
-    # Load and merge pricing tables
+    # Load pricing from YAML (primary)
+    pricing: Dict[str, dict] = {}
+    pricing_warnings: List[str] = []
+    surcharge_per_req = 0.0
+    surcharge_pct = 0.0
+    
+    if Path(args.pricing_yaml).exists():
+        result = load_pricing_yaml(args.pricing_yaml)
+        if len(result) == 3:
+            yaml_pricing, yaml_warnings, surcharges = result
+        else:
+            yaml_pricing, yaml_warnings = result
+            surcharges = {}
+        pricing.update(yaml_pricing)
+        pricing_warnings.extend(yaml_warnings)
+        surcharge_per_req = surcharges.get("per_request_usd", 0.0) or 0.0
+        surcharge_pct = surcharges.get("percent_markup", 0.0) or 0.0
+        print(f"✅ Loaded {len(yaml_pricing)} models from {args.pricing_yaml}")
+    else:
+        print(f"⚠️  Pricing YAML not found: {args.pricing_yaml}")
+    
+    # Load and merge pricing from CSVs (supplement)
     pricing_raw: Dict[str, dict] = {}
     for p in args.pricing_csv:
         if not Path(p).exists():
@@ -269,11 +342,21 @@ def main():
             pricing_raw[k]["variants"].extend(v.get("variants", []))
         print(f"✅ Loaded {len(parsed)} models from {Path(p).name}")
     
-    pricing, pricing_warnings = normalize_pricing(pricing_raw)
-    print(f"✅ Normalized pricing for {len(pricing)} models")
+    # Normalize CSV pricing and merge with YAML (YAML takes precedence)
+    if pricing_raw:
+        csv_pricing, csv_warnings = normalize_pricing(pricing_raw)
+        pricing_warnings.extend(csv_warnings)
+        for model, prices in csv_pricing.items():
+            if model not in pricing:
+                pricing[model] = prices
+                
+    print(f"✅ Total pricing: {len(pricing)} models")
     
-    if pricing_warnings:
-        print(f"⚠️  {len(pricing_warnings)} pricing warnings")
+    # Apply surcharge overrides from command line
+    if args.surcharge_per_request is not None:
+        surcharge_per_req = args.surcharge_per_request
+    if args.surcharge_percent is not None:
+        surcharge_pct = args.surcharge_percent
     
     # Load trace
     events = read_jsonl(args.trace)
@@ -339,8 +422,8 @@ def main():
             cost += (ct / 1_000_000.0) * float(comp_per_1M)
         
         # Apply surcharges
-        cost += args.surcharge_per_request
-        cost *= (1.0 + args.surcharge_percent)
+        cost += surcharge_per_req
+        cost *= (1.0 + surcharge_pct)
         
         # Update totals
         totals["calls"] += 1
