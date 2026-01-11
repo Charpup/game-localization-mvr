@@ -467,19 +467,28 @@ class QAHardValidator:
 
 def main():
     """主入口"""
-    if len(sys.argv) != 6:
-        print("Usage: python qa_hard.py <translated_csv> <placeholder_map_json> <schema_yaml> <forbidden_txt> <report_json>")
-        print()
-        print("Example:")
-        print("  python qa_hard.py data/translated.csv data/placeholder_map.json workflow/placeholder_schema.yaml workflow/forbidden_patterns.txt data/qa_report.json")
-        sys.exit(1)
+    import argparse
+    
+    ap = argparse.ArgumentParser(description="QA Hard - 硬性规则校验")
+    ap.add_argument("translated_csv", nargs="?", default="data/translated.csv",
+                    help="Input translated CSV (default: data/translated.csv)")
+    ap.add_argument("placeholder_map", nargs="?", default="data/placeholder_map.json",
+                    help="Placeholder map JSON (default: data/placeholder_map.json)")
+    ap.add_argument("schema_yaml", nargs="?", default="workflow/placeholder_schema.yaml",
+                    help="Schema YAML (default: workflow/placeholder_schema.yaml)")
+    ap.add_argument("forbidden_txt", nargs="?", default="workflow/forbidden_patterns.txt",
+                    help="Forbidden patterns TXT (default: workflow/forbidden_patterns.txt)")
+    ap.add_argument("report_json", nargs="?", default="data/qa_hard_report.json",
+                    help="Output report JSON (default: data/qa_hard_report.json)")
+    
+    args = ap.parse_args()
     
     validator = QAHardValidator(
-        translated_csv=sys.argv[1],
-        placeholder_map=sys.argv[2],
-        schema_yaml=sys.argv[3],
-        forbidden_txt=sys.argv[4],
-        report_json=sys.argv[5]
+        translated_csv=args.translated_csv,
+        placeholder_map=args.placeholder_map,
+        schema_yaml=args.schema_yaml,
+        forbidden_txt=args.forbidden_txt,
+        report_json=args.report_json
     )
     
     success = validator.run()
@@ -488,3 +497,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
