@@ -63,15 +63,23 @@ def load_glossary(path: str) -> List[dict]:
     return data.get("entries", [])
 
 
-def read_repair_tasks(path: str) -> List[dict]:
-    """Read repair tasks from JSONL file."""
-    tasks = []
+def read_repair_tasks(path: str) -> Dict[str, List[dict]]:
+    """
+    Read repair tasks from JSONL file, grouped by string_id.
+    Returns dict: string_id -> list of issues for that string.
+    """
+    grouped: Dict[str, List[dict]] = {}
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
             line = line.strip()
             if line:
-                tasks.append(json.loads(line))
-    return tasks
+                task = json.loads(line)
+                sid = task.get("string_id", "")
+                if sid:  # Skip entries without string_id (e.g., soft_qa_failed markers)
+                    if sid not in grouped:
+                        grouped[sid] = []
+                    grouped[sid].append(task)
+    return grouped
 
 
 def read_csv_rows(path: str) -> Dict[str, Dict[str, str]]:
@@ -123,16 +131,16 @@ def validate_translation(source_zh: str, target_text: str) -> Tuple[bool, str]:
     return True, "ok"
 
 
-def build_repair_prompt(task: dict, style_guide: str, glossary: List[dict]) -> Tuple[str, str]:
+def build_repair_prompt(string_id: str, translated_row: Dict[str, str], 
+                        issues: List[dict], style_guide: str, 
+                        glossary: List[dict]) -> Tuple[str, str]:
     """
     Build repair prompt with issue context.
+    Handles new soft_qa format: type, note, suggested_fix
     Returns (system_prompt, user_prompt).
     """
-    source_zh = task.get("source_zh", "")
-    current_text = task.get("target_text", "")
-    issues = task.get("issues", [])
-    suggestion = task.get("suggestion", "")
-    string_id = task.get("string_id", "")
+    source_zh = translated_row.get("source_zh", "") or translated_row.get("tokenized_zh", "")
+    current_text = translated_row.get("target_text", "")
     
     # Filter relevant glossary terms
     relevant_terms = []
@@ -142,6 +150,18 @@ def build_repair_prompt(task: dict, style_guide: str, glossary: List[dict]) -> T
             term_ru = e.get("term_ru", "")
             status = e.get("status", "proposed")
             relevant_terms.append(f"{term_zh}→{term_ru}({status})")
+    
+    # Format issues from soft_qa output
+    issue_descriptions = []
+    suggested_fixes = []
+    for iss in issues:
+        dim = iss.get("type", "unknown")
+        sev = iss.get("severity", "minor")
+        note = iss.get("note", "")
+        fix = iss.get("suggested_fix", "")
+        issue_descriptions.append(f"[{dim}/{sev}] {note}")
+        if fix:
+            suggested_fixes.append(fix)
     
     system = (
         "你是一位资深的游戏本地化译者和修复专家。\n"
@@ -157,8 +177,8 @@ def build_repair_prompt(task: dict, style_guide: str, glossary: List[dict]) -> T
         f"string_id: {string_id}\n"
         f"源文本: {source_zh}\n"
         f"当前译文: {current_text}\n"
-        f"发现的问题: {json.dumps(issues, ensure_ascii=False)}\n"
-        f"改进建议: {suggestion}\n"
+        f"发现的问题:\n" + "\n".join(f"  - {d}" for d in issue_descriptions) + "\n"
+        f"参考修复: {suggested_fixes[0] if suggested_fixes else '无'}\n"
         f"相关术语: {', '.join(relevant_terms) if relevant_terms else '无'}\n\n"
         "请输出修复后的译文（仅译文本身，不要JSON包装或解释）："
     )
@@ -173,17 +193,29 @@ def backoff_sleep(attempt: int) -> None:
     time.sleep(base * jitter)
 
 
-def attempt_repair(llm: LLMClient, task: dict, style_guide: str, 
+def attempt_repair(llm: LLMClient, string_id: str, translated_row: Dict[str, str],
+                   issues: List[dict], style_guide: str, 
                    glossary: List[dict], max_attempts: int) -> Tuple[Optional[str], str]:
     """
     Attempt to repair a translation.
     Returns (repaired_text or None, status_message).
     """
-    source_zh = task.get("source_zh", "")
+    source_zh = translated_row.get("source_zh", "") or translated_row.get("tokenized_zh", "")
+    
+    # Check if soft_qa already provided a suggested_fix that passes validation
+    for iss in issues:
+        suggested = iss.get("suggested_fix", "").strip()
+        if suggested:
+            is_valid, _ = validate_translation(source_zh, suggested)
+            if is_valid:
+                return suggested, "used_suggested_fix"
+    
+    # Otherwise, use LLM to repair
+    working_issues = issues.copy()
     
     for attempt in range(max_attempts):
         try:
-            system, user = build_repair_prompt(task, style_guide, glossary)
+            system, user = build_repair_prompt(string_id, translated_row, working_issues, style_guide, glossary)
             result = llm.chat(system=system, user=user)
             repaired = result.text.strip()
             
@@ -192,8 +224,9 @@ def attempt_repair(llm: LLMClient, task: dict, style_guide: str,
             if is_valid:
                 return repaired, "ok"
             
-            # If validation failed, retry with feedback
-            task["issues"] = [f"上次修复失败: {reason}"] + task.get("issues", [])[:3]
+            # If validation failed, add feedback and retry
+            working_issues = [{"type": "validation_failed", "severity": "major", 
+                              "note": f"上次修复失败: {reason}", "suggested_fix": ""}] + issues[:2]
             
         except LLMError as e:
             if not e.retryable:
@@ -202,7 +235,7 @@ def attempt_repair(llm: LLMClient, task: dict, style_guide: str,
         except Exception as e:
             backoff_sleep(attempt)
     
-    return None, f"max_attempts_exceeded"
+    return None, "max_attempts_exceeded"
 
 
 def main():
@@ -228,14 +261,14 @@ def main():
     # Load resources
     style_guide = load_style_guide(args.style_guide)
     glossary = load_glossary(args.glossary)
-    tasks = read_repair_tasks(args.repair_tasks)
+    tasks_by_id = read_repair_tasks(args.repair_tasks)
     translated = read_csv_rows(args.translated_csv)
     
-    if not tasks:
+    if not tasks_by_id:
         print("✅ No repair tasks. Nothing to do.")
         sys.exit(0)
     
-    print(f"✅ Loaded {len(tasks)} repair tasks")
+    print(f"✅ Loaded {len(tasks_by_id)} strings with repair tasks")
     
     # Initialize LLM
     try:
@@ -249,41 +282,51 @@ def main():
     ckpt = load_checkpoint(args.checkpoint)
     repaired_ids = ckpt.get("repaired_ids", {})
     
-    # Process tasks
+    # Process tasks grouped by string_id
     repaired_rows = []
     escalated = []
     
-    for idx, task in enumerate(tasks, 1):
-        string_id = task.get("string_id", "")
+    string_ids = list(tasks_by_id.keys())
+    for idx, string_id in enumerate(string_ids, 1):
+        issues = tasks_by_id[string_id]
         
         # Skip if already repaired
         if string_id in repaired_ids:
-            print(f"  [{idx}/{len(tasks)}] {string_id}: skipped (already repaired)")
+            print(f"  [{idx}/{len(string_ids)}] {string_id}: skipped (already repaired)")
             continue
         
-        print(f"  [{idx}/{len(tasks)}] {string_id}: repairing...")
+        # Get original translated row
+        if string_id not in translated:
+            print(f"  [{idx}/{len(string_ids)}] {string_id}: ⚠️  not found in translated.csv, skipping")
+            continue
+        
+        translated_row = translated[string_id]
+        print(f"  [{idx}/{len(string_ids)}] {string_id}: repairing ({len(issues)} issues)...")
         
         # Attempt repair
-        repaired_text, status = attempt_repair(llm, task, style_guide, glossary, args.max_attempts)
+        repaired_text, status = attempt_repair(
+            llm, string_id, translated_row, issues, 
+            style_guide, glossary, args.max_attempts
+        )
         
         if repaired_text:
             # Success - update row
-            original_row = translated.get(string_id, {})
-            repaired_row = dict(original_row)
+            repaired_row = dict(translated_row)
             repaired_row["target_text"] = repaired_text
             repaired_row["repair_status"] = "repaired"
             repaired_rows.append(repaired_row)
             
             repaired_ids[string_id] = True
             ckpt["stats"]["ok"] = ckpt["stats"].get("ok", 0) + 1
-            print(f"    ✅ repaired")
+            print(f"    ✅ repaired ({status})")
         else:
             # Failed - escalate
+            source_zh = translated_row.get("source_zh", "") or translated_row.get("tokenized_zh", "")
             escalated.append({
                 "string_id": string_id,
                 "reason": f"repair_failed: {status}",
-                "tokenized_zh": task.get("source_zh", ""),
-                "last_output": task.get("target_text", "")[:300]
+                "tokenized_zh": source_zh,
+                "last_output": translated_row.get("target_text", "")[:300]
             })
             ckpt["stats"]["fail"] = ckpt["stats"].get("fail", 0) + 1
             print(f"    ❌ escalated: {status}")
@@ -329,7 +372,7 @@ def main():
     # Summary
     print()
     print(f"📊 Repair Loop Summary:")
-    print(f"   Total tasks: {len(tasks)}")
+    print(f"   Total strings: {len(string_ids)}")
     print(f"   Repaired: {ckpt['stats']['ok']}")
     print(f"   Failed: {ckpt['stats']['fail']}")
     print()

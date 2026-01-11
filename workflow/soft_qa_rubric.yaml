@@ -1,106 +1,59 @@
 ---
 # Soft QA Rubric v1.0
-# LLM-based translation quality evaluation dimensions
-# Used by soft_qa_llm.py
+# 定义软质量评审维度，用于生成可执行的 repair tasks
+# 注意：Soft QA 的价值不是"打分"，而是输出可执行的修复任务
 
 version: 1
+target: "ru-RU"
 
-# Target language for evaluation
-target_language: ru-RU
-
-# Evaluation dimensions
+# 评审维度
 dimensions:
-  fluency:
-    weight: 0.25
-    description: "文本流畅度和可读性"
-    criteria:
-      - "语法正确，无明显语病"
-      - "句子结构自然，符合目标语言习惯"
-      - "标点符号使用正确"
-    pass_threshold: 3
-    warn_threshold: 2
+  - key: style_officialness
+    description: "系统文案是否足够官方、清晰、可操作"
+    severity: ["minor", "major"]
+    examples:
+      - "系统提示过于口语化"
+      - "指令不够明确"
 
-  accuracy:
-    weight: 0.30
-    description: "翻译准确性和完整性"
-    criteria:
-      - "原文含义完整传达"
-      - "无遗漏或添加内容"
-      - "数字、单位等保持一致"
-    pass_threshold: 4
-    warn_threshold: 3
+  - key: anime_tone
+    description: "二次元口语是否适度（只在合适场景出现）"
+    severity: ["minor", "major"]
+    examples:
+      - "正式系统提示中出现不当的卡通化语气"
+      - "角色对话中语气过于生硬"
 
-  terminology:
-    weight: 0.25
-    description: "术语一致性"
-    criteria:
-      - "遵守术语表中的 approved 术语"
-      - "不使用 banned 术语的错误译法"
-      - "专有名词翻译统一"
-    pass_threshold: 4
-    warn_threshold: 3
+  - key: terminology_consistency
+    description: "术语是否遵守 glossary.yaml（approved 必用；banned 禁用；proposed 倾向）"
+    severity: ["minor", "major"]
+    examples:
+      - "未使用 approved 术语"
+      - "使用了 banned 术语的错误译法"
 
-  style:
-    weight: 0.20
-    description: "语域和风格适配"
-    criteria:
-      - "符合游戏本地化风格"
-      - "系统文案正式，活动文案可活泼"
-      - "语气与原文匹配"
-    pass_threshold: 3
-    warn_threshold: 2
+  - key: ui_brevity
+    description: "按钮/短提示是否过长、是否可压缩"
+    severity: ["minor", "major"]
+    examples:
+      - "按钮文本超过 15 字符"
+      - "提示文本可精简"
 
-# Scoring scale
-scoring:
-  min: 1
-  max: 5
-  labels:
-    1: "差 - 需要重写"
-    2: "较差 - 多处问题"
-    3: "一般 - 可接受但有改进空间"
-    4: "良好 - 少量小问题"
-    5: "优秀 - 无明显问题"
+  - key: ambiguity
+    description: "是否存在歧义或语义偏移风险"
+    severity: ["minor", "major"]
+    examples:
+      - "译文可能产生多种理解"
+      - "原文含义未完全传达"
 
-# Overall thresholds
-thresholds:
-  pass: 3.5      # weighted average >= 3.5 = pass
-  warn: 2.5      # weighted average in [2.5, 3.5) = warn
-  fail: 0        # weighted average < 2.5 = fail, add to repair queue
+# 输出配置
+outputs:
+  report_json: "data/qa_soft_report.json"
+  repair_tasks_jsonl: "data/repair_tasks.jsonl"
 
-# Issue types that trigger repair
-repair_triggers:
-  - fluency < 2
-  - accuracy < 3
-  - terminology < 3
-  - overall < 2.5
-
-# LLM evaluation prompt template
-prompt_template: |
-  你是一位资深的游戏本地化质量审核专家。
-  
-  请评估以下翻译的质量，从 4 个维度打分（1-5分）：
-  1. fluency (流畅度)：语法、可读性、标点
-  2. accuracy (准确性)：含义完整、无遗漏
-  3. terminology (术语)：专业术语使用正确
-  4. style (风格)：语域适配、语气匹配
-  
-  源文本 (中文)：{source_text}
-  翻译文本 ({target_lang})：{target_text}
-  术语表参考：{glossary_context}
-  
-  请只输出 JSON，格式如下：
-  {{
-    "scores": {{
-      "fluency": <1-5>,
-      "accuracy": <1-5>,
-      "terminology": <1-5>,
-      "style": <1-5>
-    }},
-    "issues": ["问题描述1", "问题描述2", ...],
-    "suggestion": "改进建议（如有）"
-  }}
-
-# Usage
+# 使用说明
 usage:
-  script: "soft_qa_llm.py 使用此 rubric 进行 LLM 质量评审"
-  output: "qa_soft_report.json 包含评分和问题列表"
+  script: "soft_qa_llm.py 使用此 rubric 进行 LLM 软质量评审"
+  workflow: |
+    1. 读取 translated.csv
+    2. 按 batch 调用 LLM 评审
+    3. 输出 qa_soft_report.json (汇总)
+    4. 输出 repair_tasks.jsonl (逐条任务)
+  note: "Soft QA 不阻断流程，但会驱动 repair loop 自动修复"
