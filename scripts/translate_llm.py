@@ -37,7 +37,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-import requests
+# Use shared runtime adapter for LLM calls
+from runtime_adapter import LLMClient, LLMError, LLMResult
 
 try:
     import yaml  # PyYAML
@@ -123,40 +124,9 @@ def build_glossary_constraints(entries: List[GlossaryEntry], source_text: str) -
     return approved_map, banned_terms, proposed_map
 
 # -----------------------------
-# LLM client (OpenAI-compatible)
+# LLMClient is now imported from runtime_adapter
+# See runtime_adapter.py for implementation
 # -----------------------------
-class LLMClient:
-    def __init__(self, base_url: str, api_key: str, model: str, timeout_s: int = 60):
-        self.base_url = base_url.rstrip("/")
-        self.api_key = api_key
-        self.model = model
-        self.timeout_s = timeout_s
-
-    def chat(self, system: str, user: str) -> str:
-        """
-        OpenAI-compatible /v1/chat/completions
-        """
-        url = f"{self.base_url}/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
-        payload = {
-            "model": self.model,
-            "temperature": 0.2,
-            "messages": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-        }
-        resp = requests.post(url, headers=headers, json=payload, timeout=self.timeout_s)
-        resp.raise_for_status()
-        data = resp.json()
-        # tolerant parsing
-        try:
-            return data["choices"][0]["message"]["content"]
-        except Exception:
-            return json.dumps(data, ensure_ascii=False)
 
 # -----------------------------
 # Helpers: checkpoint/resume
@@ -313,24 +283,15 @@ def main():
     style_guide = load_style_guide(args.style_guide_md)
     glossary = load_glossary(args.glossary_yaml) if args.glossary_yaml else []
 
-    # LLM config
-    base_url = os.getenv("LLM_BASE_URL", "").strip()
-    api_key = os.getenv("LLM_API_KEY", "").strip()
-    model = os.getenv("LLM_MODEL", "").strip()
-    timeout_s = int(os.getenv("LLM_TIMEOUT_S", "60"))
-
-    if not base_url or not api_key or not model:
-        print(
-            "ERROR: Missing LLM configuration.\n"
-            "Set env vars: LLM_BASE_URL, LLM_API_KEY, LLM_MODEL\n"
-            "Example:\n"
-            "  export LLM_BASE_URL=https://api.openai.com/v1\n"
-            "  export LLM_API_KEY=...\n"
-            "  export LLM_MODEL=gpt-4o-mini\n"
-        )
+    # LLM config - now uses runtime_adapter
+    # Environment variables are read by LLMClient automatically
+    try:
+        llm = LLMClient()
+        print(f"[INFO] Using LLM: {llm.model} via {llm.base_url}")
+    except LLMError as e:
+        print(f"ERROR: {e}")
+        print("Set env vars: LLM_BASE_URL, LLM_API_KEY, LLM_MODEL")
         sys.exit(2)
-
-    llm = LLMClient(base_url=base_url, api_key=api_key, model=model, timeout_s=timeout_s)
 
     # Load input
     rows = read_csv_rows(args.input_draft_csv)
@@ -388,13 +349,19 @@ def main():
         last_err = ""
         for attempt in range(args.max_retries + 1):
             try:
-                raw = llm.chat(system=system, user=user)
+                result = llm.chat(system=system, user=user)
+                raw = result.text
                 obj = extract_json_object(raw)
                 if not obj:
                     last_err = "invalid_json"
                     raise ValueError("Model output is not valid JSON object.")
                 success_obj = obj
                 break
+            except LLMError as e:
+                last_err = f"batch_call_failed: {e.kind}: {e}"
+                if not e.retryable or attempt >= args.max_retries:
+                    break
+                backoff_sleep(attempt)
             except Exception as e:
                 last_err = f"batch_call_failed: {type(e).__name__}: {e}"
                 if attempt >= args.max_retries:
@@ -434,7 +401,8 @@ def main():
                 per_last = ""
                 for attempt in range(args.max_retries + 1):
                     try:
-                        raw = llm.chat(system=system, user=user)
+                        result = llm.chat(system=system, user=user)
+                        raw = result.text
                         obj = extract_json_object(raw)
                         if not obj or sid not in obj:
                             per_last = "invalid_json_or_missing_key"
@@ -447,6 +415,11 @@ def main():
                         batch_results[sid] = ru
                         per_ok = True
                         break
+                    except LLMError as e:
+                        per_last = f"{per_last} | {e.kind}: {e}".strip(" |")
+                        if not e.retryable or attempt >= args.max_retries:
+                            break
+                        backoff_sleep(attempt)
                     except Exception as e:
                         per_last = f"{per_last} | {type(e).__name__}: {e}".strip(" |")
                         if attempt >= args.max_retries:
@@ -509,7 +482,8 @@ def main():
                             f"glossary_soft={json.dumps(proposed, ensure_ascii=False)}\n"
                             f"tokenized_zh={json.dumps(tok, ensure_ascii=False)}"
                         )
-                        raw = llm.chat(system=system, user=user)
+                        result = llm.chat(system=system, user=user)
+                        raw = result.text
                         obj = extract_json_object(raw)
                         if not obj or sid not in obj:
                             per_last = "invalid_json_or_missing_key"

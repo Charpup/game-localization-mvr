@@ -1,0 +1,340 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+repair_loop.py
+Auto-repair loop for translations flagged by soft QA.
+
+Purpose:
+  - Read repair tasks from soft QA output
+  - Attempt LLM-based repair with issue context
+  - Validate repairs against hard QA rules
+  - Checkpoint/resume support
+  - Escalate unfixable items
+
+Usage:
+  python scripts/repair_loop.py \
+    data/repair_tasks.jsonl data/translated.csv data/repaired.csv \
+    workflow/style_guide.md data/glossary.yaml \
+    --max_attempts 3
+
+Environment:
+  LLM_BASE_URL, LLM_API_KEY, LLM_MODEL (via runtime_adapter)
+"""
+
+import argparse
+import csv
+import json
+import random
+import re
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+try:
+    import yaml
+except ImportError:
+    yaml = None
+
+from runtime_adapter import LLMClient, LLMError
+
+
+# Token and CJK patterns for validation
+TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
+CJK_RE = re.compile(r"[\u4e00-\u9fff]")
+
+
+def load_style_guide(path: str) -> str:
+    """Load style guide content."""
+    with open(path, 'r', encoding='utf-8') as f:
+        return f.read().strip()
+
+
+def load_glossary(path: str) -> List[dict]:
+    """Load glossary entries."""
+    if not path or not Path(path).exists():
+        return []
+    if yaml is None:
+        return []
+    with open(path, 'r', encoding='utf-8') as f:
+        data = yaml.safe_load(f) or {}
+    return data.get("entries", [])
+
+
+def read_repair_tasks(path: str) -> List[dict]:
+    """Read repair tasks from JSONL file."""
+    tasks = []
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                tasks.append(json.loads(line))
+    return tasks
+
+
+def read_csv_rows(path: str) -> Dict[str, Dict[str, str]]:
+    """Read translated CSV as dict keyed by string_id."""
+    result = {}
+    with open(path, 'r', encoding='utf-8-sig', newline='') as f:
+        for row in csv.DictReader(f):
+            sid = row.get("string_id", "").strip()
+            if sid:
+                result[sid] = row
+    return result
+
+
+def load_checkpoint(path: str) -> dict:
+    """Load repair checkpoint."""
+    if Path(path).exists():
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {"repaired_ids": {}, "stats": {"ok": 0, "fail": 0}}
+
+
+def save_checkpoint(path: str, ckpt: dict) -> None:
+    """Save repair checkpoint."""
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(ckpt, f, ensure_ascii=False, indent=2)
+
+
+def tokens_signature(text: str) -> Dict[str, int]:
+    """Count tokens in text."""
+    counts: Dict[str, int] = {}
+    for m in TOKEN_RE.finditer(text or ""):
+        k = m.group(1)
+        counts[k] = counts.get(k, 0) + 1
+    return counts
+
+
+def validate_translation(source_zh: str, target_text: str) -> Tuple[bool, str]:
+    """
+    Validate translation against hard rules.
+    Returns (is_valid, reason).
+    """
+    if tokens_signature(source_zh) != tokens_signature(target_text):
+        return False, "token_mismatch"
+    if CJK_RE.search(target_text or ""):
+        return False, "cjk_remaining"
+    if not (target_text or "").strip():
+        return False, "empty"
+    return True, "ok"
+
+
+def build_repair_prompt(task: dict, style_guide: str, glossary: List[dict]) -> Tuple[str, str]:
+    """
+    Build repair prompt with issue context.
+    Returns (system_prompt, user_prompt).
+    """
+    source_zh = task.get("source_zh", "")
+    current_text = task.get("target_text", "")
+    issues = task.get("issues", [])
+    suggestion = task.get("suggestion", "")
+    string_id = task.get("string_id", "")
+    
+    # Filter relevant glossary terms
+    relevant_terms = []
+    for e in glossary:
+        term_zh = e.get("term_zh", "")
+        if term_zh and term_zh in source_zh:
+            term_ru = e.get("term_ru", "")
+            status = e.get("status", "proposed")
+            relevant_terms.append(f"{term_zh}→{term_ru}({status})")
+    
+    system = (
+        "你是一位资深的游戏本地化译者和修复专家。\n"
+        "任务：根据给出的问题反馈，修复以下翻译。\n"
+        "硬约束：\n"
+        "1. 所有 token（⟦PH_x⟧ 或 ⟦TAG_x⟧）必须逐字保留，数量一致\n"
+        "2. 输出不能包含任何中文字符\n"
+        "3. 只输出修复后的译文，不要任何解释\n\n"
+        f"风格规范：\n{style_guide[:2000]}\n"
+    )
+    
+    user = (
+        f"string_id: {string_id}\n"
+        f"源文本: {source_zh}\n"
+        f"当前译文: {current_text}\n"
+        f"发现的问题: {json.dumps(issues, ensure_ascii=False)}\n"
+        f"改进建议: {suggestion}\n"
+        f"相关术语: {', '.join(relevant_terms) if relevant_terms else '无'}\n\n"
+        "请输出修复后的译文（仅译文本身，不要JSON包装或解释）："
+    )
+    
+    return system, user
+
+
+def backoff_sleep(attempt: int) -> None:
+    """Exponential backoff with jitter."""
+    base = min(2 ** attempt, 30)
+    jitter = random.uniform(0.2, 1.0)
+    time.sleep(base * jitter)
+
+
+def attempt_repair(llm: LLMClient, task: dict, style_guide: str, 
+                   glossary: List[dict], max_attempts: int) -> Tuple[Optional[str], str]:
+    """
+    Attempt to repair a translation.
+    Returns (repaired_text or None, status_message).
+    """
+    source_zh = task.get("source_zh", "")
+    
+    for attempt in range(max_attempts):
+        try:
+            system, user = build_repair_prompt(task, style_guide, glossary)
+            result = llm.chat(system=system, user=user)
+            repaired = result.text.strip()
+            
+            # Validate the repair
+            is_valid, reason = validate_translation(source_zh, repaired)
+            if is_valid:
+                return repaired, "ok"
+            
+            # If validation failed, retry with feedback
+            task["issues"] = [f"上次修复失败: {reason}"] + task.get("issues", [])[:3]
+            
+        except LLMError as e:
+            if not e.retryable:
+                return None, f"llm_error_non_retryable: {e.kind}"
+            backoff_sleep(attempt)
+        except Exception as e:
+            backoff_sleep(attempt)
+    
+    return None, f"max_attempts_exceeded"
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Auto-repair loop for translations")
+    parser.add_argument("repair_tasks", help="Input repair_tasks.jsonl")
+    parser.add_argument("translated_csv", help="Original translated.csv")
+    parser.add_argument("repaired_csv", help="Output repaired.csv")
+    parser.add_argument("style_guide", help="Style guide path")
+    parser.add_argument("glossary", help="Glossary path", nargs="?", default="")
+    parser.add_argument("--max_attempts", type=int, default=3,
+                        help="Max repair attempts per item")
+    parser.add_argument("--checkpoint", default="data/repair_checkpoint.json",
+                        help="Checkpoint file path")
+    parser.add_argument("--escalate_csv", default="data/escalate_list.csv",
+                        help="Escalation list for unfixable items")
+    args = parser.parse_args()
+    
+    print(f"🔧 Starting Repair Loop v1.0...")
+    print(f"   Tasks: {args.repair_tasks}")
+    print(f"   Max attempts: {args.max_attempts}")
+    print()
+    
+    # Load resources
+    style_guide = load_style_guide(args.style_guide)
+    glossary = load_glossary(args.glossary)
+    tasks = read_repair_tasks(args.repair_tasks)
+    translated = read_csv_rows(args.translated_csv)
+    
+    if not tasks:
+        print("✅ No repair tasks. Nothing to do.")
+        sys.exit(0)
+    
+    print(f"✅ Loaded {len(tasks)} repair tasks")
+    
+    # Initialize LLM
+    try:
+        llm = LLMClient()
+        print(f"✅ Using LLM: {llm.model}")
+    except LLMError as e:
+        print(f"❌ LLM Error: {e}")
+        sys.exit(2)
+    
+    # Load checkpoint
+    ckpt = load_checkpoint(args.checkpoint)
+    repaired_ids = ckpt.get("repaired_ids", {})
+    
+    # Process tasks
+    repaired_rows = []
+    escalated = []
+    
+    for idx, task in enumerate(tasks, 1):
+        string_id = task.get("string_id", "")
+        
+        # Skip if already repaired
+        if string_id in repaired_ids:
+            print(f"  [{idx}/{len(tasks)}] {string_id}: skipped (already repaired)")
+            continue
+        
+        print(f"  [{idx}/{len(tasks)}] {string_id}: repairing...")
+        
+        # Attempt repair
+        repaired_text, status = attempt_repair(llm, task, style_guide, glossary, args.max_attempts)
+        
+        if repaired_text:
+            # Success - update row
+            original_row = translated.get(string_id, {})
+            repaired_row = dict(original_row)
+            repaired_row["target_text"] = repaired_text
+            repaired_row["repair_status"] = "repaired"
+            repaired_rows.append(repaired_row)
+            
+            repaired_ids[string_id] = True
+            ckpt["stats"]["ok"] = ckpt["stats"].get("ok", 0) + 1
+            print(f"    ✅ repaired")
+        else:
+            # Failed - escalate
+            escalated.append({
+                "string_id": string_id,
+                "reason": f"repair_failed: {status}",
+                "tokenized_zh": task.get("source_zh", ""),
+                "last_output": task.get("target_text", "")[:300]
+            })
+            ckpt["stats"]["fail"] = ckpt["stats"].get("fail", 0) + 1
+            print(f"    ❌ escalated: {status}")
+        
+        # Save checkpoint periodically
+        if idx % 10 == 0:
+            ckpt["repaired_ids"] = repaired_ids
+            save_checkpoint(args.checkpoint, ckpt)
+    
+    # Final checkpoint save
+    ckpt["repaired_ids"] = repaired_ids
+    save_checkpoint(args.checkpoint, ckpt)
+    
+    # Write repaired.csv
+    if repaired_rows:
+        Path(args.repaired_csv).parent.mkdir(parents=True, exist_ok=True)
+        
+        # Get fieldnames from first row
+        fieldnames = list(repaired_rows[0].keys())
+        if "repair_status" not in fieldnames:
+            fieldnames.append("repair_status")
+        
+        with open(args.repaired_csv, 'w', encoding='utf-8-sig', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(repaired_rows)
+        print(f"✅ Wrote {len(repaired_rows)} repaired rows to {args.repaired_csv}")
+    
+    # Append to escalate list
+    if escalated:
+        Path(args.escalate_csv).parent.mkdir(parents=True, exist_ok=True)
+        esc_fields = ["string_id", "reason", "tokenized_zh", "last_output"]
+        
+        exists = Path(args.escalate_csv).exists()
+        mode = 'a' if exists else 'w'
+        with open(args.escalate_csv, mode, encoding='utf-8-sig', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=esc_fields)
+            if not exists:
+                writer.writeheader()
+            writer.writerows(escalated)
+        print(f"⚠️  Escalated {len(escalated)} items to {args.escalate_csv}")
+    
+    # Summary
+    print()
+    print(f"📊 Repair Loop Summary:")
+    print(f"   Total tasks: {len(tasks)}")
+    print(f"   Repaired: {ckpt['stats']['ok']}")
+    print(f"   Failed: {ckpt['stats']['fail']}")
+    print()
+    print("✅ Repair loop complete!")
+
+
+if __name__ == "__main__":
+    main()

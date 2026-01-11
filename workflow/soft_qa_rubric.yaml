@@ -1,0 +1,106 @@
+---
+# Soft QA Rubric v1.0
+# LLM-based translation quality evaluation dimensions
+# Used by soft_qa_llm.py
+
+version: 1
+
+# Target language for evaluation
+target_language: ru-RU
+
+# Evaluation dimensions
+dimensions:
+  fluency:
+    weight: 0.25
+    description: "文本流畅度和可读性"
+    criteria:
+      - "语法正确，无明显语病"
+      - "句子结构自然，符合目标语言习惯"
+      - "标点符号使用正确"
+    pass_threshold: 3
+    warn_threshold: 2
+
+  accuracy:
+    weight: 0.30
+    description: "翻译准确性和完整性"
+    criteria:
+      - "原文含义完整传达"
+      - "无遗漏或添加内容"
+      - "数字、单位等保持一致"
+    pass_threshold: 4
+    warn_threshold: 3
+
+  terminology:
+    weight: 0.25
+    description: "术语一致性"
+    criteria:
+      - "遵守术语表中的 approved 术语"
+      - "不使用 banned 术语的错误译法"
+      - "专有名词翻译统一"
+    pass_threshold: 4
+    warn_threshold: 3
+
+  style:
+    weight: 0.20
+    description: "语域和风格适配"
+    criteria:
+      - "符合游戏本地化风格"
+      - "系统文案正式，活动文案可活泼"
+      - "语气与原文匹配"
+    pass_threshold: 3
+    warn_threshold: 2
+
+# Scoring scale
+scoring:
+  min: 1
+  max: 5
+  labels:
+    1: "差 - 需要重写"
+    2: "较差 - 多处问题"
+    3: "一般 - 可接受但有改进空间"
+    4: "良好 - 少量小问题"
+    5: "优秀 - 无明显问题"
+
+# Overall thresholds
+thresholds:
+  pass: 3.5      # weighted average >= 3.5 = pass
+  warn: 2.5      # weighted average in [2.5, 3.5) = warn
+  fail: 0        # weighted average < 2.5 = fail, add to repair queue
+
+# Issue types that trigger repair
+repair_triggers:
+  - fluency < 2
+  - accuracy < 3
+  - terminology < 3
+  - overall < 2.5
+
+# LLM evaluation prompt template
+prompt_template: |
+  你是一位资深的游戏本地化质量审核专家。
+  
+  请评估以下翻译的质量，从 4 个维度打分（1-5分）：
+  1. fluency (流畅度)：语法、可读性、标点
+  2. accuracy (准确性)：含义完整、无遗漏
+  3. terminology (术语)：专业术语使用正确
+  4. style (风格)：语域适配、语气匹配
+  
+  源文本 (中文)：{source_text}
+  翻译文本 ({target_lang})：{target_text}
+  术语表参考：{glossary_context}
+  
+  请只输出 JSON，格式如下：
+  {{
+    "scores": {{
+      "fluency": <1-5>,
+      "accuracy": <1-5>,
+      "terminology": <1-5>,
+      "style": <1-5>
+    }},
+    "issues": ["问题描述1", "问题描述2", ...],
+    "suggestion": "改进建议（如有）"
+  }}
+
+# Usage
+usage:
+  script: "soft_qa_llm.py 使用此 rubric 进行 LLM 质量评审"
+  output: "qa_soft_report.json 包含评分和问题列表"
