@@ -349,7 +349,7 @@ def main():
         last_err = ""
         for attempt in range(args.max_retries + 1):
             try:
-                result = llm.chat(system=system, user=user)
+                result = llm.chat(system=system, user=user, step="translate")
                 raw = result.text
                 obj = extract_json_object(raw)
                 if not obj:
@@ -401,7 +401,7 @@ def main():
                 per_last = ""
                 for attempt in range(args.max_retries + 1):
                     try:
-                        result = llm.chat(system=system, user=user)
+                        result = llm.chat(system=system, user=user, step="translate")
                         raw = result.text
                         obj = extract_json_object(raw)
                         if not obj or sid not in obj:
@@ -482,7 +482,7 @@ def main():
                             f"glossary_soft={json.dumps(proposed, ensure_ascii=False)}\n"
                             f"tokenized_zh={json.dumps(tok, ensure_ascii=False)}"
                         )
-                        result = llm.chat(system=system, user=user)
+                        result = llm.chat(system=system, user=user, step="translate")
                         raw = result.text
                         obj = extract_json_object(raw)
                         if not obj or sid not in obj:

@@ -1,0 +1,512 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+metrics_aggregator.py
+
+Aggregates LLM usage metrics from trace logs and calculates costs.
+
+Inputs:
+  - LLM trace jsonl from runtime_adapter.py (data/llm_trace.jsonl)
+  - Pricing tables (CSV) - supports Chinese and English column names
+  - translated/repaired CSVs for line counts (optional)
+
+Outputs:
+  - data/metrics_summary.json
+  - data/metrics_report.md
+
+Usage:
+  python scripts/metrics_aggregator.py \
+    --trace data/llm_trace.jsonl \
+    --pricing_csv "path/to/pricing.csv" \
+    --translated data/translated.csv \
+    --repaired data/repaired.csv
+
+Cost Calculation:
+  - Prefers usage tokens from LLM response if present
+  - Falls back to estimation: tokens ~= ceil(chars / 4)
+  - Separates prompt and completion costs
+"""
+
+import argparse
+import csv
+import json
+import math
+import re
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, Any, List, Optional, Tuple
+
+
+# -------------------------
+# Pricing CSV Parsing
+# -------------------------
+
+# Chinese pricing table patterns
+RE_CN_PROMPT_PRICE = re.compile(r"提示价格[：:]\s*\$?\s*([0-9.]+)\s*/\s*1M", re.I)
+RE_CN_COMP_PRICE = re.compile(r"补全价格[：:]\s*\$?\s*([0-9.]+)\s*/\s*1M", re.I)
+RE_CN_PROMPT_MULT = re.compile(r"提示倍率[：:]\s*([0-9.]+)", re.I)
+RE_CN_COMP_MULT = re.compile(r"补全倍率[：:]\s*([0-9.]+)", re.I)
+
+# English pricing table patterns
+RE_EN_PROMPT_PRICE = re.compile(r"(?:Prompt|Input)\s*(?:price)?[：:]?\s*\$?\s*([0-9.]+)\s*/\s*1M", re.I)
+RE_EN_COMP_PRICE = re.compile(r"(?:Completion|Output)\s*(?:price)?[：:]?\s*\$?\s*([0-9.]+)\s*/\s*1M", re.I)
+RE_EN_PROMPT_MULT = re.compile(r"(?:Prompt|Input)\s*(?:multiplier|ratio)[：:]?\s*([0-9.]+)", re.I)
+RE_EN_COMP_MULT = re.compile(r"(?:Completion|Output)\s*(?:multiplier|ratio)[：:]?\s*([0-9.]+)", re.I)
+
+
+def read_csv_rows(path: str) -> List[Dict[str, str]]:
+    """Read CSV file as list of dicts."""
+    with open(path, "r", encoding="utf-8-sig", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def parse_pricing_rows(rows: List[Dict[str, str]], source_name: str = "") -> Dict[str, dict]:
+    """
+    Parse pricing rows from CSV.
+    Supports both Chinese and English column names.
+    
+    Returns: model -> {variants: [{prompt_per_1M, completion_per_1M, ...}]}
+    """
+    out: Dict[str, dict] = {}
+    
+    for r in rows:
+        model = None
+        price_text = ""
+        mult_text = ""
+        group = ""
+        is_cn = False
+        
+        # Try Chinese columns
+        if "模型名称" in r:
+            model = (r.get("模型名称") or "").strip()
+            price_text = r.get("价格") or ""
+            mult_text = r.get("倍率") or ""
+            group = (r.get("分组") or "").strip()
+            is_cn = True
+        # Try English columns
+        elif "Model Name" in r:
+            model = (r.get("Model Name") or "").strip()
+            price_text = r.get("Price") or ""
+            mult_text = r.get("Magnification") or r.get("Multiplier") or ""
+            group = (r.get("Grouping") or r.get("Group") or "").strip()
+            is_cn = False
+        
+        if not model:
+            continue
+        
+        # Parse prices
+        if is_cn:
+            mp = RE_CN_PROMPT_PRICE.search(price_text)
+            mc = RE_CN_COMP_PRICE.search(price_text)
+            mmp = RE_CN_PROMPT_MULT.search(mult_text)
+            mmc = RE_CN_COMP_MULT.search(mult_text)
+        else:
+            mp = RE_EN_PROMPT_PRICE.search(price_text)
+            mc = RE_EN_COMP_PRICE.search(price_text)
+            mmp = RE_EN_PROMPT_MULT.search(mult_text)
+            mmc = RE_EN_COMP_MULT.search(mult_text)
+        
+        # Skip if no completion price found (required)
+        if not mc:
+            continue
+        
+        prompt_price = float(mp.group(1)) if mp else None
+        comp_price = float(mc.group(1)) if mc else None
+        prompt_mult = float(mmp.group(1)) if mmp else None
+        comp_mult = float(mmc.group(1)) if mmc else None
+        
+        out.setdefault(model, {"variants": []})
+        out[model]["variants"].append({
+            "prompt_per_1M": prompt_price,
+            "completion_per_1M": comp_price,
+            "prompt_mult": prompt_mult,
+            "completion_mult": comp_mult,
+            "group": group or None,
+            "source": source_name or ("cn" if is_cn else "en"),
+        })
+    
+    return out
+
+
+def normalize_pricing(pricing: Dict[str, dict]) -> Tuple[Dict[str, dict], List[str]]:
+    """
+    Cross-validate variants from multiple sources.
+    Pick the best variant per model (prefer entries with both prompt and completion prices).
+    Return normalized pricing + warnings.
+    """
+    norm: Dict[str, dict] = {}
+    warnings: List[str] = []
+    
+    for model, blob in pricing.items():
+        variants = blob.get("variants", [])
+        if not variants:
+            continue
+        
+        # Score variants by completeness
+        def score(v):
+            s = 0
+            if v.get("prompt_per_1M") is not None:
+                s += 1
+            if v.get("completion_per_1M") is not None:
+                s += 1
+            if v.get("group"):
+                s += 0.1
+            return s
+        
+        variants_sorted = sorted(variants, key=score, reverse=True)
+        best = variants_sorted[0]
+        
+        # Check for inconsistencies across variants
+        for v in variants_sorted[1:]:
+            for k in ("prompt_per_1M", "completion_per_1M"):
+                a = best.get(k)
+                b = v.get(k)
+                if a is not None and b is not None and abs(float(a) - float(b)) > 1e-9:
+                    warnings.append(
+                        f"[pricing_mismatch] model={model} {k}: {a} != {b} (source={v.get('source')})"
+                    )
+        
+        norm[model] = {
+            "prompt_per_1M": best.get("prompt_per_1M"),
+            "completion_per_1M": best.get("completion_per_1M"),
+            "prompt_mult": best.get("prompt_mult"),
+            "completion_mult": best.get("completion_mult"),
+            "group": best.get("group"),
+        }
+        
+        if norm[model]["prompt_per_1M"] is None:
+            warnings.append(f"[pricing_missing_prompt] model={model}")
+        if norm[model]["completion_per_1M"] is None:
+            warnings.append(f"[pricing_missing_completion] model={model}")
+    
+    return norm, warnings
+
+
+# -------------------------
+# Trace Parsing & Cost
+# -------------------------
+
+def read_jsonl(path: str) -> List[dict]:
+    """Read JSONL file as list of dicts."""
+    if not Path(path).exists():
+        return []
+    out = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                out.append(json.loads(line))
+            except Exception:
+                continue
+    return out
+
+
+def estimate_tokens(chars: int) -> int:
+    """
+    Estimate tokens from character count.
+    Conservative heuristic for mixed zh/en text: ~4 chars per token.
+    """
+    return int(math.ceil(max(0, chars) / 4.0))
+
+
+def count_csv_lines(path: Optional[str]) -> Optional[int]:
+    """Count data lines in CSV (excluding header)."""
+    if not path:
+        return None
+    p = Path(path)
+    if not p.exists():
+        return None
+    with open(p, "r", encoding="utf-8-sig", newline="") as f:
+        return max(0, sum(1 for _ in f) - 1)
+
+
+def write_json(path: str, obj: Any) -> None:
+    """Write JSON file."""
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(obj, f, ensure_ascii=False, indent=2)
+
+
+def write_text(path: str, s: str) -> None:
+    """Write text file."""
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(s)
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Metrics aggregator for LLM usage and costs")
+    ap.add_argument("--trace", default="data/llm_trace.jsonl", help="LLM trace JSONL file")
+    ap.add_argument("--pricing_csv", action="append", default=[], help="Pricing CSV file(s)")
+    ap.add_argument("--translated", default=None, help="Translated CSV for line count")
+    ap.add_argument("--repaired", default=None, help="Repaired CSV for line count")
+    ap.add_argument("--out_json", default="data/metrics_summary.json", help="Output JSON")
+    ap.add_argument("--out_md", default="data/metrics_report.md", help="Output markdown report")
+    ap.add_argument("--currency", default="USD", help="Currency label")
+    ap.add_argument("--surcharge_per_request", type=float, default=0.0, help="Fixed surcharge per request")
+    ap.add_argument("--surcharge_percent", type=float, default=0.0, help="Percentage surcharge (0.0-1.0)")
+    args = ap.parse_args()
+    
+    print(f"📊 Starting Metrics Aggregator...")
+    print(f"   Trace: {args.trace}")
+    print(f"   Pricing CSVs: {len(args.pricing_csv)}")
+    print()
+    
+    # Load and merge pricing tables
+    pricing_raw: Dict[str, dict] = {}
+    for p in args.pricing_csv:
+        if not Path(p).exists():
+            print(f"⚠️  Pricing file not found: {p}")
+            continue
+        rows = read_csv_rows(p)
+        parsed = parse_pricing_rows(rows, source_name=Path(p).stem)
+        # Merge variants
+        for k, v in parsed.items():
+            pricing_raw.setdefault(k, {"variants": []})
+            pricing_raw[k]["variants"].extend(v.get("variants", []))
+        print(f"✅ Loaded {len(parsed)} models from {Path(p).name}")
+    
+    pricing, pricing_warnings = normalize_pricing(pricing_raw)
+    print(f"✅ Normalized pricing for {len(pricing)} models")
+    
+    if pricing_warnings:
+        print(f"⚠️  {len(pricing_warnings)} pricing warnings")
+    
+    # Load trace
+    events = read_jsonl(args.trace)
+    llm_calls = [e for e in events if e.get("type") == "llm_call"]
+    print(f"✅ Loaded {len(llm_calls)} LLM calls from trace")
+    print()
+    
+    # Aggregate metrics
+    totals = {
+        "calls": 0,
+        "latency_ms_sum": 0,
+        "usage_present_calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "estimated_calls": 0,
+        "estimated_prompt_tokens": 0,
+        "estimated_completion_tokens": 0,
+        "cost": 0.0,
+        "cost_estimated_portion": 0.0,
+    }
+    
+    by_model_step: Dict[str, dict] = {}
+    missing_pricing_models = set()
+    
+    for e in llm_calls:
+        model = (e.get("model") or "unknown").strip()
+        step = (e.get("step") or "unknown").strip()
+        latency_ms = int(e.get("latency_ms") or 0)
+        
+        # Get usage from trace
+        usage = e.get("usage") or {}
+        usage_present = bool(usage) and (
+            usage.get("prompt_tokens") is not None or 
+            usage.get("completion_tokens") is not None
+        )
+        
+        req_chars = int(e.get("req_chars") or 0)
+        resp_chars = int(e.get("resp_chars") or 0)
+        
+        if usage_present:
+            pt = int(usage.get("prompt_tokens") or 0)
+            ct = int(usage.get("completion_tokens") or 0)
+            tt = int(usage.get("total_tokens") or (pt + ct))
+        else:
+            # Estimate tokens from character count
+            pt = estimate_tokens(req_chars)
+            ct = estimate_tokens(resp_chars)
+            tt = pt + ct
+        
+        # Calculate cost
+        price = pricing.get(model)
+        if not price:
+            missing_pricing_models.add(model)
+        
+        prompt_per_1M = price.get("prompt_per_1M") if price else None
+        comp_per_1M = price.get("completion_per_1M") if price else None
+        
+        cost = 0.0
+        if prompt_per_1M is not None:
+            cost += (pt / 1_000_000.0) * float(prompt_per_1M)
+        if comp_per_1M is not None:
+            cost += (ct / 1_000_000.0) * float(comp_per_1M)
+        
+        # Apply surcharges
+        cost += args.surcharge_per_request
+        cost *= (1.0 + args.surcharge_percent)
+        
+        # Update totals
+        totals["calls"] += 1
+        totals["latency_ms_sum"] += latency_ms
+        totals["prompt_tokens"] += pt
+        totals["completion_tokens"] += ct
+        totals["total_tokens"] += tt
+        totals["cost"] += cost
+        
+        if usage_present:
+            totals["usage_present_calls"] += 1
+        else:
+            totals["estimated_calls"] += 1
+            totals["estimated_prompt_tokens"] += pt
+            totals["estimated_completion_tokens"] += ct
+            totals["cost_estimated_portion"] += cost
+        
+        # Update by model::step breakdown
+        key = f"{model}::{step}"
+        by_model_step.setdefault(key, {
+            "model": model,
+            "step": step,
+            "calls": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "cost": 0.0,
+            "usage_present_calls": 0,
+            "estimated_calls": 0,
+            "latency_ms_sum": 0,
+        })
+        b = by_model_step[key]
+        b["calls"] += 1
+        b["prompt_tokens"] += pt
+        b["completion_tokens"] += ct
+        b["total_tokens"] += tt
+        b["cost"] += cost
+        b["latency_ms_sum"] += latency_ms
+        b["usage_present_calls"] += 1 if usage_present else 0
+        b["estimated_calls"] += 0 if usage_present else 1
+    
+    # Calculate averages for breakdown
+    for b in by_model_step.values():
+        b["avg_latency_ms"] = b["latency_ms_sum"] / b["calls"] if b["calls"] else 0
+        del b["latency_ms_sum"]
+    
+    # Line counts
+    translated_lines = count_csv_lines(args.translated)
+    repaired_lines = count_csv_lines(args.repaired)
+    denom_lines = repaired_lines or translated_lines
+    
+    cost_per_1k = None
+    if denom_lines and denom_lines > 0:
+        cost_per_1k = totals["cost"] / (denom_lines / 1000.0)
+    
+    usage_rate = None
+    if totals["calls"] > 0:
+        usage_rate = totals["usage_present_calls"] / totals["calls"]
+    
+    avg_latency = totals["latency_ms_sum"] / totals["calls"] if totals["calls"] else 0
+    
+    # Build summary
+    summary = {
+        "generated_at": datetime.now().isoformat(),
+        "currency": args.currency,
+        "trace_file": args.trace,
+        "pricing": {
+            "models_loaded": len(pricing),
+            "warnings": pricing_warnings,
+            "missing_models": list(missing_pricing_models),
+        },
+        "line_counts": {
+            "translated_csv": args.translated,
+            "translated_lines": translated_lines,
+            "repaired_csv": args.repaired,
+            "repaired_lines": repaired_lines,
+            "denominator_for_per_1k": denom_lines,
+        },
+        "usage": {
+            "total_calls": totals["calls"],
+            "usage_present_calls": totals["usage_present_calls"],
+            "usage_presence_rate": usage_rate,
+            "estimated_calls": totals["estimated_calls"],
+            "avg_latency_ms": round(avg_latency, 1),
+        },
+        "tokens": {
+            "prompt_tokens": totals["prompt_tokens"],
+            "completion_tokens": totals["completion_tokens"],
+            "total_tokens": totals["total_tokens"],
+            "estimated_prompt_tokens": totals["estimated_prompt_tokens"],
+            "estimated_completion_tokens": totals["estimated_completion_tokens"],
+        },
+        "cost": {
+            "total_cost": round(totals["cost"], 6),
+            "cost_estimated_portion": round(totals["cost_estimated_portion"], 6),
+            "cost_per_1k_lines": round(cost_per_1k, 6) if cost_per_1k else None,
+        },
+        "breakdown": sorted(by_model_step.values(), key=lambda x: x["cost"], reverse=True),
+    }
+    
+    write_json(args.out_json, summary)
+    print(f"✅ Wrote summary to {args.out_json}")
+    
+    # Generate Markdown report
+    md = []
+    md.append("# Localization Metrics Report\n\n")
+    md.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+    
+    md.append("## Summary\n\n")
+    md.append(f"| Metric | Value |\n")
+    md.append(f"|--------|-------|\n")
+    md.append(f"| Total LLM Calls | {totals['calls']} |\n")
+    md.append(f"| Avg Latency | {avg_latency:.1f} ms |\n")
+    md.append(f"| Total Tokens | {totals['total_tokens']:,} |\n")
+    md.append(f"| Prompt Tokens | {totals['prompt_tokens']:,} |\n")
+    md.append(f"| Completion Tokens | {totals['completion_tokens']:,} |\n")
+    md.append(f"| Total Cost | ${totals['cost']:.6f} {args.currency} |\n")
+    if cost_per_1k:
+        md.append(f"| Cost per 1k Lines | ${cost_per_1k:.6f} {args.currency} |\n")
+    if usage_rate is not None:
+        md.append(f"| Usage Data Present | {usage_rate:.1%} |\n")
+    if totals["estimated_calls"] > 0:
+        md.append(f"| Estimated Calls | {totals['estimated_calls']} |\n")
+    md.append("\n")
+    
+    if missing_pricing_models:
+        md.append("## ⚠️ Missing Pricing\n\n")
+        md.append("The following models have no pricing data:\n\n")
+        for m in sorted(missing_pricing_models):
+            md.append(f"- `{m}`\n")
+        md.append("\n")
+    
+    if pricing_warnings:
+        md.append("## Pricing Warnings\n\n")
+        for w in pricing_warnings[:20]:
+            md.append(f"- {w}\n")
+        if len(pricing_warnings) > 20:
+            md.append(f"- ... ({len(pricing_warnings) - 20} more)\n")
+        md.append("\n")
+    
+    md.append("## Cost by Model & Step\n\n")
+    md.append("| Model | Step | Calls | Tokens | Cost |\n")
+    md.append("|-------|------|-------|--------|------|\n")
+    for b in summary["breakdown"][:30]:
+        md.append(
+            f"| {b['model']} | {b['step']} | {b['calls']} | "
+            f"{b['total_tokens']:,} | ${b['cost']:.6f} |\n"
+        )
+    md.append("\n")
+    
+    write_text(args.out_md, "".join(md))
+    print(f"✅ Wrote report to {args.out_md}")
+    
+    # Print summary
+    print()
+    print(f"📊 Metrics Summary:")
+    print(f"   Calls: {totals['calls']}")
+    print(f"   Tokens: {totals['total_tokens']:,}")
+    print(f"   Cost: ${totals['cost']:.6f} {args.currency}")
+    if cost_per_1k:
+        print(f"   Per 1k lines: ${cost_per_1k:.6f}")
+    print()
+    print("✅ Metrics aggregation complete!")
+    
+    return 0
+
+
+if __name__ == "__main__":
+    exit(main())

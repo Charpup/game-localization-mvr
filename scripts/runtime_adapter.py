@@ -31,6 +31,7 @@ class LLMResult:
     text: str
     latency_ms: int
     raw: Optional[dict] = None
+    usage: Optional[dict] = None  # {prompt_tokens, completion_tokens, total_tokens}
 
 
 class LLMError(Exception):
@@ -110,7 +111,8 @@ class LLMClient:
              system: str, 
              user: str, 
              temperature: float = 0.2,
-             max_tokens: Optional[int] = None) -> LLMResult:
+             max_tokens: Optional[int] = None,
+             step: Optional[str] = None) -> LLMResult:
         """
         Send a chat completion request.
         
@@ -119,9 +121,10 @@ class LLMClient:
             user: User message
             temperature: Sampling temperature (default 0.2 for consistency)
             max_tokens: Optional max tokens limit
+            step: Optional step name for metrics (e.g., 'translate', 'soft_qa', 'repair')
             
         Returns:
-            LLMResult with text, latency_ms, and raw response
+            LLMResult with text, latency_ms, raw response, and usage
             
         Raises:
             LLMError with kind and retryable flag
@@ -197,16 +200,21 @@ class LLMClient:
             })
             raise LLMError("parse", f"Response parse error: {e}", retryable=True)
 
-        # Log successful call
+        # Extract usage info if present
+        usage = data.get("usage") or {}
+        
+        # Log successful call with usage and step
         _trace({
             "type": "llm_call",
             "model": self.model,
+            "step": step or "unknown",
             "latency_ms": latency_ms,
             "req_chars": len(system) + len(user),
             "resp_chars": len(text),
+            "usage": usage if usage else None,
         })
         
-        return LLMResult(text=text, latency_ms=latency_ms, raw=data)
+        return LLMResult(text=text, latency_ms=latency_ms, raw=data, usage=usage if usage else None)
 
 
 # Convenience function for simple calls

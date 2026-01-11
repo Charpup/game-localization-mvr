@@ -323,7 +323,7 @@ def main():
         
         for attempt in range(args.max_retries + 1):
             try:
-                result = llm.chat(system=system, user=user, temperature=0.1)
+                result = llm.chat(system=system, user=user, temperature=0.1, step="repair")
                 obj = extract_json(result.text)
                 
                 if not obj or obj.get("string_id") != sid:
