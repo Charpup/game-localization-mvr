@@ -1,191 +1,332 @@
 # Pricing configuration for LLM cost calculation
-# Source: apiyi pricing tables (2026-01)
+# Source: apiyi API platform pricing (2026-01)
 # Update this file when pricing changes
 
-version: 1
+version: 2
 currency: USD
-billing_unit: per_1M_tokens
 
-# Common models used in localization workflow
+# ============================================
+# Platform billing formula (API平台计费规则)
+# ============================================
+# 
+# 费用计算公式:
+#   cost = conversion_rate × group_rate × model_rate × 
+#          (prompt_tokens + completion_tokens × completion_ratio) / 500000
+#
+# 其中:
+#   conversion_rate = (new_recharge_rate / old_recharge_rate) × (new_group_rate / old_group_rate)
+#   group_rate = 用户分组倍率 (默认 1.00)
+#   model_rate = 模型提示倍率 (prompt_mult)
+#   completion_ratio = 补全倍率 (completion_mult)
+#
+# ============================================
+
+billing:
+  # Platform conversion parameters
+  recharge_rate:
+    old: 1.0      # 原充值倍率
+    new: 1.0      # 新充值倍率
+  group_rate:
+    old: 1.0      # 原分组倍率
+    new: 1.0      # 新分组倍率
+  
+  # User group multiplier (用户分组倍率)
+  user_group_multiplier: 1.00
+  
+  # Base divisor for token calculation
+  token_divisor: 500000
+  
+  # Formula mode: "multiplier" (倍率模式) or "per_1m" (每百万token模式)
+  mode: multiplier
+
+# ============================================
+# Model pricing (模型定价)
+# ============================================
+# 
+# Each model has:
+#   prompt_mult: 提示倍率 (model_rate)
+#   completion_mult: 补全倍率 (completion_ratio)
+#   input_per_1M: (optional) 直接定价 $ per 1M tokens
+#   output_per_1M: (optional) 直接定价 $ per 1M tokens
+#
+# 如果使用 multiplier 模式, 需要 prompt_mult 和 completion_mult
+# 如果使用 per_1m 模式, 需要 input_per_1M 和 output_per_1M
+#
+# ============================================
+
 models:
   # === GPT-4o Mini - Primary translation model ===
   gpt-4o-mini:
+    prompt_mult: 0.075
+    completion_mult: 4.0
     input_per_1M: 0.15
     output_per_1M: 0.60
   gpt-4o-mini-2024-07-18:
+    prompt_mult: 0.075
+    completion_mult: 4.0
     input_per_1M: 0.15
     output_per_1M: 0.60
 
   # === GPT-4o ===
   gpt-4o:
+    prompt_mult: 1.25
+    completion_mult: 4.0
     input_per_1M: 2.50
     output_per_1M: 10.00
   gpt-4o-2024-08-06:
+    prompt_mult: 1.25
+    completion_mult: 4.0
     input_per_1M: 2.50
     output_per_1M: 10.00
   gpt-4o-2024-11-20:
+    prompt_mult: 1.25
+    completion_mult: 4.0
     input_per_1M: 2.50
     output_per_1M: 10.00
 
   # === GPT-4.1 ===
   gpt-4.1:
+    prompt_mult: 1.0
+    completion_mult: 4.0
     input_per_1M: 2.00
     output_per_1M: 8.00
   gpt-4.1-mini:
+    prompt_mult: 0.2
+    completion_mult: 4.0
     input_per_1M: 0.40
     output_per_1M: 1.60
   gpt-4.1-nano:
+    prompt_mult: 0.05
+    completion_mult: 4.0
     input_per_1M: 0.10
     output_per_1M: 0.40
 
   # === GPT-3.5 Turbo ===
   gpt-3.5-turbo:
+    prompt_mult: 0.25
+    completion_mult: 3.0
     input_per_1M: 0.50
     output_per_1M: 1.50
   gpt-3.5-turbo-0125:
+    prompt_mult: 0.25
+    completion_mult: 3.0
     input_per_1M: 0.50
     output_per_1M: 1.50
 
   # === Claude 3.5 Sonnet ===
   claude-3-5-sonnet-20241022:
+    prompt_mult: 1.5
+    completion_mult: 5.0
     input_per_1M: 3.00
     output_per_1M: 15.00
   claude-3-5-sonnet-latest:
+    prompt_mult: 1.5
+    completion_mult: 5.0
     input_per_1M: 3.00
     output_per_1M: 15.00
 
   # === Claude 3.5 Haiku ===
   claude-3-5-haiku-20241022:
+    prompt_mult: 0.4
+    completion_mult: 5.0
     input_per_1M: 0.80
     output_per_1M: 4.00
   claude-3-5-haiku-latest:
+    prompt_mult: 0.4
+    completion_mult: 5.0
     input_per_1M: 0.80
     output_per_1M: 4.00
 
   # === Claude 3.7 Sonnet ===
   claude-3-7-sonnet-20250219:
+    prompt_mult: 1.5
+    completion_mult: 5.0
     input_per_1M: 3.00
     output_per_1M: 15.00
   claude-3-7-sonnet-latest:
+    prompt_mult: 1.5
+    completion_mult: 5.0
     input_per_1M: 3.00
     output_per_1M: 15.00
 
   # === Claude Sonnet 4 ===
   claude-sonnet-4-20250514:
+    prompt_mult: 1.5
+    completion_mult: 5.0
     input_per_1M: 3.00
     output_per_1M: 15.00
   claude-sonnet-4-5-20250929:
+    prompt_mult: 1.5
+    completion_mult: 5.0
     input_per_1M: 3.00
     output_per_1M: 15.00
 
   # === DeepSeek ===
   deepseek-chat:
+    prompt_mult: 0.125
+    completion_mult: 4.0
     input_per_1M: 0.25
     output_per_1M: 1.00
   deepseek-v3:
+    prompt_mult: 0.125
+    completion_mult: 4.0
     input_per_1M: 0.25
     output_per_1M: 1.00
   deepseek-r1:
+    prompt_mult: 0.25
+    completion_mult: 4.0
     input_per_1M: 0.50
     output_per_1M: 2.00
   deepseek-reasoner:
+    prompt_mult: 0.25
+    completion_mult: 4.0
     input_per_1M: 0.50
     output_per_1M: 2.00
 
   # === Gemini 2.5 Flash ===
   gemini-2.5-flash:
+    prompt_mult: 0.15
+    completion_mult: 8.0
     input_per_1M: 0.30
     output_per_1M: 2.40
   gemini-2.5-flash-lite:
+    prompt_mult: 0.05
+    completion_mult: 4.0
     input_per_1M: 0.10
     output_per_1M: 0.40
 
   # === Gemini 2.5 Pro ===
   gemini-2.5-pro:
+    prompt_mult: 0.625
+    completion_mult: 8.0
     input_per_1M: 1.25
     output_per_1M: 10.00
   gemini-2.5-pro-exp:
+    prompt_mult: 0.625
+    completion_mult: 8.0
     input_per_1M: 1.25
     output_per_1M: 10.00
 
   # === Gemini 2.0 Flash ===
   gemini-2.0-flash:
+    prompt_mult: 0.05
+    completion_mult: 4.0
     input_per_1M: 0.10
     output_per_1M: 0.40
   gemini-2.0-flash-001:
+    prompt_mult: 0.05
+    completion_mult: 4.0
     input_per_1M: 0.10
     output_per_1M: 0.40
 
   # === Qwen ===
   qwen-turbo:
+    prompt_mult: 0.1
+    completion_mult: 3.0
     input_per_1M: 0.20
     output_per_1M: 0.60
   qwen-turbo-latest:
+    prompt_mult: 0.1
+    completion_mult: 3.0
     input_per_1M: 0.20
     output_per_1M: 0.60
   qwen-plus:
+    prompt_mult: 0.2
+    completion_mult: 3.0
     input_per_1M: 0.40
     output_per_1M: 1.20
   qwen-plus-latest:
+    prompt_mult: 0.2
+    completion_mult: 3.0
     input_per_1M: 0.40
     output_per_1M: 1.20
   qwen-max:
+    prompt_mult: 0.8
+    completion_mult: 4.0
     input_per_1M: 1.60
     output_per_1M: 6.40
   qwen-max-latest:
+    prompt_mult: 0.8
+    completion_mult: 4.0
     input_per_1M: 1.60
     output_per_1M: 6.40
 
   # === GLM ===
   glm-4.5:
+    prompt_mult: 0.25
+    completion_mult: 4.0
     input_per_1M: 0.50
     output_per_1M: 2.00
   glm-4.5-flash:
+    prompt_mult: 0.005
+    completion_mult: 4.0
     input_per_1M: 0.01
     output_per_1M: 0.04
   glm-4.6:
+    prompt_mult: 0.25
+    completion_mult: 4.0
     input_per_1M: 0.50
     output_per_1M: 2.00
 
   # === Doubao (Bytedance) ===
   doubao-seed-1-6-flash-250615:
+    prompt_mult: 0.015
+    completion_mult: 10.0
     input_per_1M: 0.03
     output_per_1M: 0.30
   doubao-seed-1-6-flash-250828:
+    prompt_mult: 0.015
+    completion_mult: 10.0
     input_per_1M: 0.03
     output_per_1M: 0.30
 
   # === O1 / O3 / O4 ===
   o1-mini:
+    prompt_mult: 0.55
+    completion_mult: 4.0
     input_per_1M: 1.10
     output_per_1M: 4.40
   o3-mini:
+    prompt_mult: 0.55
+    completion_mult: 4.0
     input_per_1M: 1.10
     output_per_1M: 4.40
   o4-mini:
+    prompt_mult: 0.55
+    completion_mult: 4.0
     input_per_1M: 1.10
     output_per_1M: 4.40
 
   # === Grok ===
   grok-3:
+    prompt_mult: 1.5
+    completion_mult: 5.0
     input_per_1M: 3.00
     output_per_1M: 15.00
   grok-4:
+    prompt_mult: 1.5
+    completion_mult: 5.0
     input_per_1M: 3.00
     output_per_1M: 15.00
 
   # === Moonshot (Kimi) ===
   moonshot-v1-8k:
+    prompt_mult: 1.0
+    completion_mult: 1.0
     input_per_1M: 2.00
     output_per_1M: 2.00
   moonshot-v1-32k:
+    prompt_mult: 2.0
+    completion_mult: 1.0
     input_per_1M: 4.00
     output_per_1M: 4.00
   kimi-k2-0905:
+    prompt_mult: 0.3
+    completion_mult: 4.0
     input_per_1M: 0.60
     output_per_1M: 2.40
 
-# Optional: Third-party platform surcharges
+# Optional: Additional surcharges
 surcharges:
   per_request_usd: 0.0
   percent_markup: 0.0

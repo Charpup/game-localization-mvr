@@ -189,22 +189,22 @@ def normalize_pricing(pricing: Dict[str, dict]) -> Tuple[Dict[str, dict], List[s
     return norm, warnings
 
 
-def load_pricing_yaml(path: str) -> Tuple[Dict[str, dict], List[str]]:
+def load_pricing_yaml(path: str) -> Tuple[Dict[str, dict], List[str], dict, dict]:
     """
     Load pricing from YAML config file.
-    Returns: (pricing_dict, warnings)
+    Returns: (pricing_dict, warnings, surcharges, billing_config)
     """
     if yaml is None:
-        return {}, ["[yaml_error] PyYAML not installed"]
+        return {}, ["[yaml_error] PyYAML not installed"], {}, {}
     
     if not Path(path).exists():
-        return {}, [f"[yaml_error] File not found: {path}"]
+        return {}, [f"[yaml_error] File not found: {path}"], {}, {}
     
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
     except Exception as e:
-        return {}, [f"[yaml_error] Failed to parse: {e}"]
+        return {}, [f"[yaml_error] Failed to parse: {e}"], {}, {}
     
     pricing: Dict[str, dict] = {}
     warnings: List[str] = []
@@ -213,23 +213,32 @@ def load_pricing_yaml(path: str) -> Tuple[Dict[str, dict], List[str]]:
     for model, prices in models.items():
         input_price = prices.get("input_per_1M")
         output_price = prices.get("output_per_1M")
+        prompt_mult = prices.get("prompt_mult")
+        completion_mult = prices.get("completion_mult")
         
-        if input_price is None and output_price is None:
+        # Need at least one pricing method
+        has_per_1m = input_price is not None or output_price is not None
+        has_mult = prompt_mult is not None
+        
+        if not has_per_1m and not has_mult:
             warnings.append(f"[yaml_warning] model={model} has no prices")
             continue
         
         pricing[model] = {
             "prompt_per_1M": float(input_price) if input_price is not None else None,
             "completion_per_1M": float(output_price) if output_price is not None else None,
-            "prompt_mult": None,
-            "completion_mult": None,
+            "prompt_mult": float(prompt_mult) if prompt_mult is not None else None,
+            "completion_mult": float(completion_mult) if completion_mult is not None else None,
             "group": None,
         }
     
     # Load surcharges
     surcharges = data.get("surcharges") or {}
     
-    return pricing, warnings, surcharges
+    # Load billing config
+    billing = data.get("billing") or {}
+    
+    return pricing, warnings, surcharges, billing
 
 
 # -------------------------
@@ -312,19 +321,19 @@ def main():
     pricing_warnings: List[str] = []
     surcharge_per_req = 0.0
     surcharge_pct = 0.0
+    billing_config: dict = {}
     
     if Path(args.pricing_yaml).exists():
-        result = load_pricing_yaml(args.pricing_yaml)
-        if len(result) == 3:
-            yaml_pricing, yaml_warnings, surcharges = result
-        else:
-            yaml_pricing, yaml_warnings = result
-            surcharges = {}
+        yaml_pricing, yaml_warnings, surcharges, billing_config = load_pricing_yaml(args.pricing_yaml)
         pricing.update(yaml_pricing)
         pricing_warnings.extend(yaml_warnings)
         surcharge_per_req = surcharges.get("per_request_usd", 0.0) or 0.0
         surcharge_pct = surcharges.get("percent_markup", 0.0) or 0.0
         print(f"✅ Loaded {len(yaml_pricing)} models from {args.pricing_yaml}")
+        
+        # Show billing mode
+        billing_mode = billing_config.get("mode", "per_1m")
+        print(f"   Billing mode: {billing_mode}")
     else:
         print(f"⚠️  Pricing YAML not found: {args.pricing_yaml}")
     
@@ -351,6 +360,18 @@ def main():
                 pricing[model] = prices
                 
     print(f"✅ Total pricing: {len(pricing)} models")
+    
+    # Calculate conversion rate from billing config
+    # conversion_rate = (new_recharge / old_recharge) × (new_group / old_group)
+    recharge_rate = billing_config.get("recharge_rate", {})
+    group_rate = billing_config.get("group_rate", {})
+    conversion_rate = (
+        (recharge_rate.get("new", 1.0) / max(recharge_rate.get("old", 1.0), 0.001)) *
+        (group_rate.get("new", 1.0) / max(group_rate.get("old", 1.0), 0.001))
+    )
+    user_group_mult = billing_config.get("user_group_multiplier", 1.0)
+    token_divisor = billing_config.get("token_divisor", 500000)
+    billing_mode = billing_config.get("mode", "per_1m")  # "multiplier" or "per_1m"
     
     # Apply surcharge overrides from command line
     if args.surcharge_per_request is not None:
@@ -407,19 +428,31 @@ def main():
             ct = estimate_tokens(resp_chars)
             tt = pt + ct
         
-        # Calculate cost
+        # Calculate cost based on billing mode
         price = pricing.get(model)
         if not price:
             missing_pricing_models.add(model)
         
-        prompt_per_1M = price.get("prompt_per_1M") if price else None
-        comp_per_1M = price.get("completion_per_1M") if price else None
-        
         cost = 0.0
-        if prompt_per_1M is not None:
-            cost += (pt / 1_000_000.0) * float(prompt_per_1M)
-        if comp_per_1M is not None:
-            cost += (ct / 1_000_000.0) * float(comp_per_1M)
+        
+        if billing_mode == "multiplier" and price:
+            # Multiplier formula:
+            # cost = conversion_rate × group_rate × model_rate × 
+            #        (prompt_tokens + completion_tokens × completion_ratio) / token_divisor
+            prompt_mult = price.get("prompt_mult") or 0.0
+            completion_mult = price.get("completion_mult") or 1.0
+            
+            effective_tokens = pt + ct * completion_mult
+            cost = conversion_rate * user_group_mult * prompt_mult * effective_tokens / token_divisor
+        else:
+            # Per-1M token formula (default)
+            prompt_per_1M = price.get("prompt_per_1M") if price else None
+            comp_per_1M = price.get("completion_per_1M") if price else None
+            
+            if prompt_per_1M is not None:
+                cost += (pt / 1_000_000.0) * float(prompt_per_1M)
+            if comp_per_1M is not None:
+                cost += (ct / 1_000_000.0) * float(comp_per_1M)
         
         # Apply surcharges
         cost += surcharge_per_req
