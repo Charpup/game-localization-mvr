@@ -52,15 +52,23 @@ patterns:
       - "</size>"
 
   # Square bracket placeholders: [NAME], [0], [PLAYER_NAME]
+  # NOTE: Only matches technical placeholders (ALL CAPS or pure numbers)
+  # Does NOT match translatable text like [沉默], [攻击], [name]
   - name: square_placeholder
     type: placeholder
-    regex: "\\[[^\\[\\]]+\\]"
-    description: "方括号占位符"
+    regex: "\\[(?:[A-Z][A-Z0-9_]*|\\d+)\\]"
+    description: "方括号技术占位符（仅全大写或纯数字）"
     examples:
       - "[NAME]"
       - "[0]"
       - "[PLAYER_NAME]"
       - "[VALUE]"
+      - "[ITEM_1]"
+    non_examples:
+      - "[沉默]"
+      - "[攻击]"
+      - "[name]"
+      - "[Name]"
 
   # Escape sequences: \n \t \r
   - name: escapes

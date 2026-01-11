@@ -21,8 +21,9 @@ import csv
 import json
 import re
 import sys
+import yaml
 from pathlib import Path
-from typing import Dict, Set, List
+from typing import Dict, Set, List, Optional
 from datetime import datetime
 
 
@@ -30,19 +31,30 @@ class RehydrateExporter:
     """Token 还原导出器 v2.0"""
     
     def __init__(self, translated_csv: str, placeholder_map: str, final_csv: str, 
-                 overwrite_mode: bool = False):
+                 overwrite_mode: bool = False, punctuation_map_path: Optional[str] = None,
+                 target_lang: str = "ru-RU"):
         self.translated_csv = Path(translated_csv)
         self.placeholder_map_path = Path(placeholder_map)
         self.final_csv = Path(final_csv)
         self.overwrite_mode = overwrite_mode
+        self.target_lang = target_lang
+        
+        # 默认标点符号映射路径
+        if punctuation_map_path:
+            self.punctuation_map_path = Path(punctuation_map_path)
+        else:
+            # 默认在 workflow 目录下查找
+            self.punctuation_map_path = Path(translated_csv).parent.parent / "workflow" / "punctuation_map.yaml"
         
         self.placeholder_map: Dict[str, str] = {}
+        self.punctuation_mappings: List[Dict[str, str]] = []
         self.map_version = "unknown"
         self.token_pattern = re.compile(r'⟦(PH_\d+|TAG_\d+)⟧')
         
         self.errors: List[str] = []
         self.total_rows = 0
         self.tokens_restored = 0
+        self.punctuation_converted = 0
     
     def load_placeholder_map(self) -> bool:
         """加载占位符映射（支持 v1.0 和 v2.0 格式）"""
@@ -75,6 +87,47 @@ class RehydrateExporter:
         except Exception as e:
             print(f"❌ Error loading placeholder map: {str(e)}")
             return False
+    
+    def load_punctuation_map(self) -> bool:
+        """加载标点符号映射（可选）"""
+        if not self.punctuation_map_path.exists():
+            print(f"ℹ️  No punctuation map found at {self.punctuation_map_path}")
+            print(f"   Punctuation normalization will be skipped.")
+            return True  # 不是错误，只是跳过
+        
+        try:
+            with open(self.punctuation_map_path, 'r', encoding='utf-8') as f:
+                data = yaml.safe_load(f)
+            
+            # 获取目标语言的映射
+            mappings_by_lang = data.get('mappings', {})
+            if self.target_lang in mappings_by_lang:
+                self.punctuation_mappings = mappings_by_lang[self.target_lang]
+                print(f"✅ Loaded {len(self.punctuation_mappings)} punctuation mappings for {self.target_lang}")
+            else:
+                print(f"ℹ️  No punctuation mappings for {self.target_lang}")
+            
+            return True
+            
+        except Exception as e:
+            print(f"⚠️  Warning: Could not load punctuation map: {str(e)}")
+            return True  # 非致命错误
+    
+    def normalize_punctuation(self, text: str) -> str:
+        """将源语言标点符号转换为目标语言等价符号"""
+        if not text or not self.punctuation_mappings:
+            return text
+        
+        result = text
+        for mapping in self.punctuation_mappings:
+            source = mapping.get('source', '')
+            target = mapping.get('target', '')
+            if source and source in result:
+                count = result.count(source)
+                result = result.replace(source, target)
+                self.punctuation_converted += count
+        
+        return result
     
     def extract_tokens(self, text: str) -> Set[str]:
         """提取文本中的所有 token"""
@@ -168,6 +221,9 @@ class RehydrateExporter:
                         # 发现错误，直接退出
                         return False
                     
+                    # 标点符号转换
+                    rehydrated = self.normalize_punctuation(rehydrated)
+                    
                     # 构建输出行
                     output_row = dict(row)
                     
@@ -225,6 +281,7 @@ class RehydrateExporter:
         print(f"   Placeholder map version: {self.map_version}")
         print(f"   Total rows processed: {self.total_rows}")
         print(f"   Total tokens restored: {self.tokens_restored}")
+        print(f"   Punctuation converted: {self.punctuation_converted}")
         print(f"   Output mode: {'overwrite' if self.overwrite_mode else 'add column'}")
         print(f"   Output file: {self.final_csv}")
         print()
@@ -241,6 +298,9 @@ class RehydrateExporter:
         # 加载占位符映射
         if not self.load_placeholder_map():
             return False
+        
+        # 加载标点符号映射（可选）
+        self.load_punctuation_map()
         
         print()
         
