@@ -2,11 +2,17 @@
 # -*- coding: utf-8 -*-
 
 """
-runtime_adapter.py
+runtime_adapter.py (v1.1)
+
 A thin, production-oriented LLM adapter:
 - OpenAI-compatible chat completions by default
 - Standardized errors and retry hints
-- Optional trace logging (jsonl)
+- Trace logging with request_id, step, usage tokens
+
+Key features in v1.1:
+- Trace includes: request_id, step, usage tokens (if present), usage_present flag
+- chat() supports metadata={"step": "...", ...} for downstream cost attribution
+- Keeps req_chars/resp_chars for fallback token estimation
 
 Env:
   LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
@@ -31,7 +37,8 @@ class LLMResult:
     text: str
     latency_ms: int
     raw: Optional[dict] = None
-    usage: Optional[dict] = None  # {prompt_tokens, completion_tokens, total_tokens}
+    request_id: Optional[str] = None
+    usage: Optional[dict] = None  # {"prompt_tokens": int, "completion_tokens": int, "total_tokens": int}
 
 
 class LLMError(Exception):
@@ -66,6 +73,42 @@ def _trace(event: Dict[str, Any]) -> None:
         pass  # Tracing should never break the main flow
 
 
+def _safe_int(x, default: int = 0) -> int:
+    """Safely convert to int."""
+    try:
+        return int(x)
+    except Exception:
+        return default
+
+
+def _extract_usage(data: dict) -> Optional[dict]:
+    """
+    Extract OpenAI-style usage info:
+      data["usage"] = {"prompt_tokens":..., "completion_tokens":..., "total_tokens":...}
+    Some gateways omit this field.
+    """
+    u = data.get("usage")
+    if not isinstance(u, dict):
+        return None
+    
+    pt = u.get("prompt_tokens")
+    ct = u.get("completion_tokens")
+    tt = u.get("total_tokens")
+    
+    if pt is None and ct is None and tt is None:
+        return None
+    
+    pt_i = _safe_int(pt, 0)
+    ct_i = _safe_int(ct, 0)
+    tt_i = _safe_int(tt, pt_i + ct_i)
+    
+    return {
+        "prompt_tokens": pt_i,
+        "completion_tokens": ct_i,
+        "total_tokens": tt_i
+    }
+
+
 class LLMClient:
     """
     OpenAI-compatible LLM client.
@@ -75,7 +118,11 @@ class LLMClient:
         
         llm = LLMClient()
         try:
-            result = llm.chat(system="You are helpful.", user="Hello!")
+            result = llm.chat(
+                system="You are helpful.",
+                user="Hello!",
+                metadata={"step": "translate", "batch_id": "0"}
+            )
             print(result.text)
         except LLMError as e:
             if e.retryable:
@@ -112,7 +159,7 @@ class LLMClient:
              user: str, 
              temperature: float = 0.2,
              max_tokens: Optional[int] = None,
-             step: Optional[str] = None) -> LLMResult:
+             metadata: Optional[Dict[str, Any]] = None) -> LLMResult:
         """
         Send a chat completion request.
         
@@ -121,10 +168,14 @@ class LLMClient:
             user: User message
             temperature: Sampling temperature (default 0.2 for consistency)
             max_tokens: Optional max tokens limit
-            step: Optional step name for metrics (e.g., 'translate', 'soft_qa', 'repair')
+            metadata: Optional metadata for tracing, recommended keys:
+                - step: "translate" | "soft_qa" | "repair" | "glossary_autopromote"
+                - batch_id: batch identifier
+                - string_id: specific string being processed
+                - scope: glossary scope
             
         Returns:
-            LLMResult with text, latency_ms, raw response, and usage
+            LLMResult with text, latency_ms, request_id, raw response, and usage
             
         Raises:
             LLMError with kind and retryable flag
@@ -145,14 +196,31 @@ class LLMClient:
         if max_tokens:
             payload["max_tokens"] = max_tokens
 
+        # Extract step from metadata
+        step = None
+        if isinstance(metadata, dict):
+            step = metadata.get("step")
+
         t0 = time.time()
         try:
             resp = requests.post(url, headers=headers, json=payload, timeout=self.timeout_s)
         except requests.Timeout as e:
-            _trace({"type": "llm_error", "kind": "timeout", "msg": str(e), "model": self.model})
+            _trace({
+                "type": "llm_error",
+                "kind": "timeout",
+                "msg": str(e),
+                "step": step,
+                "model": self.model
+            })
             raise LLMError("timeout", f"Request timeout after {self.timeout_s}s: {e}", retryable=True)
         except requests.RequestException as e:
-            _trace({"type": "llm_error", "kind": "network", "msg": str(e), "model": self.model})
+            _trace({
+                "type": "llm_error",
+                "kind": "network",
+                "msg": str(e),
+                "step": step,
+                "model": self.model
+            })
             raise LLMError("network", f"Network error: {e}", retryable=True)
 
         latency_ms = int((time.time() - t0) * 1000)
@@ -164,6 +232,7 @@ class LLMClient:
                 "kind": "upstream", 
                 "status": resp.status_code, 
                 "body": resp.text[:500],
+                "step": step,
                 "model": self.model
             })
             raise LLMError(
@@ -178,6 +247,7 @@ class LLMClient:
                 "kind": "http", 
                 "status": resp.status_code, 
                 "body": resp.text[:500],
+                "step": step,
                 "model": self.model
             })
             raise LLMError(
@@ -196,25 +266,48 @@ class LLMClient:
                 "kind": "parse", 
                 "msg": str(e), 
                 "body": resp.text[:800],
+                "step": step,
                 "model": self.model
             })
             raise LLMError("parse", f"Response parse error: {e}", retryable=True)
 
-        # Extract usage info if present
-        usage = data.get("usage") or {}
-        
-        # Log successful call with usage and step
-        _trace({
+        # Extract request_id and usage
+        request_id = data.get("id") if isinstance(data, dict) else None
+        usage = _extract_usage(data) if isinstance(data, dict) else None
+        usage_present = bool(usage)
+
+        # Character counts for fallback estimation
+        req_chars = len(system) + len(user)
+        resp_chars = len(text or "")
+
+        # Build trace event
+        trace_event = {
             "type": "llm_call",
             "model": self.model,
             "step": step or "unknown",
+            "request_id": request_id,
             "latency_ms": latency_ms,
-            "req_chars": len(system) + len(user),
-            "resp_chars": len(text),
-            "usage": usage if usage else None,
-        })
+            "req_chars": req_chars,
+            "resp_chars": resp_chars,
+            "usage_present": usage_present,
+            "usage": usage,  # None if missing
+        }
         
-        return LLMResult(text=text, latency_ms=latency_ms, raw=data, usage=usage if usage else None)
+        # Add extra metadata (excluding step which is already at top level)
+        if isinstance(metadata, dict):
+            extra_meta = {k: v for k, v in metadata.items() if k != "step"}
+            if extra_meta:
+                trace_event["meta"] = extra_meta
+        
+        _trace(trace_event)
+        
+        return LLMResult(
+            text=text,
+            latency_ms=latency_ms,
+            raw=data,
+            request_id=request_id,
+            usage=usage
+        )
 
 
 # Convenience function for simple calls

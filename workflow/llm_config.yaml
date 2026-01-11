@@ -63,3 +63,30 @@ translation:
   temperature: 0.3        # 生成温度，越低越稳定
   max_retries: 3          # API 调用失败重试次数
   retry_delay: 2          # 重试间隔（秒）
+
+# ========================================
+# LLM 调用规则 (MANDATORY)
+# ========================================
+llm_call_rules:
+  # 所有 llm.chat() 调用必须传 metadata.step
+  # 否则 metrics 归类为 unknown 并在报告中报警
+  require_step_metadata: true
+  
+  # 有效的 step 值
+  valid_steps:
+    - translate           # translate_llm.py
+    - soft_qa            # soft_qa_llm.py  
+    - repair             # repair_loop.py
+    - glossary_autopromote  # glossary_autopromote.py
+  
+  # metadata 推荐字段
+  recommended_metadata_fields:
+    - step               # (必填) 工作流步骤
+    - batch_id           # (可选) 批次标识
+    - string_id          # (可选) 正在处理的 string_id
+    - scope              # (可选) glossary scope
+  
+  # unknown step 比例阈值
+  # 超过此比例时，metrics_report.md 会显示警告
+  unknown_step_warning_threshold: 0.01  # 1%
+

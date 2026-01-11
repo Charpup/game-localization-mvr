@@ -210,7 +210,7 @@ def main():
             system = build_system(style)
             user = build_user(batch, glossary_text, rubric)
             
-            result = llm.chat(system=system, user=user, temperature=0.1, step="soft_qa")
+            result = llm.chat(system=system, user=user, temperature=0.1, metadata={"step": "soft_qa"})
             obj = extract_json(result.text)
             
             if not obj or "items" not in obj:

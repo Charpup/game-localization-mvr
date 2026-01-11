@@ -463,7 +463,7 @@ def main():
                 system=sys_prompt,
                 user=user_prompt,
                 temperature=0.1,
-                step="glossary_autopromote"
+                metadata={"step": "glossary_autopromote", "scope": args.scope, "string_id": sid}
             )
             raw = result.text
             processed += 1

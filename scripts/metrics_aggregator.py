@@ -402,11 +402,16 @@ def main():
     
     by_model_step: Dict[str, dict] = {}
     missing_pricing_models = set()
+    unknown_step_count = 0  # Track calls without proper step metadata
     
     for e in llm_calls:
         model = (e.get("model") or "unknown").strip()
         step = (e.get("step") or "unknown").strip()
         latency_ms = int(e.get("latency_ms") or 0)
+        
+        # Track unknown steps
+        if step == "unknown":
+            unknown_step_count += 1
         
         # Get usage from trace
         usage = e.get("usage") or {}
@@ -518,6 +523,9 @@ def main():
     
     avg_latency = totals["latency_ms_sum"] / totals["calls"] if totals["calls"] else 0
     
+    # Calculate unknown step ratio
+    unknown_step_ratio = unknown_step_count / totals["calls"] if totals["calls"] > 0 else 0
+    
     # Build summary
     summary = {
         "generated_at": datetime.now().isoformat(),
@@ -540,6 +548,8 @@ def main():
             "usage_present_calls": totals["usage_present_calls"],
             "usage_presence_rate": usage_rate,
             "estimated_calls": totals["estimated_calls"],
+            "unknown_step_calls": unknown_step_count,
+            "unknown_step_ratio": round(unknown_step_ratio, 4),
             "avg_latency_ms": round(avg_latency, 1),
         },
         "tokens": {
@@ -606,6 +616,14 @@ def main():
             f"{b['total_tokens']:,} | ${b['cost']:.6f} |\n"
         )
     md.append("\n")
+    
+    # Unknown step warning
+    if unknown_step_ratio > 0.01:  # More than 1%
+        md.append("## ⚠️ Unknown Step Warning\n\n")
+        md.append(f"> **{unknown_step_count}** LLM calls ({unknown_step_ratio:.1%}) have `step=unknown`.\n")
+        md.append("> All `llm.chat()` calls should include `metadata={{\"step\": \"...\"}}`\n")
+        md.append(">\n")
+        md.append("> Valid steps: `translate`, `soft_qa`, `repair`, `glossary_autopromote`\n\n")
     
     write_text(args.out_md, "".join(md))
     print(f"✅ Wrote report to {args.out_md}")
