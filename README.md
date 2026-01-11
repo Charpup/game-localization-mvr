@@ -33,25 +33,53 @@ python scripts/rehydrate_export.py data/translated.csv data/placeholder_map.json
 
 ```
 loc-mvr/
+├── config/                        # Configuration files
+│   └── pricing.yaml               # LLM pricing (multiplier + per-1M modes)
 ├── data/                          # Localization data files
 │   ├── input.csv                  # Source strings
 │   ├── draft.csv                  # Tokenized strings
+│   ├── translated.csv             # LLM translations
+│   ├── repaired.csv               # QA-fixed translations
 │   ├── final.csv                  # Final output
-│   └── placeholder_map.json       # Token mappings
+│   ├── placeholder_map.json       # Token mappings
+│   ├── llm_trace.jsonl            # LLM call traces
+│   ├── metrics_summary.json       # Cost/usage metrics
+│   └── metrics_report.md          # Human-readable report
+├── glossary/                      # Hierarchical glossary
+│   ├── global.yaml                # Universal terms
+│   └── zhCN_ruRU/                 # Language-pair specific
+│       └── base.yaml              # Core game terms
 ├── workflow/                      # Configuration
 │   ├── placeholder_schema.yaml    # Placeholder patterns (16 types)
 │   ├── forbidden_patterns.txt     # QA forbidden patterns (28 rules)
+│   ├── llm_config.yaml            # LLM settings & rules
+│   ├── soft_qa_rubric.yaml        # Soft QA scoring rubric
+│   ├── punctuation_map.yaml       # Punctuation conversion
 │   └── style_guide.md             # Localization guidelines
 ├── scripts/                       # Core scripts
+│   ├── runtime_adapter.py         # LLM client with tracing (v1.1)
 │   ├── normalize_guard.py         # Freeze placeholders → tokens
-│   ├── qa_hard.py                 # Validate translations
+│   ├── translate_llm.py           # LLM translation with glossary
+│   ├── soft_qa_llm.py             # Soft QA scoring
+│   ├── qa_hard.py                 # Hard validation (blocker)
+│   ├── repair_loop.py             # Automated repair
 │   ├── rehydrate_export.py        # Restore tokens → placeholders
+│   ├── metrics_aggregator.py      # Cost & usage analytics
+│   ├── glossary_autopromote.py    # Term extraction flywheel
+│   ├── glossary_apply_patch.py    # Apply reviewed patches
 │   └── test_*.py                  # Test scripts
-└── docs/                          # Documentation
-    ├── normalize_guard_usage.md
-    ├── qa_hard_usage.md
-    ├── rehydrate_export_usage.md
-    └── demo.md
+├── docs/                          # Documentation
+│   ├── WORKSPACE_RULES.md         # Mandatory workflow rules
+│   ├── normalize_guard_usage.md
+│   ├── qa_hard_usage.md
+│   ├── rehydrate_export_usage.md
+│   └── demo.md
+└── .agent/workflows/              # Agentic workflows
+    ├── loc-translate.md           # /loc_translate
+    ├── loc-soft-qa.md             # /loc_soft_qa
+    ├── loc-repair-loop.md         # /loc_repair_loop
+    ├── loc-metrics.md             # /loc_metrics
+    └── loc-glossary-autopromote.md # /loc_glossary_autopromote
 ```
 
 ## 🔄 Workflow
