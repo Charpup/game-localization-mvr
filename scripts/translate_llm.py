@@ -68,25 +68,53 @@ def load_style_guide(path: str) -> str:
     with open(path, "r", encoding="utf-8") as f:
         return f.read().strip()
 
-def load_glossary(path: str) -> List[GlossaryEntry]:
+def load_glossary_lock(compiled_path: str) -> Dict[str, Any]:
+    """Load compiled.lock.json if exists."""
+    lock_path = Path(compiled_path).with_suffix('.lock.json')
+    if lock_path.exists():
+        with open(lock_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+def load_glossary(path: str) -> Tuple[List[GlossaryEntry], Optional[str]]:
+    """
+    Load glossary from YAML.
+    
+    Supports multiple formats:
+    - compiled.yaml: {"entries": [{term_zh, term_ru, scope}]}
+    - approved.yaml: {"entries": [{term_zh, term_ru, status, ...}]}
+    - Legacy: {"candidates": [...]}
+    
+    Returns: (entries, glossary_hash)
+    """
     if not path or not Path(path).exists():
-        return []
+        return [], None
     if yaml is None:
         raise RuntimeError("PyYAML is required. Install with: pip install pyyaml")
+    
     with open(path, "r", encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
 
     entries: List[GlossaryEntry] = []
-    # Support two shapes:
-    # 1) {"entries": [{term_zh, term_ru, status, notes}, ...]}
-    # 2) {"candidates": [{term_zh, ru_suggestion, status, notes}, ...]}  (from earlier term extraction)
+    glossary_hash = None
+    
+    # Try to load lock file for version info
+    lock = load_glossary_lock(path)
+    if lock:
+        glossary_hash = lock.get("hash", "")
+    
+    # Support multiple shapes:
+    # 1) compiled.yaml format: {"entries": [{term_zh, term_ru, scope}]}
+    # 2) approved.yaml format: {"entries": [{term_zh, term_ru, status, notes}]}
+    # 3) Legacy candidates: {"candidates": [{term_zh, ru_suggestion, status, notes}]}
     if isinstance(data, dict) and "entries" in data and isinstance(data["entries"], list):
         src = data["entries"]
         for it in src:
             term_zh = (it.get("term_zh") or "").strip()
             term_ru = (it.get("term_ru") or "").strip()
-            status = (it.get("status") or "proposed").strip()
-            notes = (it.get("notes") or "").strip()
+            # compiled.yaml has scope but no status - treat as approved
+            status = (it.get("status") or "approved").strip()
+            notes = (it.get("notes") or it.get("note") or "").strip()
             if term_zh:
                 entries.append(GlossaryEntry(term_zh, term_ru, status, notes))
     elif isinstance(data, dict) and "candidates" in data and isinstance(data["candidates"], list):
@@ -99,9 +127,9 @@ def load_glossary(path: str) -> List[GlossaryEntry]:
                 entries.append(GlossaryEntry(term_zh, term_ru, status, notes))
     else:
         # If unknown shape, treat as empty to avoid crashing production runs.
-        return []
+        return [], None
 
-    return entries
+    return entries, glossary_hash
 
 def build_glossary_constraints(entries: List[GlossaryEntry], source_text: str) -> Tuple[Dict[str, str], List[str], Dict[str, List[str]]]:
     """
@@ -289,7 +317,21 @@ def main():
 
     # Load resources
     style_guide = load_style_guide(args.style_guide_md)
-    glossary = load_glossary(args.glossary_yaml) if args.glossary_yaml else []
+    
+    # Load glossary with version tracking
+    # Priority: glossary/compiled.yaml > data/glossary.yaml (fallback)
+    glossary_path = args.glossary_yaml
+    glossary_version = None
+    
+    # Check for compiled glossary first
+    compiled_path = Path("glossary/compiled.yaml")
+    if compiled_path.exists():
+        glossary_path = str(compiled_path)
+        print(f"[INFO] Using compiled glossary: {glossary_path}")
+    
+    glossary, glossary_version = load_glossary(glossary_path) if glossary_path else ([], None)
+    if glossary_version:
+        print(f"[INFO] Glossary version: {glossary_version}")
 
     # Dry-run mode: validate without LLM
     if getattr(args, 'dry_run', False):
@@ -300,6 +342,8 @@ def main():
         print()
         print(f"[OK] Style guide loaded: {args.style_guide_md} ({len(style_guide)} chars)")
         print(f"[OK] Glossary loaded: {len(glossary)} entries")
+        if glossary_version:
+            print(f"[OK] Glossary version: {glossary_version}")
         
         # Validate input file
         rows = read_csv_rows(args.input_draft_csv)
