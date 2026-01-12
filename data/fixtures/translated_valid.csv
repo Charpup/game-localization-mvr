@@ -1,0 +1,8 @@
+string_id,source_zh,tokenized_zh,target_text,context
+welcome_msg,欢迎 {0} 来到游戏！,欢迎 ⟦PH_1⟧ 来到游戏！,Добро пожаловать ⟦PH_1⟧ в игру!,Welcome message
+level_up,恭喜！你已达到等级 {level},恭喜！你已达到等级 ⟦PH_2⟧,Поздравляем! Вы достигли уровня ⟦PH_2⟧,Level up notification
+color_text,<color=#FF00FF>稀有物品</color>已获得！,⟦TAG_2⟧稀有物品⟦TAG_1⟧已获得！,⟦TAG_2⟧Редкий предмет⟦TAG_1⟧ получен!,Rare item popup
+multi_placeholder,{playerName} 在 {location} 拾取了 {itemName},⟦PH_3⟧ 在 ⟦PH_4⟧ 拾取了 ⟦PH_5⟧,⟦PH_3⟧ подобрал ⟦PH_5⟧ в ⟦PH_4⟧,Item pickup log
+printf_test,你有 %d 个金币,你有 ⟦PH_6⟧ 个金币,У вас ⟦PH_6⟧ монет,Currency display
+newline_test,第一行\n第二行,第一行⟦PH_7⟧第二行,Первая строка⟦PH_7⟧Вторая строка,Multi-line text
+escape_combo,{0} 获得了 %s 点经验\n请继续努力！,⟦PH_8⟧ 获得了 ⟦PH_9⟧ 点经验⟦PH_10⟧请继续努力！,⟦PH_8⟧ получил ⟦PH_9⟧ опыта⟦PH_10⟧Продолжайте!,Combined placeholders

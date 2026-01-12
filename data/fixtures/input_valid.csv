@@ -1,0 +1,8 @@
+string_id,source_zh,context
+welcome_msg,欢迎 {0} 来到游戏！,Welcome message
+level_up,恭喜！你已达到等级 {level},Level up notification
+color_text,<color=#FF00FF>稀有物品</color>已获得！,Rare item popup
+multi_placeholder,{playerName} 在 {location} 拾取了 {itemName},Item pickup log
+printf_test,你有 %d 个金币,Currency display
+newline_test,第一行\n第二行,Multi-line text
+escape_combo,{0} 获得了 %s 点经验\n请继续努力！,Combined placeholders

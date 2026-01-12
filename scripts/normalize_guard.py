@@ -26,6 +26,12 @@ from pathlib import Path
 from typing import List, Dict, Tuple, Set
 from datetime import datetime
 
+# Ensure UTF-8 output on Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 try:
     import yaml
 except ImportError:

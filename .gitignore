@@ -25,7 +25,8 @@ ENV/
 Thumbs.db
 desktop.ini
 
-# Generated/temporary files
+# Generated/temporary test files
+data/temp_*/
 data/*_output.csv
 data/*_e2e.csv
 data/qa_report*.json
@@ -37,7 +38,7 @@ data/final_bad_output.csv
 data/final_e2e.csv
 data/draft_e2e.csv
 
-# Keep example files
+# Keep example/production files
 !data/input.csv
 !data/draft.csv
 !data/final.csv
@@ -45,9 +46,20 @@ data/draft_e2e.csv
 !data/qa_hard_report.json
 !data/translated_good.csv
 !data/translated_bad.csv
+!data/translated.csv
+!data/repaired.csv
+
+# Keep test fixtures (IMPORTANT for deployment)
+!data/fixtures/
+!data/fixtures/*.csv
+!data/fixtures/*.json
+!data/fixtures/*.md
 
 # Logs
 *.log
+data/llm_trace.jsonl
+data/metrics_*.json
+data/metrics_*.md
 
 # Test coverage
 .coverage
@@ -56,3 +68,4 @@ htmlcov/
 # Temporary
 *.tmp
 *.bak
+

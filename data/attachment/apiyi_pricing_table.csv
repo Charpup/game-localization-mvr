@@ -1,0 +1,409 @@
+Model Name,Billing type,Price,Magnification,Grouping
+gpt-4o,Pay-per-use - Chat,Suggested price: $ 2.5000 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 1.25 Completion ratio: 4.0000,DefaultSVIP
+gpt-5.2-xhigh,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+longcat-flash-thinking,Pay-per-use - Chat,Suggested price: $ 0.1400 / 1M tokens Completion price: $ 1.4000 / 1M tokens,Prompt multiplier: 0.07 Completion ratio: 10.0000,DefaultSVIPChinaOpenSource
+qwen-turbo-2025-07-15,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 1.6000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 8.0000,DefaultSVIP
+qwen3-235b-a22b,Pay-per-use - Chat,Suggested price: $ 1.0000 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.5 Completion ratio: 10.0000,DefaultSVIPChinaOpenSource
+qwen3-vl-plus,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gpt-5-codex-mini,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 1.0000,DefaultSVIP
+gpt-5.2-codex-medium,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+minimax-m2,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 1.2000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+qwen-plus-latest,Pay-per-use - Chat,Suggested price: $ 0.4000 / 1M tokens Completion price: $ 1.2000 / 1M tokens,Prompt multiplier: 0.2 Completion ratio: 3.0000,DefaultSVIP
+text-moderation-latest,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.2000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 1.0000,DefaultSVIP
+gemini-2.5-pro-exp,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.1-codex-mini-high,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 1.0000,DefaultSVIP
+gemini-2.5-flash-preview-09-2025-thinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+claude-sonnet-4-5-20250929,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+deepseek-ocr,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 0.6000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 2.0000,DefaultSVIPChinaOpenSource
+gpt-5-pro,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 120.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 8.0000,DefaultSVIP
+o1-mini-2024-09-12,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+whisper-1,Pay-per-use - Chat,Suggested price: $ 60.0000 / 1M tokens Completion price: $ 0.0000 / 1M tokens,Prompt multiplier: 30 Completion ratio: 0.0000,DefaultSVIP
+babbage-002,Pay-per-use - Chat,Suggested price: $ 0.4000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.2 Completion ratio: 1.0000,DefaultSVIP
+gemini-2.5-pro-preview-05-06,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.1-thinking-all,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 5.0000,DefaultSVIP
+grok-4-deepsearch,Pay-per-use - Chat,Suggested price: $ 4.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 2 Completion ratio: 5.0000,DefaultSVIP
+qwen-vl-plus,Pay-per-use - Chat,Suggested price: $ 2.8572 / 1M tokens Completion price: $ 2.8572 / 1M tokens,Prompt multiplier: 1.4286 Completion ratio: 1.0000,DefaultSVIP
+llama-3-1-405b-instruct,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 1.0000,DefaultSVIP
+o1-pro-2025-03-19,Pay-per-use - Chat,Suggested price: $ 180.0000 / 1M tokens Completion price: $ 720.0000 / 1M tokens,Prompt multiplier: 90 Completion ratio: 4.0000,DefaultSVIP
+qwen2-vl-7b-instruct,Pay-per-use - Chat,Suggested price: $ 2.8572 / 1M tokens Completion price: $ 2.8572 / 1M tokens,Prompt multiplier: 1.4286 Completion ratio: 1.0000,DefaultSVIPChinaOpenSource
+qwq-plus-2025-03-05,Pay-per-use - Chat,Suggested price: $ 0.8000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.4 Completion ratio: 3.0000,DefaultSVIP
+gpt-5-2025-08-07,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.1-codex-mini-medium,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 1.0000,DefaultSVIP
+claude-sonnet-4-5-20250929-thinking,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+deepseek-v3-1-250821,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 1.5000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 3.0000,DefaultSVIP
+gemini-2.5-flash-preview-09-2025-nothinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gpt-4-turbo,Pay-per-use - Chat,Suggested price: $ 10.0000 / 1M tokens Completion price: $ 30.0000 / 1M tokens,Prompt multiplier: 5 Completion ratio: 3.0000,DefaultSVIP
+grok-4-1-fast-non-reasoning,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+claude-3-7-sonnet-20250219-thinking,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+glm-4.5-air,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 1.0000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 5.0000,DefaultSVIP
+gpt-3.5-turbo-0125,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 1.5000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 3.0000,DefaultSVIP
+qvq-max-2025-05-15,Pay-per-use - Chat,Suggested price: $ 1.0000 / 1M tokens Completion price: $ 4.0000 / 1M tokens,Prompt multiplier: 0.5 Completion ratio: 4.0000,DefaultSVIP
+qwen3-coder-flash,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 5.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 10.0000,DefaultSVIP
+claude-opus-4-1-20250805-thinking,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 75.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 5.0000,DefaultSVIP
+glm-4.6,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+grok-4-fast-non-reasoning-latest,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+o3-mini-2025-01-31-medium,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+qwen-plus-2025-09-11,Pay-per-use - Chat,Suggested price: $ 0.4000 / 1M tokens Completion price: $ 4.0000 / 1M tokens,Prompt multiplier: 0.2 Completion ratio: 10.0000,DefaultSVIP
+qwen-vl-plus-latest,Pay-per-use - Chat,Suggested price: $ 2.8572 / 1M tokens Completion price: $ 2.8572 / 1M tokens,Prompt multiplier: 1.4286 Completion ratio: 1.0000,DefaultSVIP
+claude-3-5-sonnet-20240620,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+deepseek-v3.1,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 1.5000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 3.0000,DefaultSVIPChinaOpenSource
+doubao-seed-1-6-flash-250828,Pay-per-use - Chat,Suggested price: $ 0.0300 / 1M tokens Completion price: $ 0.3000 / 1M tokens,Prompt multiplier: 0.015 Completion ratio: 10.0000,DefaultSVIP
+gemini-embedding-001,Pay-per-use - Chat,Suggested price: $ 0.1500 / 1M tokens Completion price: $ 0.4500 / 1M tokens,Prompt multiplier: 0.075 Completion ratio: 3.0000,DefaultSVIP
+gpt-5.2-minimal,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 5.0000,DefaultSVIP
+gpt-oss-120b,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 4.0000,DefaultSVIP
+grok-3-mini-latest,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 1.8000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 6.0000,DefaultSVIP
+grok-4-fast-reasoning-latest,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+deepseek-v3-fast,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 0.9000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 3.0000,DefaultSVIPChinaOpenSource
+gemini-2.5-flash-preview-04-17-nothinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gemini-2.5-pro-exp-03-25,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gemini-2.5-pro-preview-05-06-thinking,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-3.5-turbo,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 1.5000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 3.0000,DefaultSVIP
+gpt-4o-2024-05-13,Pay-per-use - Chat,Suggested price: $ 5.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 2.5 Completion ratio: 3.0000,DefaultSVIP
+gpt-5.1-codex-high,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-image-1,Pay-per-use - Chat,Suggested price: $ 5.0000 / 1M tokens Completion price: $ 40.0000 / 1M tokens,Prompt multiplier: 2.5 Completion ratio: 8.0000,DefaultSVIP
+deepseek-v3.1-fast,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 6.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 3.0000,DefaultSVIPChinaOpenSource
+gemini-2.0-flash-001,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+gpt-4.1-2025-04-14,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 8.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 4.0000,DefaultSVIP
+grok-4-fast-reasoning,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+grok-4-latest,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+grok-code-fast-1-0825,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.3000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 1.5000,DefaultSVIP
+o1-mini,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+deepseek-v3-250324,Pay-per-use - Chat,Suggested price: $ 0.2500 / 1M tokens Completion price: $ 1.0000 / 1M tokens,Prompt multiplier: 0.125 Completion ratio: 4.0000,DefaultSVIP
+gemini-3-flash-preview,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 3.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 6.0000,DefaultSVIP
+gpt-5.1-medium,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 5.0000,DefaultSVIP
+gpt-oss-20b,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+o1-2024-12-17,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 60.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 4.0000,DefaultSVIP
+o3-mini,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+omni-moderation-2024-09-26,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.2000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 1.0000,DefaultSVIP
+qwen-turbo-latest,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.6000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 3.0000,DefaultSVIP
+claude-3-5-haiku-20241022,Pay-per-use - Chat,Suggested price: $ 0.8000 / 1M tokens Completion price: $ 4.0000 / 1M tokens,Prompt multiplier: 0.4 Completion ratio: 5.0000,DefaultSVIP
+gemini-2.5-pro-deepsearch,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.1-codex-max-high,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+grok-4-1-fast,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+grok-4-fast,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+moonshot-v1-32k,Pay-per-use - Chat,Suggested price: $ 4.0000 / 1M tokens Completion price: $ 4.0000 / 1M tokens,Prompt multiplier: 2 Completion ratio: 1.0000,DefaultSVIP
+o3-mini-2025-01-31,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+gemini-2.5-pro-preview-06-05,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+qwen2.5-32b-instruct,Pay-per-use - Chat,Suggested price: $ 2.8572 / 1M tokens Completion price: $ 2.8572 / 1M tokens,Prompt multiplier: 1.4286 Completion ratio: 1.0000,DefaultSVIPChinaOpenSource
+claude-3-haiku-20240307,Pay-per-use - Chat,Suggested price: $ 1.0000 / 1M tokens Completion price: $ 5.0000 / 1M tokens,Prompt multiplier: 0.5 Completion ratio: 5.0000,DefaultSVIP
+gpt-4o-mini,Pay-per-use - Chat,Suggested price: $ 0.1500 / 1M tokens Completion price: $ 0.6000 / 1M tokens,Prompt multiplier: 0.075 Completion ratio: 4.0000,DefaultSVIP
+gpt-5-codex-medium,Pay-per-use - Chat,Suggested price: $ 0.6000 / 1M tokens Completion price: $ 4.8000 / 1M tokens,Prompt multiplier: 0.3 Completion ratio: 8.0000,DefaultSVIP
+qwen-turbo,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.6000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 3.0000,DefaultSVIP
+qwen2-vl-72b-instruct,Pay-per-use - Chat,Suggested price: $ 2.3000 / 1M tokens Completion price: $ 6.9000 / 1M tokens,Prompt multiplier: 1.15 Completion ratio: 3.0000,DefaultSVIPChinaOpenSource
+qwen3-vl-flash-2025-10-15,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.8000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 8.0000,DefaultSVIP
+deepseek-r1,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+gemini-2.5-flash-preview-04-17,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+kimi-k2-thinking,Pay-per-use - Chat,Suggested price: $ 0.6000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.3 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+moonshot-v1-8k,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 1.0000,DefaultSVIP
+o3-mini-medium,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+cld-3-5-sonnet-20240620,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+doubao-seed-1-6-251015,Pay-per-use - Chat,Suggested price: $ 0.1140 / 1M tokens Completion price: $ 0.2850 / 1M tokens,Prompt multiplier: 0.057 Completion ratio: 2.5000,DefaultSVIP
+gemini-2.5-pro-thinking,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5-high,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5-medium,Pay-per-use - Chat,Suggested price: $ 0.6000 / 1M tokens Completion price: $ 4.8000 / 1M tokens,Prompt multiplier: 0.3 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.1-codex,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 5.0000,DefaultSVIP
+gpt-5.2-codex-xhigh,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+kimi-k2-0711-preview,Pay-per-use - Chat,Suggested price: $ 0.8000 / 1M tokens Completion price: $ 3.2000 / 1M tokens,Prompt multiplier: 0.4 Completion ratio: 4.0000,DefaultSVIP
+deepseek-v3-20250324,Pay-per-use - Chat,Suggested price: $ 0.2500 / 1M tokens Completion price: $ 1.0000 / 1M tokens,Prompt multiplier: 0.125 Completion ratio: 4.0000,DefaultSVIP
+gpt-5,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5-nano-2025-08-07,Pay-per-use - Chat,Suggested price: $ 0.0500 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.025 Completion ratio: 8.0000,DefaultSVIP
+o1-preview-2024-09-12,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 60.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 4.0000,DefaultSVIP
+o3-mini-2025-01-31-high,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+qwen-plus-2025-07-14,Pay-per-use - Chat,Suggested price: $ 0.4000 / 1M tokens Completion price: $ 4.0000 / 1M tokens,Prompt multiplier: 0.2 Completion ratio: 10.0000,DefaultSVIP
+cld-3-7-sonnet-20250219-thinking,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+deepseek-v3.2,Pay-per-use - Chat,Suggested price: $ 0.2800 / 1M tokens Completion price: $ 0.4200 / 1M tokens,Prompt multiplier: 0.14 Completion ratio: 1.5000,DefaultSVIPChinaOpenSource
+gpt-5.1-all,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 5.0000,DefaultSVIP
+qwen3-235b-a22b-thinking-2507,Pay-per-use - Chat,Suggested price: $ 1.6000 / 1M tokens Completion price: $ 12.8000 / 1M tokens,Prompt multiplier: 0.8 Completion ratio: 8.0000,DefaultSVIPChinaOpenSource
+qwen3-vl-32b-thinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 3.0000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 10.0000,DefaultSVIP
+chatgpt-4o-latest,Pay-per-use - Chat,Suggested price: $ 5.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 2.5 Completion ratio: 3.0000,DefaultSVIP
+cld-opus-4-20250514,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 75.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 5.0000,DefaultSVIP
+deepseek-v3-0324,Pay-per-use - Chat,Suggested price: $ 0.2500 / 1M tokens Completion price: $ 1.0000 / 1M tokens,Prompt multiplier: 0.125 Completion ratio: 4.0000,DefaultSVIP
+doubao-seed-1-6-vision-250815,Pay-per-use - Chat,Suggested price: $ 0.1600 / 1M tokens Completion price: $ 1.6000 / 1M tokens,Prompt multiplier: 0.08 Completion ratio: 10.0000,DefaultSVIP
+gemini-2.5-computer-use-preview-10-2025,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+glm-4.5,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 4.0000,DefaultSVIP
+gpt-5-pro-2025-10-06,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 120.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 8.0000,DefaultSVIP
+gpt-3.5-turbo-0301,Pay-per-use - Chat,Suggested price: $ 1.5000 / 1M tokens Completion price: $ 1.9500 / 1M tokens,Prompt multiplier: 0.75 Completion ratio: 1.3000,DefaultSVIP
+grok-4-1-fast-reasoning,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+qwen3-next-80b-a3b-thinking,Pay-per-use - Chat,Suggested price: $ 0.1400 / 1M tokens Completion price: $ 1.4000 / 1M tokens,Prompt multiplier: 0.07 Completion ratio: 10.0000,DefaultSVIPChinaOpenSource
+cld-3-5-sonnet-20241022,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+gemini-2.5-pro-nothinking,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+qwen3-30b-a3b-instruct-2507,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.8000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+gemini-2.5-flash,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+glm-4.5v,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 1.5000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 3.0000,DefaultSVIP
+o3-mini-2025-01-31-low,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+qwen3-vl-235b-a22b-instruct,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 3.0000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 10.0000,DefaultSVIPChinaOpenSource
+qwen3-vl-plus-2025-09-23,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+tts-1,Pay-per-use - Chat,Suggested price: $ 30.0000 / 1M tokens Completion price: $ 30.0000 / 1M tokens,Prompt multiplier: 15 Completion ratio: 1.0000,DefaultSVIP
+gemini-2.5-flash-lite-thinking,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+gpt-5.1-codex-max,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+qwen-max,Pay-per-use - Chat,Suggested price: $ 1.6000 / 1M tokens Completion price: $ 6.4000 / 1M tokens,Prompt multiplier: 0.8 Completion ratio: 4.0000,DefaultSVIP
+qwq-32b,Pay-per-use - Chat,Suggested price: $ 0.4000 / 1M tokens Completion price: $ 1.2000 / 1M tokens,Prompt multiplier: 0.2 Completion ratio: 3.0000,DefaultSVIPChinaOpenSource
+text-embedding-ada-002,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.1000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 1.0000,DefaultSVIP
+claude-3-7-sonnet-20250219,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+gemini-2.5-flash-lite-preview-09-2025,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+qwen3-max-2025-09-23,Pay-per-use - Chat,Suggested price: $ 0.4500 / 1M tokens Completion price: $ 1.8000 / 1M tokens,Prompt multiplier: 0.225 Completion ratio: 4.0000,DefaultSVIP
+gemini-2.5-flash-preview,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gemini-2.5-flash-preview-05-20-thinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gpt-5-chat-latest,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.2-chat-latest,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.2-codex-low,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.2-low,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+o4-mini,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+qwen3-14b,Pay-per-use - Chat,Suggested price: $ 0.1400 / 1M tokens Completion price: $ 1.4000 / 1M tokens,Prompt multiplier: 0.07 Completion ratio: 10.0000,DefaultSVIPChinaOpenSource
+deepseek-r1-0528,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+gemma-3-12b,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+gpt-5.1-codex-mini,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 3.7500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 3.0000,DefaultSVIP
+grok-2-image-1212,Pay-per-use - Chat,Suggested price: $ 60.0000 / 1M tokens ⚠️ Completion price: $ 60.0000 / 1M tokens ⚠️,Prompt multiplier: 30 ⚠️ Completion ratio: 1.0000 ⚠️,DefaultSVIP
+qwen-vl-max,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.8000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 4.0000,DefaultSVIP
+qwq-plus-latest,Pay-per-use - Chat,Suggested price: $ 0.8000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.4 Completion ratio: 3.0000,DefaultSVIP
+tts-1-hd,Pay-per-use - Chat,Suggested price: $ 60.0000 / 1M tokens Completion price: $ 60.0000 / 1M tokens,Prompt multiplier: 30 Completion ratio: 1.0000,DefaultSVIP
+claude-3-5-haiku-latest,Pay-per-use - Chat,Suggested price: $ 0.8000 / 1M tokens Completion price: $ 4.0000 / 1M tokens,Prompt multiplier: 0.4 Completion ratio: 5.0000,DefaultSVIP
+gpt-5.1-minimal,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 5.0000,DefaultSVIP
+gpt-5.2-pro,Pay-per-use - Chat,Suggested price: $ 21.0000 / 1M tokens Completion price: $ 168.0000 / 1M tokens,Prompt multiplier: 10.5 Completion ratio: 8.0000,DefaultSVIP
+gpt-oss-120b-1,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 4.0000,DefaultSVIP
+llama-3-1-8b-instruct,Pay-per-use - Chat,Suggested price: $ 0.0300 / 1M tokens Completion price: $ 0.0600 / 1M tokens,Prompt multiplier: 0.015 Completion ratio: 2.0000,DefaultSVIP
+qwen-max-longcontext,Pay-per-use - Chat,Suggested price: $ 3.2000 / 1M tokens Completion price: $ 3.2000 / 1M tokens,Prompt multiplier: 1.6 Completion ratio: 1.0000,DefaultSVIP
+cld-opus-4-20250514-thinking,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 75.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 5.0000,DefaultSVIP
+grok-3-mini-fast,Pay-per-use - Chat,Suggested price: $ 0.6000 / 1M tokens Completion price: $ 3.6000 / 1M tokens,Prompt multiplier: 0.3 Completion ratio: 6.0000,DefaultSVIP
+gpt-5.1-codex-low,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 1.0000,DefaultSVIP
+gpt-5.2,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+llama-4-maverick,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 1.5000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 3.0000,DefaultSVIP
+o4-mini-2025-04-16,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+text-moderation-stable,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.2000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 1.0000,DefaultSVIP
+deepseek-v3.2-fast,Pay-per-use - Chat,Suggested price: $ 1.2000 / 1M tokens Completion price: $ 3.6000 / 1M tokens,Prompt multiplier: 0.6 Completion ratio: 3.0000,DefaultSVIPChinaOpenSource
+gpt-4.1-mini-2025-04-14,Pay-per-use - Chat,Suggested price: $ 0.4000 / 1M tokens Completion price: $ 1.6000 / 1M tokens,Prompt multiplier: 0.2 Completion ratio: 4.0000,DefaultSVIP
+gpt-5-low,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+moonshot-v1-128k,Pay-per-use - Chat,Suggested price: $ 10.0000 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 5 Completion ratio: 1.0000,DefaultSVIP
+qwen3-vl-30b-a3b-thinking,Pay-per-use - Chat,Suggested price: $ 0.1200 / 1M tokens Completion price: $ 1.2000 / 1M tokens,Prompt multiplier: 0.06 Completion ratio: 10.0000,DefaultSVIP
+gpt-5-codex-mini-high,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 1.0000,DefaultSVIP
+o3-mini-low,Pay-per-use - Chat,Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens,Prompt multiplier: 0.55 Completion ratio: 4.0000,DefaultSVIP
+qwq-plus,Pay-per-use - Chat,Suggested price: $ 0.8000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.4 Completion ratio: 3.0000,DefaultSVIP
+claude-opus-4-20250514,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 75.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 5.0000,DefaultSVIP
+gemini-2.5-flash-lite,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+grok-3-mini,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 1.8000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 6.0000,DefaultSVIP
+qwen3-max-preview,Pay-per-use - Chat,Suggested price: $ 0.4500 / 1M tokens Completion price: $ 1.8000 / 1M tokens,Prompt multiplier: 0.225 Completion ratio: 4.0000,DefaultSVIP
+qwen3-vl-flash,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.8000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 8.0000,DefaultSVIP
+claude-3-sonnet-20240229,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+gpt-5-codex-low,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.2-codex-high,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+gpt-image-1-mini,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 8.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 4.0000,DefaultSVIP
+grok-3-deepsearch,Pay-per-use - Chat,Suggested price: $ 4.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 2 Completion ratio: 5.0000,DefaultSVIP
+doubao-seed-1-6-flash-250615,Pay-per-use - Chat,Suggested price: $ 0.0300 / 1M tokens Completion price: $ 0.3000 / 1M tokens,Prompt multiplier: 0.015 Completion ratio: 10.0000,DefaultSVIP
+gemini-3-flash-preview-nothinking,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 3.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 6.0000,DefaultSVIP
+gemini-embedding-exp,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.3000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 3.0000,DefaultSVIP
+gpt-5.1,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+deepseek-r1-distill-qwen-32b,Pay-per-use - Chat,Suggested price: $ 1.5000 / 1M tokens Completion price: $ 6.0000 / 1M tokens,Prompt multiplier: 0.75 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+gemini-2.5-flash-preview-05-20,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gpt-3.5-turbo-16k,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 3.9000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 1.3000,DefaultSVIP
+gpt-5.1-2025-11-13,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+o3,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 12.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 4.0000,DefaultSVIP
+qwen3-235b-a22b-instruct-2507,Pay-per-use - Chat,Suggested price: $ 1.0000 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.5 Completion ratio: 10.0000,DefaultSVIPChinaOpenSource
+qwen3-coder-480b-a35b-instruct,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+qwen3-omni-flash-2025-09-15,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 10.0000,DefaultSVIP
+deepseek-v3,Pay-per-use - Chat,Suggested price: $ 0.2500 / 1M tokens Completion price: $ 1.0000 / 1M tokens,Prompt multiplier: 0.125 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+gpt-3.5-turbo-16k-0613,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 3.9000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 1.3000,DefaultSVIP
+gpt-4.1,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 8.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 4.0000,DefaultSVIP
+gpt-4.1-nano,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+gpt-5-mini,Pay-per-use - Chat,Suggested price: $ 0.2500 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.125 Completion ratio: 8.0000,DefaultSVIP
+dall-e-3,Pay-per-use - Chat,Suggested price: $ 40.0000 / 1M tokens Completion price: $ 40.0000 / 1M tokens,Prompt multiplier: 20 Completion ratio: 1.0000,DefaultSVIP
+gemini-embedding-exp-03-07,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.3000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 3.0000,DefaultSVIP
+gpt-4o-2024-11-20,Pay-per-use - Chat,Suggested price: $ 2.5000 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 1.25 Completion ratio: 4.0000,DefaultSVIP
+grok-2-image-latest,Pay-per-use - Chat,Suggested price: $ 60.0000 / 1M tokens ⚠️ Completion price: $ 60.0000 / 1M tokens ⚠️,Prompt multiplier: 30 ⚠️ Completion ratio: 1.0000 ⚠️,DefaultSVIP
+moonshot-v1-auto,Pay-per-use - Chat,Suggested price: $ 10.0000 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 5 Completion ratio: 1.0000,DefaultSVIP
+o1-preview,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 60.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 4.0000,DefaultSVIP
+o1-pro,Pay-per-use - Chat,Suggested price: $ 180.0000 / 1M tokens Completion price: $ 720.0000 / 1M tokens,Prompt multiplier: 90 Completion ratio: 4.0000,DefaultSVIP
+gpt-5.2-2025-12-11,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+doubao-seed-1-6-lite-251015,Pay-per-use - Chat,Suggested price: $ 0.0600 / 1M tokens Completion price: $ 0.6000 / 1M tokens,Prompt multiplier: 0.03 Completion ratio: 10.0000,DefaultSVIP
+gpt-4-32k,Pay-per-use - Chat,Suggested price: $ 60.0000 / 1M tokens Completion price: $ 120.0000 / 1M tokens,Prompt multiplier: 30 Completion ratio: 2.0000,DefaultSVIP
+gpt-4.1-mini,Pay-per-use - Chat,Suggested price: $ 0.4000 / 1M tokens Completion price: $ 1.6000 / 1M tokens,Prompt multiplier: 0.2 Completion ratio: 4.0000,DefaultSVIP
+claude-opus-4-5-20251101,Pay-per-use - Chat,Suggested price: $ 5.0000 / 1M tokens Completion price: $ 25.0000 / 1M tokens,Prompt multiplier: 2.5 Completion ratio: 5.0000,DefaultSVIP
+qvq-max-latest,Pay-per-use - Chat,Suggested price: $ 1.2000 / 1M tokens Completion price: $ 4.8000 / 1M tokens,Prompt multiplier: 0.6 Completion ratio: 4.0000,DefaultSVIP
+gpt-3.5-turbo-0613,Pay-per-use - Chat,Suggested price: $ 1.5000 / 1M tokens Completion price: $ 1.9500 / 1M tokens,Prompt multiplier: 0.75 Completion ratio: 1.3000,DefaultSVIP
+gpt-3.5-turbo-1106,Pay-per-use - Chat,Suggested price: $ 1.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.5 Completion ratio: 2.0000,DefaultSVIP
+grok-4,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+grok-4-1-fast-reasoning-latest,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+grok-4-fast-non-reasoning,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+DeepSeek-V3.2-Exp-thinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 0.4500 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 1.5000,DefaultSVIP
+glm-4.6v,Pay-per-use - Chat,Suggested price: $ 0.2800 / 1M tokens Completion price: $ 0.8400 / 1M tokens,Prompt multiplier: 0.14 Completion ratio: 3.0000,DefaultSVIPChinaOpenSource
+gpt-5.1-high,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+o3-deep-research-2025-06-26,Pay-per-use - Chat,Suggested price: $ 12.0000 / 1M tokens Completion price: $ 48.0000 / 1M tokens,Prompt multiplier: 6 Completion ratio: 4.0000,DefaultSVIP
+qwen3-omni-flash,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 10.0000,DefaultSVIP
+gemini-2.5-flash-preview-04-17-thinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gemini-3-pro-preview-thinking,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 12.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 6.0000,DefaultSVIP
+gpt-4o-mini-tts,Pay-per-use - Chat,Suggested price: $ 1.2000 / 1M tokens Completion price: $ 18.0000 / 1M tokens,Prompt multiplier: 0.6 Completion ratio: 15.0000,DefaultSVIP
+gpt-5-minimal,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 1.6000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.1-codex-medium,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.2-pro-2025-12-11,Pay-per-use - Chat,Suggested price: $ 21.0000 / 1M tokens Completion price: $ 168.0000 / 1M tokens,Prompt multiplier: 10.5 Completion ratio: 8.0000,DefaultSVIP
+grok-4-auto-deepsearch,Pay-per-use - Chat,Suggested price: $ 4.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 2 Completion ratio: 5.0000,DefaultSVIP
+moonshot-v1-8k-vision-preview,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 1.0000,DefaultSVIP
+doubao-seed-1-8-251215,Pay-per-use - Chat,Suggested price: $ 0.1140 / 1M tokens Completion price: $ 1.1400 / 1M tokens,Prompt multiplier: 0.057 Completion ratio: 10.0000,DefaultSVIP
+gemini-2.5-flash-lite-nothinking,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+gpt-5.1-low,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 5.0000,DefaultSVIP
+kimi-k2-250711,Pay-per-use - Chat,Suggested price: $ 0.8000 / 1M tokens Completion price: $ 3.2000 / 1M tokens,Prompt multiplier: 0.4 Completion ratio: 4.0000,DefaultSVIP
+qwen-long,Pay-per-use - Chat,Suggested price: $ 0.0700 / 1M tokens Completion price: $ 0.2800 / 1M tokens,Prompt multiplier: 0.035 Completion ratio: 4.0000,DefaultSVIP
+gemini-2.5-pro,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-3.5-turbo-instruct,Pay-per-use - Chat,Suggested price: $ 1.5000 / 1M tokens Completion price: $ 1.9500 / 1M tokens,Prompt multiplier: 0.75 Completion ratio: 1.3000,DefaultSVIP
+longcat-flash-chat,Pay-per-use - Chat,Suggested price: $ 0.2500 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.125 Completion ratio: 2.0000,DefaultSVIPChinaOpenSource
+omni-moderation-latest,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.2000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 1.0000,DefaultSVIP
+qwen-plus,Pay-per-use - Chat,Suggested price: $ 0.4000 / 1M tokens Completion price: $ 1.2000 / 1M tokens,Prompt multiplier: 0.2 Completion ratio: 3.0000,DefaultSVIP
+qwen-vl-ocr-latest,Pay-per-use - Chat,Suggested price: $ 0.0440 / 1M tokens Completion price: $ 0.0735 / 1M tokens,Prompt multiplier: 0.022 Completion ratio: 1.6700,DefaultSVIP
+qwen3-coder-plus,Pay-per-use - Chat,Suggested price: $ 5.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 2.5 Completion ratio: 4.0000,DefaultSVIP
+claude-3-5-sonnet-latest,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+gemini-2.5-pro-preview-06-05-thinking,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5-codex,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.2-medium,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+qwen-max-latest,Pay-per-use - Chat,Suggested price: $ 1.6000 / 1M tokens Completion price: $ 6.4000 / 1M tokens,Prompt multiplier: 0.8 Completion ratio: 4.0000,DefaultSVIP
+qwen3-vl-235b-a22b-thinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 3.0000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 10.0000,DefaultSVIPChinaOpenSource
+claude-haiku-4-5-20251001,Pay-per-use - Chat,Suggested price: $ 1.0000 / 1M tokens Completion price: $ 5.0000 / 1M tokens,Prompt multiplier: 0.5 Completion ratio: 5.0000,DefaultSVIP
+grok-3,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+claude-3-7-sonnet-latest,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+deepseek-v3.2-exp,Pay-per-use - Chat,Suggested price: $ 0.2800 / 1M tokens Completion price: $ 0.4200 / 1M tokens,Prompt multiplier: 0.14 Completion ratio: 1.5000,DefaultSVIPChinaOpenSource
+moonshot-v1-128k-vision-preview,Pay-per-use - Chat,Suggested price: $ 10.0000 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 5 Completion ratio: 1.0000,DefaultSVIP
+qwen2.5-vl-32b-instruct,Pay-per-use - Chat,Suggested price: $ 8.0000 / 1M tokens Completion price: $ 24.0000 / 1M tokens,Prompt multiplier: 4 Completion ratio: 3.0000,DefaultSVIPChinaOpenSource
+gemini-2.5-pro-preview-03-25,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+qvq-max,Pay-per-use - Chat,Suggested price: $ 1.2000 / 1M tokens Completion price: $ 4.8000 / 1M tokens,Prompt multiplier: 0.6 Completion ratio: 4.0000,DefaultSVIP
+qwen-mt-turbo,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+qwen-vl-ocr,Pay-per-use - Chat,Suggested price: $ 0.7200 / 1M tokens Completion price: $ 0.7200 / 1M tokens,Prompt multiplier: 0.36 Completion ratio: 1.0000,DefaultSVIP
+text-embedding-3-small,Pay-per-use - Chat,Suggested price: $ 0.0200 / 1M tokens Completion price: $ 0.0200 / 1M tokens,Prompt multiplier: 0.01 Completion ratio: 1.0000,DefaultSVIP
+claude-haiku-4-5-20251001-thinking,Pay-per-use - Chat,Suggested price: $ 1.0000 / 1M tokens Completion price: $ 5.0000 / 1M tokens,Prompt multiplier: 0.5 Completion ratio: 5.0000,DefaultSVIP
+claude-sonnet-4-20250514-thinking,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+gemini-2.5-flash-thinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gpt-image-1.5-2025-12-16,Pay-per-use - Chat,Suggested price: $ 5.0000 / 1M tokens Completion price: $ 32.0000 / 1M tokens,Prompt multiplier: 2.5 Completion ratio: 6.4000,DefaultSVIP
+kimi-k2-0905,Pay-per-use - Chat,Suggested price: $ 0.6000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.3 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+qwen3-30b-a3b-thinking-2507,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 12.0000,DefaultSVIPChinaOpenSource
+claude-3-5-sonnet-20241022,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+doubao-seed-1-6-250615,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 1.0000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 10.0000,DefaultSVIP
+grok-3-fast,Pay-per-use - Chat,Suggested price: $ 5.0000 / 1M tokens Completion price: $ 25.0000 / 1M tokens,Prompt multiplier: 2.5 Completion ratio: 5.0000,DefaultSVIP
+grok-code-fast-1,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 1.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 7.5000,DefaultSVIP
+o3-pro-2025-06-10,Pay-per-use - Chat,Suggested price: $ 20.0000 / 1M tokens Completion price: $ 80.0000 / 1M tokens,Prompt multiplier: 10 Completion ratio: 4.0000,DefaultSVIP
+tts-1-hd-1106,Pay-per-use - Chat,Suggested price: $ 60.0000 / 1M tokens Completion price: $ 60.0000 / 1M tokens,Prompt multiplier: 30 Completion ratio: 1.0000,DefaultSVIP
+doubao-seed-1-6-thinking-250615,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 1.0000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 10.0000,DefaultSVIP
+gemini-3-pro-preview,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 12.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 6.0000,DefaultSVIP
+glm-4.5-flash,Pay-per-use - Chat,Suggested price: $ 0.0100 / 1M tokens Completion price: $ 0.0400 / 1M tokens,Prompt multiplier: 0.005 Completion ratio: 4.0000,DefaultSVIP
+gpt-5.2-high,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+qwen2.5-vl-72b-instruct,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 6.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 3.0000,DefaultSVIPChinaOpenSource
+qwen2.5-vl-7b-instruct,Pay-per-use - Chat,Suggested price: $ 0.1400 / 1M tokens Completion price: $ 0.7000 / 1M tokens,Prompt multiplier: 0.07 Completion ratio: 5.0000,DefaultSVIPChinaOpenSource
+doubao-seed-1-6-thinking-250715,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 1.0000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 10.0000,DefaultSVIP
+gemini-2.5-flash-preview-09-2025,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gpt-5-codex-mini-medium,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 1.0000,DefaultSVIP
+gpt-5-mini-2025-08-07,Pay-per-use - Chat,Suggested price: $ 0.2500 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.125 Completion ratio: 8.0000,DefaultSVIP
+grok-3-latest,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+qwen3-32b,Pay-per-use - Chat,Suggested price: $ 0.4000 / 1M tokens Completion price: $ 4.0000 / 1M tokens,Prompt multiplier: 0.2 Completion ratio: 10.0000,DefaultSVIPChinaOpenSource
+deepseek-r1-250528,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+gemini-2.5-flash-preview-05-20-nothinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+qvq-plus-2025-05-15,Pay-per-use - Chat,Suggested price: $ 0.2800 / 1M tokens Completion price: $ 0.7000 / 1M tokens,Prompt multiplier: 0.14 Completion ratio: 2.5000,DefaultSVIP
+qwen3-coder-plus-2025-07-22,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 10.0000,DefaultSVIP
+tts-1-1106,Pay-per-use - Chat,Suggested price: $ 30.0000 / 1M tokens Completion price: $ 30.0000 / 1M tokens,Prompt multiplier: 15 Completion ratio: 1.0000,DefaultSVIP
+claude-opus-4-20250514-thinking,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 75.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 5.0000,DefaultSVIP
+cld-sonnet-4-20250514-thinking,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+deepseek-chat,Pay-per-use - Chat,Suggested price: $ 0.2500 / 1M tokens Completion price: $ 1.0000 / 1M tokens,Prompt multiplier: 0.125 Completion ratio: 4.0000,DefaultSVIP
+gpt-4o-mini-2024-07-18,Pay-per-use - Chat,Suggested price: $ 0.1500 / 1M tokens Completion price: $ 0.6000 / 1M tokens,Prompt multiplier: 0.075 Completion ratio: 4.0000,DefaultSVIP
+gpt-5.1-codex-max-medium,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 5.0000,DefaultSVIP
+Model Name,Billing type,Price,Magnification,Grouping
+grok-4-1-thinking-1108b,Pay-per-use - Chat,$ 0.0500 / time,-,DefaultSVIP
+grok-4-1-thinking-1129-all,Pay-per-use - Chat,$ 0.1000 / time,-,DefaultSVIP
+grok-4-all,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIP
+nano-banana,Pay-per-use - Chat,$ 0.0250 / time,-,DefaultNanoBanana企业SVIP
+nano-banana-oss,Pay-per-use - Chat,$ 0.0250 / time,-,DefaultNanoBanana企业SVIP
+nano-banana-pro,Pay-per-use - Chat,$ 0.0500 / time,-,DefaultNanoBanana企业SVIP
+seedream-4-0-250828,Pay-per-use - Chat,$ 0.0350 / time,-,DefaultSVIP
+seedream-4-5-251128,Pay-per-use - Chat,$ 0.0450 / time,-,DefaultSVIP
+sora-2,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+sora-2-character,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIPSora2
+sora-2-pro,Pay-per-use - Chat,$ 0.8000 / time,-,DefaultSVIPSora2
+sora-2-remix,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+sora-character,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIPSora2
+sora-image,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIP
+sora_image,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIP
+sora_video2,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+sora_video2-15s,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+sora_video2-15s-openaicdn,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+sora_video2-landscape,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+sora_video2-landscape-15s,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+sora_video2-landscape-15s-openaicdn,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+sora_video2-landscape-openaicdn,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+sora_video2-openaicdn,Pay-per-use - Chat,$ 0.1200 / time,-,DefaultSVIPSora2
+veo-3.1,Pay-per-use - Chat,$ 0.2500 / time,-,DefaultSVIP
+veo-3.1-fast,Pay-per-use - Chat,$ 0.1500 / time,-,DefaultSVIP
+veo-3.1-fast-fl,Pay-per-use - Chat,$ 0.1500 / time,-,DefaultSVIP
+veo-3.1-fl,Pay-per-use - Chat,$ 0.2500 / time,-,DefaultSVIP
+veo-3.1-landscape,Pay-per-use - Chat,$ 0.2500 / time,-,DefaultSVIP
+veo-3.1-landscape-fast,Pay-per-use - Chat,$ 0.1500 / time,-,DefaultSVIP
+veo-3.1-landscape-fast-fl,Pay-per-use - Chat,$ 0.1500 / time,-,DefaultSVIP
+veo-3.1-landscape-fl,Pay-per-use - Chat,$ 0.2500 / time,-,DefaultSVIP
+Model Name,Billing type,Price,Magnification,Grouping
+Model Name,Billing type,Price,Magnification,Grouping
+gpt-image-1.5,Pay-per-use - Chat,Suggested price: $ 5.0000 / 1M tokens Completion price: $ 32.0000 / 1M tokens,Prompt multiplier: 2.5 Completion ratio: 6.4000,DefaultSVIP
+grok-code-fast,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 1.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 7.5000,DefaultSVIP
+o1,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 60.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 4.0000,DefaultSVIP
+claude-opus-4-1-20250805,Pay-per-use - Chat,Suggested price: $ 15.0000 / 1M tokens Completion price: $ 75.0000 / 1M tokens,Prompt multiplier: 7.5 Completion ratio: 5.0000,DefaultSVIP
+DeepSeek-V3.2-Exp-nothinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 0.4500 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 1.5000,DefaultSVIP
+gpt-4o-2024-08-06,Pay-per-use - Chat,Suggested price: $ 2.5000 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 1.25 Completion ratio: 4.0000,DefaultSVIP
+cld-3-7-sonnet-20250219,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+gemini-2.5-flash-lite-preview-06-17,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+gemini-2.5-pro-preview-06-05-nothinking,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gemini-3-flash-preview-thinking,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 3.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 6.0000,DefaultSVIP
+gpt-5-nano,Pay-per-use - Chat,Suggested price: $ 0.0500 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.025 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.1-chat-latest,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+gpt-5.1-codex-max-xhigh,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+cld-sonnet-4-20250514,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+gpt-5-codex-high,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 8.0000,DefaultSVIP
+grok-4-auto,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+llama-3-3-70b-instruct,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.3000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 3.0000,DefaultSVIP
+qwen2.5-72b-instruct,Pay-per-use - Chat,Suggested price: $ 2.8572 / 1M tokens Completion price: $ 2.8572 / 1M tokens,Prompt multiplier: 1.4286 Completion ratio: 1.0000,DefaultSVIPChinaOpenSource
+qwen3-coder,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 10.0000,DefaultSVIPChinaOpenSource
+claude-sonnet-4-20250514,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+gemini-2.5-pro-preview-tts,Pay-per-use - Chat,Suggested price: $ 1.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 0.5 Completion ratio: 20.0000,DefaultSVIP
+grok-4-0709,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+qwen-mt-plus,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 8.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 4.0000,DefaultSVIP
+claude-opus-4-5-20251101-thinking,Pay-per-use - Chat,Suggested price: $ 5.0000 / 1M tokens Completion price: $ 25.0000 / 1M tokens,Prompt multiplier: 2.5 Completion ratio: 5.0000,DefaultSVIP
+gemini-2.0-flash,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+gpt-5.2-codex,Pay-per-use - Chat,Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens,Prompt multiplier: 0.875 Completion ratio: 8.0000,DefaultSVIP
+moonshot-v1-32k-vision-preview,Pay-per-use - Chat,Suggested price: $ 4.0000 / 1M tokens Completion price: $ 4.0000 / 1M tokens,Prompt multiplier: 2 Completion ratio: 1.0000,DefaultSVIP
+qwen2-72b-instruct,Pay-per-use - Chat,Suggested price: $ 2.8572 / 1M tokens Completion price: $ 2.8572 / 1M tokens,Prompt multiplier: 1.4286 Completion ratio: 1.0000,DefaultSVIP
+qwen2.5-7b-instruct,Pay-per-use - Chat,Suggested price: $ 2.8572 / 1M tokens Completion price: $ 2.8572 / 1M tokens,Prompt multiplier: 1.4286 Completion ratio: 1.0000,DefaultSVIPChinaOpenSource
+qwen-vl-ocr-2025-11-20,Pay-per-use - Chat,Suggested price: $ 0.0440 / 1M tokens Completion price: $ 0.0735 / 1M tokens,Prompt multiplier: 0.022 Completion ratio: 1.6700,DefaultSVIP
+qwen3-coder-plus-2025-09-23,Pay-per-use - Chat,Suggested price: $ 2.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens,Prompt multiplier: 1 Completion ratio: 10.0000,DefaultSVIP
+gpt-5.1-codex-max-low,Pay-per-use - Chat,Suggested price: $ 1.2500 / 1M tokens Completion price: $ 3.7500 / 1M tokens,Prompt multiplier: 0.625 Completion ratio: 3.0000,DefaultSVIP
+grok-4-1-fast-non-reasoning-latest,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 2.5000,DefaultSVIP
+o3-2025-04-16,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 12.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 4.0000,DefaultSVIP
+o3-pro,Pay-per-use - Chat,Suggested price: $ 20.0000 / 1M tokens Completion price: $ 80.0000 / 1M tokens,Prompt multiplier: 10 Completion ratio: 4.0000,DefaultSVIP
+qvq-plus,Pay-per-use - Chat,Suggested price: $ 0.2800 / 1M tokens Completion price: $ 0.7000 / 1M tokens,Prompt multiplier: 0.14 Completion ratio: 2.5000,DefaultSVIP
+qwen3-next-80b-a3b-instruct,Pay-per-use - Chat,Suggested price: $ 0.1400 / 1M tokens Completion price: $ 0.5600 / 1M tokens,Prompt multiplier: 0.07 Completion ratio: 4.0000,DefaultSVIPChinaOpenSource
+text-embedding-3-large,Pay-per-use - Chat,Suggested price: $ 0.1300 / 1M tokens Completion price: $ 0.1300 / 1M tokens,Prompt multiplier: 0.065 Completion ratio: 1.0000,DefaultSVIP
+deepseek-reasoner,Pay-per-use - Chat,Suggested price: $ 0.5000 / 1M tokens Completion price: $ 2.0000 / 1M tokens,Prompt multiplier: 0.25 Completion ratio: 4.0000,DefaultSVIP
+gemini-2.5-flash-nothinking,Pay-per-use - Chat,Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens,Prompt multiplier: 0.15 Completion ratio: 8.0000,DefaultSVIP
+gpt-4.1-nano-2025-04-14,Pay-per-use - Chat,Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens,Prompt multiplier: 0.05 Completion ratio: 4.0000,DefaultSVIP
+grok-4-1-thinking-1108b,Pay-per-use - Chat,Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens,Prompt multiplier: 1.5 Completion ratio: 5.0000,DefaultSVIP
+qwen-vl-max-latest,Pay-per-use - Chat,Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.8000 / 1M tokens,Prompt multiplier: 0.1 Completion ratio: 4.0000,DefaultSVIP
+claude-haiku-4-5-20251001-all,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIP
+claude-haiku-4-5-20251001-thinking-all,Pay-per-use - Chat,$ 0.0150 / time,-,DefaultSVIP
+claude-sonnet-4-5-20250929-all,Pay-per-use - Chat,$ 0.0150 / time,-,DefaultSVIP
+claude-sonnet-4-5-20250929-thinking-all,Pay-per-use - Chat,$ 0.0200 / time,-,DefaultSVIP
+flux-2-flex,Pay-per-use - Chat,$ 0.0350 / time,-,DefaultSVIP
+flux-2-max,Pay-per-use - Chat,$ 0.0700 / time,-,DefaultSVIP
+flux-2-pro,Pay-per-use - Chat,$ 0.0350 / time,-,DefaultSVIP
+flux-dev,Pay-per-use - Chat,$ 0.0200 / time,-,DefaultSVIP
+flux-kontext-max,Pay-per-use - Chat,$ 0.0700 / time,-,DefaultSVIP
+flux-kontext-pro,Pay-per-use - Chat,$ 0.0350 / time,-,DefaultSVIP
+flux-pro,Pay-per-use - Chat,$ 0.0400 / time,-,DefaultSVIP
+flux-pro-1.1,Pay-per-use - Chat,$ 0.0350 / time,-,DefaultSVIP
+flux-pro-1.1-ultra,Pay-per-use - Chat,$ 0.0500 / time,-,DefaultSVIP
+gemini-2.5-flash-image,Pay-per-use - Chat,$ 0.0250 / time,-,DefaultNanoBanana企业SVIP
+gemini-2.5-flash-image-oss,Pay-per-use - Chat,$ 0.0250 / time,-,DefaultNanoBanana企业SVIP
+gemini-2.5-flash-image-preview,Pay-per-use - Chat,$ 0.0250 / time,-,DefaultNanoBanana企业SVIP
+gemini-2.5-flash-image-preview-oss,Pay-per-use - Chat,$ 0.0250 / time,-,DefaultNanoBanana企业SVIP
+gemini-3-pro-image-preview,Pay-per-use - Chat,$ 0.0500 / time,-,DefaultNanoBanana企业SVIP
+gemini-3-pro-image-preview-1k,Pay-per-use - Chat,$ 0.0500 / time,-,DefaultNanoBanana企业SVIP
+gemini-3-pro-image-preview-2k,Pay-per-use - Chat,$ 0.0500 / time,-,DefaultNanoBanana企业SVIP
+gemini-3-pro-image-preview-4k,Pay-per-use - Chat,$ 0.0500 / time,-,DefaultNanoBanana企业SVIP
+gemini-3-pro-image-preview-oss,Pay-per-use - Chat,$ 0.0500 / time,-,DefaultNanoBanana企业SVIP
+gpt-4o-all,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIP
+gpt-4o-image,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIP
+gpt-4o-image-vip,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIP
+gpt-5-codex-high,Pay-per-use - Chat,$ 0.0250 / time,-,DefaultSVIP
+gpt-5.1-codex-max-low,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIP
+gpt-5.1-codex-max-xhigh,Pay-per-use - Chat,$ 0.0250 / time,-,DefaultSVIP
+gpt-5.2-all,Pay-per-use - Chat,$ 0.1000 / time,-,DefaultSVIP
+gpt-image-1.5-all,Pay-per-use - Chat,$ 0.0100 / time,-,DefaultSVIP
+grok-2-image,Pay-per-use - Chat,$ 0.0700 / time,-,DefaultSVIP
