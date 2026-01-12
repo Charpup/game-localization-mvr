@@ -398,6 +398,10 @@ def main():
     ap.add_argument("--out_proposals", default="data/glossary_proposals.yaml", help="Output proposals YAML")
     ap.add_argument("--out_patch", default="data/glossary_patch.yaml", help="Output patch YAML")
     
+    # Rejected terms (to avoid re-proposing)
+    ap.add_argument("--rejected", default="glossary/rejected.yaml", 
+                    help="Rejected terms YAML (avoid re-proposing)")
+    
     # Dry-run mode
     ap.add_argument("--dry-run", action="store_true",
                     help="Validate configuration and count candidates without making LLM calls")
@@ -422,6 +426,12 @@ def main():
     glossary_entries = load_glossary_entries(args.glossary)
     glossary_idx = build_glossary_index(glossary_entries)
     glossary_excerpt = glossary_to_text(glossary_entries, max_entries=80)
+    
+    # Load rejected terms to avoid re-proposing
+    rejected_entries = load_glossary_entries(args.rejected) if Path(args.rejected).exists() else []
+    rejected_set = {(e.term_zh.strip(), e.term_ru.strip()) for e in rejected_entries}
+    if rejected_entries:
+        print(f"✅ Loaded {len(rejected_entries)} rejected terms (will skip)")
     
     soft_tasks = read_jsonl(args.soft_tasks) if args.soft_tasks else []
     
@@ -567,8 +577,14 @@ def main():
     
     # Filter by support and conflict
     proposals = []
+    skipped_rejected = 0
     for k, s in sorted(stats.items(), key=lambda kv: (kv[1].support, kv[1].avg_confidence), reverse=True):
         if s.support < args.min_support:
+            continue
+        
+        # Skip previously rejected terms
+        if (s.term_zh.strip(), s.term_ru.strip()) in rejected_set:
+            skipped_rejected += 1
             continue
         
         # Hard conflicts with approved entries are rejected
@@ -591,6 +607,8 @@ def main():
         })
     
     print(f"📝 Generated {len(proposals)} proposals")
+    if skipped_rejected > 0:
+        print(f"⏭️  Skipped {skipped_rejected} previously rejected terms")
     
     # Build output structures
     out_proposals = {
