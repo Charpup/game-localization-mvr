@@ -362,9 +362,12 @@ def main():
         last_err = ""
         repaired_text = ""
         
+        # Select step based on repair type for model routing
+        repair_step = "repair_hard" if is_hard else "repair_soft_major"
+        
         for attempt in range(args.max_retries + 1):
             try:
-                result = llm.chat(system=system, user=user, temperature=0.1, metadata={"step": "repair", "string_id": sid})
+                result = llm.chat(system=system, user=user, temperature=0.1, metadata={"step": repair_step, "string_id": sid})
                 obj = extract_json(result.text)
                 
                 if not obj or obj.get("string_id") != sid:
