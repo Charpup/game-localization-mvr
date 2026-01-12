@@ -27,9 +27,16 @@ import argparse
 import csv
 import json
 import re
+import sys
 import time
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
+
+# Ensure UTF-8 output on Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 try:
     import yaml
@@ -200,6 +207,8 @@ def main():
     ap.add_argument("--max_retries", type=int, default=4, help="Max repair attempts per item")
     ap.add_argument("--only_soft_major", action="store_true", 
                     help="Only repair soft issues with major severity (skip minor)")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="Validate configuration and count issues without making LLM calls")
     args = ap.parse_args()
 
     print(f"🔧 Starting Repair Loop v2.0...")
@@ -258,6 +267,38 @@ def main():
     print(f"✅ Hard errors: {len(hard_ids)} strings")
     print(f"✅ Soft major: {len(soft_major_ids)} strings")
     print(f"✅ Total to repair: {len(issue_map)} strings")
+
+    # Dry-run mode
+    if getattr(args, 'dry_run', False):
+        print()
+        print("=" * 60)
+        print("DRY-RUN MODE - Validation Summary")
+        print("=" * 60)
+        print()
+        print(f"[OK] Input CSV: {len(rows)} rows")
+        print(f"[OK] Style guide: {len(style)} chars")
+        print(f"[OK] Glossary: {len(glossary_text)} chars")
+        print(f"[OK] Hard errors to fix: {len(hard_ids)}")
+        print(f"[OK] Soft issues to fix: {len(soft_major_ids)}")
+        print(f"[OK] Total repair items: {len(issue_map)}")
+        
+        # Check LLM env
+        import os
+        llm_model = os.getenv("LLM_MODEL", "")
+        if llm_model:
+            print(f"[OK] LLM model: {llm_model}")
+        else:
+            print(f"[WARN] LLM_MODEL not set")
+        
+        print()
+        print("=" * 60)
+        print("[OK] Dry-run validation PASSED")
+        if issue_map:
+            print(f"     {len(issue_map)} items would be repaired in actual run")
+        else:
+            print(f"     No items need repair")
+        print("=" * 60)
+        return 0
 
     if not issue_map:
         print("\n✅ No issues found. Nothing to repair.")

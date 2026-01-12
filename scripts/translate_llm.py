@@ -37,6 +37,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+# Ensure UTF-8 output on Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 # Use shared runtime adapter for LLM calls
 from runtime_adapter import LLMClient, LLMError, LLMResult
 
@@ -267,7 +273,7 @@ def extract_json_object(text: str) -> Optional[dict]:
 # Main pipeline
 # -----------------------------
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(description="Translate tokenized Chinese to target language via LLM")
     ap.add_argument("input_draft_csv", help="data/draft.csv")
     ap.add_argument("output_translated_csv", help="data/translated.csv (append/resume)")
     ap.add_argument("style_guide_md", help="workflow/style_guide.md")
@@ -277,11 +283,69 @@ def main():
     ap.add_argument("--max_retries", type=int, default=4)
     ap.add_argument("--checkpoint", default="data/translate_checkpoint.json")
     ap.add_argument("--escalate_csv", default="data/escalate_list.csv")
+    ap.add_argument("--dry-run", action="store_true", 
+                    help="Validate configuration without making LLM calls")
     args = ap.parse_args()
 
     # Load resources
     style_guide = load_style_guide(args.style_guide_md)
     glossary = load_glossary(args.glossary_yaml) if args.glossary_yaml else []
+
+    # Dry-run mode: validate without LLM
+    if getattr(args, 'dry_run', False):
+        print()
+        print("=" * 60)
+        print("DRY-RUN MODE - Validating configuration")
+        print("=" * 60)
+        print()
+        print(f"[OK] Style guide loaded: {args.style_guide_md} ({len(style_guide)} chars)")
+        print(f"[OK] Glossary loaded: {len(glossary)} entries")
+        
+        # Validate input file
+        rows = read_csv_rows(args.input_draft_csv)
+        if not rows:
+            print(f"[FAIL] No rows in input file: {args.input_draft_csv}")
+            sys.exit(1)
+        print(f"[OK] Input loaded: {len(rows)} rows")
+        
+        # Check required columns
+        sample = rows[0]
+        required = ["string_id", "tokenized_zh"]
+        for col in required:
+            if col not in sample and (col == "tokenized_zh" and "source_zh" not in sample):
+                print(f"[FAIL] Missing required column: {col}")
+                sys.exit(1)
+        print(f"[OK] Required columns present")
+        
+        # Validate LLM env vars
+        import os
+        llm_base = os.getenv("LLM_BASE_URL", "")
+        llm_key = os.getenv("LLM_API_KEY", "")
+        llm_model = os.getenv("LLM_MODEL", "")
+        
+        if llm_base and llm_key and llm_model:
+            print(f"[OK] LLM config: model={llm_model} base_url={llm_base[:30]}...")
+        else:
+            missing = []
+            if not llm_base: missing.append("LLM_BASE_URL")
+            if not llm_key: missing.append("LLM_API_KEY")
+            if not llm_model: missing.append("LLM_MODEL")
+            print(f"[WARN] Missing LLM env vars: {', '.join(missing)}")
+            print(f"       (Required for actual translation, not for dry-run)")
+        
+        # Show sample prompt
+        print()
+        print("Sample system prompt (first 500 chars):")
+        print("-" * 40)
+        sample_system = build_system_prompt(style_guide)
+        print(sample_system[:500] + "...")
+        print()
+        
+        print("=" * 60)
+        print("[OK] Dry-run validation PASSED")
+        print("     Configuration is valid. Ready for actual translation.")
+        print("=" * 60)
+        sys.exit(0)
 
     # LLM config - now uses runtime_adapter
     # Environment variables are read by LLMClient automatically

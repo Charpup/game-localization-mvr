@@ -47,10 +47,17 @@ import csv
 import json
 import re
 import os
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple, Set
+
+# Ensure UTF-8 output on Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 try:
     import yaml
@@ -391,6 +398,10 @@ def main():
     ap.add_argument("--out_proposals", default="data/glossary_proposals.yaml", help="Output proposals YAML")
     ap.add_argument("--out_patch", default="data/glossary_patch.yaml", help="Output patch YAML")
     
+    # Dry-run mode
+    ap.add_argument("--dry-run", action="store_true",
+                    help="Validate configuration and count candidates without making LLM calls")
+    
     args = ap.parse_args()
     
     print(f"🔄 Glossary Autopromote")
@@ -421,6 +432,39 @@ def main():
     if len(candidate_ids) > args.max_rows:
         print(f"⚠️  Capping to {args.max_rows} rows")
         candidate_ids = candidate_ids[:args.max_rows]
+    
+    # Dry-run mode
+    if getattr(args, 'dry_run', False):
+        print()
+        print("=" * 60)
+        print("DRY-RUN MODE - Validation Summary")
+        print("=" * 60)
+        print()
+        print(f"[OK] Before CSV: {len(before_rows)} rows")
+        print(f"[OK] After CSV: {len(after_rows)} rows")
+        print(f"[OK] Style guide: {len(style)} chars")
+        print(f"[OK] Existing glossary: {len(glossary_entries)} entries")
+        print(f"[OK] Candidate rows: {len(candidate_ids)}")
+        print(f"[OK] Language pair: {args.language_pair}")
+        print(f"[OK] Scope: {args.scope}")
+        
+        # Check LLM env
+        import os
+        llm_model = os.getenv("LLM_MODEL", "")
+        if llm_model:
+            print(f"[OK] LLM model: {llm_model}")
+        else:
+            print(f"[WARN] LLM_MODEL not set")
+        
+        print()
+        print("=" * 60)
+        print("[OK] Dry-run validation PASSED")
+        if candidate_ids:
+            print(f"     {len(candidate_ids)} candidates would be processed in actual run")
+        else:
+            print(f"     No candidates found")
+        print("=" * 60)
+        return 0
     
     if not candidate_ids:
         print("ℹ️  No candidates found, nothing to propose")

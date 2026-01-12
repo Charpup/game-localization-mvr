@@ -23,8 +23,15 @@ import csv
 import json
 import os
 import re
+import sys
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+
+# Ensure UTF-8 output on Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 try:
     import yaml
@@ -161,6 +168,8 @@ def main():
     ap.add_argument("--batch_size", type=int, default=40, help="Rows per LLM call")
     ap.add_argument("--out_report", default="data/qa_soft_report.json", help="Output report JSON")
     ap.add_argument("--out_tasks", default="data/repair_tasks.jsonl", help="Output repair tasks JSONL")
+    ap.add_argument("--dry-run", action="store_true", 
+                    help="Validate configuration without making LLM calls")
     args = ap.parse_args()
 
     print(f"🔍 Starting Soft QA v1.0...")
@@ -176,6 +185,32 @@ def main():
     glossary_text = ""
     if args.glossary_yaml and Path(args.glossary_yaml).exists():
         glossary_text = load_text(args.glossary_yaml)
+
+    # Dry-run mode
+    if getattr(args, 'dry_run', False):
+        print()
+        print("=" * 60)
+        print("DRY-RUN MODE - Validating configuration")
+        print("=" * 60)
+        print()
+        print(f"[OK] Input loaded: {len(rows)} rows")
+        print(f"[OK] Style guide: {len(style)} chars")
+        print(f"[OK] Rubric loaded: {args.rubric_yaml}")
+        print(f"[OK] Glossary: {len(glossary_text)} chars")
+        
+        # Check LLM env
+        import os
+        llm_model = os.getenv("LLM_MODEL", "")
+        if llm_model:
+            print(f"[OK] LLM model: {llm_model}")
+        else:
+            print(f"[WARN] LLM_MODEL not set")
+        
+        print()
+        print("=" * 60)
+        print("[OK] Dry-run validation PASSED")
+        print("=" * 60)
+        return 0
 
     # Initialize LLM
     try:
