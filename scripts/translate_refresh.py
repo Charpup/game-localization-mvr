@@ -145,7 +145,8 @@ def refresh_row(llm: LLMClient, row: Dict[str, str],
     
     try:
         result = llm.chat(
-            messages=[{"role": "user", "content": prompt}],
+            system="You are a professional translator performing minimal glossary updates.",
+            user=prompt,
             metadata={
                 "step": "translate_refresh",
                 "string_id": string_id,
@@ -155,8 +156,8 @@ def refresh_row(llm: LLMClient, row: Dict[str, str],
             }
         )
         
-        if result.content:
-            return result.content.strip(), True
+        if result.text:
+            return result.text.strip(), True
         else:
             return current_ru, False
             

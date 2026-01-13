@@ -314,7 +314,7 @@ def main():
     # Initialize LLM
     try:
         llm = LLMClient()
-        print(f"✅ Using LLM: {llm.model}")
+        print(f"✅ Using LLM: {llm.default_model}")
     except LLMError as e:
         print(f"❌ LLM Error: {e}")
         return 2

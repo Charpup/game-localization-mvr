@@ -395,7 +395,7 @@ def main():
     # Environment variables are read by LLMClient automatically
     try:
         llm = LLMClient()
-        print(f"[INFO] Using LLM: {llm.model} via {llm.base_url}")
+        print(f"[INFO] Using LLM: {llm.default_model} via {llm.base_url}")
     except LLMError as e:
         print(f"ERROR: {e}")
         print("Set env vars: LLM_BASE_URL, LLM_API_KEY, LLM_MODEL")

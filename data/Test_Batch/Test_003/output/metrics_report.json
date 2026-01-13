@@ -1,0 +1,90 @@
+{
+  "generated_at": "2026-01-14T02:27:06.246279",
+  "currency": "USD",
+  "trace_file": "data/llm_trace.jsonl",
+  "pricing": {
+    "models_loaded": 47,
+    "warnings": [],
+    "missing_models": [
+      "unknown"
+    ]
+  },
+  "line_counts": {
+    "translated_csv": null,
+    "translated_lines": null,
+    "repaired_csv": null,
+    "repaired_lines": null,
+    "denominator_for_per_1k": null
+  },
+  "usage": {
+    "total_calls": 1846,
+    "usage_present_calls": 1846,
+    "usage_presence_rate": 1.0,
+    "estimated_calls": 0,
+    "unknown_step_calls": 0,
+    "unknown_step_ratio": 0.0,
+    "avg_latency_ms": 6209.8
+  },
+  "tokens": {
+    "prompt_tokens": 2698930,
+    "completion_tokens": 732390,
+    "total_tokens": 3431320,
+    "estimated_prompt_tokens": 0,
+    "estimated_completion_tokens": 0
+  },
+  "cost": {
+    "total_cost": 0.0,
+    "cost_estimated_portion": 0.0,
+    "cost_per_1k_lines": null
+  },
+  "breakdown": [
+    {
+      "model": "unknown",
+      "step": "translate",
+      "calls": 1054,
+      "prompt_tokens": 1327619,
+      "completion_tokens": 273843,
+      "total_tokens": 1601462,
+      "cost": 0.0,
+      "usage_present_calls": 1054,
+      "estimated_calls": 0,
+      "avg_latency_ms": 3910.6157495256166
+    },
+    {
+      "model": "unknown",
+      "step": "repair_hard",
+      "calls": 11,
+      "prompt_tokens": 10257,
+      "completion_tokens": 2248,
+      "total_tokens": 12505,
+      "cost": 0.0,
+      "usage_present_calls": 11,
+      "estimated_calls": 0,
+      "avg_latency_ms": 3895.0
+    },
+    {
+      "model": "unknown",
+      "step": "soft_qa",
+      "calls": 496,
+      "prompt_tokens": 1201359,
+      "completion_tokens": 447710,
+      "total_tokens": 1649069,
+      "cost": 0.0,
+      "usage_present_calls": 496,
+      "estimated_calls": 0,
+      "avg_latency_ms": 13680.677419354839
+    },
+    {
+      "model": "unknown",
+      "step": "repair_soft_major",
+      "calls": 285,
+      "prompt_tokens": 159695,
+      "completion_tokens": 8589,
+      "total_tokens": 168284,
+      "cost": 0.0,
+      "usage_present_calls": 285,
+      "estimated_calls": 0,
+      "avg_latency_ms": 1799.8701754385966
+    }
+  ]
+}

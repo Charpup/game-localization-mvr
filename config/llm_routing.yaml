@@ -6,46 +6,41 @@
 
 routing:
   translate:
-    default: gpt-4.1-mini
-    fallback: [gpt-4.1, claude-sonnet-4-5-20250929]
+    default: gpt-4.1
+    fallback: [claude-sonnet-4-5-20250929, gpt-4.1-mini]
 
   soft_qa:
-    default: gpt-4.1-nano
-    fallback: [gpt-4o-mini, gpt-4.1-mini]
+    default: gpt-4.1-mini
+    fallback: [gpt-4.1, gemini-2.5-pro]
 
   repair_hard:
     default: claude-sonnet-4-5-20250929
     fallback: [gpt-4.1]
 
   repair_post_soft:
-    default: gpt-4.1-mini
-    fallback: [claude-sonnet-4-5-20250929]
+    default: claude-sonnet-4-5-20250929
+    fallback: [gpt-4.1-mini]
 
   repair_soft_major:
-    default: gpt-4.1-mini
+    default: gpt-4.1
     fallback: [claude-sonnet-4-5-20250929]
 
   glossary_autopromote:
-    default: deepseek-v3
-    fallback: [gpt-4.1-mini]
+    default: gpt-4.1-mini
+    fallback: [gpt-4.1, gemini-2.5-pro]
 
   translate_refresh:
     default: claude-sonnet-4-5-20250929
-    fallback: [gpt-4.1]
+    fallback: [gpt-4.1, gpt-4.1-mini]
 
-  # Fallback for unknown steps
   _default:
     default: gpt-4.1-mini
-    fallback: []
+    fallback: [gpt-4.1]
 
 fallback_triggers:
-  # HTTP status codes that trigger fallback
   http_codes: [429, 500, 502, 503, 504]
-  # Error kinds that trigger fallback
   on_timeout: true
   on_network_error: true
   on_parse_error: true
-
-# Router does NOT retry within a model - only switches to next in chain
-# Total attempts = len(model_chain), each model gets exactly 1 try
-# Caller manages any additional retry logic
+  # Router 不做重试，只换模型；重试上移到调用方/loop 控制
+  max_attempts_total: 1
