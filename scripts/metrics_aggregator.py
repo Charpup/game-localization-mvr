@@ -245,6 +245,81 @@ def load_pricing_yaml(path: str) -> Tuple[Dict[str, dict], List[str], dict, dict
 # Trace Parsing & Cost
 # -------------------------
 
+# -------------------------
+# Model Name Resolution
+# -------------------------
+
+def extract_model_name(event: dict) -> str:
+    """
+    Extract model name from trace event.
+    Priority: selected_model > model > metadata.model > "unknown"
+    """
+    model = event.get("selected_model")
+    if not model:
+        model = event.get("model")
+    if not model:
+        meta = event.get("metadata") or {}
+        model = meta.get("model")
+    return (model or "unknown").strip()
+
+
+def canonicalize_model_name(raw_name: str, pricing_models: dict) -> Tuple[str, str]:
+    """
+    Canonicalize model name for pricing lookup.
+    
+    Returns: (canonical_name, status)
+    Status: "ok", "vendor_stripped", "fallback_to_base", "fallback_latest", "missing"
+    
+    Precedence:
+      1. Exact match in pricing_models
+      2. Strip vendor prefix (openai/, anthropic/, etc.)
+      3. Dated suffix fallback (YYYY-MM-DD or YYYYMMDD)
+      4. -latest suffix fallback
+      5. Missing (return raw_name)
+    
+    NO cross-product aliases to avoid incorrect billing.
+    """
+    if not raw_name or raw_name == "unknown":
+        return "unknown", "missing"
+    
+    # 1. Exact match
+    if raw_name in pricing_models:
+        return raw_name, "ok"
+    
+    # 2. Strip vendor prefix (e.g., "openai/gpt-4o" -> "gpt-4o")
+    if "/" in raw_name:
+        stripped = raw_name.split("/", 1)[1]
+        if stripped in pricing_models:
+            return stripped, "vendor_stripped"
+    
+    # 3. Dated suffix fallback
+    # Pattern: base-YYYY-MM-DD or base-YYYYMMDD
+    import re
+    
+    # Try YYYY-MM-DD format
+    match_dashed = re.match(r"^(.+)-(\d{4}-\d{2}-\d{2})$", raw_name)
+    if match_dashed:
+        base = match_dashed.group(1)
+        if base in pricing_models:
+            return base, "fallback_to_base"
+    
+    # Try YYYYMMDD format
+    match_compact = re.match(r"^(.+)-(\d{8})$", raw_name)
+    if match_compact:
+        base = match_compact.group(1)
+        if base in pricing_models:
+            return base, "fallback_to_base"
+    
+    # 4. -latest suffix fallback (e.g., "claude-3-5-sonnet-latest" -> "claude-3-5-sonnet")
+    if raw_name.endswith("-latest"):
+        base = raw_name[:-7]  # Remove "-latest"
+        if base in pricing_models:
+            return base, "fallback_latest"
+    
+    # 5. Still missing
+    return raw_name, "missing"
+
+
 def read_jsonl(path: str) -> List[dict]:
     """Read JSONL file as list of dicts."""
     if not Path(path).exists():
@@ -404,10 +479,18 @@ def main():
     missing_pricing_models = set()
     unknown_step_count = 0  # Track calls without proper step metadata
     
-    for e in llm_calls:
-        model = (e.get("model") or "unknown").strip()
+    # Enhanced tracking for missing models report
+    missing_models_info: Dict[str, dict] = {}  # model_raw -> {count, steps, first_ts, line_no}
+    
+    for line_no, e in enumerate(llm_calls, start=1):
+        # Extract model using new function
+        model_raw = extract_model_name(e)
         step = (e.get("step") or "unknown").strip()
         latency_ms = int(e.get("latency_ms") or 0)
+        timestamp = e.get("timestamp", "")
+        
+        # Canonicalize model name for pricing lookup
+        model, pricing_status = canonicalize_model_name(model_raw, pricing)
         
         # Track unknown steps
         if step == "unknown":
@@ -437,6 +520,19 @@ def main():
         price = pricing.get(model)
         if not price:
             missing_pricing_models.add(model)
+            # Track detailed info for missing models report
+            if model_raw not in missing_models_info:
+                missing_models_info[model_raw] = {
+                    "canonical": model,
+                    "status": pricing_status,
+                    "count": 0,
+                    "steps": set(),
+                    "first_ts": timestamp,
+                    "first_line": line_no
+                }
+            missing_models_info[model_raw]["count"] += 1
+            missing_models_info[model_raw]["steps"].add(step)
+
         
         cost = 0.0
         
@@ -627,6 +723,25 @@ def main():
     
     write_text(args.out_md, "".join(md))
     print(f"✅ Wrote report to {args.out_md}")
+    
+    # Write missing models report CSV if any models are missing
+    if missing_models_info:
+        missing_report_path = str(Path(args.out_json).parent / "missing_models_report.csv")
+        with open(missing_report_path, "w", encoding="utf-8-sig", newline="") as f:
+            import csv
+            writer = csv.writer(f)
+            writer.writerow(["model_raw", "model_canonical", "pricing_status", "count", "steps_where_seen", "first_seen_ts", "first_line_no"])
+            for model_raw, info in sorted(missing_models_info.items(), key=lambda x: -x[1]["count"]):
+                writer.writerow([
+                    model_raw,
+                    info["canonical"],
+                    info["status"],
+                    info["count"],
+                    ",".join(sorted(info["steps"])),
+                    info["first_ts"],
+                    info["first_line"]
+                ])
+        print(f"⚠️  Missing models report: {missing_report_path} ({len(missing_models_info)} models)")
     
     # Print summary
     print()

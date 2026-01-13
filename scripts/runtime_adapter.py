@@ -495,6 +495,7 @@ class LLMClient:
             "usage": usage,
             # Enhanced router fields
             "selected_model": model,
+            "model": model,  # Legacy field for backward compatibility
             "router_default_model": router_default,
             "model_override": model_override,
             "routing_config_version": self.router.config_hash if self.router.enabled else None,
