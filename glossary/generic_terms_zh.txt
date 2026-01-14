@@ -1,0 +1,136 @@
+# Generic Terms Blacklist (Chinese)
+# Terms that should NOT be included in glossary
+# Format: one term per line, lines starting with # are comments
+#
+# Categories:
+# 1. Function words (particles, conjunctions)
+# 2. UI/System generic verbs
+# 3. UI/System generic nouns
+# 4. Common game action words (too generic for glossary)
+
+# === Function words (particles, conjunctions) ===
+的
+是
+在
+有
+为
+和
+与
+等
+会
+可
+能
+时
+后
+前
+中
+上
+下
+了
+着
+过
+被
+把
+给
+让
+得
+地
+而
+但
+却
+或
+且
+则
+若
+
+# === UI/System generic verbs ===
+获得
+解锁
+提升
+点击
+确认
+取消
+继续
+返回
+开始
+结束
+完成
+领取
+购买
+使用
+选择
+查看
+刷新
+保存
+确定
+放弃
+关闭
+打开
+前往
+进入
+退出
+升级
+下载
+加载
+提交
+删除
+添加
+移除
+修改
+设置
+重置
+兑换
+
+# === UI/System generic nouns ===
+奖励
+属性
+等级
+经验
+数量
+次数
+时间
+效果
+状态
+条件
+上限
+下限
+概率
+比例
+系数
+加成
+提高
+降低
+增加
+减少
+恢复
+消耗
+花费
+需要
+要求
+达到
+满足
+累计
+当前
+剩余
+可用
+已用
+总计
+合计
+
+# === Common game terms (too generic) ===
+玩家
+敌方
+我方
+目标
+单位
+全体
+自身
+队伍
+队友
+伙伴
+
+# === Percentage/Number patterns (handled separately) ===
+# 10%
+# 20%
+# n1
+# n2

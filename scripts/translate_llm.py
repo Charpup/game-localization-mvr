@@ -311,6 +311,8 @@ def main():
     ap.add_argument("--max_retries", type=int, default=4)
     ap.add_argument("--checkpoint", default="data/translate_checkpoint.json")
     ap.add_argument("--escalate_csv", default="data/escalate_list.csv")
+    ap.add_argument("--progress_every", type=int, default=200,
+                    help="Log progress every N rows (default: 200)")
     ap.add_argument("--dry-run", action="store_true", 
                     help="Validate configuration without making LLM calls")
     args = ap.parse_args()
@@ -489,7 +491,13 @@ def main():
     # Escalate list fields
     esc_fields = ["string_id", "reason", "tokenized_zh", "last_output"]
 
-    # Translate in batches
+    # Translate in batches with progress tracking
+    import time
+    from datetime import datetime
+    start_time = time.time()
+    last_progress_time = start_time
+    last_progress_count = 0
+    
     i = 0
     while i < len(pending):
         batch = pending[i:i+args.batch_size]
@@ -680,9 +688,26 @@ def main():
         save_checkpoint(args.checkpoint, ckpt)
 
         i += args.batch_size
-        print(f"[PROGRESS] done_ok={ckpt['stats']['ok']} fail={ckpt['stats']['fail']} / remaining={max(0, len(pending)-i)}")
+        
+        # Enhanced progress reporting
+        total_done = ckpt['stats']['ok'] + ckpt['stats']['fail']
+        if total_done % args.progress_every < args.batch_size or i >= len(pending):
+            now = time.time()
+            elapsed = now - start_time
+            delta = now - last_progress_time
+            rows_since_last = total_done - last_progress_count
+            rate = rows_since_last / delta if delta > 0 else 0
+            pct = total_done / len(pending) * 100 if pending else 0
+            
+            print(f"[PROGRESS] {total_done}/{len(pending)} ({pct:.1f}%) | "
+                  f"elapsed={int(elapsed)}s | delta={delta:.1f}s | "
+                  f"rate={rate:.1f}/s | step=translate")
+            
+            last_progress_time = now
+            last_progress_count = total_done
 
-    print(f"[DONE] ok={ckpt['stats']['ok']} fail={ckpt['stats']['fail']}")
+    total_elapsed = time.time() - start_time
+    print(f"[DONE] ok={ckpt['stats']['ok']} fail={ckpt['stats']['fail']} | total_time={int(total_elapsed)}s")
     print(f"[FILES] translated={args.output_translated_csv} checkpoint={args.checkpoint} escalate={args.escalate_csv}")
 
 if __name__ == "__main__":

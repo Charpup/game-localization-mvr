@@ -1,131 +1,161 @@
-# Game Localization MVR (Minimum Viable Rules) v2.0
+# Game Localization MVR (Minimum Viable Rules) v2.1
 
-A robust, automated workflow system for managing game localization with strict validation, AI translation/repair, and multi-format export capabilities.
+A robust, automated workflow system for game localization with strict validation, AI translation/repair, glossary management, and multi-format export.
 
-> **Key Features**: Token freezing, Hard/Soft QA, Auto-repair Loop, Round2 Refresh, Cost Tracking.
-
----
-
-## 🤖 Agent Deployment Instructions
-
-**For Vibe Coding Agents / AI Deployments:**
-
-### 1. Environment Setup
-Target OS: Windows (preferred) or Linux. Python 3.8+ required.
-
-```bash
-# Clone repository
-git clone https://github.com/Charpup/game-localization-mvr.git
-cd game-localization-mvr
-
-# Install dependencies
-pip install pyyaml requests
-```
-
-### 2. Configuration
-Set environment variables for LLM access (OpenAI-compatible API):
-
-```powershell
-# Windows PowerShell
-$env:LLM_BASE_URL="https://api.apiyi.com/v1"
-$env:LLM_API_KEY="sk-your-api-key"
-$env:LLM_MODEL="gpt-4o-mini"
-$env:LLM_TIMEOUT_S="60"
-```
-
-### 3. Quick Verification
-Run the dry-run test suite to verify the environment:
-```bash
-python scripts/test_llm_dry_run.py
-```
+> **Core Principle**: Input rows == Output rows ALWAYS. No silent data loss.
 
 ---
 
-## 🚀 Human Quick Start
+## 🤖 For AI Coding Agents
 
-### 1. Prepare Data
-Ensure your input CSV has columns: `string_id`, `source_zh`, `target_ru` (optional).
-See `data/fixtures/input_valid.csv` for example.
+**Quick Commands for Agents:**
 
-### 2. Run Pipeline Steps
-
-#### Step 1: Normalize (Freeze Placeholders)
 ```bash
-python scripts/normalize_guard.py input.csv temp_normalized.csv placeholder_map.json workflow/placeholder_schema.yaml
+# 1. Verify LLM connectivity (MUST run first)
+python scripts/llm_ping.py
+
+# 2. Validate workflow configuration (dry-run)
+python scripts/translate_llm.py input.csv output.csv workflow/style_guide.md glossary/compiled.yaml --dry-run
+
+# 3. Run E2E test
+python scripts/test_e2e_workflow.py
 ```
 
-#### Step 5: Translate
+**Environment Variables (REQUIRED):**
+
 ```bash
-python scripts/translate_llm.py temp_normalized.csv translated.csv workflow/style_guide.md glossary/compiled.yaml
+LLM_BASE_URL=https://api.example.com/v1
+LLM_API_KEY=sk-your-key
+LLM_MODEL=gpt-4.1-mini
+LLM_TRACE_PATH=data/llm_trace.jsonl
 ```
 
-#### Step 6-7: QA & Repair (Hard)
-```bash
-python scripts/qa_hard.py translated.csv qa_report.json placeholder_map.json
-python scripts/repair_loop.py translated.csv qa_report.json repair_tasks.jsonl workflow/style_guide.md glossary/compiled.yaml --out_csv repaired.csv
-```
+**Key Rules for Agents:**
 
-#### Step 10: Export (Rehydrate)
-```bash
-python scripts/rehydrate_export.py repaired.csv placeholder_map.json final_output.csv
-```
+1. **Never hardcode API keys** - Use environment variables only
+2. **Run `llm_ping.py` first** - Fail-fast if LLM unavailable
+3. **Check WORKSPACE_RULES.md** - See `docs/WORKSPACE_RULES.md` for hard constraints
+4. **Row preservation is P0** - Empty source rows must be preserved with `status=skipped_empty`
+5. **Glossary is mandatory** - `glossary/compiled.yaml` must exist before translation
 
 ---
 
-## 🔄 Full Pipeline Overview
+## 🚀 Pipeline Overview
 
-| Step | Script | Purpose |
-|------|--------|---------|
-| **1** | `normalize_guard.py` | 🧊 Freeze tags/placeholders into tokens (`⟦PH_1⟧`) |
-| **2-4** | (Manual/Pre-process) | Glossary check & extraction |
-| **5** | `translate_llm.py` | 🤖 AI Translation with glossary & style guide |
-| **6** | `qa_hard.py` | 🛡️ **Blocker**: Validate forbidden patterns & tokens |
-| **7** | `repair_loop.py` | 🔧 Auto-repair hard errors |
-| **8** | `soft_qa_llm.py` | 🧠 AI Quality Check (nuance, tone, glossary) |
-| **9** | `repair_loop.py` | 🔧 Auto-repair major soft issues |
-| **10** | `rehydrate_export.py` | 💧 Restore tokens to original placeholders |
-| **11** | `metrics_aggregator.py` | 💰 Calculate costs & token usage |
-| **12** | `glossary_autopromote.py` | 📖 Extract new terms from translation |
-| **13** | `translate_refresh.py` | ♻️ Round 2: Update translations affected by glossary changes |
+```
+Input CSV → Normalize → Translate → QA_Hard → Repair → Export
+                ↓
+            Glossary (required)
+```
+
+| Step | Script | Purpose | Blocking? |
+|------|--------|---------|-----------|
+| 0 | `llm_ping.py` | 🔌 LLM connectivity check | YES |
+| 1 | `normalize_guard.py` | 🧊 Freeze placeholders → tokens | YES |
+| 2-4 | `extract_terms.py` → `glossary_compile.py` | 📖 Build glossary | YES |
+| 5 | `translate_llm.py` | 🤖 AI Translation | YES |
+| 6 | `qa_hard.py` | 🛡️ Validate tokens/patterns | YES |
+| 7 | `repair_loop.py` | 🔧 Auto-repair hard errors | - |
+| 8 | `soft_qa_llm.py` | 🧠 Quality review | - |
+| 10 | `rehydrate_export.py` | 💧 Restore tokens → placeholders | YES |
 
 ---
 
 ## 📁 Project Structure
 
-```text
+```
 loc-mvr/
-├── config/              # Configuration (pricing, routing)
-├── data/                # Data storage (ignored by git usually)
-│   └── Test_Batch/      # Test datasets
-├── docs/                # Usage documentation
-├── glossary/            # Glossary files (YAML)
-├── scripts/             # Core Python scripts
-│   ├── runtime_adapter.py  # LLM Client & Router
-│   ├── translate_llm.py    # Main translation script
-│   ├── repair_loop.py      # Repair logic
-│   └── ...
-└── workflow/            # Workflow rules
-    ├── forbidden_patterns.txt
-    ├── placeholder_schema.yaml
-    └── style_guide.md
+├── config/
+│   ├── llm_routing.yaml    # Model routing per step
+│   └── pricing.yaml        # Cost calculation
+├── glossary/
+│   ├── compiled.yaml       # Active glossary (generated)
+│   └── generic_terms_zh.txt # Blacklist for extraction
+├── scripts/
+│   ├── llm_ping.py         # ★ Run first - connectivity check
+│   ├── normalize_guard.py  # Step 1: Placeholder freezing
+│   ├── translate_llm.py    # Step 5: Translation
+│   ├── qa_hard.py          # Step 6: Hard validation
+│   ├── repair_loop.py      # Step 7: Auto-repair
+│   └── runtime_adapter.py  # LLM client with routing
+├── workflow/
+│   ├── style_guide.md      # Translation style rules
+│   ├── forbidden_patterns.txt
+│   └── placeholder_schema.yaml
+└── docs/
+    └── WORKSPACE_RULES.md  # ★ Hard constraints for agents
 ```
 
-## 🔧 Configuration
+---
 
-- **Routing**: `config/llm_routing.yaml` - Configure which model handles which step.
-- **Pricing**: `config/pricing.yaml` - Set token costs for metrics.
-- **Rules**: `workflow/` - Customize forbidden patterns and style guides.
+## 🔧 Quick Start (Human)
 
-## 🧪 Testing
-
-Run specific test suites:
+### 1. Setup
 
 ```bash
-python scripts/test_normalize.py
-python scripts/test_rehydrate.py
-python scripts/test_e2e_workflow.py  # Small E2E test
+git clone https://github.com/Charpup/game-localization-mvr.git
+cd game-localization-mvr
+pip install pyyaml requests jieba
 ```
+
+### 2. Configure LLM
+
+```powershell
+# Windows PowerShell
+$env:LLM_BASE_URL="https://api.apiyi.com/v1"
+$env:LLM_API_KEY="sk-your-key"
+$env:LLM_MODEL="gpt-4.1-mini"
+```
+
+### 3. Run Pipeline
+
+```bash
+# Verify LLM
+python scripts/llm_ping.py
+
+# Normalize → Translate → QA → Export
+python scripts/normalize_guard.py input.csv normalized.csv map.json workflow/placeholder_schema.yaml
+python scripts/translate_llm.py normalized.csv translated.csv workflow/style_guide.md glossary/compiled.yaml
+python scripts/qa_hard.py translated.csv qa_report.json map.json
+python scripts/rehydrate_export.py translated.csv map.json final.csv
+```
+
+---
+
+## ⚡ Key Features
+
+- **Row Preservation**: Empty rows kept with `status=skipped_empty`
+- **Drift Guard**: Refresh stage blocks non-placeholder text changes
+- **Progress Reporting**: `--progress_every N` for translation progress
+- **Router-based Models**: Configure per-step models in `llm_routing.yaml`
+- **LLM Tracing**: All calls logged to `LLM_TRACE_PATH` for billing
+
+---
+
+## 📋 Testing
+
+```bash
+# Unit tests
+python scripts/test_normalize.py
+python scripts/test_qa_hard.py
+python scripts/test_rehydrate.py
+
+# E2E test (small dataset)
+python scripts/test_e2e_workflow.py
+
+# Dry-run validation
+python scripts/translate_llm.py input.csv out.csv style.md glossary.yaml --dry-run
+```
+
+---
 
 ## 📄 License
 
 MIT License. Built for game localization automation.
+
+---
+
+## 🔗 Links
+
+- **Workspace Rules**: [docs/WORKSPACE_RULES.md](docs/WORKSPACE_RULES.md)
+- **Demo Walkthrough**: [docs/demo.md](docs/demo.md)

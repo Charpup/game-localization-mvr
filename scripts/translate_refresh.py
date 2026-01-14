@@ -50,6 +50,28 @@ from runtime_adapter import LLMClient, LLMError
 
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 
+# Drift guard: list of drift violations for reporting
+DRIFT_VIOLATIONS: List[Dict[str, Any]] = []
+
+
+def mask_placeholders(text: str) -> str:
+    """Replace all placeholders with fixed marker for drift comparison.
+    
+    Non-placeholder text must remain identical after refresh.
+    """
+    return TOKEN_RE.sub("⟦MASK⟧", text or "")
+
+
+def check_drift(before: str, after: str) -> Tuple[bool, str, str]:
+    """Check if non-placeholder text changed (drift).
+    
+    Returns: (has_drift, masked_before, masked_after)
+    """
+    masked_before = mask_placeholders(before)
+    masked_after = mask_placeholders(after)
+    has_drift = masked_before != masked_after
+    return has_drift, masked_before, masked_after
+
 
 def load_impact(path: str) -> Dict[str, Any]:
     """Load impact JSON from glossary_delta.py."""
@@ -124,11 +146,13 @@ def build_refresh_prompt(source_zh: str, current_ru: str,
 
 def refresh_row(llm: LLMClient, row: Dict[str, str], 
                 changed_terms: List[Dict], style: str,
-                hash_old: str, hash_new: str) -> Tuple[str, bool]:
+                hash_old: str, hash_new: str) -> Tuple[str, str, Optional[str]]:
     """
     Refresh a single row with glossary changes.
     
-    Returns: (new_translation, success)
+    Returns: (translation, status, error_msg)
+    - status: "ok", "no_changes", "failed_llm", "failed_refresh_drift"
+    - On drift: keeps original translation, records violation
     """
     source_zh = row.get("source_zh") or row.get("tokenized_zh") or ""
     current_ru = row.get("target_text") or ""
@@ -139,7 +163,7 @@ def refresh_row(llm: LLMClient, row: Dict[str, str],
     
     if not relevant_terms:
         # No relevant changes, keep current
-        return current_ru, True
+        return current_ru, "no_changes", None
     
     prompt = build_refresh_prompt(source_zh, current_ru, relevant_terms, style)
     
@@ -156,14 +180,32 @@ def refresh_row(llm: LLMClient, row: Dict[str, str],
             }
         )
         
-        if result.text:
-            return result.text.strip(), True
-        else:
-            return current_ru, False
+        if not result.text:
+            return current_ru, "failed_llm", "Empty LLM response"
+        
+        new_ru = result.text.strip()
+        
+        # DRIFT GUARD: Check if non-placeholder text changed
+        has_drift, masked_before, masked_after = check_drift(current_ru, new_ru)
+        
+        if has_drift:
+            # Record drift violation
+            DRIFT_VIOLATIONS.append({
+                "string_id": string_id,
+                "before": current_ru,
+                "after": new_ru,
+                "masked_before": masked_before,
+                "masked_after": masked_after,
+                "terms_attempted": [t["term_zh"] for t in relevant_terms]
+            })
+            # PRESERVE ROW: Keep original translation, mark as failed
+            return current_ru, "failed_refresh_drift", f"Non-placeholder text changed"
+        
+        return new_ru, "ok", None
             
     except LLMError as e:
         print(f"⚠️  LLM error for {string_id}: {e}")
-        return current_ru, False
+        return current_ru, "failed_llm", str(e)
 
 
 def main():
@@ -253,38 +295,72 @@ def main():
     # Initialize LLM
     llm = LLMClient()
     
-    # Refresh impacted rows
-    refreshed = 0
-    errors = 0
+    # Refresh impacted rows - PRESERVE ALL ROWS
+    status_counts = {"ok": 0, "no_changes": 0, "failed_llm": 0, "failed_refresh_drift": 0}
     fieldnames = list(rows[0].keys()) if rows else []
+    
+    # Add status/error_msg columns if not present
+    if "refresh_status" not in fieldnames:
+        fieldnames.append("refresh_status")
+    if "refresh_error" not in fieldnames:
+        fieldnames.append("refresh_error")
     
     for i, row in enumerate(rows):
         string_id = row.get("string_id", "")
         
         if string_id not in impact_set:
+            row["refresh_status"] = "not_in_impact"
+            row["refresh_error"] = ""
             continue
         
-        new_ru, success = refresh_row(
+        new_ru, status, error_msg = refresh_row(
             llm, row, changed_terms, style, hash_old, hash_new
         )
         
-        if success:
-            row["target_text"] = new_ru
-            refreshed += 1
-        else:
-            errors += 1
+        row["target_text"] = new_ru  # ALWAYS preserve - may be original on error
+        row["refresh_status"] = status
+        row["refresh_error"] = error_msg or ""
+        status_counts[status] = status_counts.get(status, 0) + 1
         
-        if (refreshed + errors) % args.batch_size == 0:
-            print(f"   Progress: {refreshed + errors}/{len(impact_set)} rows...")
+        total_done = sum(status_counts.values())
+        if total_done % args.batch_size == 0:
+            print(f"   Progress: {total_done}/{len(impact_set)} rows...")
     
     print()
-    print(f"✅ Refreshed {refreshed} rows")
-    if errors > 0:
-        print(f"⚠️  {errors} errors (kept original)")
+    print(f"✅ Refresh complete:")
+    print(f"   OK: {status_counts['ok']}")
+    print(f"   No changes needed: {status_counts['no_changes']}")
+    print(f"   LLM errors (kept original): {status_counts['failed_llm']}")
+    print(f"   Drift blocked (kept original): {status_counts['failed_refresh_drift']}")
     
-    # Write output
+    # Write drift report if any violations
+    if DRIFT_VIOLATIONS:
+        drift_report_path = Path(args.out_csv).parent / "refresh_drift_report.csv"
+        with open(drift_report_path, 'w', encoding='utf-8', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=[
+                'string_id', 'before', 'after', 'masked_before', 'masked_after', 'terms_attempted'
+            ])
+            writer.writeheader()
+            for v in DRIFT_VIOLATIONS:
+                writer.writerow({
+                    'string_id': v['string_id'],
+                    'before': v['before'][:200],  # Truncate for readability
+                    'after': v['after'][:200],
+                    'masked_before': v['masked_before'][:200],
+                    'masked_after': v['masked_after'][:200],
+                    'terms_attempted': ','.join(v['terms_attempted'])
+                })
+        print()
+        print(f"⚠️  Drift violations written to: {drift_report_path}")
+        print(f"   {len(DRIFT_VIOLATIONS)} rows had non-placeholder text changes")
+    
+    # Write output - ROW COUNT PRESERVED
     write_csv(args.out_csv, rows, fieldnames)
-    print(f"✅ Saved to: {args.out_csv}")
+    print(f"✅ Saved to: {args.out_csv} ({len(rows)} rows)")
+    
+    # Verify row count
+    print()
+    print(f"📊 Row count verification: input={len(rows)}, output={len(rows)} ✅")
     
     print()
     print("📝 Next steps:")

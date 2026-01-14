@@ -26,6 +26,7 @@ resp = requests.post("https://api.openai.com/v1/chat/completions", ...)
 所有 `llm.chat()` 调用**必须**传 `metadata={"step": "..."}` 参数。
 
 有效的 step 值：
+
 - `translate` - translate_llm.py
 - `soft_qa` - soft_qa_llm.py
 - `repair` - repair_loop.py
@@ -56,6 +57,7 @@ llm.chat(system=..., user=...)
 ### 2.2 无 usage 则 fallback 估算
 
 若 `usage` 缺失，则按字符数估算 tokens：
+
 ```
 tokens ≈ ceil(chars / 4)
 ```
@@ -94,6 +96,7 @@ entries:
 ### 3.3 Scope 分域控制
 
 Glossary 按 scope 组织，至少区分：
+
 - `language_pair` - 语言对 (zh-CN->ru-RU)
 - `ip/project` - IP 或项目 (ip_naruto, project_xxx)
 
@@ -115,6 +118,7 @@ glossary/
 翻译前**必须**运行 `glossary_compile.py` 生成 `glossary/compiled.yaml`。
 
 `translate_llm.py` 在以下情况会**阻断执行**：
+
 - `compiled.yaml` 不存在
 - `compiled.yaml` 为空（0 条目）
 
@@ -205,6 +209,7 @@ python scripts/translate_llm.py --input normalized.csv ...
 ### 6.2 必须产出可验证证据
 
 每一步必须产出"可验证证据"：
+
 - 运行了哪些命令（终端日志）
 - 产生了哪些文件（路径 + 简要摘要）
 
@@ -224,8 +229,98 @@ python scripts/translate_llm.py --input normalized.csv ...
 
 ## 规则版本
 
-- Version: 2.0
-- Last Updated: 2026-01-12
+- Version: 2.1
+- Last Updated: 2026-01-15
 - Changelog:
+  - 2.1: 增加 Row Preservation, LLM Ping, Secrets Hygiene, Refresh Drift Guard 规则
   - 2.0: 增加 metrics 和 glossary autopromote 规则
   - 1.0: 初始版本
+
+---
+
+## 8. Row Preservation 规则 (v2.1)
+
+### 8.1 行数恒等
+
+Input rows == Output rows **ALWAYS**。空源行必须保留。
+
+```python
+# ✅ 正确 - 空行保留
+if not source_zh.strip():
+    result.status = "skipped_empty"
+    result.is_empty_source = True
+    results.append(result)  # 仍然添加
+
+# ❌ 禁止 - 跳过空行
+if not source_zh.strip():
+    continue  # 会导致行数不一致
+```
+
+### 8.2 状态字段
+
+所有输出必须包含 `status` 字段：
+
+- `ok` - 正常处理
+- `skipped_empty` - 空源跳过
+- `failed_translate` - 翻译失败
+- `failed_refresh_drift` - 刷新漂移被阻止
+
+---
+
+## 9. LLM Ping 规则 (v2.1)
+
+### 9.1 Pipeline 必须先 Ping
+
+任何 LLM 依赖的 pipeline **必须**先运行 `llm_ping.py`：
+
+```bash
+python scripts/llm_ping.py  # 必须先运行
+python scripts/translate_llm.py ...
+```
+
+### 9.2 Ping 使用 Router
+
+`llm_ping.py` **必须**使用 `config/llm_routing.yaml` 中的 `llm_ping` step 配置，禁止硬编码模型。
+
+---
+
+## 10. Secrets Hygiene 规则 (v2.1)
+
+### 10.1 禁止在 Repo 中存储 API Key
+
+API keys / base_url **禁止**存储在 repo 配置中。必须使用环境变量：
+
+```bash
+# ✅ 正确 - 环境变量
+export LLM_API_KEY="sk-xxx"
+
+# ❌ 禁止 - 配置文件
+# config/secrets.yaml
+api_key: sk-xxx  # NEVER DO THIS
+```
+
+### 10.2 .gitignore 必须包含敏感文件
+
+`.gitignore` 必须包含：
+
+- `*.key`
+- `secrets.yaml`
+- `data/llm_trace.jsonl` (含调用数据)
+
+---
+
+## 11. Refresh Drift Guard 规则 (v2.1)
+
+### 11.1 Non-placeholder 文本不可变
+
+`translate_refresh.py` 中，mask_placeholders(before) **必须等于** mask_placeholders(after)。
+
+若检测到漂移：
+
+- 标记 `status=failed_refresh_drift`
+- **保留原翻译**，不使用 LLM 输出
+- 写入 `refresh_drift_report.csv`
+
+### 11.2 禁止 LLM 重写
+
+Refresh 阶段**只能**进行确定性术语替换。禁止 LLM 重写非术语部分。
