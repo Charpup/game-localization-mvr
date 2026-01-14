@@ -33,6 +33,10 @@ routing:
     default: claude-sonnet-4-5-20250929
     fallback: [gpt-4.1, gpt-4.1-mini]
 
+  glossary_review:
+    default: gpt-4.1-mini
+    fallback: [claude-3-5-haiku-latest, gpt-4o-mini]
+
   _default:
     default: gpt-4.1-mini
     fallback: [gpt-4.1]

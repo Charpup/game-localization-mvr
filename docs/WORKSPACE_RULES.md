@@ -110,6 +110,54 @@ glossary/
 
 若 proposed 的 `term_zh` 已有不同的 `approved` `term_ru`，则标记为冲突并**不纳入** proposals。
 
+### 3.5 Glossary 必须先编译再翻译 (v2.1)
+
+翻译前**必须**运行 `glossary_compile.py` 生成 `glossary/compiled.yaml`。
+
+`translate_llm.py` 在以下情况会**阻断执行**：
+- `compiled.yaml` 不存在
+- `compiled.yaml` 为空（0 条目）
+
+**无逃生通道** - 空 glossary 不被允许。测试时使用 seed glossary。
+
+```bash
+# 正确流程
+python scripts/glossary_compile.py  # 先编译
+python scripts/translate_llm.py ...  # 再翻译
+```
+
+### 3.6 首次翻译前建议提取术语
+
+新项目首次翻译前，**建议**运行 `extract_terms.py` 提取候选术语：
+
+```bash
+1. python scripts/extract_terms.py input.csv --out terms_candidates.yaml
+2. 人工审核或 LLM 审核候选术语
+3. python scripts/glossary_compile.py
+4. python scripts/translate_llm.py ...
+```
+
+### 3.7 LLM Glossary Review Fallback
+
+当用户不懂目标语言时，可使用 LLM 进行 glossary 审核：
+
+```bash
+# 模式 1: 推荐模式（默认）- 只输出建议，不自动 approve
+python scripts/glossary_review_llm.py \
+    --proposals proposals.yaml \
+    --output recommendations.yaml \
+    --mode recommend
+
+# 模式 2: 自信审批模式 - 输出 patch，需人工确认后 merge
+python scripts/glossary_review_llm.py \
+    --proposals proposals.yaml \
+    --output approved_patch.yaml \
+    --mode approve_if_confident \
+    --confidence_threshold 0.85
+```
+
+**所有输出均可审计 + 可逆**，LLM 审核结果仍需人工确认后方可 merge 为 approved。
+
 ---
 
 ## 4. 占位符规则
