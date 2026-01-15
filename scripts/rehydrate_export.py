@@ -94,46 +94,34 @@ class RehydrateExporter:
             print(f"❌ Error loading placeholder map: {str(e)}")
             return False
     
-    def load_punctuation_map(self) -> bool:
-        """加载标点符号映射（可选）"""
-        if not self.punctuation_map_path.exists():
-            print(f"ℹ️  No punctuation map found at {self.punctuation_map_path}")
-            print(f"   Punctuation normalization will be skipped.")
-            return True  # 不是错误，只是跳过
+    def load_punctuation_mappings(self) -> bool:
+        """加载分层标点符号配置 (Base + Locale)"""
+        from scripts.lib_text import load_punctuation_config
         
-        try:
-            with open(self.punctuation_map_path, 'r', encoding='utf-8') as f:
-                data = yaml.safe_load(f)
-            
-            # 获取目标语言的映射
-            mappings_by_lang = data.get('mappings', {})
-            if self.target_lang in mappings_by_lang:
-                self.punctuation_mappings = mappings_by_lang[self.target_lang]
-                print(f"✅ Loaded {len(self.punctuation_mappings)} punctuation mappings for {self.target_lang}")
-            else:
-                print(f"ℹ️  No punctuation mappings for {self.target_lang}")
-            
-            return True
-            
-        except Exception as e:
-            print(f"⚠️  Warning: Could not load punctuation map: {str(e)}")
-            return True  # 非致命错误
-    
+        base_conf = str(self.translated_csv.parent.parent / "config" / "punctuation" / "base.yaml")
+        locale_conf = str(self.translated_csv.parent.parent / "config" / "punctuation" / f"{self.target_lang}.yaml")
+        
+        self.punctuation_mappings = load_punctuation_config(base_conf, locale_conf)
+        if self.punctuation_mappings:
+            print(f"✅ Loaded {len(self.punctuation_mappings)} punctuation rules")
+        
+        return True
+
     def normalize_punctuation(self, text: str) -> str:
         """将源语言标点符号转换为目标语言等价符号"""
+        from scripts.lib_text import sanitize_punctuation
+        
         if not text or not self.punctuation_mappings:
             return text
+            
+        old_text = text
+        new_text = sanitize_punctuation(text, self.punctuation_mappings)
         
-        result = text
-        for mapping in self.punctuation_mappings:
-            source = mapping.get('source', '')
-            target = mapping.get('target', '')
-            if source and source in result:
-                count = result.count(source)
-                result = result.replace(source, target)
-                self.punctuation_converted += count
-        
-        return result
+        # Count changes (imperfect but sufficient)
+        if old_text != new_text:
+            self.punctuation_converted += 1
+            
+        return new_text
     
     def extract_tokens(self, text: str) -> Set[str]:
         """提取文本中的所有 token"""
@@ -306,7 +294,7 @@ class RehydrateExporter:
             return False
         
         # 加载标点符号映射（可选）
-        self.load_punctuation_map()
+        self.load_punctuation_mappings()
         
         print()
         

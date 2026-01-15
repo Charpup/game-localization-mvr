@@ -28,10 +28,10 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 # Ensure UTF-8 output on Windows
-if sys.platform == 'win32':
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+# if sys.platform == 'win32':
+#     import io
+#     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+#     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 try:
     import yaml
@@ -87,52 +87,73 @@ def token_counts(s: str) -> Dict[str, int]:
     return d
 
 
+# Import glossary logic from translate_llm
+from translate_llm import load_glossary, build_glossary_constraints, GlossaryEntry
+
 def build_system(style: str) -> str:
     """Build system prompt for soft QA."""
     return (
-        "你是资深游戏本地化语言 QA（ru-RU）。\n"
-        "你只做'软质量评审'：风格、术语一致性、UI可读性、歧义风险。\n"
-        "注意：不可变 token（⟦PH_x⟧/⟦TAG_x⟧）必须保留；你不能要求删除 token。\n"
-        "输出必须是 JSON，不要解释文本。\n\n"
-        "风格规范：\n" + style
+        "你是手游本地化软质检（zh-CN → ru-RU）。\n\n"
+        "输入：source_zh + target_ru。输出：需要修复的任务列表（JSON），用于后续 repair_loop。\n\n"
+        "检查维度（只报问题，不要夸）：\n"
+        "- 术语一致性（glossary）\n"
+        "- 语气：官方为主，二次元口语为辅（避免过度口语或过度书面）\n"
+        "- UI 简洁性（冗长/重复/不自然）\n"
+        "- 歧义/误译/信息缺失\n"
+        "- 标点与符号：禁止【】；占位符必须完整\n\n"
+        "输出 JSON（硬性，且仅输出 JSON）：\n"
+        "{\n"
+        "  \"tasks\": [\n"
+        "    {\n"
+        "      \"string_id\": \"<id>\",\n"
+        "      \"severity\": \"minor|major\",\n"
+        "      \"issue_type\": \"terminology|tone|brevity|ambiguity|mistranslation|format|punctuation\",\n"
+        "      \"problem\": \"<一句话描述问题>\",\n"
+        "      \"suggestion\": \"<一句话给出修复方向>\",\n"
+        "      \"preferred_fix_ru\": \"<可选：给出你建议的修复后俄文；若不确定留空字符串>\"\n"
+        "    }\n"
+        "  ]\n"
+        "}\n"
+        "规则：\n"
+        "- 没问题则输出 { \"tasks\": [] }。\n"
+        "- problem/suggestion 必须短句，避免长段解释。\n"
     )
 
 
-def build_user(batch: List[Dict[str, str]], glossary_text: str, rubric: dict) -> str:
-    """Build user prompt for soft QA batch."""
-    # Extract dimension keys and descriptions for stable prompting
-    dims = rubric.get("dimensions", [])
-    dim_desc = [{"key": d["key"], "description": d["description"]} for d in dims]
-
-    payload = []
-    for r in batch:
-        payload.append({
-            "string_id": r.get("string_id", ""),
-            "source_zh": r.get("source_zh", ""),
-            "tokenized_zh": r.get("tokenized_zh", ""),
-            "target_text": r.get("target_text", ""),
-        })
+def build_user(row: Dict[str, str], glossary_entries: List[GlossaryEntry], style_guide_excerpt: str) -> str:
+    """Build user prompt for soft QA (single item)."""
+    sid = row.get("string_id", "").strip()
+    source_zh = row.get("source_zh", "").strip() or row.get("tokenized_zh", "").strip()
+    target_ru = row.get("target_text", "").strip()
+    
+    # Build glossary excerpt (similar to translate_llm)
+    # We check against source_zh for relevant terms
+    approved, banned, proposed = build_glossary_constraints(glossary_entries, source_zh)
+    
+    glossary_lines = []
+    if approved:
+        glossary_lines.append("【强制使用】")
+        for k, v in approved.items():
+            glossary_lines.append(f"- {k} → {v}")
+    if banned:
+        glossary_lines.append("【禁止自创】")
+        for k in banned:
+            glossary_lines.append(f"- {k}")
+    if proposed:
+        glossary_lines.append("【参考建议】")
+        for k, vals in proposed.items():
+            glossary_lines.append(f"- {k} → {', '.join(vals)}")
+            
+    glossary_text = "\n".join(glossary_lines) if glossary_lines else "(无)"
 
     return (
-        "请对以下条目做软质量评审，输出 JSON：\n"
-        "{\n"
-        "  \"items\": [\n"
-        "    {\"string_id\": \"...\", \"issues\": [\n"
-        "        {\"dimension\": \"...\", \"severity\": \"minor|major\", \"note\": \"...\", \"suggested_fix\": \"...\"}\n"
-        "    ]}\n"
-        "  ],\n"
-        "  \"summary\": {\"major\": 0, \"minor\": 0}\n"
-        "}\n\n"
-        "规则：\n"
-        "- 如果条目没有问题，issues 数组为空 []\n"
-        "- dimension 只能是以下之一：style_officialness, anime_tone, terminology_consistency, ui_brevity, ambiguity\n"
-        "- severity 只能是 minor 或 major\n"
-        "- suggested_fix 应该是修复后的完整译文（保留所有 token）\n\n"
-        f"评审维度：{json.dumps(dim_desc, ensure_ascii=False)}\n\n"
-        "术语表（参考；approved 必须遵守）：\n"
-        f"{glossary_text[:4000]}\n\n"
-        "条目：\n"
-        f"{json.dumps(payload, ensure_ascii=False, indent=2)}"
+        f"string_id: {sid}\n"
+        f"source_zh: {source_zh}\n"
+        f"target_ru: {target_ru}\n\n"
+        "glossary_excerpt:\n"
+        f"{glossary_text}\n\n"
+        "style_guide_excerpt:\n"
+        f"{style_guide_excerpt[:2000]}\n"
     )
 
 
@@ -165,27 +186,27 @@ def main():
     ap.add_argument("style_guide_md", help="Style guide file")
     ap.add_argument("glossary_yaml", help="Glossary file")
     ap.add_argument("rubric_yaml", help="Soft QA rubric config")
-    ap.add_argument("--batch_size", type=int, default=40, help="Rows per LLM call")
+    ap.add_argument("--batch_size", type=int, default=40, help="Ignored in single-mode v2")
     ap.add_argument("--out_report", default="data/qa_soft_report.json", help="Output report JSON")
     ap.add_argument("--out_tasks", default="data/repair_tasks.jsonl", help="Output repair tasks JSONL")
     ap.add_argument("--dry-run", action="store_true", 
                     help="Validate configuration without making LLM calls")
     args = ap.parse_args()
 
-    print(f"🔍 Starting Soft QA v1.0...")
+    print(f"🔍 Starting Soft QA v2.0 (Single-Item Strict JSON)...")
     print(f"   Input: {args.translated_csv}")
-    print(f"   Batch size: {args.batch_size}")
     print()
 
     # Load resources
     rows = read_csv(args.translated_csv)
     style = load_text(args.style_guide_md)
-    rubric = load_yaml(args.rubric_yaml)
+    # rubric = load_yaml(args.rubric_yaml) # Not used in new prompt structure directly but kept for comp
 
-    glossary_text = ""
-    if args.glossary_yaml and Path(args.glossary_yaml).exists():
-        glossary_text = load_text(args.glossary_yaml)
-
+    glossary_path = args.glossary_yaml
+    glossary_entries = []
+    if glossary_path and Path(glossary_path).exists():
+        glossary_entries, _ = load_glossary(glossary_path)
+    
     # Dry-run mode
     if getattr(args, 'dry_run', False):
         print()
@@ -195,8 +216,7 @@ def main():
         print()
         print(f"[OK] Input loaded: {len(rows)} rows")
         print(f"[OK] Style guide: {len(style)} chars")
-        print(f"[OK] Rubric loaded: {args.rubric_yaml}")
-        print(f"[OK] Glossary: {len(glossary_text)} chars")
+        print(f"[OK] Glossary loaded: {len(glossary_entries)} entries")
         
         # Check LLM env
         import os
@@ -227,7 +247,7 @@ def main():
     if Path(args.out_tasks).exists():
         Path(args.out_tasks).unlink()
 
-    # Process batches
+    # Process single items
     major = 0
     minor = 0
     all_tasks = 0
@@ -235,66 +255,63 @@ def main():
 
     i = 0
     while i < len(rows):
-        batch = rows[i:i+args.batch_size]
-        batch_start = i + 1
-        batch_end = min(i + args.batch_size, len(rows))
+        row = rows[i]
         
-        print(f"  [{batch_start}-{batch_end}/{len(rows)}] Processing...")
+        # Skip if no target text
+        if not row.get("target_text"):
+            i += 1
+            continue
+
+        if (i+1) % 10 == 0:
+            print(f"  [{i+1}/{len(rows)}] Processing...")
 
         try:
             system = build_system(style)
-            user = build_user(batch, glossary_text, rubric)
+            user = build_user(row, glossary_entries, style)
             
-            result = llm.chat(system=system, user=user, temperature=0.1, metadata={"step": "soft_qa"})
+            result = llm.chat(
+                system=system, 
+                user=user, 
+                temperature=0.1, 
+                metadata={"step": "soft_qa", "string_id": row.get("string_id")},
+                response_format={"type": "json_object"}
+            )
             obj = extract_json(result.text)
             
-            if not obj or "items" not in obj:
-                # Soft QA failure should not break pipeline
-                print(f"    ⚠️  Invalid JSON response, skipping batch")
-                append_jsonl(args.out_tasks, [{
-                    "string_id": "",
-                    "type": "soft_qa_failed",
-                    "severity": "major",
-                    "note": "soft QA model output invalid JSON",
-                    "suggested_fix": "run soft QA again with smaller batch_size",
-                }])
-                major += 1
+            if not obj or "tasks" not in obj:
+                # Retry logic could be added here, but for now we log and move on
+                print(f"    ⚠️  Invalid JSON response for {row.get('string_id')}")
                 batch_errors += 1
-                i += args.batch_size
+                i += 1
                 continue
 
             # Extract issues as tasks
-            tasks = []
-            batch_major = 0
-            batch_minor = 0
+            tasks_found = obj.get("tasks", [])
             
-            for it in obj.get("items", []):
-                sid = it.get("string_id", "")
-                issues = it.get("issues", []) or []
+            valid_tasks = []
+            for t in tasks_found:
+                # Normalize task object to expected output format
+                # Prompt output: string_id, severity, issue_type, problem, suggestion, preferred_fix_ru
+                # Output expectation: string_id, type, severity, note, suggested_fix
                 
-                for iss in issues:
-                    sev = iss.get("severity", "minor")
-                    if sev == "major":
-                        major += 1
-                        batch_major += 1
-                    else:
-                        minor += 1
-                        batch_minor += 1
-                    
-                    tasks.append({
-                        "string_id": sid,
-                        "type": iss.get("dimension", ""),
-                        "severity": sev,
-                        "note": iss.get("note", ""),
-                        "suggested_fix": iss.get("suggested_fix", ""),
-                    })
+                sev = t.get("severity", "minor")
+                if sev == "major":
+                    major += 1
+                else:
+                    minor += 1
+                
+                valid_tasks.append({
+                    "string_id": t.get("string_id") or row.get("string_id"),
+                    "type": t.get("issue_type", "issue"),
+                    "severity": sev,
+                    "note": f"{t.get('problem', '')} | Suggestion: {t.get('suggestion', '')}",
+                    "suggested_fix": t.get("preferred_fix_ru", ""),
+                })
 
-            if tasks:
-                append_jsonl(args.out_tasks, tasks)
-                all_tasks += len(tasks)
+            if valid_tasks:
+                append_jsonl(args.out_tasks, valid_tasks)
+                all_tasks += len(valid_tasks)
             
-            print(f"    ✅ Found {batch_major} major, {batch_minor} minor issues")
-
         except LLMError as e:
             print(f"    ❌ LLM Error: {e.kind} - {e}")
             batch_errors += 1
@@ -302,7 +319,7 @@ def main():
             print(f"    ❌ Error: {e}")
             batch_errors += 1
 
-        i += args.batch_size
+        i += 1
 
     # Write report
     report = {

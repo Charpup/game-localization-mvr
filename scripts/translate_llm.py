@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-translate_llm.py
+translate_llm.py (v2.1 - Concurrent)
 Purpose:
   Translate tokenized Chinese strings (tokenized_zh) into target language with:
   - checkpoint/resume
@@ -10,19 +10,20 @@ Purpose:
   - fallback to escalate list after repeated failures
   - glossary.yaml (approved hard, banned hard, proposed soft)
   - style_guide.md guidance
+  - Controlled concurrency via --max_inflight
 
 Usage:
   python scripts/translate_llm.py \
-    data/draft.csv data/translated.csv \
-    workflow/style_guide.md data/glossary.yaml \
-    --target ru-RU --batch_size 50 --max_retries 4
+    --input data/draft.csv \
+    --output data/translated.csv \
+    --style workflow/style_guide.md \
+    --glossary data/glossary.yaml \
+    --target ru-RU --max_retries 4 --max_inflight 3
 
 Environment (OpenAI-compatible):
-  LLM_BASE_URL   e.g. https://api.openai.com/v1 (or your internal compatible gateway)
+  LLM_BASE_URL   e.g. https://api.openai.com/v1
   LLM_API_KEY    your key/token
-  LLM_MODEL      e.g. gpt-4.1-mini / gpt-4o-mini / claude-compatible gateway model name
-Optional:
-  LLM_TIMEOUT_S  default 60
+  LLM_MODEL      e.g. gpt-4o
 """
 
 import argparse
@@ -33,18 +34,17 @@ import random
 import re
 import sys
 import time
-from dataclasses import dataclass
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
-
-# Ensure UTF-8 output on Windows
-if sys.platform == 'win32':
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+from typing import Dict, List, Optional, Tuple, Any
 
 # Use shared runtime adapter for LLM calls
-from runtime_adapter import LLMClient, LLMError, LLMResult
+try:
+    from runtime_adapter import LLMClient, LLMError
+except ImportError:
+    LLMClient = None
+    LLMError = Exception
 
 try:
     import yaml  # PyYAML
@@ -64,7 +64,22 @@ class GlossaryEntry:
     status: str  # approved | proposed | banned
     notes: str = ""
 
+
+@dataclass
+class TranslateResult:
+    """Result of processing a single row."""
+    idx: int
+    string_id: str
+    success: bool
+    target_text: str = ""
+    error_msg: str = ""
+    row: Dict[str, str] = field(default_factory=dict)
+    queue_wait_ms: int = 0
+
+
 def load_style_guide(path: str) -> str:
+    if not Path(path).exists():
+        return ""
     with open(path, "r", encoding="utf-8") as f:
         return f.read().strip()
 
@@ -77,16 +92,6 @@ def load_glossary_lock(compiled_path: str) -> Dict[str, Any]:
     return {}
 
 def load_glossary(path: str) -> Tuple[List[GlossaryEntry], Optional[str]]:
-    """
-    Load glossary from YAML.
-    
-    Supports multiple formats:
-    - compiled.yaml: {"entries": [{term_zh, term_ru, scope}]}
-    - approved.yaml: {"entries": [{term_zh, term_ru, status, ...}]}
-    - Legacy: {"candidates": [...]}
-    
-    Returns: (entries, glossary_hash)
-    """
     if not path or not Path(path).exists():
         return [], None
     if yaml is None:
@@ -98,21 +103,15 @@ def load_glossary(path: str) -> Tuple[List[GlossaryEntry], Optional[str]]:
     entries: List[GlossaryEntry] = []
     glossary_hash = None
     
-    # Try to load lock file for version info
     lock = load_glossary_lock(path)
     if lock:
         glossary_hash = lock.get("hash", "")
     
-    # Support multiple shapes:
-    # 1) compiled.yaml format: {"entries": [{term_zh, term_ru, scope}]}
-    # 2) approved.yaml format: {"entries": [{term_zh, term_ru, status, notes}]}
-    # 3) Legacy candidates: {"candidates": [{term_zh, ru_suggestion, status, notes}]}
     if isinstance(data, dict) and "entries" in data and isinstance(data["entries"], list):
         src = data["entries"]
         for it in src:
             term_zh = (it.get("term_zh") or "").strip()
             term_ru = (it.get("term_ru") or "").strip()
-            # compiled.yaml has scope but no status - treat as approved
             status = (it.get("status") or "approved").strip()
             notes = (it.get("notes") or it.get("note") or "").strip()
             if term_zh:
@@ -125,20 +124,10 @@ def load_glossary(path: str) -> Tuple[List[GlossaryEntry], Optional[str]]:
             notes = (it.get("notes") or "").strip()
             if term_zh:
                 entries.append(GlossaryEntry(term_zh, term_ru, status, notes))
-    else:
-        # If unknown shape, treat as empty to avoid crashing production runs.
-        return [], None
-
+    
     return entries, glossary_hash
 
 def build_glossary_constraints(entries: List[GlossaryEntry], source_text: str) -> Tuple[Dict[str, str], List[str], Dict[str, List[str]]]:
-    """
-    Return:
-      approved_map: zh -> ru (hard)
-      banned_terms: list of zh terms (hard forbidden in translation output as ru equivalents are unknown)
-      proposed_map: zh -> list of ru suggestions (soft reference)
-    Only include entries that appear in source_text to keep prompts small.
-    """
     approved_map: Dict[str, str] = {}
     banned_terms: List[str] = []
     proposed_map: Dict[str, List[str]] = {}
@@ -158,24 +147,12 @@ def build_glossary_constraints(entries: List[GlossaryEntry], source_text: str) -
     return approved_map, banned_terms, proposed_map
 
 # -----------------------------
-# LLMClient is now imported from runtime_adapter
-# See runtime_adapter.py for implementation
-# -----------------------------
-
-# -----------------------------
-# Helpers: checkpoint/resume
+# Helpers
 # -----------------------------
 def read_csv_rows(path: str) -> List[Dict[str, str]]:
     with open(path, "r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         return list(reader)
-
-def write_csv_rows(path: str, fieldnames: List[str], rows: List[Dict[str, str]]) -> None:
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fieldnames)
-        w.writeheader()
-        w.writerows(rows)
 
 def append_csv_rows(path: str, fieldnames: List[str], rows: List[Dict[str, str]]) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -206,22 +183,16 @@ def tokens_signature(text: str) -> Dict[str, int]:
     return counts
 
 def validate_translation(tokenized_zh: str, ru: str) -> Tuple[bool, str]:
-    """
-    Hard checks for /loc_translate output (pre-qa_hard):
-      - token counts must match
-      - must not contain CJK
-    """
     if tokens_signature(tokenized_zh) != tokens_signature(ru):
         return False, "token_mismatch"
     if CJK_RE.search(ru or ""):
         return False, "cjk_remaining"
-    # basic: empty translation is invalid
     if not (ru or "").strip():
-        return False, "empty"
+        if (tokenized_zh or "").strip():
+            return False, "empty"
     return True, "ok"
 
 def backoff_sleep(attempt: int) -> None:
-    # exponential backoff + jitter, capped
     base = min(2 ** attempt, 30)
     jitter = random.uniform(0.2, 1.0)
     time.sleep(base * jitter)
@@ -231,484 +202,267 @@ def backoff_sleep(attempt: int) -> None:
 # -----------------------------
 def build_system_prompt(style_guide: str) -> str:
     return (
-        "你是一个严谨的手游本地化译者与校对员。\n"
-        "目标：把中文（已包含不可变 token）翻译成俄语（ru-RU），输出必须可直接用于上线。\n"
-        "硬约束：任何 token（形如 ⟦PH_1⟧ 或 ⟦TAG_1⟧）必须逐字保留，不能增删改、不能改变顺序。\n"
-        "禁止：输出中出现任何中文字符。\n"
-        "输出格式：你只输出 JSON（不要额外解释）。\n\n"
-        "风格规范（必须遵守）：\n"
-        f"{style_guide}\n"
+        '你是严谨的手游本地化译者（zh-CN → ru-RU），面向"官方系统文案为主，二次元口语为辅"的火影题材。\n\n'
+        '目标：把给定的中文文本翻译成自然、简洁、符合俄语习惯的俄文 UI/系统文本。\n\n'
+        '术语表规则（硬性）：\n'
+        '- glossary 中出现的 term_zh → term_ru 必须严格使用 term_ru（大小写/词形按 glossary 指定；如需要变格请保持词根一致并优先保持 glossary 形式）。\n'
+        '- 若源文包含 term_zh，但译文难以直接套用 term_ru，必须在不破坏占位符的前提下改写句子以容纳 term_ru。\n\n\n'
+        '占位符规则（硬性）：\n'
+        '- 任何形如 ⟦PH_xx⟧ / ⟦TAG_xx⟧ / {0} / %s 的占位符必须原样保留，不得翻译/改动/增删/移动。\n'
+        '- 输出中禁止出现中文括号符号【】；如源文含【】用于分组/强调，俄语侧用 «» 或改写为"X: …"。\n\n\n'
+        '输出格式（硬性）：\n'
+        '- 只输出最终俄文译文纯文本，不要解释，不要加引号，不要加编号，不要 Markdown。\n'
+        '- 若源文为空字符串：输出空字符串（不要输出 null）。\n'
     )
 
-def build_user_prompt(batch: List[Dict[str, str]], glossary_entries: List[GlossaryEntry], target_lang: str) -> str:
-    """
-    Batch translation. Return JSON mapping string_id -> target_text.
-    Glossary constraints injected per-row to keep prompt small.
-    """
-    items = []
-    for r in batch:
-        sid = (r.get("string_id") or "").strip()
-        tok = r.get("tokenized_zh") or r.get("source_zh") or ""
-        approved, banned, proposed = build_glossary_constraints(glossary_entries, tok)
-
-        items.append({
-            "string_id": sid,
-            "tokenized_zh": tok,
-            "glossary_hard": approved,              # zh->ru mandatory
-            "glossary_banned_zh": banned,           # zh terms not to invent/rename; treated as "do not creatively rename"
-            "glossary_soft": proposed,              # zh->ru suggestions
-        })
+def build_user_prompt(row: Dict[str, str], glossary_entries: List[GlossaryEntry], style_guide_excerpt: str) -> str:
+    source_zh = row.get("tokenized_zh") or row.get("source_zh") or ""
+    approved, banned, proposed = build_glossary_constraints(glossary_entries, source_zh)
+    
+    glossary_lines = []
+    if approved:
+        glossary_lines.append("【强制使用】")
+        for k, v in approved.items():
+            glossary_lines.append(f"- {k} → {v}")
+    if banned:
+        glossary_lines.append("【禁止自创】")
+        for k in banned:
+            glossary_lines.append(f"- {k}")
+    if proposed:
+        glossary_lines.append("【参考建议】")
+        for k, vals in proposed.items():
+            glossary_lines.append(f"- {k} → {', '.join(vals)}")
+            
+    glossary_text = "\n".join(glossary_lines) if glossary_lines else "(无)"
 
     return (
-        f"请将以下条目翻译为 {target_lang}。\n"
-        "要求：\n"
-        "1) 只输出 JSON 对象：key=string_id，value=target_text\n"
-        "2) 必须保留 token（⟦PH_x⟧/⟦TAG_x⟧）并保持数量一致\n"
-        "3) glossary_hard 里的译法必须使用（强制）；glossary_banned_zh 中的术语不要自创别名；glossary_soft 仅参考\n"
-        "4) 默认是官方系统文案语域；仅当原文明显是活动/台词语气时才可略口语化\n"
-        "5) 不要输出任何解释性文本\n\n"
-        "条目：\n"
-        + json.dumps(items, ensure_ascii=False, indent=2)
+        "源文（已冻结占位符）：\n"
+        f"{source_zh}\n\n"
+        "可用术语摘录（如为空则表示无匹配）：\n"
+        f"{glossary_text}\n\n"
+        "style_guide（节选）：\n"
+        f"{style_guide_excerpt[:2000]}\n"
     )
 
-def extract_json_object(text: str) -> Optional[dict]:
+# -----------------------------
+# Worker function (runs in thread)
+# -----------------------------
+def process_row(
+    idx: int,
+    row: Dict[str, str],
+    llm: LLMClient,
+    glossary: List[GlossaryEntry],
+    style_guide: str,
+    max_retries: int,
+    submit_time: float,
+    inflight_limit: int
+) -> TranslateResult:
     """
-    Try to extract a JSON object from model output.
+    Process a single row translation with retries.
+    Thread-safe: only reads shared data, returns result object.
     """
-    text = (text or "").strip()
-    # direct parse
-    try:
-        obj = json.loads(text)
-        if isinstance(obj, dict):
-            return obj
-    except Exception:
-        pass
+    worker_start = time.time()
+    queue_wait_ms = int((worker_start - submit_time) * 1000)
+    
+    sid = (row.get("string_id") or "").strip()
+    tok = row.get("tokenized_zh") or row.get("source_zh") or ""
+    
+    system = build_system_prompt(style_guide)
+    user = build_user_prompt(row, glossary, style_guide)
 
-    # fallback: find first { ... } block
-    start = text.find("{")
-    end = text.rfind("}")
-    if start != -1 and end != -1 and end > start:
-        snippet = text[start:end+1]
+    ru_result = ""
+    last_err = ""
+    success = False
+
+    for attempt in range(max_retries + 1):
         try:
-            obj = json.loads(snippet)
-            if isinstance(obj, dict):
-                return obj
-        except Exception:
-            return None
-    return None
-
-# -----------------------------
-# Main pipeline
-# -----------------------------
-def main():
-    ap = argparse.ArgumentParser(description="Translate tokenized Chinese to target language via LLM")
-    ap.add_argument("input_draft_csv", help="data/draft.csv")
-    ap.add_argument("output_translated_csv", help="data/translated.csv (append/resume)")
-    ap.add_argument("style_guide_md", help="workflow/style_guide.md")
-    ap.add_argument("glossary_yaml", help="data/glossary.yaml (can be empty/nonexistent)")
-    ap.add_argument("--target", default="ru-RU")
-    ap.add_argument("--batch_size", type=int, default=50)
-    ap.add_argument("--max_retries", type=int, default=4)
-    ap.add_argument("--checkpoint", default="data/translate_checkpoint.json")
-    ap.add_argument("--escalate_csv", default="data/escalate_list.csv")
-    ap.add_argument("--progress_every", type=int, default=200,
-                    help="Log progress every N rows (default: 200)")
-    ap.add_argument("--dry-run", action="store_true", 
-                    help="Validate configuration without making LLM calls")
-    args = ap.parse_args()
-
-    # Load resources
-    style_guide = load_style_guide(args.style_guide_md)
-    
-    # =========================================
-    # MANDATORY GLOSSARY VALIDATION (v2.1)
-    # =========================================
-    # Glossary is REQUIRED - no empty glossary allowed.
-    # Use glossary/compiled.yaml (generated by glossary_compile.py)
-    
-    glossary_path = args.glossary_yaml
-    glossary_version = None
-    glossary_hash = None
-    
-    # Check for compiled glossary at default location
-    compiled_path = Path("glossary/compiled.yaml")
-    if compiled_path.exists():
-        glossary_path = str(compiled_path)
-    
-    # Validate glossary exists
-    if not glossary_path or not Path(glossary_path).exists():
-        print("❌ ERROR: Glossary not found!")
-        print(f"   Expected: {glossary_path or 'glossary/compiled.yaml'}")
-        print()
-        print("   To fix this, run the glossary pipeline first:")
-        print("   1. python scripts/glossary_compile.py")
-        print("   2. (Optional) python scripts/extract_terms.py for new projects")
-        print()
-        print("   Empty glossary is NOT allowed. Every translation run requires")
-        print("   a valid compiled glossary to ensure terminology consistency.")
-        sys.exit(1)
-    
-    # Load glossary
-    glossary, glossary_version = load_glossary(glossary_path)
-    
-    # Validate glossary is non-empty
-    if not glossary:
-        print("❌ ERROR: Glossary is empty!")
-        print(f"   File: {glossary_path}")
-        print()
-        print("   To fix this, add terms to your glossary:")
-        print("   - glossary/global.yaml (universal terms)")
-        print("   - glossary/zhCN_ruRU/base.yaml (language pair terms)")
-        print("   Then run: python scripts/glossary_compile.py")
-        print()
-        print("   Empty glossary is NOT allowed. Terminology consistency")
-        print("   requires at least one approved term before translation.")
-        sys.exit(1)
-    
-    print(f"✅ Glossary loaded: {len(glossary)} terms from {glossary_path}")
-    
-    # Load and log compiled.lock.json for traceability
-    lock_data = load_glossary_lock(glossary_path)
-    if lock_data:
-        glossary_hash = lock_data.get("hash", lock_data.get("sha256", ""))
-        lock_version = lock_data.get("version", "")
-        print(f"   Version: {lock_version or 'N/A'}, Hash: {glossary_hash[:16] if glossary_hash else 'N/A'}...")
-    else:
-        print(f"   ⚠️  Warning: No compiled.lock.json found. Glossary traceability limited.")
-    
-    if glossary_version:
-        print(f"   Glossary config version: {glossary_version}")
-
-
-    # Dry-run mode: validate without LLM
-    if getattr(args, 'dry_run', False):
-        print()
-        print("=" * 60)
-        print("DRY-RUN MODE - Validating configuration")
-        print("=" * 60)
-        print()
-        print(f"[OK] Style guide loaded: {args.style_guide_md} ({len(style_guide)} chars)")
-        print(f"[OK] Glossary loaded: {len(glossary)} entries")
-        if glossary_version:
-            print(f"[OK] Glossary version: {glossary_version}")
-        
-        # Validate input file
-        rows = read_csv_rows(args.input_draft_csv)
-        if not rows:
-            print(f"[FAIL] No rows in input file: {args.input_draft_csv}")
-            sys.exit(1)
-        print(f"[OK] Input loaded: {len(rows)} rows")
-        
-        # Check required columns
-        sample = rows[0]
-        required = ["string_id", "tokenized_zh"]
-        for col in required:
-            if col not in sample and (col == "tokenized_zh" and "source_zh" not in sample):
-                print(f"[FAIL] Missing required column: {col}")
-                sys.exit(1)
-        print(f"[OK] Required columns present")
-        
-        # Validate LLM env vars
-        import os
-        llm_base = os.getenv("LLM_BASE_URL", "")
-        llm_key = os.getenv("LLM_API_KEY", "")
-        llm_model = os.getenv("LLM_MODEL", "")
-        
-        if llm_base and llm_key and llm_model:
-            print(f"[OK] LLM config: model={llm_model} base_url={llm_base[:30]}...")
-        else:
-            missing = []
-            if not llm_base: missing.append("LLM_BASE_URL")
-            if not llm_key: missing.append("LLM_API_KEY")
-            if not llm_model: missing.append("LLM_MODEL")
-            print(f"[WARN] Missing LLM env vars: {', '.join(missing)}")
-            print(f"       (Required for actual translation, not for dry-run)")
-        
-        # Show sample prompt
-        print()
-        print("Sample system prompt (first 500 chars):")
-        print("-" * 40)
-        sample_system = build_system_prompt(style_guide)
-        print(sample_system[:500] + "...")
-        print()
-        
-        print("=" * 60)
-        print("[OK] Dry-run validation PASSED")
-        print("     Configuration is valid. Ready for actual translation.")
-        print("=" * 60)
-        sys.exit(0)
-
-    # LLM config - now uses runtime_adapter
-    # Environment variables are read by LLMClient automatically
-    try:
-        llm = LLMClient()
-        print(f"[INFO] Using LLM: {llm.default_model} via {llm.base_url}")
-    except LLMError as e:
-        print(f"ERROR: {e}")
-        print("Set env vars: LLM_BASE_URL, LLM_API_KEY, LLM_MODEL")
-        sys.exit(2)
-
-    # Load input
-    rows = read_csv_rows(args.input_draft_csv)
-    if not rows:
-        print("No rows found in input.")
-        sys.exit(0)
-
-    # Ensure tokenized_zh exists; if not, fall back to source_zh
-    for r in rows:
-        if "tokenized_zh" not in r or not (r.get("tokenized_zh") or "").strip():
-            r["tokenized_zh"] = r.get("source_zh") or ""
-
-    # Checkpoint
-    ckpt = load_checkpoint(args.checkpoint)
-    done_ids = ckpt.get("done_ids", {})
-
-    # Prepare output fieldnames
-    base_fields = list(rows[0].keys())
-    # Ensure required columns exist
-    for col in ["string_id", "source_zh", "tokenized_zh"]:
-        if col not in base_fields:
-            base_fields.append(col)
-    out_fields = base_fields + (["target_text"] if "target_text" not in base_fields else [])
-
-    # If output already exists, also mark done_ids by reading it (makes resume robust even if checkpoint lost)
-    if Path(args.output_translated_csv).exists():
-        existing = read_csv_rows(args.output_translated_csv)
-        for r in existing:
-            sid = (r.get("string_id") or "").strip()
-            tgt = (r.get("target_text") or "").strip()
-            if sid and tgt:
-                done_ids[sid] = True
-
-    # Build batches of pending rows
-    pending = [r for r in rows if not done_ids.get((r.get("string_id") or "").strip(), False)]
-    if not pending:
-        print("[OK] All rows already translated. Nothing to do.")
-        sys.exit(0)
-
-    print(f"[INFO] total={len(rows)} pending={len(pending)} batch_size={args.batch_size}")
-
-    # Escalate list fields
-    esc_fields = ["string_id", "reason", "tokenized_zh", "last_output"]
-
-    # Translate in batches with progress tracking
-    import time
-    from datetime import datetime
-    start_time = time.time()
-    last_progress_time = start_time
-    last_progress_count = 0
-    
-    i = 0
-    while i < len(pending):
-        batch = pending[i:i+args.batch_size]
-
-        system = build_system_prompt(style_guide)
-        user = build_user_prompt(batch, glossary, args.target)
-
-        # Retry the whole batch; on repeated failure, fallback to per-row attempts, then escalate.
-        success_obj = None
-        last_err = ""
-        for attempt in range(args.max_retries + 1):
-            try:
-                result = llm.chat(system=system, user=user, metadata={"step": "translate"})
-                raw = result.text
-                obj = extract_json_object(raw)
-                if not obj:
-                    last_err = "invalid_json"
-                    raise ValueError("Model output is not valid JSON object.")
-                success_obj = obj
-                break
-            except LLMError as e:
-                last_err = f"batch_call_failed: {e.kind}: {e}"
-                if not e.retryable or attempt >= args.max_retries:
-                    break
-                backoff_sleep(attempt)
-            except Exception as e:
-                last_err = f"batch_call_failed: {type(e).__name__}: {e}"
-                if attempt >= args.max_retries:
-                    break
-                backoff_sleep(attempt)
-
-        batch_results: Dict[str, str] = {}
-        if success_obj:
-            # normalize values to string
-            for sid, val in success_obj.items():
-                if isinstance(val, str):
-                    batch_results[str(sid)] = val
-                else:
-                    batch_results[str(sid)] = json.dumps(val, ensure_ascii=False)
-
-        # If batch-level failed, do per-row retries to salvage
-        if not batch_results or len(batch_results) < len(batch) // 2:
-            print(f"[WARN] batch low success ({len(batch_results)}/{len(batch)}). Fallback to per-row retries. reason={last_err}")
-            batch_results = {}
-
-            for r in batch:
-                sid = (r.get("string_id") or "").strip()
-                tok = r.get("tokenized_zh") or ""
-                # Build minimal per-row prompt (smaller & more stable)
-                approved, banned, proposed = build_glossary_constraints(glossary, tok)
-                system = build_system_prompt(style_guide)
-                user = (
-                    f"翻译为 {args.target}，只输出 JSON：{{\"{sid}\": \"...\"}}。\n"
-                    "硬约束：保留 token（⟦PH_x⟧/⟦TAG_x⟧），禁止中文。\n"
-                    f"glossary_hard={json.dumps(approved, ensure_ascii=False)}\n"
-                    f"glossary_banned_zh={json.dumps(banned, ensure_ascii=False)}\n"
-                    f"glossary_soft={json.dumps(proposed, ensure_ascii=False)}\n"
-                    f"tokenized_zh={json.dumps(tok, ensure_ascii=False)}"
-                )
-
-                per_ok = False
-                per_last = ""
-                for attempt in range(args.max_retries + 1):
-                    try:
-                        result = llm.chat(system=system, user=user, metadata={"step": "translate"})
-                        raw = result.text
-                        obj = extract_json_object(raw)
-                        if not obj or sid not in obj:
-                            per_last = "invalid_json_or_missing_key"
-                            raise ValueError("Missing key in JSON.")
-                        ru = obj[sid] if isinstance(obj[sid], str) else json.dumps(obj[sid], ensure_ascii=False)
-                        ok, why = validate_translation(tok, ru)
-                        if not ok:
-                            per_last = why
-                            raise ValueError(f"Validation failed: {why}")
-                        batch_results[sid] = ru
-                        per_ok = True
-                        break
-                    except LLMError as e:
-                        per_last = f"{per_last} | {e.kind}: {e}".strip(" |")
-                        if not e.retryable or attempt >= args.max_retries:
-                            break
-                        backoff_sleep(attempt)
-                    except Exception as e:
-                        per_last = f"{per_last} | {type(e).__name__}: {e}".strip(" |")
-                        if attempt >= args.max_retries:
-                            break
-                        backoff_sleep(attempt)
-
-                if not per_ok:
-                    # escalate this row
-                    append_csv_rows(
-                        args.escalate_csv,
-                        esc_fields,
-                        [{
-                            "string_id": sid,
-                            "reason": f"translate_failed_after_retries: {per_last}",
-                            "tokenized_zh": tok,
-                            "last_output": "",
-                        }]
-                    )
-                    ckpt["stats"]["fail"] = ckpt.get("stats", {}).get("fail", 0) + 1
-
-        # Write successful translations, validate tokens & CJK, else escalate.
-        out_rows = []
-        for r in batch:
-            sid = (r.get("string_id") or "").strip()
-            tok = r.get("tokenized_zh") or ""
-            ru = batch_results.get(sid, "").strip()
-
-            if not ru:
-                # already escalated in fallback stage, or batch output missing this item
-                append_csv_rows(
-                    args.escalate_csv,
-                    esc_fields,
-                    [{
-                        "string_id": sid,
-                        "reason": "missing_translation_in_batch_output",
-                        "tokenized_zh": tok,
-                        "last_output": "",
-                    }]
-                )
-                ckpt["stats"]["fail"] = ckpt.get("stats", {}).get("fail", 0) + 1
-                continue
-
+            result = llm.chat(
+                system=system, 
+                user=user, 
+                metadata={
+                    "step": "translate", 
+                    "string_id": sid,
+                    "queue_wait_ms": queue_wait_ms,
+                    "inflight_limit": inflight_limit
+                }
+            )
+            ru = result.text.strip()
+            
             ok, why = validate_translation(tok, ru)
             if not ok:
-                # Retry per-row quickly for validation failure
-                per_last = why
-                fixed = ""
-                for attempt in range(args.max_retries):
-                    backoff_sleep(attempt)
-                    try:
-                        approved, banned, proposed = build_glossary_constraints(glossary, tok)
-                        system = build_system_prompt(style_guide)
-                        user = (
-                            f"你上一次输出不符合硬约束（原因：{why}）。请重新翻译为 {args.target}。\n"
-                            "只输出 JSON：{\"string_id\": \"target_text\"}，key 必须等于该 string_id。\n"
-                            "再次强调：token 必须逐字保留且数量一致；禁止中文。\n"
-                            f"string_id={sid}\n"
-                            f"glossary_hard={json.dumps(approved, ensure_ascii=False)}\n"
-                            f"glossary_banned_zh={json.dumps(banned, ensure_ascii=False)}\n"
-                            f"glossary_soft={json.dumps(proposed, ensure_ascii=False)}\n"
-                            f"tokenized_zh={json.dumps(tok, ensure_ascii=False)}"
-                        )
-                        result = llm.chat(system=system, user=user, metadata={"step": "translate"})
-                        raw = result.text
-                        obj = extract_json_object(raw)
-                        if not obj or sid not in obj:
-                            per_last = "invalid_json_or_missing_key"
-                            continue
-                        cand = obj[sid] if isinstance(obj[sid], str) else json.dumps(obj[sid], ensure_ascii=False)
-                        ok2, why2 = validate_translation(tok, cand)
-                        if ok2:
-                            fixed = cand
-                            break
-                        per_last = why2
-                    except Exception as e:
-                        per_last = f"{per_last} | {type(e).__name__}: {e}"
+                last_err = why
+                raise ValueError(f"Validation failed: {why}")
+                
+            ru_result = ru
+            success = True
+            break
+        except Exception as e:
+            last_err = str(e)
+            if attempt >= max_retries:
+                break
+            backoff_sleep(attempt)
 
-                if not fixed:
-                    append_csv_rows(
-                        args.escalate_csv,
-                        esc_fields,
-                        [{
-                            "string_id": sid,
-                            "reason": f"validation_failed_after_retries: {per_last}",
-                            "tokenized_zh": tok,
-                            "last_output": ru[:300],
-                        }]
-                    )
-                    ckpt["stats"]["fail"] = ckpt.get("stats", {}).get("fail", 0) + 1
-                    continue
-                ru = fixed
+    return TranslateResult(
+        idx=idx,
+        string_id=sid,
+        success=success,
+        target_text=ru_result,
+        error_msg=last_err,
+        row=row,
+        queue_wait_ms=queue_wait_ms
+    )
 
-            # success: write to output
-            out = dict(r)
-            out["target_text"] = ru
-            out_rows.append(out)
-            done_ids[sid] = True
-            ckpt["stats"]["ok"] = ckpt.get("stats", {}).get("ok", 0) + 1
+# -----------------------------
+# Main
+# -----------------------------
+def main():
+    parser = argparse.ArgumentParser(description="LLM Translate (Concurrent)")
+    parser.add_argument("--input", required=True, help="Input CSV")
+    parser.add_argument("--output", required=True, help="Output Translated CSV")
+    parser.add_argument("--style", default="workflow/style_guide.md", help="Style guide")
+    parser.add_argument("--glossary", default="data/glossary.yaml", help="Glossary YAML")
+    parser.add_argument("--escalate_csv", default="data/escalate_list.csv", help="Escalation CSV")
+    parser.add_argument("--checkpoint", default="data/translate_checkpoint.json", help="Checkpoint JSON")
+    parser.add_argument("--target", default="ru-RU")
+    parser.add_argument("--max_retries", type=int, default=3)
+    parser.add_argument("--max_inflight", type=int, default=3, help="Max concurrent requests")
+    parser.add_argument("--progress_every", type=int, default=10)
+    parser.add_argument("--dry-run", action="store_true")
+    
+    args = parser.parse_args()
+    
+    # 1. Load resources
+    style_guide = load_style_guide(args.style)
+    glossary, gloss_hash = load_glossary(args.glossary)
+    
+    # 2. Load input
+    if not Path(args.input).exists():
+        print(f"Input file not found: {args.input}")
+        sys.exit(1)
+    
+    rows = read_csv_rows(args.input)
+    print(f"Loaded {len(rows)} rows from {args.input}")
+    print(f"Concurrency: max_inflight={args.max_inflight}")
+    
+    if args.dry_run:
+        print("[Dry-Run] Validation passed.")
+        print(f"Glossary: {len(glossary)} entries")
+        print(f"Style Guide: {len(style_guide)} chars")
+        return
 
-        if out_rows:
-            # append to translated.csv for resume safety
-            append_csv_rows(args.output_translated_csv, out_fields, out_rows)
+    # 3. Checkpoint
+    ckpt = load_checkpoint(args.checkpoint)
+    done_ids = ckpt["done_ids"]
+    
+    # 4. Filter pending
+    pending = []
+    for r in rows:
+        sid = (r.get("string_id") or "").strip()
+        if sid and not done_ids.get(sid):
+            pending.append(r)
+            
+    print(f"Pending items: {len(pending)}")
+    
+    if not pending:
+        print("All done.")
+        return
 
-        ckpt["done_ids"] = done_ids
-        save_checkpoint(args.checkpoint, ckpt)
+    # 5. Initialize Output
+    sample_fields = list(rows[0].keys())
+    if "target_text" not in sample_fields:
+        sample_fields.append("target_text")
+    
+    esc_fields = ["string_id", "reason", "tokenized_zh", "last_output"]
 
-        i += args.batch_size
+    # 6. Initialize LLM
+    if not LLMClient:
+        print("runtime_adapter not found. Cannot proceed.")
+        sys.exit(1)
         
-        # Enhanced progress reporting
-        total_done = ckpt['stats']['ok'] + ckpt['stats']['fail']
-        if total_done % args.progress_every < args.batch_size or i >= len(pending):
-            now = time.time()
-            elapsed = now - start_time
-            delta = now - last_progress_time
-            rows_since_last = total_done - last_progress_count
-            rate = rows_since_last / delta if delta > 0 else 0
-            pct = total_done / len(pending) * 100 if pending else 0
+    try:
+        llm = LLMClient()
+    except Exception as e:
+        print(f"Failed to init LLM: {e}")
+        sys.exit(1)
+
+    # 7. Concurrent execution with as_completed + write buffer
+    start_time = time.time()
+    
+    # Write buffer: idx -> TranslateResult
+    result_buffer: Dict[int, TranslateResult] = {}
+    next_write_idx = 0
+    
+    ok_count = ckpt["stats"].get("ok", 0)
+    fail_count = ckpt["stats"].get("fail", 0)
+    
+    with ThreadPoolExecutor(max_workers=args.max_inflight) as executor:
+        # Submit all tasks
+        future_to_idx = {}
+        for idx, row in enumerate(pending):
+            submit_time = time.time()
+            future = executor.submit(
+                process_row,
+                idx, row, llm, glossary, style_guide, 
+                args.max_retries, submit_time, args.max_inflight
+            )
+            future_to_idx[future] = idx
+        
+        # Process as completed
+        for future in as_completed(future_to_idx):
+            try:
+                result = future.result()
+            except Exception as e:
+                # Unexpected error in worker
+                idx = future_to_idx[future]
+                result = TranslateResult(
+                    idx=idx,
+                    string_id=pending[idx].get("string_id", ""),
+                    success=False,
+                    error_msg=f"Worker exception: {e}",
+                    row=pending[idx],
+                    queue_wait_ms=0
+                )
             
-            print(f"[PROGRESS] {total_done}/{len(pending)} ({pct:.1f}%) | "
-                  f"elapsed={int(elapsed)}s | delta={delta:.1f}s | "
-                  f"rate={rate:.1f}/s | step=translate")
+            # Store in buffer
+            result_buffer[result.idx] = result
             
-            last_progress_time = now
-            last_progress_count = total_done
+            # Flush buffer in order
+            while next_write_idx in result_buffer:
+                res = result_buffer.pop(next_write_idx)
+                
+                if res.success:
+                    out = dict(res.row)
+                    out["target_text"] = res.target_text
+                    append_csv_rows(args.output, sample_fields, [out])
+                    done_ids[res.string_id] = True
+                    ok_count += 1
+                else:
+                    tok = res.row.get("tokenized_zh") or res.row.get("source_zh") or ""
+                    append_csv_rows(args.escalate_csv, esc_fields, [{
+                        "string_id": res.string_id,
+                        "reason": f"translate_failed: {res.error_msg}",
+                        "tokenized_zh": tok,
+                        "last_output": ""
+                    }])
+                    fail_count += 1
+                
+                # Update checkpoint
+                ckpt["done_ids"] = done_ids
+                ckpt["stats"]["ok"] = ok_count
+                ckpt["stats"]["fail"] = fail_count
+                save_checkpoint(args.checkpoint, ckpt)
+                
+                next_write_idx += 1
+                
+                # Progress reporting
+                total_done = ok_count + fail_count
+                if total_done % args.progress_every == 0 or next_write_idx >= len(pending):
+                    elapsed = time.time() - start_time
+                    rate = total_done / elapsed if elapsed > 0 else 0
+                    print(f"[PROGRESS] {total_done}/{len(pending)} | elapsed={int(elapsed)}s | rate={rate:.2f}/s")
 
     total_elapsed = time.time() - start_time
-    print(f"[DONE] ok={ckpt['stats']['ok']} fail={ckpt['stats']['fail']} | total_time={int(total_elapsed)}s")
-    print(f"[FILES] translated={args.output_translated_csv} checkpoint={args.checkpoint} escalate={args.escalate_csv}")
+    print(f"[DONE] ok={ok_count} fail={fail_count} | total_time={int(total_elapsed)}s")
 
 if __name__ == "__main__":
     main()

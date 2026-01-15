@@ -212,6 +212,30 @@ class LLMRouter:
         """Return default model for step."""
         chain = self.get_model_chain(step)
         return chain[0] if chain else None
+
+    def get_generation_params(self, step: str) -> Dict[str, Any]:
+        """Return generation parameters (temperature, max_tokens, etc) for step."""
+        if not self.config or "routing" not in self.config:
+            return {}
+        
+        routing = self.config["routing"]
+        step_config = routing.get(step) or routing.get("_default", {})
+        
+        # Extract params
+        params = {}
+        for key in ["temperature", "max_tokens", "json_schema", "response_format"]:
+            if key in step_config:
+                params[key] = step_config[key]
+                
+        # Validate json_schema structure if present
+        if "response_format" in params and params["response_format"].get("type") == "json_schema":
+            if "json_schema" not in params["response_format"]:
+                # Map flattened json_schema to response_format if needed
+                if "json_schema" in params:
+                    params["response_format"]["json_schema"] = params["json_schema"]
+                    del params["json_schema"]
+                    
+        return params
     
     def should_fallback(self, error: LLMError) -> bool:
         """
@@ -307,8 +331,9 @@ class LLMClient:
     def chat(self, 
              system: str, 
              user: str, 
-             temperature: float = 0.2,
+             temperature: Optional[float] = None,
              max_tokens: Optional[int] = None,
+             response_format: Optional[Dict[str, Any]] = None,
              metadata: Optional[Dict[str, Any]] = None) -> LLMResult:
         """
         Send a chat completion request with automatic model routing.
@@ -316,26 +341,31 @@ class LLMClient:
         Args:
             system: System prompt
             user: User message
-            temperature: Sampling temperature (default 0.2 for consistency)
+            temperature: Sampling temperature (default 0.2 if not in config)
             max_tokens: Optional max tokens limit
+            response_format: Optional response format (e.g. {"type": "json_object"})
             metadata: Optional metadata for tracing:
                 - step: route key (translate/soft_qa/repair_hard/etc)
                 - model_override: bypass routing, use this model
-                - batch_id, string_id, scope: for tracing
             
         Returns:
             LLMResult with text, latency_ms, request_id, raw response, and usage
-            
-        Raises:
-            LLMError with kind, retryable, and http_status
         """
-        # Extract routing context from metadata
+        # Extract routing context
         step = "_default"
         model_override = None
         if isinstance(metadata, dict):
             step = metadata.get("step", "_default")
             model_override = metadata.get("model_override")
         
+        # 1. Get Config Params
+        config_params = self.router.get_generation_params(step) if self.router.enabled else {}
+        
+        # 2. Resolve Parameters (Arg > Config > Default)
+        final_temp = temperature if temperature is not None else config_params.get("temperature", 0.2)
+        final_max_tokens = max_tokens if max_tokens is not None else config_params.get("max_tokens")
+        final_resp_format = response_format if response_format is not None else config_params.get("response_format")
+
         # Build model chain (priority: override > routing > default_model)
         if model_override:
             model_chain = [model_override]
@@ -370,8 +400,9 @@ class LLMClient:
                     model=model,
                     system=system,
                     user=user,
-                    temperature=temperature,
-                    max_tokens=max_tokens,
+                    temperature=final_temp,
+                    max_tokens=final_max_tokens,
+                    response_format=final_resp_format,
                     metadata=metadata,
                     step=step,
                     attempt_no=attempt_no,
@@ -397,6 +428,7 @@ class LLMClient:
     
     def _call_single_model(self, model: str, system: str, user: str,
                            temperature: float, max_tokens: Optional[int],
+                           response_format: Optional[Dict[str, Any]],
                            metadata: Optional[Dict[str, Any]],
                            step: str, attempt_no: int,
                            router_default: Optional[str],
@@ -420,6 +452,10 @@ class LLMClient:
         }
         if max_tokens:
             payload["max_tokens"] = max_tokens
+        
+        if response_format:
+            # Only supported by some providers/models
+            payload["response_format"] = response_format
 
         t0 = time.time()
         http_status = None
@@ -429,7 +465,7 @@ class LLMClient:
             http_status = resp.status_code
         except requests.Timeout as e:
             self._trace_error("timeout", str(e), step, model, attempt_no, 
-                             router_default, router_chain_len, model_override)
+                              router_default, router_chain_len, model_override)
             raise LLMError("timeout", f"Request timeout after {self.timeout_s}s: {e}", 
                           retryable=True, http_status=None)
         except requests.RequestException as e:

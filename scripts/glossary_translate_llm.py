@@ -71,86 +71,91 @@ def load_style_guide(path: str) -> str:
         return f.read().strip()
 
 
-def build_translate_prompt(entries: List[Dict], style_guide: str, batch_size: int = 20) -> str:
-    """Build prompt for translating glossary terms zh→ru."""
-    entries_text = ""
-    for i, e in enumerate(entries[:batch_size], 1):
-        term_zh = e.get('term_zh', '')
-        context = e.get('context', '') or ''
-        if not context and e.get('examples'):
-            examples = e.get('examples', [])
-            if examples and isinstance(examples[0], dict):
-                context = examples[0].get('source_zh', '')[:80]
-        
-        entries_text += f"{i}. {term_zh}\n"
-        if context:
-            entries_text += f"   Context: {context[:80]}\n"
+def build_system_prompt() -> str:
+    """Build system prompt for glossary translation."""
+    return (
+        "你是术语表译者（zh-CN → ru-RU），为手游项目生成“可落地”的术语对。\n"
+        "任务：把候选 term_zh 翻译为 term_ru，并给出简短注释，避免把整句当术语。\n\n"
+        "输出 JSON（仅输出 JSON）：\n"
+        "{\n"
+        "  \"items\": [\n"
+        "    {\n"
+        "      \"term_zh\": \"<原样>\",\n"
+        "      \"term_ru\": \"<俄文术语>\",\n"
+        "      \"pos\": \"noun|verb|adj|phrase|name|system\",\n"
+        "      \"notes\": \"<可选：一句话说明语境/是否可变格>\",\n"
+        "      \"confidence\": 0.0\n"
+        "    }\n"
+        "  ]\n"
+        "}\n\n"
+        "规则（硬性）：\n"
+        "- term_zh 必须与输入一致（不要改写）。\n"
+        "- term_ru 不得包含【】；如需要引号用 «».\n"
+        "- 专有名词/技能名优先音译或官方惯用译法；系统词优先简洁一致。\n"
+    )
+
+
+def build_user_prompt(entries: List[Dict]) -> str:
+    """Build user prompt for glossary translation."""
+    candidates = []
+    for e in entries:
+        candidates.append({
+            "term_zh": e.get('term_zh', ''),
+            "context": e.get('context', '') or ''
+        })
     
-    prompt = f"""You are a professional game localization translator for zh-CN → ru-RU.
-
-Translate the following Chinese game terms to Russian.
-
-For each term, provide:
-1. term_ru: Russian translation
-2. confidence: 0.0 to 1.0 (how certain you are)
-3. reason: brief explanation of translation choice
-
-Translation Guidelines:
-- Proper nouns (names, places): transliterate, do not translate
-- Game mechanics terms: use established Russian gaming terminology
-- Keep translations concise and natural for game UI
-
-Style Guide Context:
-{style_guide[:500] if style_guide else "(No style guide provided)"}
-
-Chinese Terms:
-{entries_text}
-
-Output JSON array:
-[
-  {{"id": 1, "term_ru": "Ниндзя", "confidence": 0.95, "reason": "Standard transliteration"}},
-  {{"id": 2, "term_ru": "Урон", "confidence": 0.9, "reason": "Common RPG term"}}
-]
-
-Only output the JSON array, no explanation."""
-    
-    return prompt
+    return (
+        f"language_pair: zh-CN -> ru-RU\n"
+        f"context_hint: Game Localization (Naruto-like)\n\n"
+        "candidates:\n"
+        f"{json.dumps(candidates, ensure_ascii=False, indent=2)}\n"
+    )
 
 
 def parse_translate_response(text: str, entries: List[Dict]) -> List[TranslatedTerm]:
     """Parse LLM translation response."""
     results = []
+    text = (text or "").strip()
     
-    # Extract JSON from response
+    data = {}
     try:
-        data = json.loads(text.strip())
+        data = json.loads(text)
     except json.JSONDecodeError:
-        start = text.find('[')
-        end = text.rfind(']')
+        # Fallback extraction
+        start = text.find('{')
+        end = text.rfind('}')
         if start != -1 and end > start:
             try:
                 data = json.loads(text[start:end+1])
             except:
-                return []
+                pass
+    
+    # Check for "items" key
+    items = data.get("items", [])
+    if not isinstance(items, list):
+        if isinstance(data, list):
+            items = data
         else:
             return []
+
+    entry_map = {e.get("term_zh"): e for e in entries}
     
-    if not isinstance(data, list):
-        return []
-    
-    for item in data:
-        idx = item.get("id", 0) - 1
-        if 0 <= idx < len(entries):
-            entry = entries[idx]
-            term_ru = item.get("term_ru", "")
-            if term_ru:
-                results.append(TranslatedTerm(
-                    term_zh=entry.get("term_zh", ""),
-                    term_ru=term_ru,
-                    confidence=float(item.get("confidence", 0.0)),
-                    reason=item.get("reason", ""),
-                    context=entry.get("context")
-                ))
+    for item in items:
+        term_zh = item.get("term_zh")
+        entry = entry_map.get(term_zh)
+        
+        if not entry:
+             continue
+
+        term_ru = item.get("term_ru", "")
+        if term_ru:
+            results.append(TranslatedTerm(
+                term_zh=term_zh,
+                term_ru=term_ru,
+                confidence=float(item.get("confidence", 0.0)),
+                reason=item.get("notes", "") + " | " + item.get("pos", ""),
+                context=entry.get("context")
+            ))
     
     return results
 
@@ -249,18 +254,20 @@ def main():
         
         print(f"  [{batch_num}/{total_batches}] Translating {len(batch)} terms...")
         
-        prompt = build_translate_prompt(batch, style_guide, args.batch_size)
+        system = build_system_prompt()
+        user = build_user_prompt(batch)
         
         try:
             # CRITICAL: metadata.step MUST be exactly "glossary_translate"
             result = llm.chat(
-                system="You are a professional game localization translator for zh-CN → ru-RU.",
-                user=prompt,
+                system=system,
+                user=user,
                 metadata={
                     "step": "glossary_translate",  # REQUIRED for routing
                     "batch": batch_num,
                     "scope": "zh-CN->ru-RU"
-                }
+                },
+                response_format={"type": "json_object"}
             )
             
             translations = parse_translate_response(result.text, batch)

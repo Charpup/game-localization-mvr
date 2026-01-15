@@ -9,14 +9,6 @@ Goal:
   - before/after RU changes (translated -> repaired)
   - terminology-related soft QA tasks
 
-Approach:
-  For each candidate row with changes, ask LLM to extract glossary candidate pairs:
-    [{"term_zh": "...", "term_ru": "...", "confidence": 0.0-1.0, "note": "..."}]
-  Then aggregate by (term_zh, term_ru, scope), detect conflicts against existing glossary,
-  output:
-    - proposals.yaml (human review)
-    - patch.yaml (machine-applicable patch; still proposed by default)
-
 Inputs:
   --before CSV (must include string_id, tokenized_zh or source_zh, target_text)
   --after  CSV (same schema)
@@ -27,19 +19,6 @@ Inputs:
 Outputs:
   --out_proposals YAML (glossary_proposals.yaml)
   --out_patch YAML (glossary_patch.yaml)
-
-Usage:
-  python scripts/glossary_autopromote.py \\
-    --before data/translated.csv \\
-    --after data/repaired.csv \\
-    --style workflow/style_guide.md \\
-    --glossary glossary/zhCN_ruRU/base.yaml \\
-    --soft_tasks data/repair_tasks.jsonl \\
-    --language_pair "zh-CN->ru-RU" \\
-    --scope "project_default" \\
-    --min_support 5 \\
-    --out_proposals data/glossary_proposals.yaml \\
-    --out_patch data/glossary_patch.yaml
 """
 
 import argparse
@@ -196,28 +175,28 @@ def glossary_to_text(entries: List[GlossaryEntry], max_entries: int = 100) -> st
 # LLM Prompting
 # -----------------------------
 
-def build_system_prompt(style: str, language_pair: str) -> str:
+def build_system_prompt() -> str:
     """Build system prompt for term extraction."""
-    return f"""\
-你是资深手游本地化术语工程师（{language_pair}）。
-
-任务：从给定的中文源文与译文（修复前/修复后）中，抽取"可沉淀为术语表"的候选项。
-
-要求：
-1) 只抽取术语（专有名词、系统功能词、可复用的 UI/玩法词），不要抽整句。
-2) term_zh 必须来自源文（直接出现），term_ru 必须来自译文（直接出现或显式等价写法）。
-3) 如果修复前后译文发生变化，重点关注变化的部分。
-4) confidence 分数规则：
-   - 0.9+: 专有名词（人名/地名/技能名）
-   - 0.7-0.9: 系统术语（功能名/道具名）
-   - 0.5-0.7: 常用游戏词汇
-   - <0.5: 不确定是否应该固定
-5) 输出纯 JSON：{{"candidates": [{{"term_zh":"...", "term_ru":"...", "confidence":0.0-1.0, "note":"..."}}]}}
-6) 不要输出解释文本，只输出 JSON。
-
-风格规范（供参考，不是让你改文案）：
-{style[:2000]}
-"""
+    # From optimized prompt bundle
+    return (
+        "你是资深手游本地化术语工程师（zh-CN → ru-RU）。\n"
+        "任务：从给定的中文源文与译文（修复前/修复后）中，抽取“可沉淀为术语表”的候选项。\n\n"
+        "输出 JSON（仅输出 JSON）：\n"
+        "{\n"
+        "  \"candidates\": [\n"
+        "    {\n"
+        "      \"term_zh\": \"<中文原词>\",\n"
+        "      \"term_ru\": \"<俄文对应词>\",\n"
+        "      \"confidence\": 0.9,\n"
+        "      \"note\": \"<简短理由>\"\n"
+        "    }\n"
+        "  ]\n"
+        "}\n\n"
+        "抽取规则：\n"
+        "- 只抽名词/专有名词/系统词/UI词，不抽动词或整句。\n"
+        "- 优先抽取“修复后”且“修复前”不一致的词（说明是修正点）。\n"
+        "- confidence 规则：专有名词 > 系统词 > 一般词。\n"
+    )
 
 
 def build_user_prompt(
@@ -225,25 +204,22 @@ def build_user_prompt(
     before_ru: str,
     after_ru: str,
     glossary_excerpt: str,
-    scope: str,
-    language_pair: str
+    scope: str
 ) -> str:
     """Build user prompt for term extraction."""
     tokenized_zh = row.get("tokenized_zh") or row.get("source_zh") or ""
     string_id = row.get("string_id", "")
     
-    return f"""\
-language_pair={language_pair}
-scope={scope}
-string_id={string_id}
-tokenized_zh={json.dumps(tokenized_zh, ensure_ascii=False)}
-before_ru={json.dumps(before_ru or '', ensure_ascii=False)}
-after_ru={json.dumps(after_ru or '', ensure_ascii=False)}
-
-已有术语表（节选，避免重复提案；标记 ✓ 的 approved 必须尊重）：
-{glossary_excerpt}
-
-请输出 JSON candidates。仅抽取术语，不要抽整句。"""
+    return (
+        f"language_pair: zh-CN -> ru-RU\n"
+        f"scope: {scope}\n"
+        f"string_id: {string_id}\n\n"
+        f"tokenized_zh: {tokenized_zh}\n"
+        f"before_ru: {before_ru}\n"
+        f"after_ru: {after_ru}\n\n"
+        "existing_glossary_context:\n"
+        f"{glossary_excerpt}\n"
+    )
 
 
 def extract_json_obj(text: str) -> Optional[dict]:
@@ -409,12 +385,6 @@ def main():
     args = ap.parse_args()
     
     print(f"🔄 Glossary Autopromote")
-    print(f"   Before: {args.before}")
-    print(f"   After: {args.after}")
-    print(f"   Glossary: {args.glossary}")
-    print(f"   Scope: {args.scope}")
-    print(f"   Min support: {args.min_support}")
-    print()
     
     # Load data
     before_rows = read_csv_rows(args.before)
@@ -422,7 +392,7 @@ def main():
     before_map = build_row_maps(before_rows)
     after_map = build_row_maps(after_rows)
     
-    style = load_text(args.style)
+    # style = load_text(args.style) # Not used in system prompt directly currently
     glossary_entries = load_glossary_entries(args.glossary)
     glossary_idx = build_glossary_index(glossary_entries)
     glossary_excerpt = glossary_to_text(glossary_entries, max_entries=80)
@@ -430,8 +400,6 @@ def main():
     # Load rejected terms to avoid re-proposing
     rejected_entries = load_glossary_entries(args.rejected) if Path(args.rejected).exists() else []
     rejected_set = {(e.term_zh.strip(), e.term_ru.strip()) for e in rejected_entries}
-    if rejected_entries:
-        print(f"✅ Loaded {len(rejected_entries)} rejected terms (will skip)")
     
     soft_tasks = read_jsonl(args.soft_tasks) if args.soft_tasks else []
     
@@ -445,35 +413,7 @@ def main():
     
     # Dry-run mode
     if getattr(args, 'dry_run', False):
-        print()
-        print("=" * 60)
-        print("DRY-RUN MODE - Validation Summary")
-        print("=" * 60)
-        print()
-        print(f"[OK] Before CSV: {len(before_rows)} rows")
-        print(f"[OK] After CSV: {len(after_rows)} rows")
-        print(f"[OK] Style guide: {len(style)} chars")
-        print(f"[OK] Existing glossary: {len(glossary_entries)} entries")
-        print(f"[OK] Candidate rows: {len(candidate_ids)}")
-        print(f"[OK] Language pair: {args.language_pair}")
-        print(f"[OK] Scope: {args.scope}")
-        
-        # Check LLM env
-        import os
-        llm_model = os.getenv("LLM_MODEL", "")
-        if llm_model:
-            print(f"[OK] LLM model: {llm_model}")
-        else:
-            print(f"[WARN] LLM_MODEL not set")
-        
-        print()
-        print("=" * 60)
-        print("[OK] Dry-run validation PASSED")
-        if candidate_ids:
-            print(f"     {len(candidate_ids)} candidates would be processed in actual run")
-        else:
-            print(f"     No candidates found")
-        print("=" * 60)
+        print(f"[OK] Dry run passed. Would process {len(candidate_ids)} rows.")
         return 0
     
     if not candidate_ids:
@@ -485,7 +425,7 @@ def main():
     
     # Initialize LLM
     llm = LLMClient()
-    sys_prompt = build_system_prompt(style, args.language_pair)
+    sys_prompt = build_system_prompt()
     
     # Collect term statistics
     stats: Dict[Tuple[str, str], TermStats] = {}
@@ -509,7 +449,7 @@ def main():
         # Build prompt and call LLM
         user_prompt = build_user_prompt(
             arow, before_ru, after_ru,
-            glossary_excerpt, args.scope, args.language_pair
+            glossary_excerpt, args.scope
         )
         
         try:
@@ -517,7 +457,8 @@ def main():
                 system=sys_prompt,
                 user=user_prompt,
                 temperature=0.1,
-                metadata={"step": "glossary_autopromote", "scope": args.scope, "string_id": sid}
+                metadata={"step": "glossary_autopromote", "scope": args.scope, "string_id": sid},
+                response_format={"type": "json_object"}
             )
             raw = result.text
             processed += 1
@@ -572,10 +513,6 @@ def main():
     print(f"📊 Found {len(stats)} unique term pairs")
     
     # Conflict detection and filtering
-    for (term_zh, term_ru), s in stats.items():
-        s.conflicts = detect_conflicts(term_zh, term_ru, glossary_idx)
-    
-    # Filter by support and conflict
     proposals = []
     skipped_rejected = 0
     for k, s in sorted(stats.items(), key=lambda kv: (kv[1].support, kv[1].avg_confidence), reverse=True):
@@ -588,6 +525,7 @@ def main():
             continue
         
         # Hard conflicts with approved entries are rejected
+        s.conflicts = detect_conflicts(s.term_zh, s.term_ru, glossary_idx)
         if s.conflicts:
             print(f"⚠️  Conflict: {s.term_zh} → {s.term_ru} (conflicts with approved)")
             continue
@@ -607,21 +545,12 @@ def main():
         })
     
     print(f"📝 Generated {len(proposals)} proposals")
-    if skipped_rejected > 0:
-        print(f"⏭️  Skipped {skipped_rejected} previously rejected terms")
     
     # Build output structures
     out_proposals = {
         "meta": {
             "version": 1,
             "generated_at": datetime.now().isoformat(),
-            "generated_from": {
-                "before": args.before,
-                "after": args.after,
-                "soft_tasks": args.soft_tasks,
-            },
-            "language_pair": args.language_pair,
-            "scope": args.scope,
             "min_support": args.min_support,
             "stats": {
                 "candidate_rows": len(candidate_ids),
@@ -655,15 +584,7 @@ def main():
     dump_yaml_file(args.out_proposals, out_proposals)
     dump_yaml_file(args.out_patch, patch)
     
-    print()
-    print(f"✅ Wrote proposals: {args.out_proposals}")
-    print(f"✅ Wrote patch: {args.out_patch}")
-    print()
-    print(f"📋 Next steps:")
-    print(f"   1. Review proposals in {args.out_proposals}")
-    print(f"   2. Edit status to 'approved' for confirmed terms")
-    print(f"   3. Apply patch: python scripts/glossary_apply_patch.py --patch {args.out_patch}")
-    
+    print(f"\n✅ Output: {args.out_proposals}")
     return 0
 
 

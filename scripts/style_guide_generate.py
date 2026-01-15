@@ -16,17 +16,12 @@ except ImportError:
     LLMClient = None
 
 # ----------------------------------------------------------------------
-# 1. Questionnaire Compilation Logic (FIX 1)
+# 1. Questionnaire Compilation Logic
 # ----------------------------------------------------------------------
 
 def parse_markdown_questionnaire(md_content: str) -> Dict[str, Any]:
     """
     Parses the structured Markdown questionnaire into a flat JSON dictionary.
-    
-    Structure expected:
-    ## 1. Section Title
-    **Key**: Value
-    - [x] Choice
     """
     data = {}
     current_section = None
@@ -53,7 +48,6 @@ def parse_markdown_questionnaire(md_content: str) -> Dict[str, Any]:
         if kv_match:
             k = kv_match.group(1).strip()
             v = kv_match.group(2).strip()
-            # Normalize key
             safe_key = f"{current_section}__{k}".replace(' ', '_').lower() if current_section else k.lower()
             data[safe_key] = v
             continue
@@ -64,9 +58,6 @@ def parse_markdown_questionnaire(md_content: str) -> Dict[str, Any]:
             is_checked = c_match.group(1).lower() == 'x'
             text = c_match.group(2).strip()
             if is_checked:
-                # Add to a list or set specific key
-                # For this simple parser, we'll assume the last key needs this choice
-                # Or just store "selected_choices"
                 if "selected_choices" not in data:
                     data["selected_choices"] = []
                 data["selected_choices"].append(f"{current_section}: {text}")
@@ -112,29 +103,26 @@ def generate_candidates(
 ):
     if dry_run:
         print("[Dry-Run] Would generate candidates using LLM")
-        # Generate dummy files for testing flow
         for i in range(count):
             out_file = os.path.join(output_dir, f"candidate_{i+1}.md")
             with open(out_file, 'w', encoding='utf-8') as f:
-                f.write(f"# Style Guide Candidate {i+1} (Dry Run)\n\n## Tone & Voice\nMock Content\n\n## Terminology Policy\nMock Content\n\n## UI Length & Brevity\nMock Content\n\n## Forbidden Patterns\nMock Content\n\n## Placeholder Handling\nMock Content")
+                f.write(f"# Style Guide Candidate {i+1} (Dry Run)\n\n## Tone & Voice\nMock Content")
         return
 
     client = LLMClient()
     
-    system_prompt = """You are an expert Game Localization Director.
-Your task is to generate a comprehensive Style Guide (Markdown) for a game localization project (ZH -> RU).
-You will be given a completed questionnaire defining the IP requirements.
-You MUST follow the structure of the provided template EXACTLY, but fill it with rules derived from the questionnaire.
-    
-CRITICAL SECTIONS TO INCLUDE:
-1. Tone & Voice (Keywords, Ratio, Examples)
-2. Terminology Policy (Transliteration vs Translation rules)
-3. Grammar & Mechanics (Register: Ты vs Вы, Gender handling)
-4. UI Length & Brevity (Constraints, Abbreviation rules)
-5. Forbidden Patterns (Strict negative constraints)
-6. Placeholder Handling (Technical rules for {0}, <br>, etc.)
-
-Output ONLY the Markdown content. Do not include prologue."""
+    # Strict Markdown Prompt
+    system_prompt = """You are an expert Game Localization Director (zh-CN -> ru-RU).
+Task: Generate a comprehensive Style Guide (Markdown) for a game localization project based on IP requirements.
+Output Format: Strict Markdown (NO prologue, NO epilogue, NO code blocks).
+Content Rules:
+1. Tone & Voice: Define tone levels and keywords.
+2. Terminology: Transliteration vs Translation rules.
+3. Grammar: Register (Ты/Вы), Gender handling.
+4. UI Brevity: Constraints and abbreviations.
+5. Forbidden Patterns: Strict negative constraints.
+6. Placeholder Handling: Rules for {0}, <br>, etc.
+"""
 
     user_prompt = f"""
 Input Questionnaire Data:
@@ -143,22 +131,14 @@ Input Questionnaire Data:
 Reference Template Structure:
 {template_content}
 
-Generate {count} distinct variations of the Style Guide.
-Variation 1: Strict adherence to questionnaire/official tone.
-Variation 2: Slightly more creative/localized adaptation (if allowed by questionnaire).
-Variation 3: Balanced approach.
-
-But for this API call, just generate ONE variation. I will call you K times.
-Current Variation Purpose: Generate a high-quality style guide based on the questionnaire.
+Generate the style guide now.
 """
 
     for i in range(count):
         print(f"[Generate] Generating candidate {i+1}/{count}...")
         try:
-            # We add a slight variation hint to the prompt for each candidate if needed,
-            # but for now rely on temperature=0.7 to give variations, or explicit prompt tweaks.
-            # Let's add a robust prompt tweak.
-            var_prompt = user_prompt + f"\n\nVariation Focus: Candidate {i+1}"
+            # Add variation hint
+            var_prompt = user_prompt + f"\n\nVariation Focus: Candidate {i+1} (Variation {i+1})"
             
             result = client.chat(
                 system=system_prompt,
@@ -166,12 +146,20 @@ Current Variation Purpose: Generate a high-quality style guide based on the ques
                 metadata={"step": "style_guide_generate", "variation": str(i+1)}
             )
             
-            content = result.text
+            content = result.text.strip()
+            # Remove markdown fence if present
+            if content.startswith("```markdown"):
+                content = content.replace("```markdown", "", 1)
+            if content.startswith("```"):
+                content = content.replace("```", "", 1)
+            if content.endswith("```"):
+                content = content[:-3]
+            content = content.strip()
             
-            # Simple validation: Check headers
-            if "## Tone & Voice" not in content:
-                print(f"[Warning] Candidate {i+1} missing headers, attempting to repair...")
-                content = "# Style Guide\n\n" + content
+            # Validation
+            if "## Tone & Voice" not in content and "# " not in content:
+                print(f"[Warning] Candidate {i+1} seems malformed, attempting to header...")
+                content = "# Style Guide (Auto-Generated)\n\n" + content
                 
             out_file = os.path.join(output_dir, f"candidate_{i+1}.md")
             with open(out_file, 'w', encoding='utf-8') as f:
@@ -195,20 +183,17 @@ def main():
     
     args = parser.parse_args()
     
-    # 1. Compile Questionnaire (Source of Truth)
     run_id = int(time.time())
     json_path = os.path.join(args.output_dir, f"questionnaire.{run_id}.json")
     
     print(f"[Generate] Compiling {args.inputs} -> {json_path}")
     q_data = compile_questionnaire(args.inputs, json_path)
     
-    # 2. Load Template
     tmpl_content = load_template(args.template) if args.template else ""
     if not tmpl_content:
         print("[Generate] No template provided, using generic structure.")
         tmpl_content = "## Tone & Voice\n...\n## Terminology Policy\n..."
 
-    # 3. Generate Candidates
     generate_candidates(q_data, tmpl_content, args.output_dir, args.count, args.dry_run)
     
     print("[Generate] Done.")

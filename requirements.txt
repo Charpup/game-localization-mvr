@@ -10,3 +10,7 @@ jieba>=0.42.1
 
 # Optional: faster JSON parsing
 # orjson>=3.8.0
+
+# Excel support
+pandas>=2.0.0
+openpyxl>=3.1.0

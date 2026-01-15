@@ -33,10 +33,10 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
 # Ensure UTF-8 output on Windows
-if sys.platform == 'win32':
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+# if sys.platform == 'win32':
+#     import io
+#     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+#     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 try:
     import yaml
@@ -149,49 +149,66 @@ def save_checkpoint(p: str, obj: dict) -> None:
         json.dump(obj, f, ensure_ascii=False, indent=2)
 
 
+# Import glossary filters
+from translate_llm import load_glossary, build_glossary_constraints, GlossaryEntry
+
 def build_system(style: str) -> str:
     """Build system prompt for repair."""
     return (
-        "你是资深本地化修复工程师（ru-RU）。\n"
-        "任务：在不改变 token 的前提下修复译文问题。\n"
-        "硬约束：token（⟦PH_x⟧/⟦TAG_x⟧）必须逐字保留且数量一致；禁止出现中文。\n"
-        "输出必须是 JSON：{\"string_id\": \"...\", \"target_text\": \"...\"}，不要解释文本。\n\n"
-        "风格规范：\n" + style
+        "你是手游本地化修复器（zh-CN → ru-RU）。你会根据给定的错误/建议，对 target_ru 进行修复。\n\n"
+        "术语表规则（硬性）：\n"
+        "- glossary 中出现的 term_zh → term_ru 必须严格使用 term_ru（大小写/词形按 glossary 指定；如需要变格请保持词根一致并优先保持 glossary 形式）。\n"
+        "- 若源文包含 term_zh，但译文难以直接套用 term_ru，必须在不破坏占位符的前提下改写句子以容纳 term_ru。\n\n\n"
+        "占位符规则（硬性）：\n"
+        "- 任何形如 {TOKEN} / %s / %d / ${var} / <tag> / [xxx] 的占位符必须原样保留，不得翻译/改动/增删/移动。\n"
+        "- 不得新增任何占位符；不得删除任何占位符。\n"
+        "- 输出中禁止出现中文括号符号【】；如源文含【】用于分组/强调，俄语侧用 «» 或改写为“X: …”。\n\n\n"
+        "输入包含：source_zh、current_ru、issues（可能来自 qa_hard 或 soft_qa）。\n"
+        "输出格式（硬性）：\n"
+        "- 只输出修复后的俄文纯文本，不解释，不要 JSON。\n"
+        "修复优先级（从高到低）：\n"
+        "1) 占位符/格式硬错误\n"
+        "2) 术语一致性（按 glossary）\n"
+        "3) 误译/漏译/歧义\n"
+        "4) 语气与简洁性（在不引入新问题前提下）\n"
     )
 
-
-def build_user(row: dict, issues: List[str], glossary_text: str) -> str:
+def build_user(row: dict, issues: List[str], glossary_entries: List[GlossaryEntry], style_guide_excerpt: str) -> str:
     """Build user prompt for repair."""
+    tokenized_zh = row.get("tokenized_zh") or row.get("source_zh") or ""
+    current_ru = row.get("target_text") or ""
+    sid =  row.get("string_id", "")
+    
+    # Build glossary excerpt
+    approved, banned, proposed = build_glossary_constraints(glossary_entries, tokenized_zh)
+    
+    glossary_lines = []
+    if approved:
+        glossary_lines.append("【强制使用】")
+        for k, v in approved.items():
+            glossary_lines.append(f"- {k} → {v}")
+    if banned:
+        glossary_lines.append("【禁止自创】")
+        for k in banned:
+            glossary_lines.append(f"- {k}")
+            
+    glossary_text = "\n".join(glossary_lines) if glossary_lines else "(无)"
+
+    # Format issues list
+    issues_text = "\n".join([f"- {i}" for i in issues])
+
     return (
-        "请修复以下条目。你只输出 JSON。\n"
-        f"issues={json.dumps(issues, ensure_ascii=False)}\n"
-        f"string_id={row.get('string_id','')}\n"
-        f"tokenized_zh={json.dumps(row.get('tokenized_zh',''), ensure_ascii=False)}\n"
-        f"current_target_text={json.dumps(row.get('target_text',''), ensure_ascii=False)}\n\n"
-        "术语表（approved 必须遵守）：\n"
-        f"{glossary_text[:4000]}"
+        f"string_id: {sid}\n"
+        f"source_zh: {tokenized_zh}\n"
+        f"current_ru: {current_ru}\n\n"
+        "issues:\n"
+        f"{issues_text}\n\n"
+        "glossary_excerpt:\n"
+        f"{glossary_text}\n\n"
+        "style_guide_excerpt:\n"
+        f"{style_guide_excerpt[:2000]}\n"
     )
 
-
-def extract_json(text: str) -> Optional[dict]:
-    """Extract JSON object from LLM response."""
-    text = (text or "").strip()
-    try:
-        obj = json.loads(text)
-        if isinstance(obj, dict):
-            return obj
-    except Exception:
-        pass
-    s = text.find("{")
-    e = text.rfind("}")
-    if s != -1 and e != -1 and e > s:
-        try:
-            obj = json.loads(text[s:e+1])
-            if isinstance(obj, dict):
-                return obj
-        except Exception:
-            return None
-    return None
 
 
 def main():
@@ -368,13 +385,14 @@ def main():
         for attempt in range(args.max_retries + 1):
             try:
                 result = llm.chat(system=system, user=user, temperature=0.1, metadata={"step": repair_step, "string_id": sid})
-                obj = extract_json(result.text)
                 
-                if not obj or obj.get("string_id") != sid:
-                    last_err = "invalid_json_or_wrong_id"
-                    raise ValueError(last_err)
+                # Direct text usage (Pure Text Strict Mode)
+                cand = result.text.strip()
                 
-                cand = obj.get("target_text", "")
+                # Clean up if model still output JSON-like quotes around text
+                if cand.startswith('"') and cand.endswith('"'):
+                    cand = cand[1:-1]
+                
                 okv, why = quick_validate(tokenized_zh, cand)
                 
                 if not okv:
@@ -430,6 +448,7 @@ def main():
     print(f"   Soft issues: {len(targets_soft)}")
     print(f"   Repaired: {ok}")
     print(f"   Failed: {fail}")
+
     print()
     print(f"✅ Output: {args.out_csv}")
     if fail > 0:

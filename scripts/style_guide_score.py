@@ -13,7 +13,7 @@ except ImportError:
     LLMClient = None
 
 # ----------------------------------------------------------------------
-# 1. Structural Gating (FIX 2)
+# 1. Structural Gating
 # ----------------------------------------------------------------------
 
 REQUIRED_HEADERS = [
@@ -32,7 +32,6 @@ def check_structure(content: str) -> Dict[str, Any]:
     missing = []
     for pattern in REQUIRED_HEADERS:
         if not re.search(pattern, content, re.IGNORECASE):
-            # Clean up regex for display
             display_name = pattern.replace(r'##\s+', '').replace(r'\s*', ' ').replace(r'\s+', ' ').replace(r'\\', '')
             missing.append(display_name)
             
@@ -50,7 +49,7 @@ def score_candidate(client: Any, filepath: str, content: str, dry_run: bool) -> 
         return {"total_score": 85, "reasoning": "Dry run mock score"}
 
     system_prompt = """You are a QA Specialist for Game Localization Style Guides.
-Score the provided Style Guide candidate (0-100) based on the rubric.
+Task: Score the provided Style Guide candidate (0-100) based on the rubric.
 Rubric:
 - Coverage (30pts): Are all sections detailed?
 - Enforceability (30pts): Are rules specific and clear (not vague)?
@@ -66,8 +65,9 @@ Output JSON ONLY:
     try:
         result = client.chat(
             system=system_prompt,
-            user=f"Candidate Content:\n{content}",
-            metadata={"step": "style_guide_score", "file": os.path.basename(filepath)}
+            user=f"Candidate Content:\n{content[:10000]}", # Truncate to avoid context limit
+            metadata={"step": "style_guide_score", "file": os.path.basename(filepath)},
+            response_format={"type": "json_object"}
         )
         
         # Parse JSON from response

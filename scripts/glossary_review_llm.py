@@ -6,45 +6,24 @@ glossary_review_llm.py
 
 LLM-assisted glossary review fallback for users who don't speak target language.
 
-Two modes:
-  1. --mode recommend (default):
-     - Output review recommendations ONLY
-     - Never writes approved.yaml
-     - Human reviews LLM suggestions
-  
-  2. --mode approve_if_confident:
-     - Output approved_patch.yaml (or reviewed.csv)
-     - Contains approve/reject flags with confidence scores
-     - Requires separate merge step to apply
-     - All outputs are auditable + reversible
-
 Usage:
-    # Recommend mode (default)
     python scripts/glossary_review_llm.py \
-        --proposals glossary/proposals.yaml \
+        --proposals glossary/proposals_translated.yaml \
         --output glossary/review_recommendations.yaml \
         --mode recommend
-
-    # Approve-if-confident mode (fallback when user cannot review)
-    python scripts/glossary_review_llm.py \
-        --proposals glossary/proposals.yaml \
-        --output glossary/approved_patch.yaml \
-        --mode approve_if_confident \
-        --confidence_threshold 0.85
 
 Environment:
     LLM_BASE_URL, LLM_API_KEY, (LLM_MODEL optional - uses router)
 """
 
 import argparse
-import csv
 import json
 import os
 import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional
 
 # Ensure UTF-8 output on Windows
 if sys.platform == 'win32':
@@ -65,9 +44,9 @@ class ReviewResult:
     term_zh: str
     term_ru: str
     recommendation: str  # "approve", "reject", "revise"
-    confidence: float  # 0.0 - 1.0
+    confidence: float
     reason: str
-    suggested_term: Optional[str] = None  # For "revise" recommendations
+    suggested_term: Optional[str] = None
 
 
 def load_proposals(path: str) -> List[Dict[str, Any]]:
@@ -80,7 +59,8 @@ def load_proposals(path: str) -> List[Dict[str, Any]]:
     with open(path, 'r', encoding='utf-8') as f:
         data = yaml.safe_load(f) or {}
     
-    return data.get("entries", data.get("proposals", []))
+    # Support multiple key names
+    return data.get("candidates", data.get("entries", data.get("proposals", [])))
 
 
 def load_style_guide(path: str) -> str:
@@ -91,76 +71,94 @@ def load_style_guide(path: str) -> str:
         return f.read().strip()
 
 
-def build_review_prompt(entries: List[Dict], style_guide: str, batch_size: int = 10) -> str:
-    """Build prompt for reviewing glossary entries."""
-    entries_text = ""
-    for i, e in enumerate(entries[:batch_size], 1):
-        entries_text += f"{i}. {e.get('term_zh', '')} → {e.get('term_ru', '')}\n"
-        if e.get('context'):
-            entries_text += f"   Context: {e['context'][:100]}\n"
-    
-    prompt = f"""You are a professional localization reviewer for zh-CN → ru-RU game translation.
+def build_system_prompt() -> str:
+    """Build system prompt for glossary review."""
+    return (
+        "你是术语表审校（zh-CN → ru-RU）。\n"
+        "任务：审核候选术语对的准确性、风格一致性。\n\n"
+        "输出 JSON（仅输出 JSON）：\n"
+        "{\n"
+        "  \"reviews\": [\n"
+        "    {\n"
+        "      \"term_zh\": \"<原样>\",\n"
+        "      \"term_ru\": \"<原样>\",\n"
+        "      \"status\": \"approved|rejected\",\n"
+        "      \"comment\": \"<简短理由>\"\n"
+        "    }\n"
+        "  ]\n"
+        "}\n\n"
+        "判定标准：\n"
+        "- approved: 准确、地道、符合游戏风格。\n"
+        "- rejected: 错译、过于口语/书面、含义错误。\n"
+    )
 
-Review the following proposed glossary entries for accuracy and appropriateness.
 
-For each entry, provide:
-1. recommendation: "approve", "reject", or "revise"
-2. confidence: 0.0 to 1.0 (how certain you are)
-3. reason: brief explanation
-4. suggested_term: (only if "revise") better Russian translation
-
-Style Guide Context:
-{style_guide[:500] if style_guide else "(No style guide provided)"}
-
-Proposed Entries:
-{entries_text}
-
-Output JSON array:
-[
-  {{"id": 1, "recommendation": "approve", "confidence": 0.95, "reason": "Correct translation"}},
-  {{"id": 2, "recommendation": "revise", "confidence": 0.7, "reason": "Wrong gender", "suggested_term": "..."}}
-]
-
-Only output the JSON array, no explanation."""
-    
-    return prompt
+def build_user_prompt(entries: List[Dict]) -> str:
+    """Build user prompt for glossary review."""
+    candidates = []
+    for e in entries:
+        candidates.append({
+            "term_zh": e.get('term_zh', ''),
+            "term_ru": e.get('term_ru', ''),
+            "context": e.get('context', '') or ''
+        })
+        
+    return (
+        "language_pair: zh-CN -> ru-RU\n\n"
+        "review_candidates:\n"
+        f"{json.dumps(candidates, ensure_ascii=False, indent=2)}\n"
+    )
 
 
 def parse_review_response(text: str, entries: List[Dict]) -> List[ReviewResult]:
-    """Parse LLM review response into ReviewResult objects."""
+    """Parse LLM review response."""
     results = []
+    text = (text or "").strip()
     
-    # Extract JSON from response
+    data = {}
     try:
-        # Try direct parse
-        data = json.loads(text.strip())
+        data = json.loads(text)
     except json.JSONDecodeError:
-        # Try extracting JSON block
-        start = text.find('[')
-        end = text.rfind(']')
+        # Fallback
+        start = text.find('{')
+        end = text.rfind('}')
         if start != -1 and end > start:
             try:
                 data = json.loads(text[start:end+1])
             except:
-                return []
+                pass
+            
+    reviews = data.get("reviews", [])
+    if not isinstance(reviews, list):
+        if isinstance(data, list):
+            reviews = data
         else:
             return []
-    
-    if not isinstance(data, list):
-        return []
-    
-    for item in data:
-        idx = item.get("id", 0) - 1
-        if 0 <= idx < len(entries):
-            entry = entries[idx]
-            results.append(ReviewResult(
-                term_zh=entry.get("term_zh", ""),
-                term_ru=entry.get("term_ru", ""),
-                recommendation=item.get("recommendation", "reject"),
-                confidence=float(item.get("confidence", 0.0)),
-                reason=item.get("reason", ""),
-                suggested_term=item.get("suggested_term")
-            ))
+
+    # Map inputs
+    entry_map = {e.get('term_zh'): e for e in entries}
+
+    for item in reviews:
+        term_zh = item.get("term_zh")
+        entry = entry_map.get(term_zh)
+        if not entry:
+            continue
+            
+        status = item.get("status", "rejected").lower()
+        if status not in ["approved", "rejected", "revise"]:
+            status = "rejected"
+            
+        # If status is approved, confident = 1.0, otherwise 0.0 or heuristic
+        conf = 1.0 if status == "approved" else 0.0
+        
+        results.append(ReviewResult(
+            term_zh=term_zh,
+            term_ru=entry.get("term_ru", ""),
+            recommendation=status,
+            confidence=conf,
+            reason=item.get("comment", ""),
+            suggested_term=None # Prompt v2 doesn't explicitly ask for suggestion in this schema, keeping it simple
+        ))
     
     return results
 
@@ -175,9 +173,8 @@ def write_recommendations_yaml(path: str, results: List[ReviewResult], mode: str
             "generated_at": datetime.now().isoformat(),
             "mode": mode,
             "total_reviewed": len(results),
-            "approved": sum(1 for r in results if r.recommendation == "approve"),
-            "rejected": sum(1 for r in results if r.recommendation == "reject"),
-            "revised": sum(1 for r in results if r.recommendation == "revise"),
+            "approved": sum(1 for r in results if r.recommendation == "approved"),
+            "rejected": sum(1 for r in results if r.recommendation == "rejected"),
         },
         "reviews": []
     }
@@ -187,69 +184,10 @@ def write_recommendations_yaml(path: str, results: List[ReviewResult], mode: str
             "term_zh": r.term_zh,
             "term_ru": r.term_ru,
             "recommendation": r.recommendation,
-            "confidence": round(r.confidence, 2),
             "reason": r.reason,
         }
-        if r.suggested_term:
-            review_entry["suggested_term"] = r.suggested_term
         output["reviews"].append(review_entry)
-    
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    with open(path, 'w', encoding='utf-8') as f:
-        yaml.dump(output, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
-
-
-def write_approved_patch_yaml(path: str, results: List[ReviewResult], threshold: float) -> None:
-    """Write approved patch YAML (for approve_if_confident mode)."""
-    if yaml is None:
-        raise RuntimeError("PyYAML required")
-    
-    approved = [r for r in results if r.recommendation == "approve" and r.confidence >= threshold]
-    revised = [r for r in results if r.recommendation == "revise" and r.confidence >= threshold]
-    rejected = [r for r in results if r.recommendation == "reject" or r.confidence < threshold]
-    
-    output = {
-        "meta": {
-            "generated_at": datetime.now().isoformat(),
-            "mode": "approve_if_confident",
-            "confidence_threshold": threshold,
-            "total_reviewed": len(results),
-            "auto_approved": len(approved),
-            "auto_revised": len(revised),
-            "rejected_or_low_confidence": len(rejected),
-            "warning": "This patch was auto-generated by LLM. Human review recommended before merge.",
-        },
-        "approved_entries": [],
-        "revised_entries": [],
-        "rejected_entries": [],
-    }
-    
-    for r in approved:
-        output["approved_entries"].append({
-            "term_zh": r.term_zh,
-            "term_ru": r.term_ru,
-            "confidence": round(r.confidence, 2),
-            "reason": r.reason,
-        })
-    
-    for r in revised:
-        output["revised_entries"].append({
-            "term_zh": r.term_zh,
-            "original_term_ru": r.term_ru,
-            "suggested_term_ru": r.suggested_term,
-            "confidence": round(r.confidence, 2),
-            "reason": r.reason,
-        })
-    
-    for r in rejected:
-        output["rejected_entries"].append({
-            "term_zh": r.term_zh,
-            "term_ru": r.term_ru,
-            "recommendation": r.recommendation,
-            "confidence": round(r.confidence, 2),
-            "reason": r.reason,
-        })
-    
+        
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'w', encoding='utf-8') as f:
         yaml.dump(output, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
@@ -260,18 +198,17 @@ def main():
         description="LLM-assisted glossary review for users who don't speak target language"
     )
     ap.add_argument("--proposals", required=True,
-                    help="Input proposals YAML (from extract_terms or autopromote)")
+                    help="Input proposals YAML (from glossary_translate)")
     ap.add_argument("--output", required=True,
                     help="Output review file (YAML)")
     ap.add_argument("--style", default="workflow/style_guide.md",
                     help="Style guide for context")
-    ap.add_argument("--mode", choices=["recommend", "approve_if_confident"],
-                    default="recommend",
-                    help="Review mode: recommend (default) or approve_if_confident")
-    ap.add_argument("--confidence_threshold", type=float, default=0.85,
-                    help="Confidence threshold for auto-approve (approve_if_confident mode)")
+    ap.add_argument("--mode", default="recommend", 
+                    help="For compatibility, currently only supports recommendations output")
     ap.add_argument("--batch_size", type=int, default=10,
                     help="Batch size for LLM review")
+    ap.add_argument("--max_terms", type=int, default=0,
+                    help="Maximum terms to process (0 = all)")
     ap.add_argument("--dry-run", action="store_true",
                     help="Validate without making LLM calls")
     args = ap.parse_args()
@@ -279,7 +216,6 @@ def main():
     print("🔍 Glossary Review LLM")
     print(f"   Proposals: {args.proposals}")
     print(f"   Output: {args.output}")
-    print(f"   Mode: {args.mode}")
     print()
     
     # Load proposals
@@ -292,23 +228,22 @@ def main():
         print("ℹ️  No proposals to review")
         return 0
     
-    print(f"✅ Loaded {len(entries)} proposals")
+    # Filter entries that have term_ru
+    entries_with_ru = [e for e in entries if e.get("term_ru")]
+    if len(entries_with_ru) < len(entries):
+        print(f"⚠️  Skipping {len(entries) - len(entries_with_ru)} entries missing 'term_ru'")
+    entries = entries_with_ru
+    
+    if args.max_terms > 0:
+        entries = entries[:args.max_terms]
+    
+    print(f"✅ Loaded {len(entries)} entries to review")
     
     # Load style guide
-    style_guide = load_style_guide(args.style)
+    # style_guide = load_style_guide(args.style) # Not used in v2 prompt currently but good to keep if needed
     
     if args.dry_run:
-        print()
-        print("=" * 60)
-        print("DRY-RUN MODE - Validation Summary")
-        print("=" * 60)
-        print(f"[OK] Would review {len(entries)} proposals")
-        print(f"[OK] Mode: {args.mode}")
-        if args.mode == "approve_if_confident":
-            print(f"[OK] Confidence threshold: {args.confidence_threshold}")
-        print(f"[OK] Would write to: {args.output}")
-        print("[OK] Dry-run validation PASSED")
-        print("=" * 60)
+        print("[OK] Dry-run passed")
         return 0
     
     # Initialize LLM
@@ -319,66 +254,34 @@ def main():
         print(f"❌ LLM initialization failed: {e}")
         return 1
     
-    # Review in batches
-    all_results: List[ReviewResult] = []
+    all_results = []
     
     for i in range(0, len(entries), args.batch_size):
         batch = entries[i:i + args.batch_size]
         batch_num = i // args.batch_size + 1
-        total_batches = (len(entries) + args.batch_size - 1) // args.batch_size
         
-        print(f"  [{batch_num}/{total_batches}] Reviewing {len(batch)} entries...")
+        print(f"  Batch {batch_num}: Reviewing {len(batch)} entries...")
         
-        prompt = build_review_prompt(batch, style_guide, args.batch_size)
+        system = build_system_prompt()
+        user = build_user_prompt(batch)
         
         try:
             result = llm.chat(
-                system="You are a professional game localization reviewer for zh-CN → ru-RU translation.",
-                user=prompt,
-                metadata={"step": "glossary_review", "batch": batch_num}
+                system=system,
+                user=user,
+                metadata={"step": "glossary_review", "batch": batch_num},
+                response_format={"type": "json_object"}
             )
             
             reviews = parse_review_response(result.text, batch)
             all_results.extend(reviews)
-            
-            approved = sum(1 for r in reviews if r.recommendation == "approve")
-            print(f"    ✅ Reviewed: {len(reviews)} ({approved} approved)")
+            print(f"    ✅ Reviewed: {len(reviews)}")
             
         except LLMError as e:
             print(f"    ⚠️  LLM error: {e}")
-    
-    print()
-    
-    # Write output based on mode
-    if args.mode == "recommend":
-        write_recommendations_yaml(args.output, all_results, args.mode)
-        print(f"📋 Recommendations written to: {args.output}")
-        print(f"   Total: {len(all_results)}")
-        print(f"   Approved: {sum(1 for r in all_results if r.recommendation == 'approve')}")
-        print(f"   Rejected: {sum(1 for r in all_results if r.recommendation == 'reject')}")
-        print(f"   Revise: {sum(1 for r in all_results if r.recommendation == 'revise')}")
-        print()
-        print("📝 Next steps:")
-        print("   1. Review the recommendations file")
-        print("   2. Manually approve/reject entries based on recommendations")
-        print("   3. Run glossary_apply_patch.py to merge approved entries")
-        
-    else:  # approve_if_confident
-        write_approved_patch_yaml(args.output, all_results, args.confidence_threshold)
-        auto_approved = sum(1 for r in all_results 
-                           if r.recommendation == "approve" and r.confidence >= args.confidence_threshold)
-        print(f"📋 Approved patch written to: {args.output}")
-        print(f"   Auto-approved: {auto_approved} (confidence ≥ {args.confidence_threshold})")
-        print()
-        print("⚠️  WARNING: This patch was auto-generated by LLM.")
-        print("    Human review is recommended before merging.")
-        print()
-        print("📝 Next steps:")
-        print("   1. Review the approved_patch.yaml for accuracy")
-        print("   2. Run glossary_apply_patch.py to merge into glossary")
-    
-    print()
-    print("✅ Glossary review complete!")
+            
+    write_recommendations_yaml(args.output, all_results, args.mode)
+    print(f"\n✅ Output written to {args.output}")
     return 0
 
 
