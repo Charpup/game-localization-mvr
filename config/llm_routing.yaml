@@ -51,6 +51,16 @@ routing:
     default: gpt-4.1-mini
     fallback: [claude-3-5-haiku-latest, gpt-4o-mini]
 
+  # Style Guide (Step 5) - Generation
+  style_guide_generate:
+    default: gpt-4.1  # High creativity
+    fallback: [claude-sonnet-4-5-20250929]
+
+  # Style Guide (Step 5) - Scoring
+  style_guide_score:
+    default: gpt-4.1  # High reasoning
+    fallback: [claude-sonnet-4-5-20250929]
+
   _default:
     default: gpt-4.1-mini
     fallback: [gpt-4.1]

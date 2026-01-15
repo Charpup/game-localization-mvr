@@ -327,6 +327,27 @@ Refresh 阶段**只能**进行确定性术语替换。禁止 LLM 重写非术语
 
 ---
 
+## 13. Style Guide 规则 (v2.2)
+
+### 13.1 翻译前置条件
+
+翻译步骤执行前，**必须**存在有效的 `workflow/style_guide.md`。
+
+```bash
+# Workflow Check
+if not os.path.exists("workflow/style_guide.md"):
+    raise Error("Style Guide missing! Run style_guide module first.")
+```
+
+### 13.2 冻结原则 (Immutable)
+
+Style Guide 一经生成并 Apply，即视为**冻结**。
+
+- 翻译过程中禁止动态修改 Style Guide。
+- 若需修改，必须重新运行 `style_guide_generate -> score -> apply` 流程，并显式覆盖。
+
+---
+
 ## 12. Docker 执行策略 (v2.1)
 
 ### 12.1 执行环境选择
