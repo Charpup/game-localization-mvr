@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Data files (mount as volume instead)
+data/
+*.csv
+*.json
+*.jsonl
+
+# Environment
+.env
+.env.local
+*.key
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test artifacts
+*.log
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Docker
+Dockerfile
+docker-compose*.yml

@@ -324,3 +324,72 @@ api_key: sk-xxx  # NEVER DO THIS
 ### 11.2 禁止 LLM 重写
 
 Refresh 阶段**只能**进行确定性术语替换。禁止 LLM 重写非术语部分。
+
+---
+
+## 12. Docker 执行策略 (v2.1)
+
+### 12.1 执行环境选择
+
+| 场景 | 执行环境 | 命令示例 |
+|------|---------|---------|
+| 开发/调试 | ✅ 本地 Python | `python scripts/xxx.py` |
+| 正式测试 | ✅ Docker | `docker-compose run --rm test` |
+| CI/CD | ✅ Docker | `docker-compose run --rm xxx` |
+| Agent 自动化 | ✅ Docker | `docker-compose run --rm xxx` |
+
+### 12.2 本地开发规则
+
+开发和迭代功能时使用本地 Python：
+
+```powershell
+# 设置环境变量
+$env:LLM_BASE_URL='...'
+$env:LLM_API_KEY='...'
+
+# 本地运行
+python scripts/translate_llm.py ...
+```
+
+**优点**：快速迭代、方便调试
+
+### 12.3 Docker 测试规则
+
+正式测试**必须**使用 Docker：
+
+```bash
+# E2E 测试
+docker-compose run --rm test
+
+# LLM 连通性测试
+docker-compose run --rm ping
+
+# 翻译任务
+docker-compose run --rm translate
+```
+
+**原因**：确保环境一致性、可复现
+
+### 12.4 Agent 执行规则
+
+Agent 自动化执行**必须**使用 Docker：
+
+```bash
+# Agent 执行前必须先 ping
+docker-compose run --rm ping
+
+# 然后执行任务
+docker-compose run --rm translate
+```
+
+**原因**：
+
+- 无需安装依赖
+- 环境隔离
+- 与 CI/CD 一致
+
+### 12.5 .env 文件规则
+
+- `.env` 文件**禁止**提交到 git
+- 使用 `.env.example` 作为模板
+- Docker 容器通过 `env_file: .env` 读取配置
