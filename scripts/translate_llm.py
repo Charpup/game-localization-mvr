@@ -2,23 +2,22 @@
 # -*- coding: utf-8 -*-
 
 """
-translate_llm.py (v2.1 - Concurrent)
+translate_llm.py (v3.0 - Batch Mode)
 Purpose:
   Translate tokenized Chinese strings (tokenized_zh) into target language with:
-  - checkpoint/resume
-  - retry + exponential backoff
-  - fallback to escalate list after repeated failures
+  - BATCH processing: multiple items per LLM call to reduce prompt token waste
+  - checkpoint/resume at batch level
+  - binary-split fallback on parse failure
   - glossary.yaml (approved hard, banned hard, proposed soft)
   - style_guide.md guidance
-  - Controlled concurrency via --max_inflight
 
 Usage:
-  python scripts/translate_llm.py \
-    --input data/draft.csv \
-    --output data/translated.csv \
-    --style workflow/style_guide.md \
-    --glossary data/glossary.yaml \
-    --target ru-RU --max_retries 4 --max_inflight 3
+  python scripts/translate_llm.py \\
+    --input data/draft.csv \\
+    --output data/translated.csv \\
+    --style workflow/style_guide.md \\
+    --glossary data/glossary.yaml \\
+    --target ru-RU --batch_size 20 --max_retries 3
 
 Environment (OpenAI-compatible):
   LLM_BASE_URL   e.g. https://api.openai.com/v1
@@ -34,10 +33,15 @@ import random
 import re
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
+
+# Ensure UTF-8 output on Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 # Use shared runtime adapter for LLM calls
 try:
@@ -51,6 +55,16 @@ try:
 except Exception:
     yaml = None
 
+# Import batch utilities
+try:
+    from batch_utils import (
+        BatchConfig, split_into_batches, parse_json_array,
+        BatchCheckpoint, filter_pending, format_progress
+    )
+except ImportError:
+    print("ERROR: batch_utils.py not found. Please ensure it exists in scripts/")
+    sys.exit(1)
+
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 CJK_RE = re.compile(r"[\u4e00-\u9fff]")
 
@@ -63,18 +77,6 @@ class GlossaryEntry:
     term_ru: str
     status: str  # approved | proposed | banned
     notes: str = ""
-
-
-@dataclass
-class TranslateResult:
-    """Result of processing a single row."""
-    idx: int
-    string_id: str
-    success: bool
-    target_text: str = ""
-    error_msg: str = ""
-    row: Dict[str, str] = field(default_factory=dict)
-    queue_wait_ms: int = 0
 
 
 def load_style_guide(path: str) -> str:
@@ -154,6 +156,13 @@ def read_csv_rows(path: str) -> List[Dict[str, str]]:
         reader = csv.DictReader(f)
         return list(reader)
 
+def write_csv_rows(path: str, fieldnames: List[str], rows: List[Dict[str, str]]) -> None:
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fieldnames)
+        w.writeheader()
+        w.writerows(rows)
+
 def append_csv_rows(path: str, fieldnames: List[str], rows: List[Dict[str, str]]) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     exists = Path(path).exists()
@@ -168,7 +177,7 @@ def load_checkpoint(path: str) -> dict:
     if Path(path).exists():
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
-    return {"done_ids": {}, "stats": {"ok": 0, "fail": 0, "skipped": 0}}
+    return {"done_ids": {}, "stats": {"ok": 0, "fail": 0, "escalated": 0}, "batch_idx": 0}
 
 def save_checkpoint(path: str, ckpt: dict) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -198,125 +207,225 @@ def backoff_sleep(attempt: int) -> None:
     time.sleep(base * jitter)
 
 # -----------------------------
-# Prompt builder
+# Batch Prompt builder
 # -----------------------------
-def build_system_prompt(style_guide: str) -> str:
+def build_system_prompt_batch(style_guide: str, glossary_summary: str) -> str:
+    """Build system prompt for batch translation."""
     return (
         '你是严谨的手游本地化译者（zh-CN → ru-RU），面向"官方系统文案为主，二次元口语为辅"的火影题材。\n\n'
-        '目标：把给定的中文文本翻译成自然、简洁、符合俄语习惯的俄文 UI/系统文本。\n\n'
+        '目标：把给定的中文文本批量翻译成自然、简洁、符合俄语习惯的俄文 UI/系统文本。\n\n'
         '术语表规则（硬性）：\n'
-        '- glossary 中出现的 term_zh → term_ru 必须严格使用 term_ru（大小写/词形按 glossary 指定；如需要变格请保持词根一致并优先保持 glossary 形式）。\n'
-        '- 若源文包含 term_zh，但译文难以直接套用 term_ru，必须在不破坏占位符的前提下改写句子以容纳 term_ru。\n\n\n'
+        '- glossary 中出现的 term_zh → term_ru 必须严格使用 term_ru。\n'
+        '- 若源文包含 term_zh，但译文难以直接套用 term_ru，必须在不破坏占位符的前提下改写句子以容纳 term_ru。\n\n'
         '占位符规则（硬性）：\n'
-        '- 任何形如 ⟦PH_xx⟧ / ⟦TAG_xx⟧ / {0} / %s 的占位符必须原样保留，不得翻译/改动/增删/移动。\n'
-        '- 输出中禁止出现中文括号符号【】；如源文含【】用于分组/强调，俄语侧用 «» 或改写为"X: …"。\n\n\n'
-        '输出格式（硬性）：\n'
-        '- 只输出最终俄文译文纯文本，不要解释，不要加引号，不要加编号，不要 Markdown。\n'
-        '- 若源文为空字符串：输出空字符串（不要输出 null）。\n'
+        '- 任何形如 ⟦PH_xx⟧ / ⟦TAG_xx⟧ 的占位符必须原样保留，不得翻译/改动/增删。\n'
+        '- 输出中禁止出现中文括号符号【】；如源文含【】用于分组/强调，俄语侧用 «» 或改写为"X: …"。\n\n'
+        '输入格式：JSON 数组，每项包含 string_id 和 tokenized_zh。\n'
+        '输出格式（硬性）：JSON 数组，每项包含 string_id 和 target_ru。\n'
+        '示例输出：[{"string_id": "XXX", "target_ru": "Привет ⟦PH_0⟧"}]\n'
+        '- 不要解释，不要加额外字段，严格输出 JSON 数组。\n'
+        '- 若源文为空字符串：target_ru 也输出空字符串。\n\n'
+        f'术语表摘要（前 50 条 approved）：\n{glossary_summary[:2000]}\n\n'
+        f'style_guide（节选）：\n{style_guide[:1500]}\n'
     )
 
-def build_user_prompt(row: Dict[str, str], glossary_entries: List[GlossaryEntry], style_guide_excerpt: str) -> str:
-    source_zh = row.get("tokenized_zh") or row.get("source_zh") or ""
-    approved, banned, proposed = build_glossary_constraints(glossary_entries, source_zh)
+def build_batch_input(rows: List[Dict[str, str]], glossary: List[GlossaryEntry]) -> List[Dict[str, Any]]:
+    """Build batch input JSON for LLM."""
+    batch_items = []
+    for row in rows:
+        source_zh = row.get("tokenized_zh") or row.get("source_zh") or ""
+        
+        # Build per-item glossary constraints (compact)
+        approved, banned, proposed = build_glossary_constraints(glossary, source_zh)
+        glossary_hint = ""
+        if approved:
+            glossary_hint = "; ".join([f"{k}→{v}" for k, v in list(approved.items())[:5]])
+        
+        item = {
+            "string_id": row.get("string_id", ""),
+            "tokenized_zh": source_zh,
+        }
+        if glossary_hint:
+            item["glossary_hint"] = glossary_hint
+        if row.get("context"):
+            item["context"] = row["context"][:200]
+        
+        batch_items.append(item)
     
-    glossary_lines = []
-    if approved:
-        glossary_lines.append("【强制使用】")
-        for k, v in approved.items():
-            glossary_lines.append(f"- {k} → {v}")
-    if banned:
-        glossary_lines.append("【禁止自创】")
-        for k in banned:
-            glossary_lines.append(f"- {k}")
-    if proposed:
-        glossary_lines.append("【参考建议】")
-        for k, vals in proposed.items():
-            glossary_lines.append(f"- {k} → {', '.join(vals)}")
-            
-    glossary_text = "\n".join(glossary_lines) if glossary_lines else "(无)"
+    return batch_items
 
-    return (
-        "源文（已冻结占位符）：\n"
-        f"{source_zh}\n\n"
-        "可用术语摘录（如为空则表示无匹配）：\n"
-        f"{glossary_text}\n\n"
-        "style_guide（节选）：\n"
-        f"{style_guide_excerpt[:2000]}\n"
-    )
+def build_glossary_summary(entries: List[GlossaryEntry], max_entries: int = 50) -> str:
+    """Build compact glossary summary for system prompt."""
+    approved = [e for e in entries if e.status.lower() == "approved"][:max_entries]
+    if not approved:
+        return "(无)"
+    lines = [f"- {e.term_zh} → {e.term_ru}" for e in approved]
+    return "\n".join(lines)
 
 # -----------------------------
-# Worker function (runs in thread)
+# Batch processing
 # -----------------------------
-def process_row(
-    idx: int,
-    row: Dict[str, str],
+def process_batch(
+    batch: List[Dict[str, str]],
     llm: LLMClient,
     glossary: List[GlossaryEntry],
     style_guide: str,
-    max_retries: int,
-    submit_time: float,
-    inflight_limit: int
-) -> TranslateResult:
+    glossary_summary: str,
+    batch_idx: int,
+    max_retries: int = 3
+) -> Tuple[List[Dict[str, str]], List[Dict[str, str]]]:
     """
-    Process a single row translation with retries.
-    Thread-safe: only reads shared data, returns result object.
+    Process a batch of rows through LLM.
+    
+    Returns:
+        (success_rows, escalated_rows)
     """
-    worker_start = time.time()
-    queue_wait_ms = int((worker_start - submit_time) * 1000)
+    if not batch:
+        return [], []
     
-    sid = (row.get("string_id") or "").strip()
-    tok = row.get("tokenized_zh") or row.get("source_zh") or ""
+    system = build_system_prompt_batch(style_guide, glossary_summary)
+    batch_input = build_batch_input(batch, glossary)
+    user_prompt = json.dumps(batch_input, ensure_ascii=False, indent=None)
     
-    system = build_system_prompt(style_guide)
-    user = build_user_prompt(row, glossary, style_guide)
-
-    ru_result = ""
-    last_err = ""
-    success = False
-
+    # Build string_id -> row map for result matching
+    id_to_row = {r.get("string_id", ""): r for r in batch}
+    
     for attempt in range(max_retries + 1):
         try:
             result = llm.chat(
-                system=system, 
-                user=user, 
+                system=system,
+                user=user_prompt,
                 metadata={
-                    "step": "translate", 
-                    "string_id": sid,
-                    "queue_wait_ms": queue_wait_ms,
-                    "inflight_limit": inflight_limit
-                }
+                    "step": "translate",
+                    "batch_idx": batch_idx,
+                    "batch_size": len(batch),
+                    "attempt": attempt
+                },
+                response_format={"type": "json_object"}
             )
-            ru = result.text.strip()
             
-            ok, why = validate_translation(tok, ru)
-            if not ok:
-                last_err = why
-                raise ValueError(f"Validation failed: {why}")
+            # Parse response
+            parsed = parse_json_array(result.text)
+            if parsed is None:
+                raise ValueError(f"Failed to parse JSON array from response")
+            
+            # Match results to original rows
+            success_rows = []
+            matched_ids = set()
+            
+            for item in parsed:
+                sid = item.get("string_id", "")
+                target_ru = item.get("target_ru", "")
                 
-            ru_result = ru
-            success = True
-            break
-        except Exception as e:
-            last_err = str(e)
+                if sid not in id_to_row:
+                    continue  # Unknown ID, skip
+                
+                original_row = id_to_row[sid]
+                source_zh = original_row.get("tokenized_zh") or original_row.get("source_zh") or ""
+                
+                # Validate translation
+                ok, reason = validate_translation(source_zh, target_ru)
+                if ok:
+                    out_row = dict(original_row)
+                    out_row["target_text"] = target_ru
+                    success_rows.append(out_row)
+                    matched_ids.add(sid)
+                else:
+                    # Validation failed - will be retried or escalated
+                    pass
+            
+            # Check for missing IDs
+            missing_ids = set(id_to_row.keys()) - matched_ids
+            
+            if not missing_ids:
+                # All rows processed successfully
+                return success_rows, []
+            
+            # Some rows missing - if this is last attempt, escalate
             if attempt >= max_retries:
-                break
+                escalated = []
+                for sid in missing_ids:
+                    row = id_to_row[sid]
+                    escalated.append({
+                        "string_id": sid,
+                        "reason": "missing_from_batch_response",
+                        "tokenized_zh": row.get("tokenized_zh", ""),
+                        "last_output": ""
+                    })
+                return success_rows, escalated
+            
+            # Retry with smaller batch (binary split)
             backoff_sleep(attempt)
+            
+        except Exception as e:
+            if attempt >= max_retries:
+                # Escalate entire batch
+                escalated = []
+                for row in batch:
+                    escalated.append({
+                        "string_id": row.get("string_id", ""),
+                        "reason": f"batch_error: {str(e)[:100]}",
+                        "tokenized_zh": row.get("tokenized_zh", ""),
+                        "last_output": ""
+                    })
+                return [], escalated
+            backoff_sleep(attempt)
+    
+    return [], []
 
-    return TranslateResult(
-        idx=idx,
-        string_id=sid,
-        success=success,
-        target_text=ru_result,
-        error_msg=last_err,
-        row=row,
-        queue_wait_ms=queue_wait_ms
+
+def process_batch_with_fallback(
+    batch: List[Dict[str, str]],
+    llm: LLMClient,
+    glossary: List[GlossaryEntry],
+    style_guide: str,
+    glossary_summary: str,
+    batch_idx: int,
+    max_retries: int = 3,
+    depth: int = 0,
+    max_depth: int = 5
+) -> Tuple[List[Dict[str, str]], List[Dict[str, str]]]:
+    """
+    Process batch with binary-split fallback on failure.
+    """
+    if not batch:
+        return [], []
+    
+    # Try full batch first
+    success, escalated = process_batch(
+        batch, llm, glossary, style_guide, glossary_summary, batch_idx, max_retries
     )
+    
+    if not escalated:
+        return success, []
+    
+    # If batch size is 1, can't split further
+    if len(batch) <= 1 or depth >= max_depth:
+        return success, escalated
+    
+    # Binary split and retry
+    mid = len(batch) // 2
+    left_batch = batch[:mid]
+    right_batch = batch[mid:]
+    
+    left_success, left_esc = process_batch_with_fallback(
+        left_batch, llm, glossary, style_guide, glossary_summary,
+        batch_idx, max_retries, depth + 1, max_depth
+    )
+    
+    right_success, right_esc = process_batch_with_fallback(
+        right_batch, llm, glossary, style_guide, glossary_summary,
+        batch_idx, max_retries, depth + 1, max_depth
+    )
+    
+    return left_success + right_success, left_esc + right_esc
+
 
 # -----------------------------
 # Main
 # -----------------------------
 def main():
-    parser = argparse.ArgumentParser(description="LLM Translate (Concurrent)")
+    parser = argparse.ArgumentParser(description="LLM Translate (Batch Mode v3.0)")
     parser.add_argument("--input", required=True, help="Input CSV")
     parser.add_argument("--output", required=True, help="Output Translated CSV")
     parser.add_argument("--style", default="workflow/style_guide.md", help="Style guide")
@@ -324,145 +433,148 @@ def main():
     parser.add_argument("--escalate_csv", default="data/escalate_list.csv", help="Escalation CSV")
     parser.add_argument("--checkpoint", default="data/translate_checkpoint.json", help="Checkpoint JSON")
     parser.add_argument("--target", default="ru-RU")
+    parser.add_argument("--batch_size", type=int, default=20, help="Items per batch")
+    parser.add_argument("--max_batch_tokens", type=int, default=6000, help="Max tokens per batch")
     parser.add_argument("--max_retries", type=int, default=3)
-    parser.add_argument("--max_inflight", type=int, default=3, help="Max concurrent requests")
-    parser.add_argument("--progress_every", type=int, default=10)
+    parser.add_argument("--progress_every", type=int, default=1, help="Report progress every N batches")
     parser.add_argument("--dry-run", action="store_true")
     
     args = parser.parse_args()
     
+    print(f"🚀 Translate LLM v3.0 (Batch Mode)")
+    print(f"   Input: {args.input}")
+    print(f"   Batch size: {args.batch_size}")
+    print()
+    
     # 1. Load resources
     style_guide = load_style_guide(args.style)
     glossary, gloss_hash = load_glossary(args.glossary)
+    glossary_summary = build_glossary_summary(glossary)
     
     # 2. Load input
     if not Path(args.input).exists():
-        print(f"Input file not found: {args.input}")
+        print(f"❌ Input file not found: {args.input}")
         sys.exit(1)
     
     rows = read_csv_rows(args.input)
-    print(f"Loaded {len(rows)} rows from {args.input}")
-    print(f"Concurrency: max_inflight={args.max_inflight}")
+    print(f"✅ Loaded {len(rows)} rows from {args.input}")
+    print(f"   Glossary: {len(glossary)} entries")
+    print(f"   Style guide: {len(style_guide)} chars")
     
     if args.dry_run:
-        print("[Dry-Run] Validation passed.")
-        print(f"Glossary: {len(glossary)} entries")
-        print(f"Style Guide: {len(style_guide)} chars")
+        print()
+        print("=" * 60)
+        print("DRY-RUN MODE - Validation Summary")
+        print("=" * 60)
+        
+        # Split into batches for preview
+        config = BatchConfig(max_items=args.batch_size, max_tokens=args.max_batch_tokens)
+        batches = split_into_batches(rows, config)
+        print(f"[OK] Would create {len(batches)} batches")
+        print(f"[OK] Average batch size: {len(rows) / max(1, len(batches)):.1f}")
+        
+        # Show sample system prompt
+        sample_system = build_system_prompt_batch(style_guide, glossary_summary)
+        print(f"[OK] System prompt: {len(sample_system)} chars (~{len(sample_system)//4} tokens)")
+        
+        print()
+        print("[OK] Dry-run validation PASSED")
+        print("=" * 60)
         return
-
+    
     # 3. Checkpoint
     ckpt = load_checkpoint(args.checkpoint)
-    done_ids = ckpt["done_ids"]
+    done_ids = ckpt.get("done_ids", {})
     
     # 4. Filter pending
-    pending = []
-    for r in rows:
-        sid = (r.get("string_id") or "").strip()
-        if sid and not done_ids.get(sid):
-            pending.append(r)
-            
-    print(f"Pending items: {len(pending)}")
+    pending = [r for r in rows if r.get("string_id") not in done_ids]
+    print(f"   Pending items: {len(pending)}")
     
     if not pending:
-        print("All done.")
+        print("✅ All done.")
         return
-
-    # 5. Initialize Output
+    
+    # 5. Initialize LLM
+    if not LLMClient:
+        print("❌ runtime_adapter not found. Cannot proceed.")
+        sys.exit(1)
+        
+    try:
+        llm = LLMClient()
+        print(f"✅ LLM initialized: {llm.default_model}")
+    except Exception as e:
+        print(f"❌ Failed to init LLM: {e}")
+        sys.exit(1)
+    
+    # 6. Split into batches
+    config = BatchConfig(max_items=args.batch_size, max_tokens=args.max_batch_tokens)
+    batches = split_into_batches(pending, config)
+    print(f"   Batches: {len(batches)}")
+    print()
+    
+    # 7. Initialize output
     sample_fields = list(rows[0].keys())
     if "target_text" not in sample_fields:
         sample_fields.append("target_text")
     
     esc_fields = ["string_id", "reason", "tokenized_zh", "last_output"]
-
-    # 6. Initialize LLM
-    if not LLMClient:
-        print("runtime_adapter not found. Cannot proceed.")
-        sys.exit(1)
-        
-    try:
-        llm = LLMClient()
-    except Exception as e:
-        print(f"Failed to init LLM: {e}")
-        sys.exit(1)
-
-    # 7. Concurrent execution with as_completed + write buffer
+    
+    # 8. Process batches
     start_time = time.time()
+    ok_count = ckpt.get("stats", {}).get("ok", 0)
+    fail_count = ckpt.get("stats", {}).get("fail", 0)
+    esc_count = ckpt.get("stats", {}).get("escalated", 0)
     
-    # Write buffer: idx -> TranslateResult
-    result_buffer: Dict[int, TranslateResult] = {}
-    next_write_idx = 0
-    
-    ok_count = ckpt["stats"].get("ok", 0)
-    fail_count = ckpt["stats"].get("fail", 0)
-    
-    with ThreadPoolExecutor(max_workers=args.max_inflight) as executor:
-        # Submit all tasks
-        future_to_idx = {}
-        for idx, row in enumerate(pending):
-            submit_time = time.time()
-            future = executor.submit(
-                process_row,
-                idx, row, llm, glossary, style_guide, 
-                args.max_retries, submit_time, args.max_inflight
-            )
-            future_to_idx[future] = idx
+    for batch_idx, batch in enumerate(batches):
+        batch_start = time.time()
         
-        # Process as completed
-        for future in as_completed(future_to_idx):
-            try:
-                result = future.result()
-            except Exception as e:
-                # Unexpected error in worker
-                idx = future_to_idx[future]
-                result = TranslateResult(
-                    idx=idx,
-                    string_id=pending[idx].get("string_id", ""),
-                    success=False,
-                    error_msg=f"Worker exception: {e}",
-                    row=pending[idx],
-                    queue_wait_ms=0
-                )
-            
-            # Store in buffer
-            result_buffer[result.idx] = result
-            
-            # Flush buffer in order
-            while next_write_idx in result_buffer:
-                res = result_buffer.pop(next_write_idx)
-                
-                if res.success:
-                    out = dict(res.row)
-                    out["target_text"] = res.target_text
-                    append_csv_rows(args.output, sample_fields, [out])
-                    done_ids[res.string_id] = True
-                    ok_count += 1
-                else:
-                    tok = res.row.get("tokenized_zh") or res.row.get("source_zh") or ""
-                    append_csv_rows(args.escalate_csv, esc_fields, [{
-                        "string_id": res.string_id,
-                        "reason": f"translate_failed: {res.error_msg}",
-                        "tokenized_zh": tok,
-                        "last_output": ""
-                    }])
-                    fail_count += 1
-                
-                # Update checkpoint
-                ckpt["done_ids"] = done_ids
-                ckpt["stats"]["ok"] = ok_count
-                ckpt["stats"]["fail"] = fail_count
-                save_checkpoint(args.checkpoint, ckpt)
-                
-                next_write_idx += 1
-                
-                # Progress reporting
-                total_done = ok_count + fail_count
-                if total_done % args.progress_every == 0 or next_write_idx >= len(pending):
-                    elapsed = time.time() - start_time
-                    rate = total_done / elapsed if elapsed > 0 else 0
-                    print(f"[PROGRESS] {total_done}/{len(pending)} | elapsed={int(elapsed)}s | rate={rate:.2f}/s")
-
+        success_rows, escalated_rows = process_batch_with_fallback(
+            batch, llm, glossary, style_guide, glossary_summary,
+            batch_idx, args.max_retries
+        )
+        
+        # Write success rows
+        if success_rows:
+            append_csv_rows(args.output, sample_fields, success_rows)
+            for row in success_rows:
+                done_ids[row.get("string_id", "")] = True
+                ok_count += 1
+        
+        # Write escalated rows
+        if escalated_rows:
+            append_csv_rows(args.escalate_csv, esc_fields, escalated_rows)
+            for row in escalated_rows:
+                done_ids[row.get("string_id", "")] = True
+                esc_count += 1
+        
+        # Update checkpoint
+        ckpt["done_ids"] = done_ids
+        ckpt["stats"] = {"ok": ok_count, "fail": fail_count, "escalated": esc_count}
+        ckpt["batch_idx"] = batch_idx + 1
+        save_checkpoint(args.checkpoint, ckpt)
+        
+        # Progress
+        batch_time = time.time() - batch_start
+        elapsed = time.time() - start_time
+        total_done = ok_count + esc_count
+        
+        if (batch_idx + 1) % args.progress_every == 0 or batch_idx == len(batches) - 1:
+            print(format_progress(
+                total_done, len(pending), batch_idx + 1, len(batches),
+                elapsed, batch_time
+            ))
+    
+    # 9. Summary
     total_elapsed = time.time() - start_time
-    print(f"[DONE] ok={ok_count} fail={fail_count} | total_time={int(total_elapsed)}s")
+    print()
+    print(f"✅ Translation complete!")
+    print(f"   OK: {ok_count}")
+    print(f"   Escalated: {esc_count}")
+    print(f"   Total time: {int(total_elapsed)}s")
+    print(f"   Output: {args.output}")
+    if esc_count > 0:
+        print(f"   Escalated: {args.escalate_csv}")
+
 
 if __name__ == "__main__":
     main()
