@@ -1,17 +1,25 @@
-# LLM Routing Configuration
+# LLM Routing Configuration (v2.0 - Batch Mode)
 # 
 # Model selection based on step, with fallback chains.
 # Router does NOT retry - only switches models on failure.
 # Retry logic is handled by callers (translate_llm, repair_loop, etc.)
 
 routing:
+  # Batch mode enabled - v3.0
   translate:
     default: gpt-4.1
     fallback: [claude-sonnet-4-5-20250929, gpt-4.1-mini]
+    max_tokens: 8000  # Larger for batch output
+    temperature: 0.1
+    response_format: { "type": "json_object" }
 
+  # Batch mode enabled - v2.0
   soft_qa:
     default: gpt-4.1-mini
     fallback: [gpt-4.1, gemini-2.5-pro]
+    max_tokens: 4000
+    temperature: 0.1
+    response_format: { "type": "json_object" }
 
   repair_hard:
     default: claude-sonnet-4-5-20250929
@@ -25,13 +33,21 @@ routing:
     default: gpt-4.1
     fallback: [claude-sonnet-4-5-20250929]
 
+  # Batch mode enabled - v2.0
   glossary_autopromote:
     default: gpt-4.1-mini
     fallback: [gpt-4.1, gemini-2.5-pro]
+    max_tokens: 4000
+    temperature: 0.1
+    response_format: { "type": "json_object" }
 
+  # Batch mode enabled - v2.0
   translate_refresh:
     default: claude-sonnet-4-5-20250929
     fallback: [gpt-4.1, gpt-4.1-mini]
+    max_tokens: 6000
+    temperature: 0.1
+    response_format: { "type": "json_object" }
 
   # Glossary pipeline steps (ALL THREE REQUIRED - fail-fast if missing)
   llm_ping:
@@ -42,6 +58,9 @@ routing:
   normalize_tagging:
     default: gpt-4.1-mini
     fallback: [claude-3-5-haiku-latest, gpt-4o-mini]
+    temperature: 0.0
+    max_tokens: 1000
+    response_format: { "type": "json_object" }
 
   glossary_translate:
     default: gpt-4.1-mini
