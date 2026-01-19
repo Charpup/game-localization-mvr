@@ -2,27 +2,20 @@
 # -*- coding: utf-8 -*-
 
 """
-translate_llm.py (v3.0 - Batch Mode)
+translate_llm.py (v5.0 - Structured Output Contract)
 Purpose:
-  Translate tokenized Chinese strings (tokenized_zh) into target language with:
-  - BATCH processing: multiple items per LLM call to reduce prompt token waste
-  - checkpoint/resume at batch level
-  - binary-split fallback on parse failure
-  - glossary.yaml (approved hard, banned hard, proposed soft)
-  - style_guide.md guidance
+  Translate tokenized Chinese strings with:
+  - CONCURRENT batch processing
+  - JSON schema validation (strict)
+  - Structure-repair retry (1 attempt)
+  - Dynamic max_tokens calculation
+  - Batch-based progress with ETA
 
 Usage:
   python scripts/translate_llm.py \\
     --input data/draft.csv \\
     --output data/translated.csv \\
-    --style workflow/style_guide.md \\
-    --glossary data/glossary.yaml \\
-    --target ru-RU --batch_size 20 --max_retries 3
-
-Environment (OpenAI-compatible):
-  LLM_BASE_URL   e.g. https://api.openai.com/v1
-  LLM_API_KEY    your key/token
-  LLM_MODEL      e.g. gpt-4o
+    --batch_size 10 --max_concurrent 6
 """
 
 import argparse
@@ -33,6 +26,8 @@ import random
 import re
 import sys
 import time
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
@@ -43,7 +38,13 @@ if sys.platform == 'win32':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
-# Use shared runtime adapter for LLM calls
+# JSON Schema validation
+try:
+    import jsonschema
+except ImportError:
+    jsonschema = None
+    print("WARNING: jsonschema not installed. Schema validation disabled.")
+
 try:
     from runtime_adapter import LLMClient, LLMError
 except ImportError:
@@ -51,31 +52,99 @@ except ImportError:
     LLMError = Exception
 
 try:
-    import yaml  # PyYAML
+    import yaml
 except Exception:
     yaml = None
 
-# Import batch utilities
 try:
-    from batch_utils import (
-        BatchConfig, split_into_batches, parse_json_array,
-        BatchCheckpoint, filter_pending, format_progress
-    )
+    from batch_utils import BatchConfig, split_into_batches, parse_json_array
 except ImportError:
-    print("ERROR: batch_utils.py not found. Please ensure it exists in scripts/")
+    print("ERROR: batch_utils.py not found.")
     sys.exit(1)
 
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 CJK_RE = re.compile(r"[\u4e00-\u9fff]")
 
 # -----------------------------
-# Glossary model
+# JSON Schema for Batch Output
+# -----------------------------
+BATCH_OUTPUT_SCHEMA = {
+    "type": "array",
+    "minItems": 1,
+    "items": {
+        "type": "object",
+        "required": ["string_id", "target_ru"],
+        "properties": {
+            "string_id": {"type": "string", "minLength": 1},
+            "target_ru": {"type": "string"}
+        },
+        "additionalProperties": False
+    }
+}
+
+# Token estimation constants
+EXPECTED_TOKENS_PER_ROW = 40
+COMPLETION_MARGIN = 1.3
+
+
+def validate_batch_schema(data: Any) -> Tuple[bool, str]:
+    """Validate parsed JSON against batch output schema."""
+    if jsonschema is None:
+        # Fallback: basic structure check
+        if not isinstance(data, list):
+            return False, "not_array"
+        for item in data:
+            if not isinstance(item, dict):
+                return False, "item_not_object"
+            if "string_id" not in item or "target_ru" not in item:
+                return False, "missing_required_fields"
+        return True, "ok"
+    
+    try:
+        jsonschema.validate(instance=data, schema=BATCH_OUTPUT_SCHEMA)
+        return True, "ok"
+    except jsonschema.ValidationError as e:
+        return False, f"schema_error: {str(e.message)[:100]}"
+
+
+# -----------------------------
+# Inflight Tracker
+# -----------------------------
+class InflightTracker:
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._count = 0
+        self._peak = 0
+    
+    def acquire(self) -> int:
+        with self._lock:
+            self._count += 1
+            self._peak = max(self._peak, self._count)
+            return self._count
+    
+    def release(self) -> None:
+        with self._lock:
+            self._count -= 1
+    
+    @property
+    def current(self) -> int:
+        with self._lock:
+            return self._count
+    
+    @property
+    def peak(self) -> int:
+        with self._lock:
+            return self._peak
+
+
+# -----------------------------
+# Glossary
 # -----------------------------
 @dataclass
 class GlossaryEntry:
     term_zh: str
     term_ru: str
-    status: str  # approved | proposed | banned
+    status: str
     notes: str = ""
 
 
@@ -85,495 +154,551 @@ def load_style_guide(path: str) -> str:
     with open(path, "r", encoding="utf-8") as f:
         return f.read().strip()
 
-def load_glossary_lock(compiled_path: str) -> Dict[str, Any]:
-    """Load compiled.lock.json if exists."""
-    lock_path = Path(compiled_path).with_suffix('.lock.json')
-    if lock_path.exists():
-        with open(lock_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {}
 
 def load_glossary(path: str) -> Tuple[List[GlossaryEntry], Optional[str]]:
     if not path or not Path(path).exists():
         return [], None
     if yaml is None:
-        raise RuntimeError("PyYAML is required. Install with: pip install pyyaml")
-    
+        return [], None
     with open(path, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f) or {}
+        g = yaml.safe_load(f) or {}
+    entries = []
+    for it in g.get("entries", []):
+        term_zh = (it.get("term_zh") or "").strip()
+        term_ru = (it.get("term_ru") or "").strip()
+        status = (it.get("status") or "").lower().strip()
+        if term_zh and status in ("approved", "proposed", "banned"):
+            entries.append(GlossaryEntry(term_zh, term_ru, status))
+    meta = g.get("meta", {})
+    return entries, meta.get("compiled_hash")
 
-    entries: List[GlossaryEntry] = []
-    glossary_hash = None
-    
-    lock = load_glossary_lock(path)
-    if lock:
-        glossary_hash = lock.get("hash", "")
-    
-    if isinstance(data, dict) and "entries" in data and isinstance(data["entries"], list):
-        src = data["entries"]
-        for it in src:
-            term_zh = (it.get("term_zh") or "").strip()
-            term_ru = (it.get("term_ru") or "").strip()
-            status = (it.get("status") or "approved").strip()
-            notes = (it.get("notes") or it.get("note") or "").strip()
-            if term_zh:
-                entries.append(GlossaryEntry(term_zh, term_ru, status, notes))
-    elif isinstance(data, dict) and "candidates" in data and isinstance(data["candidates"], list):
-        for it in data["candidates"]:
-            term_zh = (it.get("term_zh") or "").strip()
-            term_ru = (it.get("ru_suggestion") or "").strip()
-            status = (it.get("status") or "proposed").strip()
-            notes = (it.get("notes") or "").strip()
-            if term_zh:
-                entries.append(GlossaryEntry(term_zh, term_ru, status, notes))
-    
-    return entries, glossary_hash
 
-def build_glossary_constraints(entries: List[GlossaryEntry], source_text: str) -> Tuple[Dict[str, str], List[str], Dict[str, List[str]]]:
-    approved_map: Dict[str, str] = {}
-    banned_terms: List[str] = []
-    proposed_map: Dict[str, List[str]] = {}
+def build_glossary_summary(glossary: List[GlossaryEntry], max_entries: int = 50) -> str:
+    approved = [e for e in glossary if e.status == "approved"][:max_entries]
+    if not approved:
+        return "(无)"
+    return "\n".join([f"- {e.term_zh} → {e.term_ru}" for e in approved])
 
-    for e in entries:
-        if e.term_zh and e.term_zh in source_text:
-            st = e.status.lower()
-            if st == "approved":
-                if e.term_ru:
-                    approved_map[e.term_zh] = e.term_ru
-            elif st == "banned":
-                banned_terms.append(e.term_zh)
-            else:  # proposed
-                if e.term_ru:
-                    proposed_map.setdefault(e.term_zh, []).append(e.term_ru)
 
-    return approved_map, banned_terms, proposed_map
+def build_glossary_constraints(glossary: List[GlossaryEntry], source_zh: str) -> Dict[str, str]:
+    approved = {}
+    for e in glossary:
+        if e.term_zh and e.term_zh in source_zh and e.status == "approved":
+            approved[e.term_zh] = e.term_ru
+    return approved
+
 
 # -----------------------------
-# Helpers
+# CSV / Checkpoint
 # -----------------------------
 def read_csv_rows(path: str) -> List[Dict[str, str]]:
     with open(path, "r", encoding="utf-8-sig", newline="") as f:
-        reader = csv.DictReader(f)
-        return list(reader)
+        return list(csv.DictReader(f))
 
-def write_csv_rows(path: str, fieldnames: List[str], rows: List[Dict[str, str]]) -> None:
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fieldnames)
-        w.writeheader()
-        w.writerows(rows)
 
 def append_csv_rows(path: str, fieldnames: List[str], rows: List[Dict[str, str]]) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     exists = Path(path).exists()
-    mode = "a" if exists else "w"
-    with open(path, mode, encoding="utf-8-sig", newline="") as f:
+    with open(path, "a" if exists else "w", encoding="utf-8-sig", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         if not exists:
             w.writeheader()
         w.writerows(rows)
 
+
 def load_checkpoint(path: str) -> dict:
     if Path(path).exists():
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
-    return {"done_ids": {}, "stats": {"ok": 0, "fail": 0, "escalated": 0}, "batch_idx": 0}
+    return {"done_ids": {}, "stats": {"ok": 0, "escalated": 0}, "batch_idx": 0}
+
 
 def save_checkpoint(path: str, ckpt: dict) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(ckpt, f, ensure_ascii=False, indent=2)
 
+
 def tokens_signature(text: str) -> Dict[str, int]:
-    counts: Dict[str, int] = {}
+    counts = {}
     for m in TOKEN_RE.finditer(text or ""):
-        k = m.group(1)
-        counts[k] = counts.get(k, 0) + 1
+        counts[m.group(1)] = counts.get(m.group(1), 0) + 1
     return counts
+
 
 def validate_translation(tokenized_zh: str, ru: str) -> Tuple[bool, str]:
     if tokens_signature(tokenized_zh) != tokens_signature(ru):
         return False, "token_mismatch"
     if CJK_RE.search(ru or ""):
         return False, "cjk_remaining"
-    if not (ru or "").strip():
-        if (tokenized_zh or "").strip():
-            return False, "empty"
+    if not (ru or "").strip() and (tokenized_zh or "").strip():
+        return False, "empty"
     return True, "ok"
 
+
 def backoff_sleep(attempt: int) -> None:
-    base = min(2 ** attempt, 30)
-    jitter = random.uniform(0.2, 1.0)
-    time.sleep(base * jitter)
+    time.sleep(min(2 ** attempt, 30) * random.uniform(0.5, 1.5))
+
 
 # -----------------------------
-# Batch Prompt builder
+# Prompt Builder (Hardened)
 # -----------------------------
-def build_system_prompt_batch(style_guide: str, glossary_summary: str) -> str:
-    """Build system prompt for batch translation."""
+def build_system_prompt(style_guide: str, glossary_summary: str) -> str:
     return (
-        '你是严谨的手游本地化译者（zh-CN → ru-RU），面向"官方系统文案为主，二次元口语为辅"的火影题材。\n\n'
-        '目标：把给定的中文文本批量翻译成自然、简洁、符合俄语习惯的俄文 UI/系统文本。\n\n'
-        '术语表规则（硬性）：\n'
-        '- glossary 中出现的 term_zh → term_ru 必须严格使用 term_ru。\n'
-        '- 若源文包含 term_zh，但译文难以直接套用 term_ru，必须在不破坏占位符的前提下改写句子以容纳 term_ru。\n\n'
-        '占位符规则（硬性）：\n'
-        '- 任何形如 ⟦PH_xx⟧ / ⟦TAG_xx⟧ 的占位符必须原样保留，不得翻译/改动/增删。\n'
-        '- 输出中禁止出现中文括号符号【】；如源文含【】用于分组/强调，俄语侧用 «» 或改写为"X: …"。\n\n'
-        '输入格式：JSON 数组，每项包含 string_id 和 tokenized_zh。\n'
-        '输出格式（硬性）：JSON 数组，每项包含 string_id 和 target_ru。\n'
-        '示例输出：[{"string_id": "XXX", "target_ru": "Привет ⟦PH_0⟧"}]\n'
-        '- 不要解释，不要加额外字段，严格输出 JSON 数组。\n'
-        '- 若源文为空字符串：target_ru 也输出空字符串。\n\n'
-        f'术语表摘要（前 50 条 approved）：\n{glossary_summary[:2000]}\n\n'
-        f'style_guide（节选）：\n{style_guide[:1500]}\n'
+        '你是严谨的手游本地化译者（zh-CN → ru-RU）。\n\n'
+        '【输出格式 - 强制要求】\n'
+        'You MUST return a JSON ARRAY.\n'
+        'Each item MUST be an object with keys: "string_id", "target_ru".\n\n'
+        'Rules:\n'
+        '- The top-level output MUST be a JSON array.\n'
+        '- Do NOT return a JSON object or key-value map.\n'
+        '- Do NOT use indices as keys.\n'
+        '- Do NOT include explanations, comments, or markdown.\n'
+        '- If you cannot comply, return an EMPTY JSON ARRAY: []\n\n'
+        'Any violation will be treated as a failure.\n\n'
+        '【翻译规则】\n'
+        '- 术语表中 term_zh → term_ru 必须严格使用。\n'
+        '- 占位符 ⟦PH_xx⟧ / ⟦TAG_xx⟧ 必须原样保留。\n'
+        '- 禁止中文括号【】，用 «» 或 "X: …" 替代。\n'
+        '- 空字符串源文输出空字符串。\n\n'
+        '【示例输出】\n'
+        '[{"string_id": "123", "target_ru": "Текст ⟦PH_0⟧"}]\n\n'
+        f'术语表摘要：\n{glossary_summary[:1500]}\n\n'
+        f'style_guide：\n{style_guide[:1000]}\n'
     )
 
+
+STRUCTURE_REPAIR_PROMPT = """Fix the JSON STRUCTURE ONLY.
+
+Requirements:
+- Preserve all text content exactly.
+- Output MUST be a JSON ARRAY of objects.
+- Each object MUST contain: string_id, target_ru.
+- Do NOT translate or rewrite content.
+- Do NOT add or remove items.
+
+Return ONLY valid JSON."""
+
+
 def build_batch_input(rows: List[Dict[str, str]], glossary: List[GlossaryEntry]) -> List[Dict[str, Any]]:
-    """Build batch input JSON for LLM."""
     batch_items = []
     for row in rows:
         source_zh = row.get("tokenized_zh") or row.get("source_zh") or ""
-        
-        # Build per-item glossary constraints (compact)
-        approved, banned, proposed = build_glossary_constraints(glossary, source_zh)
-        glossary_hint = ""
+        approved = build_glossary_constraints(glossary, source_zh)
+        item = {"string_id": row.get("string_id", ""), "tokenized_zh": source_zh}
         if approved:
-            glossary_hint = "; ".join([f"{k}→{v}" for k, v in list(approved.items())[:5]])
-        
-        item = {
-            "string_id": row.get("string_id", ""),
-            "tokenized_zh": source_zh,
-        }
-        if glossary_hint:
-            item["glossary_hint"] = glossary_hint
-        if row.get("context"):
-            item["context"] = row["context"][:200]
-        
+            item["glossary_hint"] = "; ".join([f"{k}→{v}" for k, v in list(approved.items())[:5]])
         batch_items.append(item)
-    
     return batch_items
 
-def build_glossary_summary(entries: List[GlossaryEntry], max_entries: int = 50) -> str:
-    """Build compact glossary summary for system prompt."""
-    approved = [e for e in entries if e.status.lower() == "approved"][:max_entries]
-    if not approved:
-        return "(无)"
-    lines = [f"- {e.term_zh} → {e.term_ru}" for e in approved]
-    return "\n".join(lines)
 
 # -----------------------------
-# Batch processing
+# Batch Result
 # -----------------------------
-def process_batch(
+@dataclass
+class BatchResult:
+    batch_idx: int
+    planned_batch_size: int
+    effective_batch_size: int = 0
+    success_rows: List[Dict[str, str]] = field(default_factory=list)
+    escalated_rows: List[Dict[str, str]] = field(default_factory=list)
+    inflight_at_submit: int = 0
+    latency_ms: int = 0
+    completion_tokens: int = 0
+    max_tokens_used: int = 0
+    structure_repair_attempted: bool = False
+    error_type: Optional[str] = None
+
+
+# -----------------------------
+# Worker Function
+# -----------------------------
+def process_batch_worker(
     batch: List[Dict[str, str]],
-    llm: LLMClient,
+    batch_idx: int,
     glossary: List[GlossaryEntry],
     style_guide: str,
     glossary_summary: str,
-    batch_idx: int,
-    max_retries: int = 3
-) -> Tuple[List[Dict[str, str]], List[Dict[str, str]]]:
-    """
-    Process a batch of rows through LLM.
+    max_retries: int,
+    inflight_tracker: InflightTracker
+) -> BatchResult:
+    """Worker: creates own LLMClient, returns BatchResult, NO file writes."""
+    planned_size = len(batch)
+    result = BatchResult(batch_idx=batch_idx, planned_batch_size=planned_size)
     
-    Returns:
-        (success_rows, escalated_rows)
-    """
     if not batch:
-        return [], []
+        return result
     
-    system = build_system_prompt_batch(style_guide, glossary_summary)
+    # Dynamic max_tokens
+    max_tokens = int(planned_size * EXPECTED_TOKENS_PER_ROW * COMPLETION_MARGIN)
+    result.max_tokens_used = max_tokens
+    
+    # Per-worker LLMClient
+    try:
+        llm = LLMClient()
+    except LLMError as e:
+        result.error_type = f"client_init: {e.kind}"
+        for row in batch:
+            result.escalated_rows.append({
+                "string_id": row.get("string_id", ""),
+                "reason": f"client_init_failed",
+                "batch_idx": str(batch_idx)
+            })
+        return result
+    
+    system_prompt = build_system_prompt(style_guide, glossary_summary)
     batch_input = build_batch_input(batch, glossary)
-    user_prompt = json.dumps(batch_input, ensure_ascii=False, indent=None)
-    
-    # Build string_id -> row map for result matching
+    user_prompt = json.dumps(batch_input, ensure_ascii=False)
     id_to_row = {r.get("string_id", ""): r for r in batch}
     
-    for attempt in range(max_retries + 1):
-        try:
-            result = llm.chat(
-                system=system,
-                user=user_prompt,
-                metadata={
-                    "step": "translate",
-                    "batch_idx": batch_idx,
-                    "batch_size": len(batch),
-                    "attempt": attempt
-                },
-                response_format={"type": "json_object"}
-            )
-            
-            # Parse response
-            parsed = parse_json_array(result.text)
-            if parsed is None:
-                raise ValueError(f"Failed to parse JSON array from response")
-            
-            # Match results to original rows
-            success_rows = []
-            matched_ids = set()
-            
-            for item in parsed:
-                sid = item.get("string_id", "")
-                target_ru = item.get("target_ru", "")
+    inflight_count = inflight_tracker.acquire()
+    result.inflight_at_submit = inflight_count
+    start_time = time.time()
+    
+    try:
+        for attempt in range(max_retries + 1):
+            try:
+                llm_result = llm.chat(
+                    system=system_prompt,
+                    user=user_prompt,
+                    temperature=0.1,
+                    max_tokens=max_tokens,
+                    metadata={
+                        "step": "translate",
+                        "batch_idx": batch_idx,
+                        "planned_batch_size": planned_size,
+                        "effective_batch_size": planned_size,
+                        "inflight_at_submit": inflight_count,
+                        "max_tokens": max_tokens,
+                        "attempt": attempt
+                    }
+                    # Note: removed response_format={type:json_object} as it forces object output
+                )
                 
-                if sid not in id_to_row:
-                    continue  # Unknown ID, skip
+                result.latency_ms = llm_result.latency_ms
+                result.effective_batch_size = planned_size
+                if llm_result.usage:
+                    result.completion_tokens = llm_result.usage.get("completion_tokens", 0)
                 
-                original_row = id_to_row[sid]
-                source_zh = original_row.get("tokenized_zh") or original_row.get("source_zh") or ""
+                # Parse JSON
+                parsed = parse_json_array(llm_result.text)
                 
-                # Validate translation
-                ok, reason = validate_translation(source_zh, target_ru)
-                if ok:
-                    out_row = dict(original_row)
-                    out_row["target_text"] = target_ru
-                    success_rows.append(out_row)
-                    matched_ids.add(sid)
-                else:
-                    # Validation failed - will be retried or escalated
-                    pass
-            
-            # Check for missing IDs
-            missing_ids = set(id_to_row.keys()) - matched_ids
-            
-            if not missing_ids:
-                # All rows processed successfully
-                return success_rows, []
-            
-            # Some rows missing - if this is last attempt, escalate
-            if attempt >= max_retries:
-                escalated = []
-                for sid in missing_ids:
-                    row = id_to_row[sid]
-                    escalated.append({
+                if parsed is None:
+                    # Try extracting from object if LLM returned wrong format
+                    try:
+                        obj = json.loads(llm_result.text.strip())
+                        if isinstance(obj, dict):
+                            # Case 1: Single item with correct keys {"string_id": "1", "target_ru": "..."}
+                            if "string_id" in obj and "target_ru" in obj:
+                                parsed = [obj]
+                            # Case 2: Wrapper object with array inside {"results": [...]}
+                            elif "results" in obj and isinstance(obj["results"], list):
+                                parsed = obj["results"]
+                            elif "translations" in obj and isinstance(obj["translations"], list):
+                                parsed = obj["translations"]
+                            elif "items" in obj and isinstance(obj["items"], list):
+                                parsed = obj["items"]
+                            # Case 3: Key-value map {"1": "text", "2": "text"}
+                            else:
+                                parsed = [{"string_id": str(k), "target_ru": str(v)} for k, v in obj.items()]
+                    except:
+                        pass
+                
+                if parsed is None:
+                    if attempt >= max_retries:
+                        result.error_type = "parse_failed"
+                        break
+                    backoff_sleep(attempt)
+                    continue
+                
+                # Schema validation
+                valid, schema_error = validate_batch_schema(parsed)
+                
+                if not valid:
+                    # Structure-repair retry (1 attempt only)
+                    if not result.structure_repair_attempted:
+                        result.structure_repair_attempted = True
+                        try:
+                            repair_result = llm.chat(
+                                system=STRUCTURE_REPAIR_PROMPT,
+                                user=f"Fix this JSON:\n{llm_result.text[:4000]}",
+                                temperature=0.0,
+                                max_tokens=max_tokens,
+                                metadata={
+                                    "step": "translate",
+                                    "batch_idx": batch_idx,
+                                    "repair_attempt": True
+                                }
+                            )
+                            repaired = parse_json_array(repair_result.text)
+                            if repaired:
+                                valid2, _ = validate_batch_schema(repaired)
+                                if valid2:
+                                    parsed = repaired
+                                    valid = True
+                        except:
+                            pass
+                    
+                    if not valid:
+                        if attempt >= max_retries:
+                            result.error_type = f"schema_violation_after_retry: {schema_error}"
+                            break
+                        backoff_sleep(attempt)
+                        continue
+                
+                # Match and validate translations
+                matched_ids = set()
+                for item in parsed:
+                    sid = str(item.get("string_id", ""))
+                    target_ru = item.get("target_ru", "")
+                    
+                    if sid not in id_to_row:
+                        continue
+                    
+                    original = id_to_row[sid]
+                    source_zh = original.get("tokenized_zh") or original.get("source_zh") or ""
+                    ok, _ = validate_translation(source_zh, target_ru)
+                    
+                    if ok:
+                        out_row = dict(original)
+                        out_row["target_text"] = target_ru
+                        result.success_rows.append(out_row)
+                        matched_ids.add(sid)
+                
+                missing = set(id_to_row.keys()) - matched_ids
+                if not missing:
+                    return result
+                
+                # Has missing items - update working batch to only missing items for next attempt
+                if attempt < max_retries:
+                    # Rebuild batch and prompts with only missing items
+                    batch = [id_to_row[sid] for sid in missing]
+                    batch_input = build_batch_input(batch, glossary)
+                    user_prompt = json.dumps(batch_input, ensure_ascii=False)
+                    id_to_row = {r.get("string_id", ""): r for r in batch}
+                    # Update max_tokens for smaller batch
+                    max_tokens = int(len(batch) * EXPECTED_TOKENS_PER_ROW * COMPLETION_MARGIN)
+                    backoff_sleep(attempt)
+                    continue
+                
+                # Max retries reached - escalate remaining
+                for sid in missing:
+                    result.escalated_rows.append({
                         "string_id": sid,
-                        "reason": "missing_from_batch_response",
-                        "tokenized_zh": row.get("tokenized_zh", ""),
-                        "last_output": ""
+                        "reason": "missing_after_max_retries",
+                        "batch_idx": str(batch_idx)
                     })
-                return success_rows, escalated
-            
-            # Retry with smaller batch (binary split)
-            backoff_sleep(attempt)
-            
-        except Exception as e:
-            if attempt >= max_retries:
-                # Escalate entire batch
-                escalated = []
-                for row in batch:
-                    escalated.append({
+                return result
+                
+            except LLMError as e:
+                if not e.retryable or attempt >= max_retries:
+                    result.error_type = f"llm_{e.kind}"
+                    for row in batch:
+                        result.escalated_rows.append({
+                            "string_id": row.get("string_id", ""),
+                            "reason": f"llm_error: {e.kind}",
+                            "batch_idx": str(batch_idx)
+                        })
+                    return result
+                backoff_sleep(attempt)
+        
+        # If loop finished without return, escalate remaining
+        if result.error_type:
+            for row in batch:
+                if row.get("string_id") not in [r.get("string_id") for r in result.success_rows]:
+                    result.escalated_rows.append({
                         "string_id": row.get("string_id", ""),
-                        "reason": f"batch_error: {str(e)[:100]}",
-                        "tokenized_zh": row.get("tokenized_zh", ""),
-                        "last_output": ""
+                        "reason": result.error_type,
+                        "batch_idx": str(batch_idx)
                     })
-                return [], escalated
-            backoff_sleep(attempt)
+                    
+    finally:
+        inflight_tracker.release()
+        result.latency_ms = int((time.time() - start_time) * 1000)
     
-    return [], []
+    return result
 
 
-def process_batch_with_fallback(
-    batch: List[Dict[str, str]],
-    llm: LLMClient,
-    glossary: List[GlossaryEntry],
-    style_guide: str,
-    glossary_summary: str,
-    batch_idx: int,
-    max_retries: int = 3,
-    depth: int = 0,
-    max_depth: int = 5
-) -> Tuple[List[Dict[str, str]], List[Dict[str, str]]]:
-    """
-    Process batch with binary-split fallback on failure.
-    """
-    if not batch:
-        return [], []
-    
-    # Try full batch first
-    success, escalated = process_batch(
-        batch, llm, glossary, style_guide, glossary_summary, batch_idx, max_retries
+# -----------------------------
+# Progress Formatting
+# -----------------------------
+def format_time(seconds: float) -> str:
+    h, rem = divmod(int(seconds), 3600)
+    m, s = divmod(rem, 60)
+    return f"{h:02d}:{m:02d}:{s:02d}"
+
+
+def format_batch_progress(
+    completed: int, 
+    total: int, 
+    inflight: int,
+    elapsed: float,
+    avg_batch_time: float
+) -> str:
+    pct = completed / total * 100 if total > 0 else 0
+    eta = avg_batch_time * (total - completed) if completed > 0 else 0
+    return (
+        f"[PROGRESS]\n"
+        f"  Batches: {completed} / {total} ({pct:.1f}%)\n"
+        f"  Inflight: {inflight}\n"
+        f"  Elapsed: {format_time(elapsed)}\n"
+        f"  ETA: {format_time(eta)}\n"
+        f"  Avg batch time: {avg_batch_time:.1f}s"
     )
-    
-    if not escalated:
-        return success, []
-    
-    # If batch size is 1, can't split further
-    if len(batch) <= 1 or depth >= max_depth:
-        return success, escalated
-    
-    # Binary split and retry
-    mid = len(batch) // 2
-    left_batch = batch[:mid]
-    right_batch = batch[mid:]
-    
-    left_success, left_esc = process_batch_with_fallback(
-        left_batch, llm, glossary, style_guide, glossary_summary,
-        batch_idx, max_retries, depth + 1, max_depth
-    )
-    
-    right_success, right_esc = process_batch_with_fallback(
-        right_batch, llm, glossary, style_guide, glossary_summary,
-        batch_idx, max_retries, depth + 1, max_depth
-    )
-    
-    return left_success + right_success, left_esc + right_esc
 
 
 # -----------------------------
 # Main
 # -----------------------------
 def main():
-    parser = argparse.ArgumentParser(description="LLM Translate (Batch Mode v3.0)")
-    parser.add_argument("--input", required=True, help="Input CSV")
-    parser.add_argument("--output", required=True, help="Output Translated CSV")
-    parser.add_argument("--style", default="workflow/style_guide.md", help="Style guide")
-    parser.add_argument("--glossary", default="data/glossary.yaml", help="Glossary YAML")
-    parser.add_argument("--escalate_csv", default="data/escalate_list.csv", help="Escalation CSV")
-    parser.add_argument("--checkpoint", default="data/translate_checkpoint.json", help="Checkpoint JSON")
-    parser.add_argument("--target", default="ru-RU")
-    parser.add_argument("--batch_size", type=int, default=20, help="Items per batch")
-    parser.add_argument("--max_batch_tokens", type=int, default=6000, help="Max tokens per batch")
-    parser.add_argument("--max_retries", type=int, default=3)
-    parser.add_argument("--progress_every", type=int, default=1, help="Report progress every N batches")
+    parser = argparse.ArgumentParser(description="LLM Translate v5.0 (Structured Output)")
+    parser.add_argument("--input", required=True)
+    parser.add_argument("--output", required=True)
+    parser.add_argument("--style", default="workflow/style_guide.md")
+    parser.add_argument("--glossary", default="data/glossary.yaml")
+    parser.add_argument("--escalate_csv", default="data/escalate_list.csv")
+    parser.add_argument("--checkpoint", default="data/translate_checkpoint.json")
+    parser.add_argument("--batch_size", type=int, default=10)
+    parser.add_argument("--max_batch_tokens", type=int, default=6000)
+    parser.add_argument("--max_concurrent", type=int, default=6)
+    parser.add_argument("--max_retries", type=int, default=2)
+    parser.add_argument("--progress_every", type=int, default=5)
     parser.add_argument("--dry-run", action="store_true")
-    
     args = parser.parse_args()
     
-    print(f"🚀 Translate LLM v3.0 (Batch Mode)")
-    print(f"   Input: {args.input}")
-    print(f"   Batch size: {args.batch_size}")
+    print(f"🚀 Translate LLM v5.0 (Structured Output Contract)")
+    print(f"   Batch size: {args.batch_size}, Concurrent: {args.max_concurrent}")
     print()
     
-    # 1. Load resources
+    # Load resources
     style_guide = load_style_guide(args.style)
-    glossary, gloss_hash = load_glossary(args.glossary)
+    glossary, _ = load_glossary(args.glossary)
     glossary_summary = build_glossary_summary(glossary)
     
-    # 2. Load input
     if not Path(args.input).exists():
-        print(f"❌ Input file not found: {args.input}")
+        print(f"❌ Input not found: {args.input}")
         sys.exit(1)
     
     rows = read_csv_rows(args.input)
-    print(f"✅ Loaded {len(rows)} rows from {args.input}")
-    print(f"   Glossary: {len(glossary)} entries")
-    print(f"   Style guide: {len(style_guide)} chars")
+    for i, row in enumerate(rows):
+        if "row_index" not in row:
+            row["row_index"] = str(i)
+    
+    print(f"✅ Loaded {len(rows)} rows")
     
     if args.dry_run:
-        print()
-        print("=" * 60)
-        print("DRY-RUN MODE - Validation Summary")
-        print("=" * 60)
-        
-        # Split into batches for preview
         config = BatchConfig(max_items=args.batch_size, max_tokens=args.max_batch_tokens)
         batches = split_into_batches(rows, config)
-        print(f"[OK] Would create {len(batches)} batches")
-        print(f"[OK] Average batch size: {len(rows) / max(1, len(batches)):.1f}")
-        
-        # Show sample system prompt
-        sample_system = build_system_prompt_batch(style_guide, glossary_summary)
-        print(f"[OK] System prompt: {len(sample_system)} chars (~{len(sample_system)//4} tokens)")
-        
-        print()
-        print("[OK] Dry-run validation PASSED")
-        print("=" * 60)
+        print(f"[DRY-RUN] Would create {len(batches)} batches")
         return
     
-    # 3. Checkpoint
+    # Checkpoint
     ckpt = load_checkpoint(args.checkpoint)
     done_ids = ckpt.get("done_ids", {})
-    
-    # 4. Filter pending
     pending = [r for r in rows if r.get("string_id") not in done_ids]
-    print(f"   Pending items: {len(pending)}")
+    print(f"   Pending: {len(pending)}")
     
     if not pending:
         print("✅ All done.")
         return
     
-    # 5. Initialize LLM
-    if not LLMClient:
-        print("❌ runtime_adapter not found. Cannot proceed.")
-        sys.exit(1)
-        
+    # LLM check
     try:
-        llm = LLMClient()
-        print(f"✅ LLM initialized: {llm.default_model}")
+        test_llm = LLMClient()
+        print(f"✅ LLM: {test_llm.default_model}")
     except Exception as e:
-        print(f"❌ Failed to init LLM: {e}")
+        print(f"❌ LLM init failed: {e}")
         sys.exit(1)
     
-    # 6. Split into batches
+    # Split batches
     config = BatchConfig(max_items=args.batch_size, max_tokens=args.max_batch_tokens)
     batches = split_into_batches(pending, config)
     print(f"   Batches: {len(batches)}")
     print()
     
-    # 7. Initialize output
+    # Output fields
     sample_fields = list(rows[0].keys())
     if "target_text" not in sample_fields:
         sample_fields.append("target_text")
+    esc_fields = ["string_id", "reason", "batch_idx"]
     
-    esc_fields = ["string_id", "reason", "tokenized_zh", "last_output"]
+    # Tracker
+    inflight = InflightTracker()
     
-    # 8. Process batches
+    # Process
     start_time = time.time()
     ok_count = ckpt.get("stats", {}).get("ok", 0)
-    fail_count = ckpt.get("stats", {}).get("fail", 0)
     esc_count = ckpt.get("stats", {}).get("escalated", 0)
+    batches_done = 0
+    results_buffer = {}
+    next_write = 0
     
-    for batch_idx, batch in enumerate(batches):
-        batch_start = time.time()
+    with ThreadPoolExecutor(max_workers=args.max_concurrent) as executor:
+        futures = {
+            executor.submit(
+                process_batch_worker, batch, idx,
+                glossary, style_guide, glossary_summary,
+                args.max_retries, inflight
+            ): idx for idx, batch in enumerate(batches)
+        }
         
-        success_rows, escalated_rows = process_batch_with_fallback(
-            batch, llm, glossary, style_guide, glossary_summary,
-            batch_idx, args.max_retries
-        )
-        
-        # Write success rows
-        if success_rows:
-            append_csv_rows(args.output, sample_fields, success_rows)
-            for row in success_rows:
-                done_ids[row.get("string_id", "")] = True
-                ok_count += 1
-        
-        # Write escalated rows
-        if escalated_rows:
-            append_csv_rows(args.escalate_csv, esc_fields, escalated_rows)
-            for row in escalated_rows:
-                done_ids[row.get("string_id", "")] = True
-                esc_count += 1
-        
-        # Update checkpoint
-        ckpt["done_ids"] = done_ids
-        ckpt["stats"] = {"ok": ok_count, "fail": fail_count, "escalated": esc_count}
-        ckpt["batch_idx"] = batch_idx + 1
-        save_checkpoint(args.checkpoint, ckpt)
-        
-        # Progress
-        batch_time = time.time() - batch_start
-        elapsed = time.time() - start_time
-        total_done = ok_count + esc_count
-        
-        if (batch_idx + 1) % args.progress_every == 0 or batch_idx == len(batches) - 1:
-            print(format_progress(
-                total_done, len(pending), batch_idx + 1, len(batches),
-                elapsed, batch_time
-            ))
+        for future in as_completed(futures):
+            idx = futures[future]
+            try:
+                res = future.result()
+            except Exception as e:
+                res = BatchResult(batch_idx=idx, planned_batch_size=len(batches[idx]))
+                res.error_type = f"exception: {str(e)[:50]}"
+                for row in batches[idx]:
+                    res.escalated_rows.append({
+                        "string_id": row.get("string_id", ""),
+                        "reason": f"worker_exception",
+                        "batch_idx": str(idx)
+                    })
+            
+            results_buffer[idx] = res
+            batches_done += 1
+            
+            # Write in order
+            while next_write in results_buffer:
+                r = results_buffer.pop(next_write)
+                if r.success_rows:
+                    sorted_rows = sorted(r.success_rows, key=lambda x: int(x.get("row_index", 0)))
+                    append_csv_rows(args.output, sample_fields, sorted_rows)
+                    for row in sorted_rows:
+                        done_ids[row.get("string_id", "")] = True
+                        ok_count += 1
+                if r.escalated_rows:
+                    append_csv_rows(args.escalate_csv, esc_fields, r.escalated_rows)
+                    for row in r.escalated_rows:
+                        done_ids[row.get("string_id", "")] = True
+                        esc_count += 1
+                ckpt["done_ids"] = done_ids
+                ckpt["stats"] = {"ok": ok_count, "escalated": esc_count}
+                ckpt["batch_idx"] = next_write + 1
+                save_checkpoint(args.checkpoint, ckpt)
+                next_write += 1
+            
+            # Progress
+            elapsed = time.time() - start_time
+            avg_batch = elapsed / batches_done if batches_done > 0 else 0
+            if batches_done % args.progress_every == 0 or batches_done == len(batches):
+                print(format_batch_progress(
+                    batches_done, len(batches), inflight.current, elapsed, avg_batch
+                ))
     
-    # 9. Summary
-    total_elapsed = time.time() - start_time
+    # Summary
+    elapsed = time.time() - start_time
+    rate = (ok_count + esc_count) / elapsed if elapsed > 0 else 0
+    esc_rate = esc_count / (ok_count + esc_count) * 100 if (ok_count + esc_count) > 0 else 0
+    
     print()
-    print(f"✅ Translation complete!")
+    print(f"✅ Complete!")
     print(f"   OK: {ok_count}")
-    print(f"   Escalated: {esc_count}")
-    print(f"   Total time: {int(total_elapsed)}s")
-    print(f"   Output: {args.output}")
-    if esc_count > 0:
-        print(f"   Escalated: {args.escalate_csv}")
+    print(f"   Escalated: {esc_count} ({esc_rate:.1f}%)")
+    print(f"   Time: {format_time(elapsed)}")
+    print(f"   Peak inflight: {inflight.peak}")
+    print(f"   Throughput: {rate * 60:.1f} rows/min")
 
 
 if __name__ == "__main__":

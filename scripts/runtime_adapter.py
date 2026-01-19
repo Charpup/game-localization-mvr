@@ -84,6 +84,61 @@ def _safe_int(x, default: int = 0) -> int:
         return default
 
 
+# Token estimation constants
+CHARS_PER_TOKEN = 4  # Conservative for CJK/Cyrillic mix
+
+
+def _estimate_tokens(text: str) -> int:
+    """Estimate token count from text using chars/4 heuristic."""
+    return max(1, len(text or "") // CHARS_PER_TOKEN)
+
+
+# Pricing loader (cached)
+_pricing_cache: Optional[Dict[str, Any]] = None
+
+
+def _load_pricing() -> Dict[str, Any]:
+    """Load pricing config from pricing.yaml."""
+    global _pricing_cache
+    if _pricing_cache is not None:
+        return _pricing_cache
+    
+    try:
+        import yaml
+        pricing_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "config", "pricing.yaml"
+        )
+        if not os.path.exists(pricing_path):
+            pricing_path = "config/pricing.yaml"
+        if os.path.exists(pricing_path):
+            with open(pricing_path, 'r', encoding='utf-8') as f:
+                _pricing_cache = yaml.safe_load(f) or {}
+                return _pricing_cache
+    except Exception:
+        pass
+    _pricing_cache = {}
+    return _pricing_cache
+
+
+def _estimate_cost(model: str, prompt_tokens: int, completion_tokens: int) -> float:
+    """Estimate cost in USD based on pricing.yaml."""
+    pricing = _load_pricing()
+    models = pricing.get("models", {})
+    model_config = models.get(model, {})
+    
+    # Use per_1M pricing if available
+    input_per_1m = model_config.get("input_per_1M", 0)
+    output_per_1m = model_config.get("output_per_1M", 0)
+    
+    if input_per_1m > 0 or output_per_1m > 0:
+        cost = (prompt_tokens * input_per_1m / 1_000_000) + \
+               (completion_tokens * output_per_1m / 1_000_000)
+        return round(cost, 6)
+    
+    return 0.0
+
+
 def _extract_usage(data: dict) -> Optional[dict]:
     """
     Extract OpenAI-style usage info:
@@ -297,6 +352,48 @@ class LLMClient:
     # Shared router instance
     _router: Optional[LLMRouter] = None
     
+    @staticmethod
+    def _load_api_key() -> str:
+        """
+        Load API key with file-based injection support.
+        
+        Priority:
+            1. LLM_API_KEY_FILE: Read key from file (supports "api key: xxx" format)
+            2. LLM_API_KEY: Direct environment variable
+        
+        Returns:
+            API key string (may be empty if not configured)
+        """
+        # Try file-based injection first
+        key_file = os.getenv("LLM_API_KEY_FILE", "").strip()
+        if key_file and os.path.exists(key_file):
+            try:
+                with open(key_file, 'r', encoding='utf-8') as f:
+                    content = f.read().strip()
+                
+                # Parse "api key: xxx" format (case-insensitive)
+                for line in content.splitlines():
+                    line = line.strip()
+                    if line.lower().startswith("api key:"):
+                        return line.split(":", 1)[1].strip()
+                    elif line.lower().startswith("api_key:"):
+                        return line.split(":", 1)[1].strip()
+                
+                # If no key: prefix found, treat entire content as key
+                # (single-line file with just the key)
+                if content and '\n' not in content and ':' not in content:
+                    return content
+                    
+            except Exception as e:
+                _trace({
+                    "type": "api_key_file_error",
+                    "path": key_file,
+                    "error": str(e)
+                })
+        
+        # Fallback to direct env var
+        return os.getenv("LLM_API_KEY", "")
+    
     def __init__(self, 
                  base_url: Optional[str] = None,
                  api_key: Optional[str] = None,
@@ -309,7 +406,7 @@ class LLMClient:
         Priority: explicit parameter > environment variable
         """
         self.base_url = (base_url or os.getenv("LLM_BASE_URL", "")).strip().rstrip("/")
-        self.api_key = (api_key or os.getenv("LLM_API_KEY", "")).strip()
+        self.api_key = (api_key or self._load_api_key()).strip()
         self.default_model = (model or os.getenv("LLM_MODEL", "")).strip()
         self.timeout_s = timeout_s or int(os.getenv("LLM_TIMEOUT_S", "60"))
         
@@ -517,18 +614,48 @@ class LLMClient:
         # Character counts for fallback estimation
         req_chars = len(system) + len(user)
         resp_chars = len(text or "")
+        
+        # Token estimation (use usage if present, otherwise local estimate)
+        if usage and usage.get("prompt_tokens"):
+            prompt_tokens = usage["prompt_tokens"]
+            completion_tokens = usage.get("completion_tokens", 0)
+            total_tokens = usage.get("total_tokens", prompt_tokens + completion_tokens)
+            usage_source = "api_usage"
+        else:
+            # Local estimation fallback
+            prompt_tokens = _estimate_tokens(system) + _estimate_tokens(user)
+            completion_tokens = _estimate_tokens(text or "")
+            total_tokens = prompt_tokens + completion_tokens
+            usage_source = "local_estimate"
+        
+        # Cost estimation
+        cost_usd_est = _estimate_cost(model, prompt_tokens, completion_tokens)
+        
+        # Get max_tokens from metadata if passed
+        max_tokens_used = None
+        if isinstance(metadata, dict):
+            max_tokens_used = metadata.get("max_tokens")
 
         # Build trace event with enhanced fields
         trace_event = {
             "type": "llm_call",
+            "ts": datetime.now().isoformat(),
             # Core fields
             "step": step,
             "request_id": request_id,
             "latency_ms": latency_ms,
             "req_chars": req_chars,
             "resp_chars": resp_chars,
+            # Cost monitoring fields
+            "base_url": self.base_url,
+            "run_id": os.getenv("LLM_RUN_ID", "default"),
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": total_tokens,
+            "usage_source": usage_source,
             "usage_present": usage_present,
-            "usage": usage,
+            "cost_usd_est": cost_usd_est,
+            "max_tokens": max_tokens_used,
             # Enhanced router fields
             "selected_model": model,
             "model": model,  # Legacy field for backward compatibility
@@ -541,9 +668,13 @@ class LLMClient:
             "router_chain_len": router_chain_len,
         }
         
-        # Add extra metadata (excluding routing keys)
+        # Add batch_id from metadata if present
         if isinstance(metadata, dict):
-            routing_keys = {"step", "model_override"}
+            batch_idx = metadata.get("batch_idx")
+            if batch_idx is not None:
+                trace_event["batch_id"] = f"{step}:{batch_idx:06d}"
+            # Add all extra metadata except routing keys
+            routing_keys = {"step", "model_override", "max_tokens", "batch_idx"}
             extra_meta = {k: v for k, v in metadata.items() if k not in routing_keys}
             if extra_meta:
                 trace_event["meta"] = extra_meta
