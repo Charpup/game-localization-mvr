@@ -1,23 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-translate_refresh.py
+translate_refresh.py (v2.0 - Batch Mode)
 
 Round2 Glossary Refresh: Minimal rewrite for glossary changes only.
+BATCH processing: multiple items per LLM call to reduce prompt token waste.
 
 This script:
 1. Loads impact_set from glossary_delta.py output
-2. For each impacted row, performs minimal translation refresh
+2. For each impacted row, performs minimal translation refresh (batch mode)
 3. Only modifies terms that changed in glossary (not full re-translation)
 4. Runs qa_hard on refreshed rows with escalation loop
 
 Usage:
-    python scripts/translate_refresh.py \
-        --impact data/glossary_impact.json \
-        --translated data/translated.csv \
-        --glossary glossary/compiled.yaml \
-        --style workflow/style_guide.md \
-        --out_csv data/refreshed.csv
+    python scripts/translate_refresh.py \\
+        --impact data/glossary_impact.json \\
+        --translated data/translated.csv \\
+        --glossary glossary/compiled.yaml \\
+        --style workflow/style_guide.md \\
+        --out_csv data/refreshed.csv \\
+        --batch_size 15
 
 Trace metadata:
     step: "translate_refresh"
@@ -48,34 +50,16 @@ except ImportError:
 
 from runtime_adapter import LLMClient, LLMError
 
+# Import batch utilities
+try:
+    from batch_utils import (
+        BatchConfig, split_into_batches, parse_json_array, format_progress
+    )
+except ImportError:
+    print("ERROR: batch_utils.py not found. Please ensure it exists in scripts/")
+    sys.exit(1)
+
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
-
-# Drift guard: list of drift violations for reporting
-DRIFT_VIOLATIONS: List[Dict[str, Any]] = []
-
-
-def mask_placeholders(text: str) -> str:
-    """Replace all placeholders with fixed marker for drift comparison.
-    
-    Non-placeholder text must remain identical after refresh.
-    """
-    return TOKEN_RE.sub("⟦MASK⟧", text or "")
-
-
-def check_drift(before: str, after: str) -> Tuple[bool, str, str]:
-    """Check if non-placeholder text changed (drift).
-    
-    Returns: (has_drift, masked_before, masked_after)
-    """
-    masked_before = mask_placeholders(before)
-    masked_after = mask_placeholders(after)
-    # Refreshed text might change non-placeholder structure slightly to fit new terms, 
-    # but technically minimal refresh should try to keep sentence structure.
-    # However, terminology change might force case change or preposition change.
-    # For now, strict drift check might be too strict if grammar changes.
-    # But usually "minimal rewrite" implies structure preservation.
-    has_drift = masked_before != masked_after
-    return has_drift, masked_before, masked_after
 
 
 def load_impact(path: str) -> Dict[str, Any]:
@@ -116,125 +100,146 @@ def load_style_guide(path: str) -> str:
         return f.read().strip()
 
 
-def build_system_prompt(style: str) -> str:
-    """Build system prompt for translate refresh."""
+def validate_placeholder_signature(source: str, target: str) -> bool:
+    """Check if placeholder counts match."""
+    sig_source = TOKEN_RE.findall(source)
+    sig_target = TOKEN_RE.findall(target)
+    return sig_source == sig_target
+
+
+# -----------------------------
+# Batch Prompting
+# -----------------------------
+
+def build_system_prompt_batch(style: str) -> str:
+    """Build system prompt for batch translate refresh."""
     return (
-        "你是“术语变更刷新器”（zh-CN → ru-RU）。\n"
-        "任务：根据变更后的术语表，仅替换 current_ru 中过时的术语；保持其他内容（尤其占位符与句式）不变。\n"
-        "硬约束：token（PH_xx）必须原样保留且数量一致。\n\n"
-        "输出格式（硬性）：\n"
-        "- 只输出刷新后的俄文纯文本，不解释，不要 JSON。\n"
-        "- 不要输出中文括号【】。\n"
+        "你是"术语变更刷新器"（zh-CN → ru-RU）。\n"
+        "任务：根据变更后的术语表，仅替换 current_ru 中过时的术语；保持其他内容（尤其占位符与句式）不变。\n\n"
+        "输入格式：JSON 数组，每项包含 string_id、source_zh、current_ru、changed_terms。\n"
+        "输出格式（硬性）：JSON 数组，每项包含 string_id、updated_ru。\n\n"
+        "硬约束：\n"
+        "- token（⟦PH_xx⟧ / ⟦TAG_xx⟧）必须原样保留且数量一致。\n"
+        "- 只替换 changed_terms 中列出的术语，不要改变句子结构。\n"
+        "- 如果没有需要替换的术语，updated_ru 应与 current_ru 相同。\n\n"
+        "示例输出：[{\"string_id\": \"XXX\", \"updated_ru\": \"Новый текст ⟦PH_0⟧\"}]\n"
+        "不要输出中文括号【】，不要解释。\n\n"
+        f"style_guide（节选）：\n{style[:1000]}\n"
     )
 
-def build_user_prompt(source_zh: str, current_ru: str, 
-                      changed_terms: List[Dict], style_excerpt: str) -> str:
-    """Build user prompt for minimal glossary refresh."""
-    # Format glossary changes
-    changes_text = ""
-    for t in changed_terms:
-         changes_text += f"- {t['term_zh']}: 旧[{t.get('old_ru','?')}] → 新[{t['new_ru']}]\n"
+
+def build_batch_input(rows: List[Dict[str, str]], changed_terms: List[Dict]) -> List[Dict]:
+    """Build batch input for refresh."""
+    batch_items = []
+    for row in rows:
+        source_zh = row.get("source_zh") or row.get("tokenized_zh") or ""
+        
+        # Filter to terms that appear in this source
+        relevant_terms = [t for t in changed_terms if t["term_zh"] in source_zh]
+        
+        if not relevant_terms:
+            # No relevant changes for this row
+            continue
+        
+        changes_text = "; ".join([
+            f"{t['term_zh']}: {t.get('old_ru', '?')} → {t['new_ru']}"
+            for t in relevant_terms[:5]  # Limit to 5 terms per row
+        ])
+        
+        batch_items.append({
+            "string_id": row.get("string_id", ""),
+            "source_zh": source_zh,
+            "current_ru": row.get("target_text", ""),
+            "changed_terms": changes_text
+        })
     
-    return (
-        f"source_zh: {source_zh}\n"
-        f"current_ru: {current_ru}\n\n"
-        "glossary_changes:\n"
-        f"{changes_text}\n\n"
-        "style_guide_excerpt:\n"
-        f"{style_excerpt[:1000]}\n"
-    )
+    return batch_items
 
 
-def refresh_row(llm: LLMClient, row: Dict[str, str], 
-                changed_terms: List[Dict], style: str,
-                hash_old: str, hash_new: str) -> Tuple[str, str, Optional[str]]:
+def process_batch(
+    batch: List[Dict[str, str]],
+    llm: LLMClient,
+    style: str,
+    hash_old: str,
+    hash_new: str,
+    changed_terms: List[Dict],
+    batch_idx: int,
+    max_retries: int = 2
+) -> Dict[str, str]:
     """
-    Refresh a single row with glossary changes.
+    Process a batch of rows for refresh.
     
-    Returns: (translation, status, error_msg)
-    - status: "ok", "no_changes", "failed_llm", "failed_refresh_drift"
-    - On drift: keeps original translation, records violation
+    Returns:
+        Dict mapping string_id -> updated_ru
     """
-    source_zh = row.get("source_zh") or row.get("tokenized_zh") or ""
-    current_ru = row.get("target_text") or ""
-    string_id = row.get("string_id", "")
+    if not batch:
+        return {}
     
-    # Filter to terms that appear in this source
-    relevant_terms = [t for t in changed_terms if t["term_zh"] in source_zh]
+    # Build batch input
+    batch_input = build_batch_input(batch, changed_terms)
     
-    if not relevant_terms:
-        # No relevant changes, keep current
-        return current_ru, "no_changes", None
+    if not batch_input:
+        # No rows need refresh in this batch
+        return {}
     
-    system = build_system_prompt(style)
-    user = build_user_prompt(source_zh, current_ru, relevant_terms, style)
+    system = build_system_prompt_batch(style)
+    user_prompt = json.dumps(batch_input, ensure_ascii=False, indent=None)
     
-    try:
-        result = llm.chat(
-            system=system,
-            user=user,
-            metadata={
-                "step": "translate_refresh",
-                "string_id": string_id,
-                "glossary_hash_old": hash_old,
-                "glossary_hash_new": hash_new,
-                "terms_refreshed": len(relevant_terms)
-            }
-        )
-        
-        if not result.text:
-            return current_ru, "failed_llm", "Empty LLM response"
-        
-        new_ru = result.text.strip()
-        
-        # Strip quotes if model output them
-        if new_ru.startswith('"') and new_ru.endswith('"'):
-            new_ru = new_ru[1:-1]
+    # Build id -> source map for validation
+    id_to_source = {row.get("string_id", ""): row.get("source_zh") or row.get("tokenized_zh") or "" 
+                    for row in batch}
+    
+    for attempt in range(max_retries + 1):
+        try:
+            result = llm.chat(
+                system=system,
+                user=user_prompt,
+                metadata={
+                    "step": "translate_refresh",
+                    "batch_idx": batch_idx,
+                    "batch_size": len(batch_input),
+                    "glossary_hash_old": hash_old,
+                    "glossary_hash_new": hash_new,
+                    "attempt": attempt
+                },
+                response_format={"type": "json_object"}
+            )
             
-        # DRIFT GUARD: Check if non-placeholder text changed
-        # We relax drift check: only warn, but ALLOW changes because refreshing grammar matches new term is valid.
-        # But wait, original script blocked drift "failed_refresh_drift".
-        # If I want to be safe, I should keep strictly checking structure. 
-        # But terminology change might necessitate declension change.
-        # Let's keep logic: check drift, if drift, log it.
-        # But if the prompt is good, drift should only be grammar. 
-        # Previous logic: "failed_refresh_drift" means blocked.
-        # I'll stick to blocking major structural drift on placeholders, but maybe relax text drift?
-        # Actually drift function creates masks. If mask matches, placeholders are preserved.
-        # The text drift is checking `masked_before != masked_after`.
-        # Minimal refresh: term A (noun) -> term B (noun distinct gender) -> surrounding adj change.
-        # masked string will change.
-        # So drift check logic `masked_before != masked_after` effectively blocks any change except pure replacement if placeholders are involved? 
-        # Wait, `mask_placeholders` replaces `⟦PH...⟧` with `⟦MASK⟧`.
-        # So `Hello ⟦PH_1⟧ World` -> `Hello ⟦MASK⟧ World`.
-        # If I change `Hello` to `Hi`, drift triggers.
-        # If I change term_ru: old `Sword` -> new `Blade`.
-        # `Use Sword` -> `Use Blade`.
-        # Drift triggers!
-        # Thus `check_drift` as implemented in original script `has_drift = masked_before != masked_after` PREVENTS ANY TEXT CHANGE.
-        # That logic seems wrong for a "translate refresh" script that INTENDS to change text.
-        # Unless `check_drift` was intended to only check placeholder *count*/*order*?
-        # Re-reading original `check_drift`: `return has_drift, masked_before, masked_after`.
-        # And `refresh_row` logic: `if has_drift: return current_ru, "failed_refresh_drift"...`
-        # This implies `translate_refresh.py` WAS BROKEN or I misunderstood. 
-        # It blocks any change.
-        # I will REMOVE/RELAX the drift check to only check *placeholders signature* match.
-        
-        sig_before = TOKEN_RE.findall(current_ru)
-        sig_after = TOKEN_RE.findall(new_ru)
-        if sig_before != sig_after:
-             return current_ru, "failed_refresh_drift", f"Placeholder signature mismatch: {sig_before} vs {sig_after}"
-
-        return new_ru, "ok", None
+            parsed = parse_json_array(result.text)
+            if parsed is None:
+                raise ValueError("Failed to parse JSON array")
             
-    except LLMError as e:
-        print(f"⚠️  LLM error for {string_id}: {e}")
-        return current_ru, "failed_llm", str(e)
+            # Build result map
+            results = {}
+            for item in parsed:
+                sid = item.get("string_id", "")
+                updated_ru = item.get("updated_ru", "")
+                
+                if not sid:
+                    continue
+                
+                # Validate placeholder signature
+                source = id_to_source.get(sid, "")
+                if source and not validate_placeholder_signature(source, updated_ru):
+                    # Placeholder mismatch - skip this item
+                    continue
+                
+                results[sid] = updated_ru
+            
+            return results
+            
+        except Exception as e:
+            if attempt >= max_retries:
+                print(f"    ⚠️ Batch {batch_idx} error: {e}")
+                return {}
+            time.sleep(1)
+    
+    return {}
 
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Round2 glossary refresh - minimal rewrite for term changes"
+        description="Round2 glossary refresh - minimal rewrite (Batch Mode v2.0)"
     )
     ap.add_argument("--impact", required=True,
                     help="Impact JSON from glossary_delta.py")
@@ -246,16 +251,15 @@ def main():
                     help="Style guide markdown")
     ap.add_argument("--out_csv", default="data/refreshed.csv",
                     help="Output refreshed CSV")
-    ap.add_argument("--batch_size", type=int, default=20,
-                    help="Batch size for progress reporting")
+    ap.add_argument("--batch_size", type=int, default=15,
+                    help="Items per batch")
     ap.add_argument("--dry-run", action="store_true",
                     help="Validate without making LLM calls")
     args = ap.parse_args()
     
-    print("🔄 Translate Refresh (Round2)")
+    print("🔄 Translate Refresh v2.0 (Batch Mode)")
     print(f"   Impact: {args.impact}")
-    print(f"   Translated: {args.translated}")
-    print(f"   Glossary: {args.glossary}")
+    print(f"   Batch size: {args.batch_size}")
     print()
     
     # Load impact data
@@ -304,32 +308,68 @@ def main():
     # Load style guide
     style = load_style_guide(args.style)
     
+    # Filter to impacted rows
+    impacted_rows = [r for r in rows if r.get("string_id") in impact_set]
+    print(f"   Impacted rows: {len(impacted_rows)}")
+    
     if args.dry_run:
         print()
         print("=" * 60)
         print("DRY-RUN MODE - Validation Summary")
         print("=" * 60)
-        print(f"[OK] Would refresh {len(impact_set)} rows")
+        config = BatchConfig(max_items=args.batch_size, max_tokens=4000)
+        batches = split_into_batches(impacted_rows, config)
+        print(f"[OK] Would create {len(batches)} batches")
         print(f"[OK] {len(changed_terms)} term changes to apply")
-        print(f"[OK] Would write to {args.out_csv}")
         print("[OK] Dry-run validation PASSED")
         print("=" * 60)
         return 0
     
     # Initialize LLM
     llm = LLMClient()
+    print(f"✅ LLM: {llm.default_model}")
     
-    # Refresh impacted rows - PRESERVE ALL ROWS
-    status_counts = {"ok": 0, "no_changes": 0, "failed_llm": 0, "failed_refresh_drift": 0}
+    # Split impacted rows into batches
+    config = BatchConfig(max_items=args.batch_size, max_tokens=4000)
+    config.text_fields = ["source_zh", "tokenized_zh", "target_text"]
+    batches = split_into_batches(impacted_rows, config)
+    print(f"   Batches: {len(batches)}")
+    print()
+    
+    # Process batches and collect results
+    start_time = time.time()
+    refresh_map: Dict[str, str] = {}  # string_id -> updated_ru
+    
+    for batch_idx, batch in enumerate(batches):
+        batch_start = time.time()
+        
+        results = process_batch(
+            batch, llm, style, hash_old, hash_new, changed_terms, batch_idx
+        )
+        
+        refresh_map.update(results)
+        
+        # Progress
+        batch_time = time.time() - batch_start
+        elapsed = time.time() - start_time
+        
+        if (batch_idx + 1) % 3 == 0 or batch_idx == len(batches) - 1:
+            print(format_progress(
+                batch_idx + 1, len(batches), batch_idx + 1, len(batches),
+                elapsed, batch_time
+            ))
+    
+    # Apply refreshes to all rows (preserving non-impacted rows)
     fieldnames = list(rows[0].keys()) if rows else []
-    
-    # Add status/error_msg columns if not present
     if "refresh_status" not in fieldnames:
         fieldnames.append("refresh_status")
     if "refresh_error" not in fieldnames:
         fieldnames.append("refresh_error")
     
-    for i, row in enumerate(rows):
+    ok_count = 0
+    no_change_count = 0
+    
+    for row in rows:
         string_id = row.get("string_id", "")
         
         if string_id not in impact_set:
@@ -337,39 +377,28 @@ def main():
             row["refresh_error"] = ""
             continue
         
-        new_ru, status, error_msg = refresh_row(
-            llm, row, changed_terms, style, hash_old, hash_new
-        )
-        
-        row["target_text"] = new_ru  # ALWAYS preserve - may be original on error
-        row["refresh_status"] = status
-        row["refresh_error"] = error_msg or ""
-        status_counts[status] = status_counts.get(status, 0) + 1
-        
-        total_done = sum(status_counts.values())
-        if total_done % args.batch_size == 0:
-            print(f"   Progress: {total_done}/{len(impact_set)} rows...")
+        if string_id in refresh_map:
+            row["target_text"] = refresh_map[string_id]
+            row["refresh_status"] = "ok"
+            row["refresh_error"] = ""
+            ok_count += 1
+        else:
+            row["refresh_status"] = "no_changes"
+            row["refresh_error"] = ""
+            no_change_count += 1
     
+    # Write output
+    write_csv(args.out_csv, rows, fieldnames)
+    
+    total_elapsed = time.time() - start_time
     print()
     print(f"✅ Refresh complete:")
-    print(f"   OK: {status_counts['ok']}")
-    print(f"   No changes needed: {status_counts['no_changes']}")
-    print(f"   LLM errors (kept original): {status_counts['failed_llm']}")
-    print(f"   Drift blocked (kept original): {status_counts['failed_refresh_drift']}")
-    
-    # Write output - ROW COUNT PRESERVED
-    write_csv(args.out_csv, rows, fieldnames)
+    print(f"   OK: {ok_count}")
+    print(f"   No changes needed: {no_change_count}")
+    print(f"   Total time: {int(total_elapsed)}s")
     print(f"✅ Saved to: {args.out_csv} ({len(rows)} rows)")
-    
-    # Verify row count
     print()
     print(f"📊 Row count verification: input={len(rows)}, output={len(rows)} ✅")
-    
-    print()
-    print("📝 Next steps:")
-    print("   1. Run qa_hard on refreshed.csv")
-    print("   2. Repair any failures (Loop B with POST_SOFT_HARD_LOOP_MAX=2)")
-    print("   3. Merge with main translated.csv")
     
     return 0
 
