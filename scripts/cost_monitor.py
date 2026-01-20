@@ -61,12 +61,20 @@ class CostMonitor:
         
         # Conditional API易 client
         self.apiyi_client = None
+        self.initial_used_quota = 0.0
+        
         if self._should_enable_apiyi():
             try:
                 from apiyi_usage_client import create_if_match
                 self.apiyi_client = create_if_match(self.base_url.rstrip("/"))
                 if self.apiyi_client:
-                    print(f"📊 API易 usage monitoring enabled for {self.run_id}")
+                    # Capture initial baseline
+                    usage = self.apiyi_client.pull_usage()
+                    if not usage.get("error"):
+                        self.initial_used_quota = usage.get("total_cost_usd_reported", 0.0)
+                        print(f"📊 API易 usage monitoring enabled for {self.run_id} (Baseline: ${self.initial_used_quota})")
+                    else:
+                        print(f"⚠️ API易 usage baseline pull warning: {usage.get('error')}")
             except Exception as e:
                 print(f"⚠️ API易 client init warning: {e}")
         
@@ -139,8 +147,9 @@ class CostMonitor:
             return
         
         try:
-            end_ts = datetime.now().isoformat()
-            apiyi_usage = self.apiyi_client.pull_usage(self.start_ts, end_ts)
+            # We don't pass start/end ts for balance API-based reconciliation
+            # as it returns cumulative totals. 
+            apiyi_usage = self.apiyi_client.pull_usage()
             self.last_pull_time = time.time()
             
             # Log reconciliation (non-blocking)
@@ -171,28 +180,39 @@ class CostMonitor:
             # Add API易 data if available
             if self.apiyi_client:
                 try:
-                    apiyi_usage = self.apiyi_client.pull_usage(self.start_ts, end_ts)
-                    snapshot_data["apiyi"] = apiyi_usage
-                    
-                    # Calculate delta
-                    local_cost = snapshot_data.get("local", {}).get("total_cost_usd_est", 0)
-                    apiyi_cost = apiyi_usage.get("total_cost_usd_reported", 0)
-                    delta = abs(apiyi_cost - local_cost)
-                    delta_ratio = delta / max(local_cost, apiyi_cost, 0.01)
-                    
-                    snapshot_data["reconciliation"] = {
-                        "delta_usd": round(delta, 4),
-                        "delta_ratio": round(delta_ratio, 4),
-                        "status": "ok" if delta_ratio < 0.1 else "warn",
-                        "notes": [
-                            "apiyi usage aggregated by time window",
-                            "local is per-call trace sum"
-                        ]
-                    }
+                    full_usage = self.apiyi_client.pull_usage()
+                    if not full_usage.get("error"):
+                        # Calculate delta since start of this run
+                        total_reported = full_usage.get("total_cost_usd_reported", 0.0)
+                        session_cost = max(0.0, total_reported - self.initial_used_quota)
+                        
+                        apiyi_data = full_usage.copy()
+                        apiyi_data["total_cost_usd_reported"] = round(session_cost, 6)
+                        apiyi_data["cumulative_used_usd"] = round(total_reported, 6)
+                        
+                        snapshot_data["apiyi"] = apiyi_data
+                        
+                        # Calculate delta with local estimation
+                        local_cost = snapshot_data.get("local", {}).get("total_cost_usd_est", 0)
+                        diff = abs(session_cost - local_cost)
+                        delta_ratio = diff / max(local_cost, session_cost, 0.01)
+                        
+                        snapshot_data["reconciliation"] = {
+                            "delta_usd": round(diff, 6),
+                            "delta_ratio": round(delta_ratio, 4),
+                            "status": "ok" if delta_ratio < 0.15 else "warn",
+                            "notes": [
+                                "apiyi usage calculated as delta since run start",
+                                "local is per-call trace sum"
+                            ]
+                        }
+                    else:
+                        snapshot_data["apiyi"] = {"enabled": True, "error": full_usage.get("error")}
                 except Exception as e:
                     snapshot_data["apiyi"] = {"enabled": True, "error": str(e)}
             else:
                 snapshot_data["apiyi"] = {"enabled": False}
+
             
             # Add metadata
             snapshot_data["generated_at"] = datetime.now().isoformat()

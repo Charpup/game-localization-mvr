@@ -124,17 +124,48 @@ def _load_pricing() -> Dict[str, Any]:
 def _estimate_cost(model: str, prompt_tokens: int, completion_tokens: int) -> float:
     """Estimate cost in USD based on pricing.yaml."""
     pricing = _load_pricing()
+    billing = pricing.get("billing", {})
     models = pricing.get("models", {})
     model_config = models.get(model, {})
     
-    # Use per_1M pricing if available
-    input_per_1m = model_config.get("input_per_1M", 0)
-    output_per_1m = model_config.get("output_per_1M", 0)
+    billing_mode = billing.get("mode", "per_1m")
     
-    if input_per_1m > 0 or output_per_1m > 0:
-        cost = (prompt_tokens * input_per_1m / 1_000_000) + \
-               (completion_tokens * output_per_1m / 1_000_000)
+    if billing_mode == "multiplier":
+        # Multiplier formula from pricing.yaml:
+        # cost = conversion_rate * group_mult * model_rate * (prompt_tokens + completion_tokens * completion_ratio) / divisor
+        
+        # 1. Base conversion rates
+        recharge_rate = billing.get("recharge_rate", {})
+        group_rate = billing.get("group_rate", {})
+        
+        conv_rate = (
+            (recharge_rate.get("new", 1.0) / max(recharge_rate.get("old", 1.0), 0.001)) *
+            (group_rate.get("new", 1.0) / max(group_rate.get("old", 1.0), 0.001))
+        )
+        
+        # 2. User group multiplier
+        user_group_mult = billing.get("user_group_multiplier", 1.0)
+        
+        # 3. Model rates
+        prompt_mult = model_config.get("prompt_mult", 0.0)
+        completion_mult = model_config.get("completion_mult", 1.0)
+        
+        # 4. Divisor
+        divisor = billing.get("token_divisor", 500000)
+        
+        effective_tokens = prompt_tokens + (completion_tokens * completion_mult)
+        cost = conv_rate * user_group_mult * prompt_mult * effective_tokens / divisor
         return round(cost, 6)
+    
+    else:
+        # Use per_1M pricing if available
+        input_per_1m = model_config.get("input_per_1M", 0)
+        output_per_1m = model_config.get("output_per_1M", 0)
+        
+        if input_per_1m > 0 or output_per_1m > 0:
+            cost = (prompt_tokens * input_per_1m / 1_000_000) + \
+                   (completion_tokens * output_per_1m / 1_000_000)
+            return round(cost, 6)
     
     return 0.0
 
@@ -262,6 +293,25 @@ class LLMRouter:
             chain.extend(fallbacks)
         
         return chain
+    
+    def check_batch_capability(self, model: str) -> bool:
+        """
+        Check if model is capable of batch processing.
+        Returns True if batch: ok (or default), False if batch: unfit.
+        """
+        if not self.config or "capabilities" not in self.config:
+            return True  # Default to ok if no config
+            
+        caps = self.config.get("capabilities", {})
+        # Check specific model
+        if model in caps:
+            return caps[model].get("batch", "ok") != "unfit"
+            
+        # Check _default
+        if "_default" in caps:
+            return caps["_default"].get("batch", "ok") != "unfit"
+            
+        return True
     
     def get_default_model(self, step: str) -> Optional[str]:
         """Return default model for step."""
@@ -471,6 +521,45 @@ class LLMClient:
         else:
             model_chain = []
         
+        # Batch Capability Enforcement
+        is_batch = False
+        if isinstance(metadata, dict):
+            # Check explicit flag or implicit batch_size
+            is_batch = metadata.get("is_batch") is True or \
+                       (isinstance(metadata.get("batch_size"), int) and metadata["batch_size"] > 1) or \
+                       (isinstance(metadata.get("planned_batch_size"), int) and metadata["planned_batch_size"] > 1)
+
+        if is_batch and model_chain and self.router.enabled:
+            # Check primary model
+            primary = model_chain[0]
+            if not self.router.check_batch_capability(primary):
+                _trace({
+                    "type": "router_batch_enforcement",
+                    "msg": f"Model {primary} is batch_unfit. Searching fallback chain.",
+                    "step": step,
+                    "original_chain": model_chain
+                })
+                
+                # Find first capable model in chain
+                found_capable = False
+                new_chain = []
+                for m in model_chain:
+                    if self.router.check_batch_capability(m):
+                        new_chain.append(m)
+                        found_capable = True
+                
+                if found_capable:
+                    model_chain = new_chain
+                else:
+                    # No capable model in chain - hard fail per requirements?
+                    # Or fall back to a safe default if known? 
+                    # Requirement: "hard fail or auto-switch to first batch_ok fallback"
+                    raise LLMError(
+                        "config", 
+                        f"Step '{step}' requires batch capability, but no configured models satisfy it. Chain: {model_chain}",
+                        retryable=False
+                    )
+        
         # Fallback to default_model if chain is empty
         if not model_chain and self.default_model:
             model_chain = [self.default_model]
@@ -666,6 +755,8 @@ class LLMClient:
             "fallback_reason": fallback_reason,
             "attempt_no": attempt_no,
             "router_chain_len": router_chain_len,
+            # Output record for debugging
+            "output": text if len(text) < 10000 else text[:10000] + "...[TRUNCATED]"
         }
         
         # Add batch_id from metadata if present

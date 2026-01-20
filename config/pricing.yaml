@@ -320,6 +320,27 @@ models:
     completion_mult: 1.0
     input_per_1M: 4.00
     output_per_1M: 4.00
+  # === GPT-5.2 (Future/placeholder) ===
+  gpt-5.2:
+    prompt_mult: 1.5
+    completion_mult: 4.0
+    input_per_1M: 3.00
+    output_per_1M: 12.00
+
+  # === Claude 4.5 Haiku ===
+  claude-haiku-4-5-20251001-thinking:
+    prompt_mult: 0.6
+    completion_mult: 5.0
+    input_per_1M: 1.20
+    output_per_1M: 6.00
+
+  # === DeepSeek V3.2 Exp ===
+  DeepSeek-V3.2-Exp-thinking:
+    prompt_mult: 0.3
+    completion_mult: 4.0
+    input_per_1M: 0.60
+    output_per_1M: 2.40
+
   kimi-k2-0905:
     prompt_mult: 0.3
     completion_mult: 4.0
