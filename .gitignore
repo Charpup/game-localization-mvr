@@ -1,77 +1,29 @@
-# Python
+# Python & PyCharm
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-*.egg-info/
-dist/
-build/
-
-# Environment secrets (NEVER commit)
-.env
-.env.local
-*.key
-
-# Virtual environments
-venv/
-env/
-ENV/
-
-# IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
-*.swo
-*~
 
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Generated/temporary test files
-data/temp_*/
-data/*_output.csv
-data/*_e2e.csv
-data/qa_report*.json
-data/placeholder_map_output.json
-data/placeholder_map_e2e.json
-data/draft_output.csv
-data/final_output.csv
-data/final_bad_output.csv
-data/final_e2e.csv
-data/draft_e2e.csv
-
-# Keep example/production files
-!data/input.csv
-!data/draft.csv
-!data/final.csv
-!data/placeholder_map.json
-!data/qa_hard_report.json
-!data/translated_good.csv
-!data/translated_bad.csv
-!data/translated.csv
-!data/repaired.csv
-
-# Keep test fixtures (IMPORTANT for deployment)
-!data/fixtures/
-!data/fixtures/*.csv
-!data/fixtures/*.json
-!data/fixtures/*.md
-
-# Logs
+# Artifacts & Outputs
+reports/**
 *.log
-data/llm_trace.jsonl
-data/metrics_*.json
-data/metrics_*.md
-
-# Test coverage
-.coverage
-htmlcov/
-
-# Temporary
 *.tmp
-*.bak
 
-artifacts/
+# Data - Default Ignore
+data/**
+
+# Data - Whitelist (Keep Gates & Validation Sets)
+!data/gate*_v*.csv
+!data/gate*_v*.meta.json
+!data/validation_*_v*.csv
+!data/validation_*_v*.meta.json
+!data/placeholder_map.json
+!data/glossary.yaml
+
+# Secrets & Configs
+*.secret*
+.env
+**/api_key.txt
+**/api access token.txt
+config/secrets.yaml
