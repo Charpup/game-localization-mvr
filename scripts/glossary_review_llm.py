@@ -193,14 +193,65 @@ def write_recommendations_yaml(path: str, results: List[ReviewResult], mode: str
         yaml.dump(output, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
 
+def read_review_csv(path: str) -> List[Dict[str, str]]:
+    """Read review queue CSV."""
+    import csv
+    with open(path, 'r', encoding='utf-8-sig', newline='') as f:
+        return list(csv.DictReader(f))
+
+
+def write_review_csv_with_decisions(path: str, rows: List[Dict[str, str]], 
+                                     results: List[ReviewResult]) -> None:
+    """
+    Write review CSV with LLM decisions filled in.
+    
+    Matches results to rows by term_zh, fills decision/note columns.
+    """
+    import csv
+    
+    # Build lookup by term_zh
+    decision_map = {r.term_zh: r for r in results}
+    
+    # Add decision columns if not present
+    fieldnames = list(rows[0].keys()) if rows else []
+    for col in ['decision', 'term_ru_final', 'note', 'llm_confidence']:
+        if col not in fieldnames:
+            fieldnames.append(col)
+    
+    # Fill decisions
+    for row in rows:
+        term_zh = row.get('term_zh', '')
+        result = decision_map.get(term_zh)
+        if result:
+            # Map recommendation to apply_review decision format
+            if result.recommendation == 'approved':
+                row['decision'] = 'approve'
+            elif result.recommendation == 'rejected':
+                row['decision'] = 'reject'
+            else:
+                row['decision'] = 'reject'  # Default to reject for unknown
+            
+            row['term_ru_final'] = result.suggested_term or ''
+            row['note'] = result.reason
+            row['llm_confidence'] = str(result.confidence)
+    
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, 'w', encoding='utf-8-sig', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="LLM-assisted glossary review for users who don't speak target language"
     )
-    ap.add_argument("--proposals", required=True,
+    ap.add_argument("--proposals",
                     help="Input proposals YAML (from glossary_translate)")
+    ap.add_argument("--review_csv",
+                    help="Input review queue CSV (alternative to --proposals)")
     ap.add_argument("--output", required=True,
-                    help="Output review file (YAML)")
+                    help="Output review file (YAML or CSV based on input)")
     ap.add_argument("--style", default="workflow/style_guide.md",
                     help="Style guide for context")
     ap.add_argument("--mode", default="recommend", 
@@ -213,20 +264,47 @@ def main():
                     help="Validate without making LLM calls")
     args = ap.parse_args()
     
+    # Validate inputs
+    if not args.proposals and not args.review_csv:
+        print("❌ Either --proposals or --review_csv is required")
+        return 1
+    
     print("🔍 Glossary Review LLM")
-    print(f"   Proposals: {args.proposals}")
+    print(f"   Proposals: {args.proposals or 'N/A'}")
+    print(f"   Review CSV: {args.review_csv or 'N/A'}")
     print(f"   Output: {args.output}")
     print()
     
-    # Load proposals
-    if not Path(args.proposals).exists():
-        print(f"❌ Proposals file not found: {args.proposals}")
-        return 1
+    # Determine input mode
+    use_csv_mode = bool(args.review_csv)
+    original_csv_rows = None
     
-    entries = load_proposals(args.proposals)
-    if not entries:
-        print("ℹ️  No proposals to review")
-        return 0
+    if use_csv_mode:
+        # CSV input mode
+        if not Path(args.review_csv).exists():
+            print(f"❌ Review CSV not found: {args.review_csv}")
+            return 1
+        
+        original_csv_rows = read_review_csv(args.review_csv)
+        # Convert CSV rows to entry format
+        entries = []
+        for row in original_csv_rows:
+            entries.append({
+                "term_zh": row.get("term_zh", ""),
+                "term_ru": row.get("term_ru_suggested") or row.get("term_ru", ""),
+                "context": row.get("context", "")
+            })
+        print(f"✅ Loaded {len(entries)} terms from review CSV")
+    else:
+        # YAML input mode
+        if not Path(args.proposals).exists():
+            print(f"❌ Proposals file not found: {args.proposals}")
+            return 1
+        
+        entries = load_proposals(args.proposals)
+        if not entries:
+            print("ℹ️  No proposals to review")
+            return 0
     
     # Filter entries that have term_ru
     entries_with_ru = [e for e in entries if e.get("term_ru")]
@@ -237,10 +315,7 @@ def main():
     if args.max_terms > 0:
         entries = entries[:args.max_terms]
     
-    print(f"✅ Loaded {len(entries)} entries to review")
-    
-    # Load style guide
-    # style_guide = load_style_guide(args.style) # Not used in v2 prompt currently but good to keep if needed
+    print(f"✅ {len(entries)} entries to review")
     
     if args.dry_run:
         print("[OK] Dry-run passed")
@@ -279,9 +354,15 @@ def main():
             
         except LLMError as e:
             print(f"    ⚠️  LLM error: {e}")
-            
-    write_recommendations_yaml(args.output, all_results, args.mode)
-    print(f"\n✅ Output written to {args.output}")
+    
+    # Write output based on mode
+    if use_csv_mode:
+        write_review_csv_with_decisions(args.output, original_csv_rows, all_results)
+        print(f"\n✅ CSV with decisions written to {args.output}")
+    else:
+        write_recommendations_yaml(args.output, all_results, args.mode)
+        print(f"\n✅ YAML output written to {args.output}")
+    
     return 0
 
 

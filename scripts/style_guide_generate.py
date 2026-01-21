@@ -170,33 +170,166 @@ Generate the style guide now.
             print(f"[Error] Failed to generate candidate {i+1}: {e}")
 
 # ----------------------------------------------------------------------
+# 3. Sample-based Style Guide Generation (New Mode)
+# ----------------------------------------------------------------------
+
+def load_glossary(path: str) -> Dict[str, str]:
+    """Load glossary YAML as term_zh -> term_ru map."""
+    import yaml
+    if not os.path.exists(path):
+        return {}
+    with open(path, 'r', encoding='utf-8') as f:
+        data = yaml.safe_load(f) or {}
+    entries = data.get("entries", [])
+    return {e.get("term_zh", ""): e.get("term_ru", "") for e in entries if e.get("term_zh")}
+
+def load_sample_texts(csv_path: str, max_samples: int = 50) -> List[str]:
+    """Load sample source texts from CSV."""
+    import csv
+    samples = []
+    with open(csv_path, 'r', encoding='utf-8-sig', newline='') as f:
+        reader = csv.DictReader(f)
+        for i, row in enumerate(reader):
+            if i >= max_samples:
+                break
+            text = row.get("tokenized_zh") or row.get("source_zh") or ""
+            if text.strip():
+                samples.append(text.strip())
+    return samples
+
+def generate_from_sample(
+    samples: List[str],
+    glossary: Dict[str, str],
+    output_path: str,
+    dry_run: bool = False
+):
+    """Generate style guide from sample texts and glossary."""
+    if dry_run:
+        print("[Dry-Run] Would generate style guide from samples")
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write("# Style Guide (Dry Run)\n\n## Tone & Voice\nMock content for dry run.\n")
+        return
+    
+    if LLMClient is None:
+        print("[Error] LLMClient not available")
+        return
+    
+    client = LLMClient()
+    
+    # Build prompt with samples and glossary
+    glossary_excerpt = "\n".join([f"- {k}: {v}" for k, v in list(glossary.items())[:30]])
+    samples_excerpt = "\n".join([f"• {s[:100]}..." if len(s) > 100 else f"• {s}" for s in samples[:20]])
+    
+    system_prompt = """你是游戏本地化风格指南专家（zh-CN → ru-RU）。
+任务：根据提供的样本文本和术语表，生成一份完整的俄语翻译风格指南。
+
+输出格式：纯 Markdown（无代码块、无额外说明）。
+
+必须包含以下章节：
+1. ## 语气与风格 (Tone & Voice) - 定义语气等级、关键词
+2. ## 术语策略 (Terminology) - 音译 vs 意译规则
+3. ## 语法规范 (Grammar) - 称谓（ты/Вы）、性别处理
+4. ## UI 简洁性 (UI Brevity) - 字符限制、缩写规则
+5. ## 禁止模式 (Forbidden Patterns) - 禁用词汇和表达
+6. ## 占位符处理 (Placeholder Handling) - {0}、<br> 等处理规则
+"""
+
+    user_prompt = f"""
+样本源文本（zh-CN）：
+{samples_excerpt}
+
+术语表摘录（zh-CN → ru-RU）：
+{glossary_excerpt}
+
+请基于以上信息生成完整的俄语翻译风格指南。
+"""
+
+    print("[Generate] Calling LLM to generate style guide...")
+    try:
+        result = client.chat(
+            system=system_prompt,
+            user=user_prompt,
+            metadata={"step": "style_guide_generate", "mode": "sample_based"}
+        )
+        
+        content = result.text.strip()
+        # Remove markdown fence if present
+        if content.startswith("```markdown"):
+            content = content.replace("```markdown", "", 1)
+        if content.startswith("```"):
+            content = content.replace("```", "", 1)
+        if content.endswith("```"):
+            content = content[:-3]
+        content = content.strip()
+        
+        os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        print(f"[Generate] Saved style guide to {output_path}")
+        
+    except Exception as e:
+        print(f"[Error] Failed to generate style guide: {e}")
+
+# ----------------------------------------------------------------------
 # Main
 # ----------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate Style Guide candidates from questionnaire")
-    parser.add_argument("--inputs", required=True, help="Path to input questionnaire markdown file")
-    parser.add_argument("--template", help="Path to reference template (optional)")
-    parser.add_argument("--output-dir", default="artifacts/style_guide_candidates", help="Directory to save candidates")
-    parser.add_argument("--count", type=int, default=3, help="Number of candidates to generate")
+    parser = argparse.ArgumentParser(description="Generate Style Guide candidates from questionnaire or samples")
+    
+    # Original mode (questionnaire-based)
+    parser.add_argument("--inputs", help="Path to input questionnaire markdown file (legacy mode)")
+    parser.add_argument("--template", help="Path to reference template (optional, legacy mode)")
+    parser.add_argument("--output-dir", default="artifacts/style_guide_candidates", help="Directory to save candidates (legacy mode)")
+    parser.add_argument("--count", type=int, default=3, help="Number of candidates to generate (legacy mode)")
+    
+    # New mode (sample-based) - matches implementation plan
+    parser.add_argument("--input_sample", help="Path to normalized CSV with sample texts")
+    parser.add_argument("--glossary", help="Path to compiled glossary YAML")
+    parser.add_argument("--output", help="Output path for generated style guide")
+    
     parser.add_argument("--dry-run", action="store_true", help="Skip LLM calls")
     
     args = parser.parse_args()
     
-    run_id = int(time.time())
-    json_path = os.path.join(args.output_dir, f"questionnaire.{run_id}.json")
-    
-    print(f"[Generate] Compiling {args.inputs} -> {json_path}")
-    q_data = compile_questionnaire(args.inputs, json_path)
-    
-    tmpl_content = load_template(args.template) if args.template else ""
-    if not tmpl_content:
-        print("[Generate] No template provided, using generic structure.")
-        tmpl_content = "## Tone & Voice\n...\n## Terminology Policy\n..."
+    # Determine mode
+    if args.input_sample and args.output:
+        # New sample-based mode
+        print(f"[Generate] Sample-based mode")
+        print(f"   Input sample: {args.input_sample}")
+        print(f"   Glossary: {args.glossary}")
+        print(f"   Output: {args.output}")
+        
+        samples = load_sample_texts(args.input_sample)
+        print(f"[Generate] Loaded {len(samples)} sample texts")
+        
+        glossary = load_glossary(args.glossary) if args.glossary else {}
+        print(f"[Generate] Loaded {len(glossary)} glossary entries")
+        
+        generate_from_sample(samples, glossary, args.output, args.dry_run)
+        
+    elif args.inputs:
+        # Legacy questionnaire mode
+        run_id = int(time.time())
+        json_path = os.path.join(args.output_dir, f"questionnaire.{run_id}.json")
+        
+        print(f"[Generate] Compiling {args.inputs} -> {json_path}")
+        q_data = compile_questionnaire(args.inputs, json_path)
+        
+        tmpl_content = load_template(args.template) if args.template else ""
+        if not tmpl_content:
+            print("[Generate] No template provided, using generic structure.")
+            tmpl_content = "## Tone & Voice\n...\n## Terminology Policy\n..."
 
-    generate_candidates(q_data, tmpl_content, args.output_dir, args.count, args.dry_run)
+        generate_candidates(q_data, tmpl_content, args.output_dir, args.count, args.dry_run)
+    else:
+        parser.print_help()
+        print("\n[Error] Either --inputs (legacy) or --input_sample + --output (new) is required")
+        return 1
     
     print("[Generate] Done.")
+    return 0
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)

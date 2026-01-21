@@ -244,25 +244,21 @@ def backoff_sleep(attempt: int) -> None:
 # Prompt Builder (Hardened)
 # -----------------------------
 def build_system_prompt(style_guide: str, glossary_summary: str) -> str:
-    return (
         '你是严谨的手游本地化译者（zh-CN → ru-RU）。\n\n'
-        '【输出格式 - 强制要求】\n'
-        'You MUST return a JSON ARRAY.\n'
-        'Each item MUST be an object with keys: "string_id", "target_ru".\n\n'
-        'Rules:\n'
-        '- The top-level output MUST be a JSON array.\n'
-        '- Do NOT return a JSON object or key-value map.\n'
-        '- Do NOT use indices as keys.\n'
-        '- Do NOT include explanations, comments, or markdown.\n'
-        '- If you cannot comply, return an EMPTY JSON ARRAY: []\n\n'
-        'Any violation will be treated as a failure.\n\n'
-        '【翻译规则】\n'
+        '【Output Contract v6 - 强制要求】\n'
+        '1. Output MUST be valid JSON (Array of Objects).\n'
+        '2. Top-level structure MUST be an Array `[...]`, NOT an Object `{"key": [...]}`.\n'
+        '3. Each object MUST contain keys: "string_id", "target_ru".\n'
+        '4. Every input "string_id" MUST appear in the output. Do not skip items.\n'
+        '5. If translation fails, return empty string "" for "target_ru".\n'
+        '6. Do NOT wrap the array in markdown blocks or keys.\n\n'
+        '【Translation Rules】\n'
         '- 术语表中 term_zh → term_ru 必须严格使用。\n'
         '- 占位符 ⟦PH_xx⟧ / ⟦TAG_xx⟧ 必须原样保留。\n'
         '- 禁止中文括号【】，用 «» 或 "X: …" 替代。\n'
         '- 空字符串源文输出空字符串。\n\n'
-        '【示例输出】\n'
-        '[{"string_id": "123", "target_ru": "Текст ⟦PH_0⟧"}]\n\n'
+        '【Example Output】\n'
+        '[{"string_id": "1", "target_ru": "Текст ⟦PH_0⟧"}, {"string_id": "2", "target_ru": ""}]\n\n'
         f'术语表摘要：\n{glossary_summary[:1500]}\n\n'
         f'style_guide：\n{style_guide[:1000]}\n'
     )
@@ -370,7 +366,10 @@ def process_batch_worker(
                         "effective_batch_size": planned_size,
                         "inflight_at_submit": inflight_count,
                         "max_tokens": max_tokens,
-                        "attempt": attempt
+                        "inflight_at_submit": inflight_count,
+                        "max_tokens": max_tokens,
+                        "attempt": attempt,
+                        "is_batch": True  # Signal to Runtime for capability check
                     }
                     # Note: removed response_format={type:json_object} as it forces object output
                 )
@@ -470,22 +469,60 @@ def process_batch_worker(
                     return result
                 
                 # Has missing items - update working batch to only missing items for next attempt
+                # Has missing items - retry logic
                 if attempt < max_retries:
-                    # Rebuild batch and prompts with only missing items
+                    # Retry 1+: Rebuild batch with only missing items
                     batch = [id_to_row[sid] for sid in missing]
                     batch_input = build_batch_input(batch, glossary)
                     user_prompt = json.dumps(batch_input, ensure_ascii=False)
                     id_to_row = {r.get("string_id", ""): r for r in batch}
-                    # Update max_tokens for smaller batch
                     max_tokens = int(len(batch) * EXPECTED_TOKENS_PER_ROW * COMPLETION_MARGIN)
                     backoff_sleep(attempt)
                     continue
                 
-                # Max retries reached - escalate remaining
+                # Max retries reached - Try ONE FINAL ESCALATION (Fallback Repair)
+                # Use 'repair_hard' step which maps to strong model (e.g. Sonnet)
+                try:
+                    batch = [id_to_row[sid] for sid in missing]
+                    batch_input = build_batch_input(batch, glossary)
+                    user_prompt = json.dumps(batch_input, ensure_ascii=False)
+                    
+                    fallback_res = llm.chat(
+                        system=system_prompt,
+                        user=user_prompt,
+                        temperature=0.0,
+                        max_tokens=max_tokens,
+                        metadata={
+                            "step": "repair_hard", # Force fallback model
+                            "batch_idx": batch_idx,
+                            "planned_batch_size": len(batch),
+                            "is_batch": True,
+                            "reason": "missing_id_fallback"
+                        }
+                    )
+                    
+                    # Parse Fallback Result
+                    fallback_parsed = parse_json_array(fallback_res.text)
+                    if fallback_parsed:
+                         for item in fallback_parsed:
+                            sid = str(item.get("string_id", ""))
+                            target_ru = item.get("target_ru", "")
+                            if sid in missing:
+                                original = id_to_row[sid]
+                                ok, _ = validate_translation(original.get("tokenized_zh",""), target_ru)
+                                if ok:
+                                    out_row = dict(original)
+                                    out_row["target_text"] = target_ru
+                                    result.success_rows.append(out_row)
+                                    missing.remove(sid)
+                except Exception:
+                    pass # Fallback failed, proceed to escalate remaining
+                
+                # Final Escalation of stubbornly missing items
                 for sid in missing:
                     result.escalated_rows.append({
                         "string_id": sid,
-                        "reason": "missing_after_max_retries",
+                        "reason": "missing_after_fallback_repair",
                         "batch_idx": str(batch_idx)
                     })
                 return result
