@@ -39,6 +39,19 @@ except Exception:
 
 from runtime_adapter import LLMClient, LLMError, BatchConfig, get_batch_config, batch_llm_call, log_llm_progress
 
+# v2.1: RAG and Semantic Scoring integration
+try:
+    from glossary_vectorstore import GlossaryVectorStore
+    HAS_RAG = True
+except ImportError:
+    HAS_RAG = False
+
+try:
+    from semantic_scorer import SemanticScorer
+    HAS_SEMANTIC = True
+except ImportError:
+    HAS_SEMANTIC = False
+
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 
 
@@ -183,6 +196,12 @@ def main():
     ap.add_argument("--out_tasks", default="data/repair_tasks.jsonl", help="Output repair tasks JSONL")
     ap.add_argument("--dry-run", action="store_true", 
                     help="Validate configuration without making LLM calls")
+    ap.add_argument("--enable-rag", action="store_true",
+                    help="Enable RAG-based dynamic glossary injection (requires glossary_vectorstore)")
+    ap.add_argument("--enable-semantic", action="store_true",
+                    help="Enable semantic scoring pre-filter (requires semantic_scorer)")
+    ap.add_argument("--rag-top-k", type=int, default=15,
+                    help="Top-K terms to retrieve for RAG (default: 15)")
     args = ap.parse_args()
 
     # Resolve input path
@@ -191,7 +210,17 @@ def main():
         ap.print_help()
         return 1
 
-    print(f"🔍 Soft QA v2.0 (Batch Mode)")
+    print(f"🔍 Soft QA v2.1 (Batch Mode + RAG/Semantic)")
+    
+    # Feature flags
+    use_rag = args.enable_rag and HAS_RAG
+    use_semantic = args.enable_semantic and HAS_SEMANTIC
+    
+    if args.enable_rag and not HAS_RAG:
+        print("⚠️  RAG requested but glossary_vectorstore not available")
+    if args.enable_semantic and not HAS_SEMANTIC:
+        print("⚠️  Semantic scoring requested but semantic_scorer not available")
+    
     # Load resources
     rows = read_csv(input_path)
     style = load_text(args.style_guide_md)
@@ -203,12 +232,44 @@ def main():
     
     glossary_summary = build_glossary_summary(glossary_entries)
     
+    # Initialize RAG vector store if enabled
+    glossary_store = None
+    if use_rag:
+        print("   Initializing RAG vector store...")
+        glossary_store = GlossaryVectorStore(glossary_path)
+        glossary_store.load_glossary()
+        glossary_store.build_index()
+    
+    # Initialize semantic scorer if enabled
+    semantic_scorer = None
+    if use_semantic:
+        print("   Initializing semantic scorer...")
+        semantic_scorer = SemanticScorer()
+    
     print(f"✅ Loaded {len(rows)} rows from {input_path}")
     print(f"   Glossary: {len(glossary_entries)} entries")
+    if use_rag:
+        print(f"   RAG: Enabled (top_k={args.rag_top_k})")
+    if use_semantic:
+        print(f"   Semantic scoring: Enabled")
     
     # Filter rows with target_text
     rows_with_target = [r for r in rows if r.get("target_text")]
     print(f"   Rows with translations: {len(rows_with_target)}")
+    
+    # Semantic pre-scoring if enabled
+    semantic_scores = {}
+    if use_semantic and rows_with_target:
+        print("   Running semantic pre-scoring...")
+        pairs = [{
+            "id": r.get("string_id", ""),
+            "source_zh": r.get("source_zh") or r.get("tokenized_zh") or "",
+            "target_ru": r.get("target_text", "")
+        } for r in rows_with_target]
+        scores = semantic_scorer.score_batch(pairs)
+        semantic_scores = {s["id"]: s for s in scores}
+        stats = semantic_scorer.get_statistics(scores)
+        print(f"   Semantic stats: OK={stats['ok']}, Warning={stats['warning']}, Error={stats['error']}, Avg={stats['avg_score']:.3f}")
     
     # Dry-run mode
     if getattr(args, 'dry_run', False):

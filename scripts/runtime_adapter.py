@@ -1119,3 +1119,224 @@ def batch_llm_call(
     })
 
     return results
+
+
+# -----------------------------
+# Embedding Client (v1.0)
+# Text vectorization with caching
+# -----------------------------
+
+import numpy as np
+import hashlib
+
+# Embedding configuration
+EMBEDDING_MODEL = "text-embedding-3-small"
+EMBEDDING_DIMENSIONS = 1536
+EMBEDDING_CACHE_DIR = "cache/embeddings"
+
+
+class EmbeddingClient:
+    """
+    文本向量化客户端
+    
+    Features:
+    - 单条/批量文本向量化
+    - 本地文件缓存 (避免重复调用)
+    - 余弦相似度计算
+    
+    Usage:
+        from runtime_adapter import EmbeddingClient
+        
+        client = EmbeddingClient()
+        emb = client.embed_single("测试文本")
+        print(f"Embedding shape: {emb.shape}")  # (1536,)
+    """
+    
+    def __init__(self, cache_dir: str = EMBEDDING_CACHE_DIR):
+        """
+        Initialize embedding client.
+        
+        Uses same env vars as LLMClient:
+        - LLM_BASE_URL (default: https://api.apiyi.com/v1)
+        - LLM_API_KEY or LLM_API_KEY_FILE
+        """
+        self.base_url = os.getenv("LLM_BASE_URL", "https://api.apiyi.com/v1").strip().rstrip("/")
+        self.api_key = LLMClient._load_api_key()
+        self.model = EMBEDDING_MODEL
+        self.cache_dir = cache_dir
+        
+        if cache_dir:
+            os.makedirs(cache_dir, exist_ok=True)
+        
+        if not self.api_key:
+            raise LLMError("config", "Missing API key for EmbeddingClient", retryable=False)
+    
+    def _cache_key(self, text: str) -> str:
+        """生成缓存键 (MD5 hash of text + model)"""
+        content = f"{text}_{self.model}"
+        return hashlib.md5(content.encode('utf-8')).hexdigest()
+    
+    def _get_cache_path(self, cache_key: str) -> str:
+        """获取缓存文件路径"""
+        return os.path.join(self.cache_dir, f"{cache_key}.npy")
+    
+    def embed_single(self, text: str, use_cache: bool = True) -> np.ndarray:
+        """
+        单条文本向量化
+        
+        Args:
+            text: 输入文本
+            use_cache: 是否使用缓存 (默认 True)
+            
+        Returns:
+            np.ndarray: 向量 (shape: EMBEDDING_DIMENSIONS,)
+        """
+        if not text or not text.strip():
+            return np.zeros(EMBEDDING_DIMENSIONS)
+        
+        # Check cache
+        if use_cache and self.cache_dir:
+            cache_key = self._cache_key(text)
+            cache_path = self._get_cache_path(cache_key)
+            if os.path.exists(cache_path):
+                return np.load(cache_path)
+        
+        # API call
+        url = f"{self.base_url}/embeddings"
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "input": text,
+            "model": self.model
+        }
+        
+        try:
+            resp = requests.post(url, headers=headers, json=payload, timeout=30)
+            resp.raise_for_status()
+            data = resp.json()
+            embedding = np.array(data["data"][0]["embedding"])
+        except requests.RequestException as e:
+            raise LLMError("network", f"Embedding API error: {e}", retryable=True)
+        except (KeyError, IndexError) as e:
+            raise LLMError("parse", f"Embedding response parse error: {e}", retryable=False)
+        
+        # Save to cache
+        if use_cache and self.cache_dir:
+            np.save(cache_path, embedding)
+        
+        return embedding
+    
+    def embed_batch(self, texts: list, use_cache: bool = True) -> np.ndarray:
+        """
+        批量文本向量化
+        
+        Args:
+            texts: 输入文本列表
+            use_cache: 是否使用缓存 (默认 True)
+            
+        Returns:
+            np.ndarray: 向量矩阵 (shape: len(texts), EMBEDDING_DIMENSIONS)
+        """
+        if not texts:
+            return np.array([]).reshape(0, EMBEDDING_DIMENSIONS)
+        
+        embeddings = []
+        texts_to_fetch = []
+        fetch_indices = []
+        
+        # Check cache for each text
+        for i, text in enumerate(texts):
+            if not text or not text.strip():
+                embeddings.append((i, np.zeros(EMBEDDING_DIMENSIONS)))
+                continue
+                
+            if use_cache and self.cache_dir:
+                cache_key = self._cache_key(text)
+                cache_path = self._get_cache_path(cache_key)
+                if os.path.exists(cache_path):
+                    embeddings.append((i, np.load(cache_path)))
+                    continue
+            
+            texts_to_fetch.append(text)
+            fetch_indices.append(i)
+        
+        # Batch API call for uncached texts
+        if texts_to_fetch:
+            url = f"{self.base_url}/embeddings"
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "input": texts_to_fetch,
+                "model": self.model
+            }
+            
+            try:
+                resp = requests.post(url, headers=headers, json=payload, timeout=60)
+                resp.raise_for_status()
+                data = resp.json()
+                
+                for j, item in enumerate(data["data"]):
+                    idx = fetch_indices[j]
+                    emb = np.array(item["embedding"])
+                    embeddings.append((idx, emb))
+                    
+                    # Save to cache
+                    if use_cache and self.cache_dir:
+                        cache_key = self._cache_key(texts_to_fetch[j])
+                        cache_path = self._get_cache_path(cache_key)
+                        np.save(cache_path, emb)
+                        
+            except requests.RequestException as e:
+                raise LLMError("network", f"Embedding batch API error: {e}", retryable=True)
+            except (KeyError, IndexError) as e:
+                raise LLMError("parse", f"Embedding batch response parse error: {e}", retryable=False)
+        
+        # Sort by original index and return
+        embeddings.sort(key=lambda x: x[0])
+        return np.array([e[1] for e in embeddings])
+    
+    def cosine_similarity(self, vec_a: np.ndarray, vec_b: np.ndarray) -> float:
+        """
+        计算两个向量的余弦相似度
+        
+        Args:
+            vec_a: 向量 A
+            vec_b: 向量 B
+            
+        Returns:
+            float: 相似度 [-1, 1]
+        """
+        norm_a = np.linalg.norm(vec_a)
+        norm_b = np.linalg.norm(vec_b)
+        if norm_a == 0 or norm_b == 0:
+            return 0.0
+        return float(np.dot(vec_a, vec_b) / (norm_a * norm_b))
+    
+    def batch_cosine_similarity(self, query_vec: np.ndarray, corpus_vecs: np.ndarray) -> np.ndarray:
+        """
+        批量计算余弦相似度 (query vs corpus)
+        
+        Args:
+            query_vec: 查询向量 (shape: D,)
+            corpus_vecs: 语料向量矩阵 (shape: N, D)
+            
+        Returns:
+            np.ndarray: 相似度数组 (shape: N,)
+        """
+        if corpus_vecs.size == 0:
+            return np.array([])
+        
+        query_norm = np.linalg.norm(query_vec)
+        if query_norm == 0:
+            return np.zeros(len(corpus_vecs))
+        
+        query_normalized = query_vec / query_norm
+        corpus_norms = np.linalg.norm(corpus_vecs, axis=1, keepdims=True)
+        corpus_norms = np.where(corpus_norms == 0, 1, corpus_norms)  # Avoid div by zero
+        corpus_normalized = corpus_vecs / corpus_norms
+        
+        return np.dot(corpus_normalized, query_normalized)
