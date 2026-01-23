@@ -1,188 +1,137 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 build_mixed_gate.py
 
-Generate Empty Gate V3 Mixed Batch dataset (100 rows).
-- 10 batches.
-- Each batch: 6 non-empty + 4 empty.
-- Deterministic selection via SHA256 sort.
-- Output: v3_mixed.csv + v3_mixed.meta.json
+Generates a deterministic dataset for Mixed Empty Batch Gate (MEBG).
+Total rows: 100 (10 batches * 10 rows).
+Batch Composition: 6 Non-Empty + 4 Empty.
 
-Usage:
-  python scripts/build_mixed_gate.py --source data/draft.csv --force --seed 123
+Source: data/gate_sample.csv (or attempts fallback to validation_set.csv)
 """
 
-import argparse
 import csv
 import hashlib
 import json
 import os
-import re
+import random
 import sys
-from typing import List, Dict, Any
+from datetime import datetime
 
-# V3 Spec
-BATCH_COUNT = 10
-ROWS_PER_BATCH = 10
-NON_EMPTY_PER_BATCH = 6
+OUTPUT_CSV = "data/empty_gate_v3_mixed.csv"
+OUTPUT_META = "data/empty_gate_v3_mixed.meta.json"
+TARGET_BATCHES = 10
+BATCH_SIZE = 10
 EMPTY_PER_BATCH = 4
-TOTAL_ROWS = BATCH_COUNT * ROWS_PER_BATCH # 100
+NON_EMPTY_PER_BATCH = 6
 
-# Bucket defs (Simplified for mixed gate)
-BUCKETS = ["placeholder", "ui_short", "dialogue_long", "system_rules", "ui_mid", "adversarial"]
+def load_source_rows():
+    """Load candidate rows from source CSVs."""
+    candidates = []
+    
+    # Priority 1: gate_sample.csv
+    if os.path.exists("data/gate_sample.csv"):
+        print("Loading from data/gate_sample.csv...")
+        with open("data/gate_sample.csv", "r", encoding="utf-8-sig") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row.get("source_zh", "").strip():  # Only non-empty
+                    candidates.append(row)
+    
+    # Priority 2: validation_set.csv fallback
+    elif os.path.exists("data/validation_set.csv"):
+        print("Loading from data/validation_set.csv...")
+        with open("data/validation_set.csv", "r", encoding="utf-8-sig") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row.get("source_zh", "").strip():
+                    candidates.append(row)
+    
+    else:
+        print("Error: No source CSV found (gate_sample.csv or validation_set.csv).")
+        sys.exit(1)
+        
+    print(f"Loaded {len(candidates)} non-empty candidate rows.")
+    return candidates
 
-PLACEHOLDER_PATTERN = re.compile(r'(\{[^}]+\}|%[sd]|⟦PH_\d+⟧|\{\{[^}]+\}\}|\[.*?\]|<[^>]+>|\\n)')
-
-def calculate_sha256(path: str) -> str:
-    sha256 = hashlib.sha256()
-    if os.path.exists(path):
-        with open(path, "rb") as f:
-            for chunk in iter(lambda: f.read(4096), b""):
-                sha256.update(chunk)
-    return sha256.hexdigest()
-
-def sha256_hash(s: str) -> str:
-    """Stable hash for deterministic sorting (SHA256)."""
-    return hashlib.sha256(s.encode()).hexdigest()
-
-def load_source_data(path: str) -> List[Dict[str, str]]:
-    with open(path, "r", encoding="utf-8-sig") as f:
-        return list(csv.DictReader(f))
-
-def classify_row(row: Dict[str, str]) -> str:
-    src = row.get("source_zh", "") or row.get("tokenized_zh", "") or ""
-    if not src.strip():
-        return "empty"
-    if PLACEHOLDER_PATTERN.search(src):
-        return "placeholder"
-    # Basic fallbacks (simplified classification for gate selection)
-    if len(src) <= 10: return "ui_short"
-    if len(src) >= 50: return "dialogue_long"
-    return "ui_mid"
+def get_stable_hash(s):
+    """Return a consistent integer hash for sorting."""
+    return int(hashlib.sha256(s.encode("utf-8")).hexdigest(), 16)
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--source", required=True)
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--force", action="store_true")
-    parser.add_argument("--output-dir", default="data")
-    args = parser.parse_args()
+    source_rows = load_source_rows()
     
-    out_csv = os.path.join(args.output_dir, "empty_gate_v3_mixed.csv")
-    out_meta = os.path.join(args.output_dir, "empty_gate_v3_mixed.meta.json")
-    
-    if os.path.exists(out_csv) and not args.force:
-        print(f"File exists: {out_csv}. Use --force to regenerate.")
-        sys.exit(0)
-
-    print(f"Loading source: {args.source}")
-    all_rows = load_source_data(args.source)
-    
-    # Bucketize
-    buckets: Dict[str, List] = {k: [] for k in BUCKETS + ["empty", "other"]}
-    for r in all_rows:
-        cat = classify_row(r)
-        if cat in buckets:
-            buckets[cat].append(r)
-        else:
-            buckets["other"].append(r)
-
-    # Need 40 empty, 60 non-empty
-    # Sort buckets deterministically
-    seed_str = str(args.seed)
-    
-    # Prepare Candidates
-    # Empty
-    empty_candidates = sorted(buckets["empty"], key=lambda r: sha256_hash(r.get("string_id","") + seed_str))
-    
-    # Synthesize empties if needed
-    if len(empty_candidates) < (BATCH_COUNT * EMPTY_PER_BATCH):
-        needed = (BATCH_COUNT * EMPTY_PER_BATCH) - len(empty_candidates)
-        for i in range(needed):
-            empty_candidates.append({
-                "string_id": f"SYNTH_EMPTY_{i}", 
-                "source_zh": "", 
-                "tokenized_zh": "",
-                "is_empty_source": "true" # Explicit marker
-            })
-            
-    # Non-Empty (Prioritize Placeholders ensure 1 per batch)
-    placeholder_candidates = sorted(buckets["placeholder"], key=lambda r: sha256_hash(r.get("string_id","") + seed_str))
-    other_candidates = []
-    for k in ["ui_short", "dialogue_long", "system_rules", "ui_mid", "adversarial", "other"]:
-        other_candidates.extend(buckets[k])
-    other_candidates = sorted(other_candidates, key=lambda r: sha256_hash(r.get("string_id","") + seed_str))
+    # Sort deterministically
+    source_rows.sort(key=lambda r: get_stable_hash(r["string_id"]))
     
     final_rows = []
-    used_ids = set()
     
-    print(f"\nBuilding {BATCH_COUNT} batches (Seed {args.seed})...")
+    non_empty_needed = TARGET_BATCHES * NON_EMPTY_PER_BATCH
+    if len(source_rows) < non_empty_needed:
+        # Cycle if not enough
+        print(f"Warning: Not enough source rows ({len(source_rows)} < {non_empty_needed}). Recycling.")
+        while len(source_rows) < non_empty_needed:
+            source_rows.extend(source_rows)
+            
+    # Slice required non-empty
+    selected_non_empty = source_rows[:non_empty_needed]
     
-    p_idx = 0
-    o_idx = 0
-    e_idx = 0
+    print(f"Generating {TARGET_BATCHES} batches...")
     
-    for b in range(BATCH_COUNT):
+    for b_idx in range(TARGET_BATCHES):
         batch_rows = []
         
-        # 1. Add 4 Empty
-        for _ in range(EMPTY_PER_BATCH):
-            row = empty_candidates[e_idx % len(empty_candidates)]
-            e_idx += 1
-            # Ensure is_empty_source is set
-            row["is_empty_source"] = "true"
-            batch_rows.append(row)
-            
-        # 2. Add 1 Placeholder (Non-Empty)
-        if placeholder_candidates:
-            row = placeholder_candidates[p_idx % len(placeholder_candidates)]
-            p_idx += 1
-            row["is_empty_source"] = "false"
-            batch_rows.append(row)
-            
-        # 3. Add 5 Other Non-Empty
-        needed_ne = NON_EMPTY_PER_BATCH - 1
-        for _ in range(needed_ne):
-            if other_candidates:
-                 row = other_candidates[o_idx % len(other_candidates)]
-                 o_idx += 1
-                 row["is_empty_source"] = "false"
-                 batch_rows.append(row)
+        # 1. Add 6 Non-Empty
+        start = b_idx * NON_EMPTY_PER_BATCH
+        end = start + NON_EMPTY_PER_BATCH
+        chunk = selected_non_empty[start:end]
         
-        # Add to final
+        for r in chunk:
+            r_new = r.copy()
+            # Ensure proper keys
+            batch_rows.append({
+                "string_id": r_new["string_id"],
+                "source_zh": r_new["source_zh"],
+                "type": r_new.get("type", "Unknown")
+            })
+            
+        # 2. Add 4 Empty
+        for e_idx in range(EMPTY_PER_BATCH):
+            batch_rows.append({
+                "string_id": f"MEBG_EMPTY_B{b_idx}_E{e_idx}",
+                "source_zh": "",
+                "type": "Empty"
+            })
+            
+        # 3. Shuffle Deterministically per batch
+        # Seed with batch index to keep order consistent across runs
+        rng = random.Random(42 + b_idx)
+        rng.shuffle(batch_rows)
+        
         final_rows.extend(batch_rows)
-
-    # Write CSV
-    print(f"Writing {len(final_rows)} rows to {out_csv}...")
-    fieldnames = ["string_id", "source_zh", "tokenized_zh", "is_empty_source"]
-    # Preserve other fields if present in source, but ensure these 4 exist
-    if final_rows:
-        keys = list(final_rows[0].keys())
-        for f in fieldnames: 
-            if f not in keys: keys.append(f)
-        fieldnames = keys
-
-    with open(out_csv, "w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fieldnames)
-        w.writeheader()
-        w.writerows(final_rows)
         
+    # Write Output
+    os.makedirs("data", exist_ok=True)
+    with open(OUTPUT_CSV, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["string_id", "source_zh", "type"])
+        writer.writeheader()
+        writer.writerows(final_rows)
+        
+    print(f"Wrote {len(final_rows)} rows to {OUTPUT_CSV}")
+    
     # Write Meta
     meta = {
-        "source_dataset_id": os.path.basename(args.source),
-        "source_sha256": calculate_sha256(args.source),
-        "rules_version": "v3",
-        "sha256": calculate_sha256(out_csv),
-        "row_count": len(final_rows),
-        "batches": BATCH_COUNT,
-        "seed": args.seed
+        "generated_at": datetime.now().isoformat(),
+        "total_rows": len(final_rows),
+        "batches": TARGET_BATCHES,
+        "batch_size": BATCH_SIZE,
+        "non_empty_ratio": f"{NON_EMPTY_PER_BATCH}/{BATCH_SIZE}",
+        "source_candidates": len(source_rows)
     }
-    with open(out_meta, "w", encoding="utf-8") as f:
+    with open(OUTPUT_META, "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2)
-        
-    print(f"Meta written to {out_meta}")
-    print(f"SHA256: {meta['sha256']}")
+    print(f"Wrote metadata to {OUTPUT_META}")
 
 if __name__ == "__main__":
     main()

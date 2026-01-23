@@ -131,7 +131,7 @@ def load_gate_data(path: str) -> List[Dict[str, str]]:
 def resolve_api_credentials(args) -> None:
     """Resolve API credentials with priority: CLI > ENV > default path."""
     default_key_path = "data/attachment/api_key.txt"
-    default_token_path = "data/attachment/api access token.txt"
+    default_token_path = "data/attachment/api_access_token.txt"
     
     # API Key
     key_path = args.api_key_path or os.environ.get("LLM_API_KEY_FILE") or default_key_path

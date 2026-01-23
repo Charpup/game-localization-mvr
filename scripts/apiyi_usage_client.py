@@ -45,21 +45,24 @@ class ApiYiUsageClient:
             raise ValueError("API key required for ApiYiUsageClient")
     
     def _load_api_key(self) -> str:
-        """Load API key from the specific attachment file or environment."""
-        # Priority: Specific attachment file mentioned by user
-        token_file = Path(r"C:\Users\bob_c\.gemini\antigravity\auto_Localization\data\attachment\api access token.txt")
+        """Load API key from environment variable or attachment file."""
+        # 1. Priority: Environment variable (configured in Docker)
+        token_env = os.getenv("LLM_ACCESS_TOKEN_FILE")
+        if token_env and os.path.exists(token_env):
+            try:
+                return Path(token_env).read_text(encoding="utf-8").strip()
+            except Exception:
+                pass
+
+        # 2. Check local relative path (standardized name)
+        token_file = Path("data/attachment/api_access_token.txt")
         if token_file.exists():
             try:
                 return token_file.read_text(encoding="utf-8").strip()
             except Exception:
                 pass
 
-        # Fallback to general secrets/APIYI_KEY.txt
-        key_file = Path("secrets/APIYI_KEY.txt")
-        if key_file.exists():
-            return key_file.read_text().strip()
-        
-        # Fallback to env var
+        # 3. Fallback to general LLM_API_KEY env var
         return os.getenv("LLM_API_KEY", "")
     
     def pull_usage(
