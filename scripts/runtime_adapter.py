@@ -933,13 +933,14 @@ def log_llm_progress(step: str, event_type: str, data: Dict[str, Any],
         print(f"{'='*60}\n")
 
 
-def parse_llm_response(response_text: str, expected_rows: list) -> list:
+def parse_llm_response(response_text: str, expected_rows: list, partial_match: bool = False) -> list:
     """
     解析 LLM JSON 响应
 
     Args:
         response_text: LLM 原始响应文本
         expected_rows: 期望的数据行 (用于验证 ID 覆盖率)
+        partial_match: 是否允许返回 ID 为输入的子集 (用于 QA 等仅报问题的场景)
 
     Returns:
         list: 解析后的结果 (items 数组)
@@ -957,7 +958,7 @@ def parse_llm_response(response_text: str, expected_rows: list) -> list:
                 text = inner[4:].strip()
             else:
                 text = inner
-
+    
     # 解析 JSON
     try:
         data = json.loads(text)
@@ -975,12 +976,19 @@ def parse_llm_response(response_text: str, expected_rows: list) -> list:
 
     # 验证 ID 覆盖率
     expected_ids = {str(r["id"]) for r in expected_rows}
-    returned_ids = {str(item.get("id", "")) for item in items}
+    returned_ids = {str(item.get("id", "")) for item in items if item.get("id")}
 
-    if expected_ids != returned_ids:
-        missing = expected_ids - returned_ids
+    if partial_match:
+        # 子集校验
         extra = returned_ids - expected_ids
-        raise ValueError(f"ID mismatch: missing={missing}, extra={extra}")
+        if extra:
+            raise ValueError(f"ID mismatch: extra={extra}")
+    else:
+        # 完全匹配校验
+        if expected_ids != returned_ids:
+            missing = expected_ids - returned_ids
+            extra = returned_ids - expected_ids
+            raise ValueError(f"ID mismatch: missing={missing}, extra={extra}")
 
     return items
 
@@ -993,7 +1001,8 @@ def batch_llm_call(
     user_prompt_template,
     content_type: str = "normal",
     retry: int = 0,
-    allow_fallback: bool = False
+    allow_fallback: bool = False,
+    partial_match: bool = False
 ) -> list:
     """
     批次化 LLM 调用 (统一接口)
@@ -1010,9 +1019,10 @@ def batch_llm_call(
         content_type: "normal" | "long_text" (影响批次大小和超时)
         retry: 重试次数
         allow_fallback: 是否允许模型降级
+        partial_match: 是否允许返回 ID 为输入的子集 (用于 QA 等仅报问题的场景)
 
     Returns:
-        list: 处理结果 (与 rows 顺序一致)
+        list: 处理结果 (与 rows 顺序一致, partial_match 模式下可能更少)
 
     Raises:
         Exception: 如果任何批次失败
@@ -1035,7 +1045,8 @@ def batch_llm_call(
         "model": model,
         "content_type": content_type,
         "timeout": timeout,
-        "cooldown": cooldown
+        "cooldown": cooldown,
+        "partial_match": partial_match
     })
 
     for i in range(total_batches):
@@ -1074,7 +1085,7 @@ def batch_llm_call(
             latency_ms = int((time.time() - t0) * 1000)
 
             # 解析响应
-            batch_results = parse_llm_response(response.text, batch_rows)
+            batch_results = parse_llm_response(response.text, batch_rows, partial_match=partial_match)
             results.extend(batch_results)
 
             # 批次完成

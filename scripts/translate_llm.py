@@ -32,11 +32,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 
-# Ensure UTF-8 output on Windows
-if sys.platform == 'win32':
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+# sys.stdout wrapping moved to __main__ block
 
 # JSON Schema validation
 try:
@@ -244,6 +240,8 @@ def backoff_sleep(attempt: int) -> None:
 # Prompt Builder (Hardened)
 # -----------------------------
 def build_system_prompt(style_guide: str, glossary_summary: str) -> str:
+    """Build system prompt for translation."""
+    return (
         '你是严谨的手游本地化译者（zh-CN → ru-RU）。\n\n'
         '【Output Contract v6 - 强制要求】\n'
         '1. Output MUST be valid JSON (Array of Objects).\n'
@@ -739,4 +737,9 @@ def main():
 
 
 if __name__ == "__main__":
+    # Ensure UTF-8 output on Windows
+    if sys.platform == 'win32':
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
     main()

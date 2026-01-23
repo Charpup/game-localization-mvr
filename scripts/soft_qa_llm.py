@@ -30,27 +30,14 @@ import time
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
-# Ensure UTF-8 output on Windows
-if sys.platform == 'win32':
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+# sys.stdout wrapping moved to __main__ block
 
 try:
     import yaml
 except Exception:
     yaml = None
 
-from runtime_adapter import LLMClient, LLMError
-
-# Import batch utilities
-try:
-    from batch_utils import (
-        BatchConfig, split_into_batches, parse_json_array, format_progress
-    )
-except ImportError:
-    print("ERROR: batch_utils.py not found. Please ensure it exists in scripts/")
-    sys.exit(1)
+from runtime_adapter import LLMClient, LLMError, BatchConfig, get_batch_config, batch_llm_call, log_llm_progress
 
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 
@@ -107,8 +94,7 @@ def build_system_batch(style: str, glossary_summary: str) -> str:
     """Build system prompt for batch soft QA."""
     return (
         "你是手游本地化软质检（zh-CN → ru-RU）。\n\n"
-        "输入：JSON 数组，每项包含 string_id、source_zh、target_ru。\n"
-        "输出：JSON 对象，包含 tasks 数组，仅列出有问题的项。\n\n"
+        "任务：分析翻译质量，仅列出有问题的项。\n\n"
         "检查维度（只报问题，不要夸）：\n"
         "- 术语一致性（glossary）\n"
         "- 语气：官方为主，二次元口语为辅（避免过度口语或过度书面）\n"
@@ -117,9 +103,9 @@ def build_system_batch(style: str, glossary_summary: str) -> str:
         "- 标点与符号：禁止【】；占位符必须完整\n\n"
         "输出格式（硬性，仅输出 JSON）：\n"
         "{\n"
-        '  "tasks": [\n'
+        '  "items": [\n'
         "    {\n"
-        '      "string_id": "<id>",\n'
+        '      "id": "<id>",\n'
         '      "severity": "minor|major",\n'
         '      "issue_type": "terminology|tone|brevity|ambiguity|mistranslation|format|punctuation",\n'
         '      "problem": "<一句话描述问题>",\n'
@@ -129,24 +115,34 @@ def build_system_batch(style: str, glossary_summary: str) -> str:
         "  ]\n"
         "}\n"
         "规则：\n"
-        '- 没问题则输出 { "tasks": [] }。\n'
+        '- 没问题则项目不出现在 items 中。\n'
         "- problem/suggestion 必须短句。\n"
-        "- 每个有问题的 string_id 只输出一个最严重的 task。\n\n"
+        "- 每个有问题的 id 只输出一个最严重的 item。\n\n"
         f"术语表摘要（前 50 条）：\n{glossary_summary[:1500]}\n\n"
         f"style_guide（节选）：\n{style[:1000]}\n"
     )
 
 
-def build_batch_input(rows: List[Dict[str, str]]) -> List[Dict[str, str]]:
-    """Build batch input for soft QA."""
-    batch_items = []
-    for row in rows:
-        batch_items.append({
-            "string_id": row.get("string_id", ""),
-            "source_zh": row.get("source_zh", "") or row.get("tokenized_zh", ""),
-            "target_ru": row.get("target_text", "")
+def build_user_prompt(items: List[Dict]) -> str:
+    """Build user prompt for soft QA from batch items."""
+    # items comes from batch_llm_call where:
+    # id = string_id
+    # source_text = "SRC: {source_zh} | TGT: {target_ru}"
+    # But for soft QA, we might want a cleaner format
+    candidates = []
+    for it in items:
+        # Re-split source_text to get zh and ru
+        parts = it.get("source_text", "").split(" | TGT: ")
+        src_zh = parts[0].replace("SRC: ", "") if len(parts) > 0 else ""
+        tgt_ru = parts[1] if len(parts) > 1 else ""
+        
+        candidates.append({
+            "string_id": it["id"],
+            "source_zh": src_zh,
+            "target_ru": tgt_ru
         })
-    return batch_items
+    
+    return json.dumps(candidates, ensure_ascii=False, indent=2)
 
 
 def build_glossary_summary(entries: List[GlossaryEntry], max_entries: int = 50) -> str:
@@ -158,99 +154,30 @@ def build_glossary_summary(entries: List[GlossaryEntry], max_entries: int = 50) 
     return "\n".join(lines)
 
 
-def extract_tasks_from_response(text: str) -> List[dict]:
-    """Extract tasks array from LLM response."""
-    text = (text or "").strip()
-    
-    # Try direct parse
-    try:
-        obj = json.loads(text)
-        if isinstance(obj, dict) and "tasks" in obj:
-            return obj["tasks"]
-    except json.JSONDecodeError:
-        pass
-    
-    # Find { ... } block
-    start = text.find("{")
-    end = text.rfind("}")
-    if start != -1 and end != -1 and end > start:
-        try:
-            obj = json.loads(text[start:end + 1])
-            if isinstance(obj, dict) and "tasks" in obj:
-                return obj["tasks"]
-        except json.JSONDecodeError:
-            pass
-    
-    return []
-
-
-def process_batch(
-    batch: List[Dict[str, str]],
-    llm: LLMClient,
-    style: str,
-    glossary_summary: str,
-    batch_idx: int,
-    max_retries: int = 2
-) -> List[dict]:
-    """
-    Process a batch of rows through soft QA.
-    
-    Returns:
-        List of task dicts (only problem items)
-    """
-    if not batch:
-        return []
-    
-    system = build_system_batch(style, glossary_summary)
-    batch_input = build_batch_input(batch)
-    user_prompt = json.dumps(batch_input, ensure_ascii=False, indent=None)
-    
-    for attempt in range(max_retries + 1):
-        try:
-            result = llm.chat(
-                system=system,
-                user=user_prompt,
-                temperature=0.1,
-                metadata={
-                    "step": "soft_qa",
-                    "batch_idx": batch_idx,
-                    "batch_size": len(batch),
-                    "attempt": attempt
-                },
-                response_format={"type": "json_object"}
-            )
-            
-            tasks = extract_tasks_from_response(result.text)
-            
-            # Normalize tasks
-            valid_tasks = []
-            for t in tasks:
-                valid_tasks.append({
-                    "string_id": t.get("string_id", ""),
-                    "type": t.get("issue_type", "issue"),
-                    "severity": t.get("severity", "minor"),
-                    "note": f"{t.get('problem', '')} | Suggestion: {t.get('suggestion', '')}",
-                    "suggested_fix": t.get("preferred_fix_ru", ""),
-                })
-            
-            return valid_tasks
-            
-        except Exception as e:
-            if attempt >= max_retries:
-                print(f"    ⚠️ Batch {batch_idx} error: {e}")
-                return []
-            time.sleep(1)
-    
-    return []
+def process_batch_results(batch_items: List[Dict]) -> List[dict]:
+    """Normalize batch output items into task dicts."""
+    valid_tasks = []
+    for t in batch_items:
+        # Note: items will only contain items with issues due to system prompt
+        valid_tasks.append({
+            "string_id": t.get("id", ""),
+            "type": t.get("issue_type", "issue"),
+            "severity": t.get("severity", "minor"),
+            "note": f"{t.get('problem', '')} | Suggestion: {t.get('suggestion', '')}",
+            "suggested_fix": t.get("preferred_fix_ru", ""),
+        })
+    return valid_tasks
 
 
 def main():
     ap = argparse.ArgumentParser(description="LLM-based soft QA (Batch Mode v2.0)")
-    ap.add_argument("translated_csv", help="Input translated.csv")
-    ap.add_argument("style_guide_md", help="Style guide file")
-    ap.add_argument("glossary_yaml", help="Glossary file")
-    ap.add_argument("rubric_yaml", help="Soft QA rubric config (legacy, ignored)")
+    ap.add_argument("translated_csv", nargs="?", help="Input translated.csv")
+    ap.add_argument("--input", help="Alias for translated_csv")
+    ap.add_argument("style_guide_md", nargs="?", default="workflow/style_guide.md", help="Style guide file")
+    ap.add_argument("glossary_yaml", nargs="?", default="data/glossary.yaml", help="Glossary file")
+    ap.add_argument("rubric_yaml", nargs="?", default="workflow/soft_qa_rubric.yaml", help="Soft QA rubric config (legacy, ignored)")
     ap.add_argument("--batch_size", type=int, default=15, help="Items per batch")
+    ap.add_argument("--model", default="claude-haiku-4-5-20251001", help="Model override")
     ap.add_argument("--max_batch_tokens", type=int, default=4000, help="Max tokens per batch")
     ap.add_argument("--out_report", default="data/qa_soft_report.json", help="Output report JSON")
     ap.add_argument("--out_tasks", default="data/repair_tasks.jsonl", help="Output repair tasks JSONL")
@@ -258,13 +185,15 @@ def main():
                     help="Validate configuration without making LLM calls")
     args = ap.parse_args()
 
-    print(f"🔍 Soft QA v2.0 (Batch Mode)")
-    print(f"   Input: {args.translated_csv}")
-    print(f"   Batch size: {args.batch_size}")
-    print()
+    # Resolve input path
+    input_path = args.input or args.translated_csv
+    if not input_path:
+        ap.print_help()
+        return 1
 
+    print(f"🔍 Soft QA v2.0 (Batch Mode)")
     # Load resources
-    rows = read_csv(args.translated_csv)
+    rows = read_csv(input_path)
     style = load_text(args.style_guide_md)
 
     glossary_path = args.glossary_yaml
@@ -274,7 +203,7 @@ def main():
     
     glossary_summary = build_glossary_summary(glossary_entries)
     
-    print(f"✅ Loaded {len(rows)} rows")
+    print(f"✅ Loaded {len(rows)} rows from {input_path}")
     print(f"   Glossary: {len(glossary_entries)} entries")
     
     # Filter rows with target_text
@@ -309,49 +238,58 @@ def main():
 
     print()
 
-    # Clean output file (fresh start)
-    if Path(args.out_tasks).exists():
-        Path(args.out_tasks).unlink()
-
-    # Split into batches
-    config = BatchConfig(max_items=args.batch_size, max_tokens=args.max_batch_tokens)
-    config.text_fields = ["source_zh", "tokenized_zh", "target_text"]
-    batches = split_into_batches(rows_with_target, config)
-    print(f"   Batches: {len(batches)}")
-    print()
-
-    # Process batches
+    # Split into batches (logic handled by batch_llm_call internally)
     start_time = time.time()
     major = 0
     minor = 0
     all_tasks = 0
     batch_errors = 0
 
-    for batch_idx, batch in enumerate(batches):
-        batch_start = time.time()
-        
-        tasks = process_batch(
-            batch, llm, style, glossary_summary, batch_idx
+    # Prepare rows for batch_llm_call
+    # Source text for soft QA needs both ZH and RU
+    batch_rows = []
+    for r in rows_with_target:
+        src = r.get("source_zh") or r.get("tokenized_zh") or ""
+        tgt = r.get("target_text") or ""
+        batch_rows.append({
+            "id": r.get("string_id"),
+            "source_text": f"SRC: {src} | TGT: {tgt}"
+        })
+
+    # Execute batch call
+    try:
+        batch_results = batch_llm_call(
+            step="soft_qa",
+            rows=batch_rows,
+            model=args.model,
+            system_prompt=build_system_batch(style, glossary_summary),
+            user_prompt_template=build_user_prompt,
+            content_type="normal",
+            retry=1,
+            allow_fallback=True,
+            partial_match=True
         )
+        
+        print("   Batch results received, processing tasks...")
+        tasks = process_batch_results(batch_results)
         
         if tasks:
             append_jsonl(args.out_tasks, tasks)
-            all_tasks += len(tasks)
+            all_tasks = len(tasks)
             for t in tasks:
                 if t.get("severity") == "major":
                     major += 1
                 else:
                     minor += 1
-        
-        # Progress
-        batch_time = time.time() - batch_start
-        elapsed = time.time() - start_time
-        
-        if (batch_idx + 1) % 5 == 0 or batch_idx == len(batches) - 1:
-            print(format_progress(
-                batch_idx + 1, len(batches), batch_idx + 1, len(batches),
-                elapsed, batch_time
-            ))
+                    
+    except Exception as e:
+        print(f"❌ Soft QA failed: {e}")
+        return 1
+
+    # Calculate batches for report
+    config_inst = get_batch_config()
+    b_size = config_inst.get_batch_size(args.model, "normal")
+    total_batches = (len(batch_rows) + b_size - 1) // b_size if b_size > 0 else 1
 
     # Write report
     report = {
@@ -364,7 +302,7 @@ def main():
             "total_tasks": all_tasks,
             "batch_errors": batch_errors,
             "rows_processed": len(rows_with_target),
-            "batches_processed": len(batches),
+            "batches_processed": total_batches,
         },
         "outputs": {
             "repair_tasks_jsonl": args.out_tasks,
@@ -390,4 +328,9 @@ def main():
 
 
 if __name__ == "__main__":
+    # Ensure UTF-8 output on Windows
+    if sys.platform == 'win32':
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
     exit(main())
