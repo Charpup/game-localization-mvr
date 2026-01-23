@@ -26,6 +26,7 @@ import os
 import time
 from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
 from typing import Optional, Dict, Any
 
 import requests
@@ -808,3 +809,302 @@ def chat(system: str, user: str, **kwargs) -> str:
     client = LLMClient()
     return client.chat(system=system, user=user, **kwargs).text
 
+
+# ===================================================
+# Batch Infrastructure (Phase 3 Week 1)
+# ===================================================
+
+class BatchConfig:
+    """批次配置管理器,从 batch_runtime_v2.json 加载模型批次配置"""
+
+    def __init__(self, config_path: str = "config/batch_runtime_v2.json"):
+        """从 JSON 文件加载批次配置"""
+        # Try relative to script directory first
+        script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        full_path = os.path.join(script_dir, config_path)
+        if not os.path.exists(full_path):
+            full_path = config_path  # Try as-is
+        
+        with open(full_path, "r", encoding="utf-8") as f:
+            self.config = json.load(f)
+        self.models = self.config.get("models", {})
+
+    def get_batch_size(self, model: str, content_type: str = "normal") -> int:
+        """
+        动态获取批次大小
+
+        Args:
+            model: 模型名称
+            content_type: "normal" | "long_text"
+
+        Returns:
+            int: 批次大小
+        """
+        model_config = self.models.get(model, {})
+
+        if content_type == "long_text":
+            return model_config.get("max_batch_size_long_text", 10)
+        else:
+            return model_config.get("max_batch_size", 10)
+
+    def get_cooldown(self, model: str) -> int:
+        """获取模型冷却期 (秒)"""
+        return self.models.get(model, {}).get("cooldown_required", 0)
+
+    def get_timeout(self, model: str, content_type: str = "normal") -> int:
+        """获取超时配置 (秒)"""
+        model_config = self.models.get(model, {})
+
+        if content_type == "long_text":
+            return model_config.get("timeout_long_text", 300)
+        else:
+            return model_config.get("timeout_normal", 180)
+
+    def get_status(self, model: str) -> str:
+        """获取模型状态"""
+        return self.models.get(model, {}).get("status", "UNKNOWN")
+
+
+# 全局单例
+_batch_config: Optional[BatchConfig] = None
+
+
+def get_batch_config() -> BatchConfig:
+    """获取全局批次配置单例"""
+    global _batch_config
+    if _batch_config is None:
+        _batch_config = BatchConfig()
+    return _batch_config
+
+
+def log_llm_progress(step: str, event_type: str, data: Dict[str, Any], 
+                     log_file: Optional[str] = None) -> None:
+    """
+    统一 LLM 调用进度汇报
+
+    Args:
+        step: 步骤名称 (如 "glossary_translate", "qa_soft")
+        event_type: 事件类型
+            - "step_start": 步骤开始
+            - "batch_start": 批次开始
+            - "batch_complete": 批次完成
+            - "step_complete": 步骤完成
+        data: 事件数据 (dict)
+        log_file: 日志文件路径 (默认 reports/{step}_progress.jsonl)
+    """
+    if log_file is None:
+        log_file = f"reports/{step}_progress.jsonl"
+
+    # 确保目录存在
+    Path(log_file).parent.mkdir(parents=True, exist_ok=True)
+
+    # 构造事件
+    event = {
+        "timestamp": datetime.now().isoformat(),
+        "step": step,
+        "event": event_type,
+        "data": data
+    }
+
+    # 写入 JSONL
+    with open(log_file, "a", encoding="utf-8") as f:
+        f.write(json.dumps(event, ensure_ascii=False) + "\n")
+
+    # 终端输出 (简化版)
+    if event_type == "step_start":
+        d = data
+        print(f"\n{'='*60}")
+        print(f"[{step}] Starting | Total: {d.get('total_rows', '?')} rows | "
+              f"Batch size: {d.get('batch_size', '?')} | Model: {d.get('model', '?')}")
+        print(f"{'='*60}")
+
+    elif event_type == "batch_complete":
+        d = data
+        status_symbol = "✅" if d.get("status") == "SUCCESS" else "❌"
+        print(f"{status_symbol} [{step}] Batch {d.get('batch_index', '?')}/{d.get('total_batches', '?')} | "
+              f"{d.get('batch_size', '?')} rows | {d.get('latency_ms', '?')}ms")
+
+    elif event_type == "step_complete":
+        d = data
+        print(f"\n[{step}] ✅ Complete")
+        print(f"  Total rows: {d.get('total_rows', '?')}")
+        print(f"  Success: {d.get('success_count', '?')}")
+        print(f"  Failed: {d.get('failed_count', '?')}")
+        print(f"{'='*60}\n")
+
+
+def parse_llm_response(response_text: str, expected_rows: list) -> list:
+    """
+    解析 LLM JSON 响应
+
+    Args:
+        response_text: LLM 原始响应文本
+        expected_rows: 期望的数据行 (用于验证 ID 覆盖率)
+
+    Returns:
+        list: 解析后的结果 (items 数组)
+
+    Raises:
+        ValueError: 如果解析失败或 ID 不匹配
+    """
+    # 去除可能的 Markdown 代码块
+    text = response_text.strip()
+    if text.startswith("```"):
+        parts = text.split("```")
+        if len(parts) >= 3:
+            inner = parts[1].strip()
+            if inner.startswith("json"):
+                text = inner[4:].strip()
+            else:
+                text = inner
+
+    # 解析 JSON
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"JSON parse error: {str(e)[:100]}")
+
+    # 验证结构
+    if "items" not in data:
+        raise ValueError("Missing 'items' key in response")
+
+    items = data["items"]
+
+    if not isinstance(items, list):
+        raise ValueError("'items' must be an array")
+
+    # 验证 ID 覆盖率
+    expected_ids = {str(r["id"]) for r in expected_rows}
+    returned_ids = {str(item.get("id", "")) for item in items}
+
+    if expected_ids != returned_ids:
+        missing = expected_ids - returned_ids
+        extra = returned_ids - expected_ids
+        raise ValueError(f"ID mismatch: missing={missing}, extra={extra}")
+
+    return items
+
+
+def batch_llm_call(
+    step: str,
+    rows: list,
+    model: str,
+    system_prompt: str,
+    user_prompt_template,
+    content_type: str = "normal",
+    retry: int = 0,
+    allow_fallback: bool = False
+) -> list:
+    """
+    批次化 LLM 调用 (统一接口)
+
+    Args:
+        step: 步骤名称 (用于日志,如 "glossary_translate")
+        rows: 数据行列表,每行需包含:
+            - id: 唯一标识
+            - source_text: 源文本 (或其他必要字段)
+        model: 模型名称 (需在 batch_runtime_v2.json 中定义)
+        system_prompt: 系统提示 (字符串)
+        user_prompt_template: 函数,接收 items 列表,返回 user prompt 字符串
+            示例: lambda items: json.dumps({"items": items}, ensure_ascii=False)
+        content_type: "normal" | "long_text" (影响批次大小和超时)
+        retry: 重试次数
+        allow_fallback: 是否允许模型降级
+
+    Returns:
+        list: 处理结果 (与 rows 顺序一致)
+
+    Raises:
+        Exception: 如果任何批次失败
+    """
+    config = get_batch_config()
+
+    # 动态获取批次配置
+    batch_size = config.get_batch_size(model, content_type)
+    timeout = config.get_timeout(model, content_type)
+    cooldown = config.get_cooldown(model)
+
+    total_batches = (len(rows) + batch_size - 1) // batch_size
+    results = []
+
+    # 步骤开始
+    log_llm_progress(step, "step_start", {
+        "total_rows": len(rows),
+        "batch_size": batch_size,
+        "total_batches": total_batches,
+        "model": model,
+        "content_type": content_type,
+        "timeout": timeout,
+        "cooldown": cooldown
+    })
+
+    for i in range(total_batches):
+        start_idx = i * batch_size
+        end_idx = min(start_idx + batch_size, len(rows))
+        batch_rows = rows[start_idx:end_idx]
+
+        # 构造 user prompt
+        items = [{"id": r["id"], "source_text": r.get("source_text", "")} for r in batch_rows]
+        user_prompt = user_prompt_template(items)
+
+        # 批次开始
+        log_llm_progress(step, "batch_start", {
+            "batch_index": i + 1,
+            "total_batches": total_batches,
+            "batch_size": len(batch_rows)
+        })
+
+        # 调用 LLM
+        t0 = time.time()
+        try:
+            client = LLMClient()
+            response = client.chat(
+                system=system_prompt,
+                user=user_prompt,
+                temperature=0,
+                metadata={
+                    "step": step,
+                    "model_override": model,
+                    "force_llm": True,
+                    "allow_fallback": allow_fallback,
+                    "retry": retry
+                }
+            )
+
+            latency_ms = int((time.time() - t0) * 1000)
+
+            # 解析响应
+            batch_results = parse_llm_response(response.text, batch_rows)
+            results.extend(batch_results)
+
+            # 批次完成
+            log_llm_progress(step, "batch_complete", {
+                "batch_index": i + 1,
+                "total_batches": total_batches,
+                "batch_size": len(batch_rows),
+                "status": "SUCCESS",
+                "latency_ms": latency_ms
+            })
+
+        except Exception as e:
+            log_llm_progress(step, "batch_complete", {
+                "batch_index": i + 1,
+                "total_batches": total_batches,
+                "batch_size": len(batch_rows),
+                "status": "FAIL",
+                "error": str(e)[:200]
+            })
+            raise  # 中断整个步骤
+
+        # 冷却期 (除了最后一个批次)
+        if i < total_batches - 1 and cooldown > 0:
+            time.sleep(cooldown)
+
+    # 步骤完成
+    log_llm_progress(step, "step_complete", {
+        "total_rows": len(rows),
+        "success_count": len(results),
+        "failed_count": len(rows) - len(results)
+    })
+
+    return results
