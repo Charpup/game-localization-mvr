@@ -37,7 +37,7 @@ try:
 except ImportError:
     yaml = None
 
-from runtime_adapter import LLMClient, LLMError
+from runtime_adapter import LLMClient, LLMError, BatchConfig, batch_llm_call, log_llm_progress
 
 
 @dataclass
@@ -75,12 +75,12 @@ def build_system_prompt() -> str:
     """Build system prompt for glossary translation."""
     return (
         "你是术语表译者（zh-CN → ru-RU），为手游项目生成“可落地”的术语对。\n"
-        "任务：把候选 term_zh 翻译为 term_ru，并给出简短注释，避免把整句当术语。\n\n"
+        "任务：把候选 id 翻译为 term_ru，并给出简短注释，避免把整句当术语。\n\n"
         "输出 JSON（仅输出 JSON）：\n"
         "{\n"
         "  \"items\": [\n"
         "    {\n"
-        "      \"term_zh\": \"<原样>\",\n"
+        "      \"id\": \"<原样>\",\n"
         "      \"term_ru\": \"<俄文术语>\",\n"
         "      \"pos\": \"noun|verb|adj|phrase|name|system\",\n"
         "      \"notes\": \"<可选：一句话说明语境/是否可变格>\",\n"
@@ -89,19 +89,19 @@ def build_system_prompt() -> str:
         "  ]\n"
         "}\n\n"
         "规则（硬性）：\n"
-        "- term_zh 必须与输入一致（不要改写）。\n"
+        "- id 必须与输入一致（不要改写）。\n"
         "- term_ru 不得包含【】；如需要引号用 «».\n"
         "- 专有名词/技能名优先音译或官方惯用译法；系统词优先简洁一致。\n"
     )
 
 
-def build_user_prompt(entries: List[Dict]) -> str:
-    """Build user prompt for glossary translation."""
+def build_user_prompt(items: List[Dict]) -> str:
+    """Build user prompt for glossary translation from batch items."""
     candidates = []
-    for e in entries:
+    for item in items:
         candidates.append({
-            "term_zh": e.get('term_zh', ''),
-            "context": e.get('context', '') or ''
+            "term_zh": item.get('id', ''),
+            "context": item.get('source_text', '') or ''
         })
     
     return (
@@ -112,36 +112,13 @@ def build_user_prompt(entries: List[Dict]) -> str:
     )
 
 
-def parse_translate_response(text: str, entries: List[Dict]) -> List[TranslatedTerm]:
-    """Parse LLM translation response."""
+def process_batch_results(batch_items: List[Dict], original_entries: List[Dict]) -> List[TranslatedTerm]:
+    """Convert batch output items back to TranslatedTerm objects."""
     results = []
-    text = (text or "").strip()
+    entry_map = {e.get("term_zh"): e for e in original_entries}
     
-    data = {}
-    try:
-        data = json.loads(text)
-    except json.JSONDecodeError:
-        # Fallback extraction
-        start = text.find('{')
-        end = text.rfind('}')
-        if start != -1 and end > start:
-            try:
-                data = json.loads(text[start:end+1])
-            except:
-                pass
-    
-    # Check for "items" key
-    items = data.get("items", [])
-    if not isinstance(items, list):
-        if isinstance(data, list):
-            items = data
-        else:
-            return []
-
-    entry_map = {e.get("term_zh"): e for e in entries}
-    
-    for item in items:
-        term_zh = item.get("term_zh")
+    for item in batch_items:
+        term_zh = item.get("id")
         entry = entry_map.get(term_zh)
         
         if not entry:
@@ -184,7 +161,7 @@ def main():
     ap = argparse.ArgumentParser(
         description="Glossary term translation (zh→ru) using LLM"
     )
-    ap.add_argument("--proposals", required=True,
+    ap.add_argument("--proposals", "--input", required=True,
                     help="Input proposals YAML (from extract_terms)")
     ap.add_argument("--output", default="glossary/proposals_translated.yaml",
                     help="Output translated terms YAML")
@@ -194,6 +171,8 @@ def main():
                     help="Batch size for LLM translation")
     ap.add_argument("--max_terms", type=int, default=0,
                     help="Maximum terms to translate (0 = all)")
+    ap.add_argument("--model", default="claude-haiku-4-5-20251001",
+                    help="Model override (default: claude-haiku-4-5-20251001)")
     ap.add_argument("--dry-run", action="store_true",
                     help="Validate without making LLM calls")
     args = ap.parse_args()
@@ -236,47 +215,30 @@ def main():
         print("=" * 60)
         return 0
     
-    # Initialize LLM with explicit step
+    # Translate in batches using infrastructure
+    # Map entries to rows expected by batch_llm_call
+    rows = [
+        {"id": e.get("term_zh"), "source_text": e.get("context", "")}
+        for e in entries
+    ]
+    
     try:
-        llm = LLMClient()
-        print(f"✅ LLM client initialized")
-    except LLMError as e:
-        print(f"❌ LLM initialization failed: {e}")
+        batch_results = batch_llm_call(
+            step="glossary_translate",
+            rows=rows,
+            model=args.model,
+            system_prompt=build_system_prompt(),
+            user_prompt_template=build_user_prompt,
+            content_type="normal",
+            retry=1,
+            allow_fallback=True
+        )
+        
+        all_results = process_batch_results(batch_results, entries)
+        
+    except Exception as e:
+        print(f"❌ Batch translation failed: {e}")
         return 1
-    
-    # Translate in batches
-    all_results: List[TranslatedTerm] = []
-    
-    for i in range(0, len(entries), args.batch_size):
-        batch = entries[i:i + args.batch_size]
-        batch_num = i // args.batch_size + 1
-        total_batches = (len(entries) + args.batch_size - 1) // args.batch_size
-        
-        print(f"  [{batch_num}/{total_batches}] Translating {len(batch)} terms...")
-        
-        system = build_system_prompt()
-        user = build_user_prompt(batch)
-        
-        try:
-            # CRITICAL: metadata.step MUST be exactly "glossary_translate"
-            result = llm.chat(
-                system=system,
-                user=user,
-                metadata={
-                    "step": "glossary_translate",  # REQUIRED for routing
-                    "batch": batch_num,
-                    "scope": "zh-CN->ru-RU"
-                },
-                response_format={"type": "json_object"}
-            )
-            
-            translations = parse_translate_response(result.text, batch)
-            all_results.extend(translations)
-            
-            print(f"    ✅ Translated: {len(translations)}")
-            
-        except LLMError as e:
-            print(f"    ⚠️  LLM error: {e}")
     
     print()
     
