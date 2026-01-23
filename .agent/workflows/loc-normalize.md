@@ -1,15 +1,21 @@
----
-description: 冻结占位符 + 生成 draft.csv
----
+目标：对原始输入做标准化处理，生成 draft.csv
 
-目标：对 data/input.csv 做占位符/标签冻结（tokenize），生成：
-- data/draft.csv（新增列 tokenized_zh，或用 source_zh 替换为 tokenized）
-- data/placeholder_map.json（token ↔ 原始占位符映射）
+执行顺序（必须按序执行，不可跳过）：
 
-要求：
-1) 如果 scripts/normalize_guard.py 不存在，则创建它（Python 3）。
-2) 运行命令：python scripts/normalize_guard.py data/input.csv data/draft.csv data/placeholder_map.json workflow/placeholder_schema.yaml
-3) 命令成功后，打印 draft.csv 前 5 行（仅用于验证），并确认 placeholder_map.json 非空（如有占位符）。
-4) 若发现未知占位符模式或源文本标签不平衡：停止并在 data/qa_hard_report.json 写入 has_errors=true 与原因（即使 qa_hard 尚未运行）。
+1. **Ingest** (Header 标准化):
+   python scripts/normalize_ingest.py --input data/input.csv --output data/source_raw.csv
+
+2. **Tagger** (分类 + 长文本标记):
+   python scripts/normalize_tagger.py --input data/source_raw.csv --output data/normalized.csv
+
+3. **Guard** (占位符冻结):
+   python scripts/normalize_guard.py data/normalized.csv data/draft.csv data/placeholder_map.json workflow/placeholder_schema.yaml
+
+注意：
+
+- 步骤 1 会自动处理 id/zh 等非标准 header。
+- 步骤 2 会针对 ID 前缀进行分类，并生成 `is_long_text` 标记供后续批次调用优化。
+- 如果置信度低，步骤 2 会自动触发 LLM Fallback 进行分类。
+- 如遇未知占位符或括号不平衡，步骤 3 会中断并报错。
 
 输出必须落盘，不要把主要结果写在聊天里。
