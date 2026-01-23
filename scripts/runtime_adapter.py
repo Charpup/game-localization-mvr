@@ -39,6 +39,7 @@ class LLMResult:
     raw: Optional[dict] = None
     request_id: Optional[str] = None
     usage: Optional[dict] = None  # {"prompt_tokens": int, "completion_tokens": int, "total_tokens": int}
+    model: Optional[str] = None  # Model used for the call
 
 
 class LLMError(Exception):
@@ -777,7 +778,8 @@ class LLMClient:
             latency_ms=latency_ms,
             raw=data,
             request_id=request_id,
-            usage=usage
+            usage=usage,
+            model=model
         )
     
     def _trace_error(self, kind: str, msg: str, step: str, model: str,

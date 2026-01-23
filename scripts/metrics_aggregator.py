@@ -719,7 +719,7 @@ def main():
         md.append(f"> **{unknown_step_count}** LLM calls ({unknown_step_ratio:.1%}) have `step=unknown`.\n")
         md.append("> All `llm.chat()` calls should include `metadata={{\"step\": \"...\"}}`\n")
         md.append(">\n")
-        md.append("> Valid steps: `translate`, `soft_qa`, `repair`, `glossary_autopromote`\n\n")
+        md.append("> Valid steps: `translate`, `soft_qa`, `repair_hard`, `repair_soft_major`, `glossary_autopromote`\n\n")
     
     write_text(args.out_md, "".join(md))
     print(f"✅ Wrote report to {args.out_md}")

@@ -1,0 +1,47 @@
+{
+    "gate_version": "v2.0",
+    "last_updated": "2026-01-23T12:44:00",
+    "notes": "Phase 1 V3 (Template B+C, Ladder [10,15,20,30,40,50]) + Phase 2 V1 (Long Text)",
+    "models": {
+        "gpt-4.1-mini": {
+            "max_batch_size": 50,
+            "max_batch_size_long_text": 1,
+            "timeout_normal": 180,
+            "timeout_long_text": 300,
+            "cooldown_required": 0,
+            "status": "QUALIFIED"
+        },
+        "claude-haiku-4-5-20251001": {
+            "max_batch_size": 50,
+            "max_batch_size_long_text": 10,
+            "timeout_normal": 180,
+            "timeout_long_text": 300,
+            "cooldown_required": 30,
+            "status": "QUALIFIED"
+        },
+        "gpt-5.1": {
+            "max_batch_size": 50,
+            "max_batch_size_long_text": 5,
+            "timeout_normal": 180,
+            "timeout_long_text": 300,
+            "cooldown_required": 30,
+            "status": "QUALIFIED"
+        },
+        "gpt-5.2": {
+            "max_batch_size": 40,
+            "max_batch_size_long_text": 10,
+            "timeout_normal": 180,
+            "timeout_long_text": 300,
+            "cooldown_required": 30,
+            "status": "QUALIFIED"
+        },
+        "claude-sonnet-4-5-20250929": {
+            "max_batch_size": 30,
+            "max_batch_size_long_text": 10,
+            "timeout_normal": 180,
+            "timeout_long_text": 300,
+            "cooldown_required": 30,
+            "status": "QUALIFIED"
+        }
+    }
+}

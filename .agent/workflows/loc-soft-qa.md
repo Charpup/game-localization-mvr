@@ -7,6 +7,7 @@ description: Soft QA - LLM-based translation quality review
 ## 目标
 
 对 `data/translated.csv` 做软质量评审，输出：
+
 - `data/qa_soft_report.json` - 汇总报告
 - `data/repair_tasks.jsonl` - 可执行的修复任务
 
@@ -29,6 +30,9 @@ python scripts/soft_qa_llm.py \
 |------|------|
 | `data/qa_soft_report.json` | 汇总：major/minor 数量、总任务数 |
 | `data/repair_tasks.jsonl` | 每行一个 JSON 任务，供 repair_loop 消费 |
+
+> [!NOTE]
+> `workflow/soft_qa_rubric.yaml` 参数是 v1.0 遗留及其，脚本 v2.0 会忽略其内容（内置了基于 style guide 的评审逻辑），但为了保持命令行兼容性，仍需在调用时提供该位置参数。
 
 ## 评审维度
 

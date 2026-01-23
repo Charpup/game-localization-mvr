@@ -1,41 +1,42 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-*.egg-info/
-.eggs/
-dist/
-build/
-
-# Data files (mount as volume instead)
-data/
-*.csv
-*.json
-*.jsonl
-
-# Environment
-.env
-.env.local
-*.key
+# Docker ignore for Gate v2 build
+# Exclude large/sensitive files
 
 # Git
 .git/
 .gitignore
 
+# Large test outputs (keep essential only)
+data/Test_Batch/
+data/alpha_test/
+data/failed_test06_part3/
+data/test06_outputs/
+data/fixtures/
+data/diff_test/
+
+# Large trace files
+data/*.jsonl
+
+# Temporary checkpoints
+data/*_ckpt.json
+data/translate_checkpoint.json*
+data/repair_checkpoint.json
+
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Test artifacts
-*.log
-htmlcov/
-.coverage
-.pytest_cache/
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
 
-# Docker
-Dockerfile
-docker-compose*.yml
+# Agent brain
+.gemini/
+
+# Docs
+docs/
+*.md
+!README.md
+
+# Tests
+tests/

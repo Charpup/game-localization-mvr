@@ -91,3 +91,13 @@ fallback_triggers:
   on_parse_error: true
   # Router 不做重试，只换模型；重试上移到调用方/loop 控制
   max_attempts_total: 1
+
+capabilities:
+  gpt-4.1:
+    batch: unfit
+  gpt-4.1-mini:
+    batch: ok
+  claude-sonnet-4-5-20250929:
+    batch: ok
+  _default:
+    batch: ok
