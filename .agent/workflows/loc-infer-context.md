@@ -15,6 +15,5 @@ description: 可选：推断 UI 场景标签
 python scripts/normalize_tagger.py --input data/source.csv --output data/normalized.csv
 ```
 
-5) 输出：`data/normalized.csv`，包含 module_tag, module_confidence, len_tier 等增强列。
-
+1) 输出：`data/normalized.csv`，包含 module_tag, module_confidence, len_tier 等增强列。
 不要生成大段解释，重点是可复用的结构化输出。
