@@ -468,6 +468,7 @@ class LLMClient:
         elif LLMClient._router is None:
             LLMClient._router = LLMRouter()
         self.router = LLMClient._router
+        self.timeout_s = timeout_s or int(os.getenv("LLM_TIMEOUT_S", "60"))
 
         # Validate base config (model can come from router)
         if not self.base_url or not self.api_key:
@@ -877,59 +878,106 @@ def get_batch_config() -> BatchConfig:
     return _batch_config
 
 
+# 全局计时器 (模块级)
+_progress_state = {
+    'start_time': None,
+    'last_report_time': None,
+    'total_rows': 0,
+    'processed_rows': 0
+}
+
 def log_llm_progress(step: str, event_type: str, data: Dict[str, Any], 
-                     log_file: Optional[str] = None) -> None:
+                     silent: bool = False) -> None:
     """
-    统一 LLM 调用进度汇报
+    双路线进度汇报:
+    1. 写入 JSONL 文件 (结构化资产)
+    2. 打印到终端 (实时可读)
 
     Args:
-        step: 步骤名称 (如 "glossary_translate", "qa_soft")
-        event_type: 事件类型
-            - "step_start": 步骤开始
-            - "batch_start": 批次开始
-            - "batch_complete": 批次完成
-            - "step_complete": 步骤完成
-        data: 事件数据 (dict)
-        log_file: 日志文件路径 (默认 reports/{step}_progress.jsonl)
+        step: 步骤名称 (如 "translate", "soft_qa")
+        event_type: 事件类型 (step_start, batch_start, batch_complete, step_complete)
+        data: 事件数据
+        silent: 是否静默 (仅写文件，不打印)
     """
-    if log_file is None:
-        log_file = f"reports/{step}_progress.jsonl"
+    global _progress_state
 
-    # 确保目录存在
-    Path(log_file).parent.mkdir(parents=True, exist_ok=True)
+    now = time.time()
+    timestamp = datetime.now().isoformat()
 
-    # 构造事件
-    event = {
-        "timestamp": datetime.now().isoformat(),
+    # === 路线 1: JSONL 文件输出 (保持原有逻辑) ===
+    log_entry = {
+        "timestamp": timestamp,
         "step": step,
         "event": event_type,
-        "data": data
+        **data
     }
 
-    # 写入 JSONL
-    with open(log_file, "a", encoding="utf-8") as f:
-        f.write(json.dumps(event, ensure_ascii=False) + "\n")
+    log_dir = "reports"
+    os.makedirs(log_dir, exist_ok=True)
+    log_path = os.path.join(log_dir, f"{step}_progress.jsonl")
 
-    # 终端输出 (简化版)
+    with open(log_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
+
+    # === 路线 2: 终端实时输出 ===
+    if silent:
+        return
+
     if event_type == "step_start":
-        d = data
+        _progress_state['start_time'] = now
+        _progress_state['last_report_time'] = now
+        _progress_state['total_rows'] = data.get('total_rows', 0)
+        _progress_state['processed_rows'] = 0
+
+        model = data.get('model', 'unknown')
+        batch_size = data.get('batch_size', 'N/A')
+        total = _progress_state['total_rows']
+
         print(f"\n{'='*60}")
-        print(f"[{step}] Starting | Total: {d.get('total_rows', '?')} rows | "
-              f"Batch size: {d.get('batch_size', '?')} | Model: {d.get('model', '?')}")
+        print(f"[{step}] 🚀 Starting")
+        print(f"  Total rows: {total} | Batch size: {batch_size} | Model: {model}")
         print(f"{'='*60}")
 
     elif event_type == "batch_complete":
-        d = data
-        status_symbol = "✅" if d.get("status") == "SUCCESS" else "❌"
-        print(f"{status_symbol} [{step}] Batch {d.get('batch_index', '?')}/{d.get('total_batches', '?')} | "
-              f"{d.get('batch_size', '?')} rows | {d.get('latency_ms', '?')}ms")
+        batch_num = data.get('batch_index', 0)  # Use batch_index to match existing logic
+        total_batches = data.get('total_batches', 0)
+        rows_in_batch = data.get('batch_size', 0)
+        latency_ms = data.get('latency_ms', 0)
+        status = data.get('status', 'SUCCESS')
+
+        _progress_state['processed_rows'] += rows_in_batch
+        processed = _progress_state['processed_rows']
+        total = _progress_state['total_rows']
+
+        # 计算百分比
+        pct = (processed / total * 100) if total > 0 else 0
+
+        # 计算时间
+        elapsed_total = now - _progress_state['start_time']
+        elapsed_since_last = now - _progress_state['last_report_time']
+        _progress_state['last_report_time'] = now
+
+        # 状态图标
+        icon = "✅" if status == "SUCCESS" else "❌"
+
+        # 格式化输出
+        print(f"{icon} [{step}] Batch {batch_num}/{total_batches} | "
+              f"{processed}/{total} rows ({pct:.1f}%) | "
+              f"Latency: {latency_ms}ms | "
+              f"Δt: {elapsed_since_last:.1f}s | "
+              f"Total: {elapsed_total:.1f}s")
 
     elif event_type == "step_complete":
-        d = data
-        print(f"\n[{step}] ✅ Complete")
-        print(f"  Total rows: {d.get('total_rows', '?')}")
-        print(f"  Success: {d.get('success_count', '?')}")
-        print(f"  Failed: {d.get('failed_count', '?')}")
+        success = data.get('success_count', 0)
+        failed = data.get('failed_count', 0)
+        total = success + failed
+
+        elapsed_total = now - _progress_state['start_time'] if _progress_state['start_time'] else 0
+
+        print(f"\n{'='*60}")
+        print(f"[{step}] 🏁 Complete")
+        print(f"  Success: {success} | Failed: {failed} | Total: {total}")
+        print(f"  Total time: {elapsed_total:.1f}s")
         print(f"{'='*60}\n")
 
 
@@ -1098,11 +1146,13 @@ def batch_llm_call(
             })
 
         except Exception as e:
+            latency_ms = int((time.time() - t0) * 1000)
             log_llm_progress(step, "batch_complete", {
                 "batch_index": i + 1,
                 "total_batches": total_batches,
                 "batch_size": len(batch_rows),
                 "status": "FAIL",
+                "latency_ms": latency_ms,
                 "error": str(e)[:200]
             })
             raise  # 中断整个步骤
