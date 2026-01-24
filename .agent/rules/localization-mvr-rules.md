@@ -18,8 +18,9 @@ trigger: always_on
 8) Soft QA 不作为阻断门槛，但必须产出 repair_tasks.jsonl，用于驱动 Repair Loop。
 9) Repair Loop 的输出必须是"只改动被标记行"的 repaired.csv；并且必须保存 repair_checkpoint.json 以支持断点续传。
 10) Runtime Adapter 是唯一允许的 LLM 调用入口：业务脚本不得直接写 HTTP 调用逻辑，必须通过 scripts/runtime_adapter.py 统一处理与留痕。
+11) **流水线遵从性 (Pipeline Compliance)**：Agent 在运行标准流水线任务时，必须以 `docs/localization_pipeline_workflow.md` 为基准流程，按 Phase 1-6 顺序执行。严禁在未完成前置阶段（如 Normalization）的情况下执行后续步骤（如 Translation）。
 
-## LLM 调用规则 (11-13)
+## LLM 调用规则 (12-14)
 
 1) 所有 llm.chat() 调用必须传 metadata.step：
     - 有效值：translate / soft_qa / repair_hard / repair_soft_major / glossary_autopromote
