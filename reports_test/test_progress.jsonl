@@ -1,0 +1,4 @@
+{"timestamp": "2026-01-24T06:00:00", "step": "test", "event": "step_start", "total_rows": 10, "batch_size": 5, "model": "gpt-4.1-mini"}
+{"timestamp": "2026-01-24T06:00:05", "step": "test", "event": "batch_complete", "batch_index": 1, "total_batches": 2, "batch_size": 5, "latency_ms": 1000, "status": "SUCCESS"}
+{"timestamp": "2026-01-24T06:00:10", "step": "test", "event": "batch_complete", "batch_index": 2, "total_batches": 2, "batch_size": 5, "latency_ms": 1100, "status": "SUCCESS"}
+{"timestamp": "2026-01-24T06:00:15", "step": "test", "event": "step_complete", "success_count": 10, "failed_count": 0}

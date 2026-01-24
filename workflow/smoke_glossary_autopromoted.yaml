@@ -1,0 +1,23 @@
+meta:
+  version: 2
+  mode: batch
+  generated_at: '2026-01-24T09:29:40.453858'
+  min_support: 1
+  stats:
+    candidate_rows: 3
+    batches_processed: 1
+    unique_pairs: 1
+    proposals: 1
+proposals:
+- term_zh: 金币
+  term_ru: Золотые монеты
+  status: proposed
+  confidence: 0.8
+  support: 1
+  scope: project_default
+  language_pair: zh-CN->ru-RU
+  evidence:
+    examples:
+    - string_id: UI_5
+    notes:
+    - 系统词，before_ru与after_ru不同，修正为更准确的货币名称
