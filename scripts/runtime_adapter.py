@@ -468,6 +468,7 @@ class LLMClient:
         elif LLMClient._router is None:
             LLMClient._router = LLMRouter()
         self.router = LLMClient._router
+        self.timeout_s = timeout_s or int(os.getenv("LLM_TIMEOUT_S", "60"))
 
         # Validate base config (model can come from router)
         if not self.base_url or not self.api_key:

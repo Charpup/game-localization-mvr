@@ -33,7 +33,7 @@
       "failed": 0,
       "latency_ms": 0,
       "models": [
-        "unknown"
+        "haiku-3"
       ]
     },
     "glossary_translate": {
@@ -43,7 +43,7 @@
       "failed": 0,
       "latency_ms": 0,
       "models": [
-        "unknown"
+        "haiku-3"
       ]
     },
     "normalize_tag": {
@@ -53,7 +53,7 @@
       "failed": 0,
       "latency_ms": 0,
       "models": [
-        "unknown"
+        "haiku-3"
       ]
     },
     "soft_qa": {
@@ -63,7 +63,7 @@
       "failed": 0,
       "latency_ms": 0,
       "models": [
-        "unknown"
+        "sonnet-3"
       ]
     },
     "translate": {
@@ -73,7 +73,7 @@
       "failed": 0,
       "latency_ms": 0,
       "models": [
-        "unknown"
+        "haiku-3"
       ]
     },
     "translate_refresh": {
@@ -83,7 +83,7 @@
       "failed": 0,
       "latency_ms": 0,
       "models": [
-        "unknown"
+        "haiku-3"
       ]
     }
   },
