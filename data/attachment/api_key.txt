@@ -1,0 +1,2 @@
+base url: https://api.apiyi.com/v1
+api key: sk-wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8

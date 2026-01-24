@@ -1,0 +1,94 @@
+{
+  "summary": {
+    "total_steps": 7,
+    "total_batches": 113,
+    "total_rows": 190,
+    "total_success": 190,
+    "total_failed": 0,
+    "total_latency_ms": 33604
+  },
+  "by_step": {
+    "unknown": {
+      "batches": 58,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": []
+    },
+    "dry_run_test": {
+      "batches": 0,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "unknown"
+      ]
+    },
+    "glossary_extract": {
+      "batches": 1,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "unknown"
+      ]
+    },
+    "glossary_translate": {
+      "batches": 3,
+      "rows": 40,
+      "success": 40,
+      "failed": 0,
+      "latency_ms": 15562,
+      "models": [
+        "claude-haiku-4-5-20251001",
+        "unknown"
+      ]
+    },
+    "normalize_tag": {
+      "batches": 5,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "unknown"
+      ]
+    },
+    "soft_qa": {
+      "batches": 10,
+      "rows": 100,
+      "success": 100,
+      "failed": 0,
+      "latency_ms": 7093,
+      "models": [
+        "claude-haiku-4-5-20251001",
+        "unknown"
+      ]
+    },
+    "translate": {
+      "batches": 33,
+      "rows": 50,
+      "success": 50,
+      "failed": 0,
+      "latency_ms": 10949,
+      "models": [
+        "claude-haiku-4-5-20251001",
+        "unknown"
+      ]
+    },
+    "translate_refresh": {
+      "batches": 3,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "unknown"
+      ]
+    }
+  },
+  "by_model": {}
+}

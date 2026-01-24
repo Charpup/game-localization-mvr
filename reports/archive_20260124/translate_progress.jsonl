@@ -1,0 +1,74 @@
+{"timestamp": "2026-01-23T17:51:48.360716", "step": "translate", "event": "step_start", "data": {"total_rows": 7, "batch_size": 10, "total_batches": 1, "model": "claude-haiku-4-5-20251001", "content_type": "long_text", "timeout": 300, "cooldown": 30, "partial_match": false}}
+{"timestamp": "2026-01-23T17:51:48.363516", "step": "translate", "event": "batch_start", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 7}}
+{"timestamp": "2026-01-23T17:51:54.078856", "step": "translate", "event": "batch_complete", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 7, "status": "SUCCESS", "latency_ms": 5700}}
+{"timestamp": "2026-01-23T17:51:54.091138", "step": "translate", "event": "step_complete", "data": {"total_rows": 7, "success_count": 7, "failed_count": 0}}
+{"timestamp": "2026-01-24T04:57:00.277607", "step": "translate", "event": "step_start", "data": {"total_rows": 50, "batch_size": 50, "total_batches": 1, "model": "claude-haiku-4-5-20251001", "content_type": "normal", "timeout": 180, "cooldown": 30, "partial_match": false}}
+{"timestamp": "2026-01-24T04:57:00.294714", "step": "translate", "event": "batch_start", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 50}}
+{"timestamp": "2026-01-24T04:57:12.106895", "step": "translate", "event": "batch_complete", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 50, "status": "SUCCESS", "latency_ms": 11803}}
+{"timestamp": "2026-01-24T04:57:12.108810", "step": "translate", "event": "step_complete", "data": {"total_rows": 50, "success_count": 50, "failed_count": 0}}
+{"timestamp": "2026-01-24T05:01:51.914969", "step": "translate", "event": "step_start", "data": {"total_rows": 300, "batch_size": 10, "total_batches": 30, "model": "claude-haiku-4-5-20251001", "content_type": "long_text", "timeout": 300, "cooldown": 30, "partial_match": false}}
+{"timestamp": "2026-01-24T05:01:51.918950", "step": "translate", "event": "batch_start", "data": {"batch_index": 1, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:01:57.305421", "step": "translate", "event": "batch_complete", "data": {"batch_index": 1, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 5375}}
+{"timestamp": "2026-01-24T05:02:27.307833", "step": "translate", "event": "batch_start", "data": {"batch_index": 2, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:02:34.151034", "step": "translate", "event": "batch_complete", "data": {"batch_index": 2, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 6839}}
+{"timestamp": "2026-01-24T05:03:04.160439", "step": "translate", "event": "batch_start", "data": {"batch_index": 3, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:03:11.073993", "step": "translate", "event": "batch_complete", "data": {"batch_index": 3, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 6903}}
+{"timestamp": "2026-01-24T05:03:41.083161", "step": "translate", "event": "batch_start", "data": {"batch_index": 4, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:03:45.548115", "step": "translate", "event": "batch_complete", "data": {"batch_index": 4, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 4462}}
+{"timestamp": "2026-01-24T05:04:15.549159", "step": "translate", "event": "batch_start", "data": {"batch_index": 5, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:04:18.782013", "step": "translate", "event": "batch_complete", "data": {"batch_index": 5, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3229}}
+{"timestamp": "2026-01-24T05:04:48.782305", "step": "translate", "event": "batch_start", "data": {"batch_index": 6, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:04:51.778924", "step": "translate", "event": "batch_complete", "data": {"batch_index": 6, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 2963}}
+{"timestamp": "2026-01-24T05:05:21.787898", "step": "translate", "event": "batch_start", "data": {"batch_index": 7, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:05:25.034379", "step": "translate", "event": "batch_complete", "data": {"batch_index": 7, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3238}}
+{"timestamp": "2026-01-24T05:05:55.045522", "step": "translate", "event": "batch_start", "data": {"batch_index": 8, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:05:58.203463", "step": "translate", "event": "batch_complete", "data": {"batch_index": 8, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3151}}
+{"timestamp": "2026-01-24T05:06:28.216901", "step": "translate", "event": "batch_start", "data": {"batch_index": 9, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:06:31.453191", "step": "translate", "event": "batch_complete", "data": {"batch_index": 9, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3226}}
+{"timestamp": "2026-01-24T05:07:01.458726", "step": "translate", "event": "batch_start", "data": {"batch_index": 10, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:07:04.281571", "step": "translate", "event": "batch_complete", "data": {"batch_index": 10, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 2819}}
+{"timestamp": "2026-01-24T05:07:34.282753", "step": "translate", "event": "batch_start", "data": {"batch_index": 11, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:07:37.242531", "step": "translate", "event": "batch_complete", "data": {"batch_index": 11, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 2948}}
+{"timestamp": "2026-01-24T05:08:07.257802", "step": "translate", "event": "batch_start", "data": {"batch_index": 12, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:08:10.479244", "step": "translate", "event": "batch_complete", "data": {"batch_index": 12, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3204}}
+{"timestamp": "2026-01-24T05:08:40.481090", "step": "translate", "event": "batch_start", "data": {"batch_index": 13, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:08:44.168647", "step": "translate", "event": "batch_complete", "data": {"batch_index": 13, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3684}}
+{"timestamp": "2026-01-24T05:09:14.170267", "step": "translate", "event": "batch_start", "data": {"batch_index": 14, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:09:17.322662", "step": "translate", "event": "batch_complete", "data": {"batch_index": 14, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3148}}
+{"timestamp": "2026-01-24T05:09:47.324483", "step": "translate", "event": "batch_start", "data": {"batch_index": 15, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:10:03.403247", "step": "translate", "event": "batch_complete", "data": {"batch_index": 15, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 16075}}
+{"timestamp": "2026-01-24T05:10:33.406949", "step": "translate", "event": "batch_start", "data": {"batch_index": 16, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:11:03.620648", "step": "translate", "event": "batch_complete", "data": {"batch_index": 16, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 30211}}
+{"timestamp": "2026-01-24T05:11:33.622916", "step": "translate", "event": "batch_start", "data": {"batch_index": 17, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:12:08.244111", "step": "translate", "event": "batch_complete", "data": {"batch_index": 17, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 34618}}
+{"timestamp": "2026-01-24T05:12:38.245190", "step": "translate", "event": "batch_start", "data": {"batch_index": 18, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:13:01.642482", "step": "translate", "event": "batch_complete", "data": {"batch_index": 18, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 23393}}
+{"timestamp": "2026-01-24T05:13:31.651726", "step": "translate", "event": "batch_start", "data": {"batch_index": 19, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:13:35.041833", "step": "translate", "event": "batch_complete", "data": {"batch_index": 19, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3387}}
+{"timestamp": "2026-01-24T05:14:05.043561", "step": "translate", "event": "batch_start", "data": {"batch_index": 20, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:14:07.829920", "step": "translate", "event": "batch_complete", "data": {"batch_index": 20, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 2783}}
+{"timestamp": "2026-01-24T05:14:37.833388", "step": "translate", "event": "batch_start", "data": {"batch_index": 21, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:14:40.434834", "step": "translate", "event": "batch_complete", "data": {"batch_index": 21, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 2598}}
+{"timestamp": "2026-01-24T05:15:10.436281", "step": "translate", "event": "batch_start", "data": {"batch_index": 22, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:15:13.064853", "step": "translate", "event": "batch_complete", "data": {"batch_index": 22, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 2620}}
+{"timestamp": "2026-01-24T05:15:43.067814", "step": "translate", "event": "batch_start", "data": {"batch_index": 23, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:16:12.897542", "step": "translate", "event": "batch_complete", "data": {"batch_index": 23, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 29820}}
+{"timestamp": "2026-01-24T05:16:42.908419", "step": "translate", "event": "batch_start", "data": {"batch_index": 24, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:16:52.698641", "step": "translate", "event": "batch_complete", "data": {"batch_index": 24, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 9787}}
+{"timestamp": "2026-01-24T05:17:22.701829", "step": "translate", "event": "batch_start", "data": {"batch_index": 25, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:17:25.017418", "step": "translate", "event": "batch_complete", "data": {"batch_index": 25, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 2312}}
+{"timestamp": "2026-01-24T05:17:55.018928", "step": "translate", "event": "batch_start", "data": {"batch_index": 26, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:17:58.245213", "step": "translate", "event": "batch_complete", "data": {"batch_index": 26, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3222}}
+{"timestamp": "2026-01-24T05:18:28.248977", "step": "translate", "event": "batch_start", "data": {"batch_index": 27, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:18:31.329866", "step": "translate", "event": "batch_complete", "data": {"batch_index": 27, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3077}}
+{"timestamp": "2026-01-24T05:19:01.331415", "step": "translate", "event": "batch_start", "data": {"batch_index": 28, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:19:04.588942", "step": "translate", "event": "batch_complete", "data": {"batch_index": 28, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3255}}
+{"timestamp": "2026-01-24T05:19:34.591015", "step": "translate", "event": "batch_start", "data": {"batch_index": 29, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:19:37.510331", "step": "translate", "event": "batch_complete", "data": {"batch_index": 29, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 2916}}
+{"timestamp": "2026-01-24T05:20:07.512811", "step": "translate", "event": "batch_start", "data": {"batch_index": 30, "total_batches": 30, "batch_size": 10}}
+{"timestamp": "2026-01-24T05:20:10.726928", "step": "translate", "event": "batch_complete", "data": {"batch_index": 30, "total_batches": 30, "batch_size": 10, "status": "SUCCESS", "latency_ms": 3198}}
+{"timestamp": "2026-01-24T05:20:10.753424", "step": "translate", "event": "step_complete", "data": {"total_rows": 300, "success_count": 300, "failed_count": 0}}
+{"timestamp": "2026-01-24T09:21:50.267851", "step": "translate", "event": "step_start", "total_rows": 50, "batch_size": 50, "total_batches": 1, "model": "claude-haiku-4-5-20251001", "content_type": "normal", "timeout": 180, "cooldown": 30, "partial_match": false}
+{"timestamp": "2026-01-24T09:21:50.270393", "step": "translate", "event": "batch_start", "batch_index": 1, "total_batches": 1, "batch_size": 50}
+{"timestamp": "2026-01-24T09:22:01.228031", "step": "translate", "event": "batch_complete", "batch_index": 1, "total_batches": 1, "batch_size": 50, "status": "SUCCESS", "latency_ms": 10949}
+{"timestamp": "2026-01-24T09:22:01.232061", "step": "translate", "event": "step_complete", "total_rows": 50, "success_count": 50, "failed_count": 0}

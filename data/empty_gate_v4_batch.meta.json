@@ -1,0 +1,11 @@
+{
+  "gate": "empty_gate_v4_thorough",
+  "batch_size": 10,
+  "empty_rows": 5,
+  "non_empty_rows": 5,
+  "source_dataset_id": "historical_normalized_dataset",
+  "source": "historical_normalized_dataset",
+  "immutable": true,
+  "sha256": "dd442ceb229c7387b63cbe788dc9f5ce7740c4c32d723686d60b3e00cdf3b75c",
+  "rules_version": "v4.0"
+}

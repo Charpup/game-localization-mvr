@@ -1,0 +1,35 @@
+{
+  "summary": {
+    "total_steps": 1,
+    "total_batches": 2,
+    "total_rows": 20,
+    "total_success": 10,
+    "total_failed": 10,
+    "total_latency_ms": 5295
+  },
+  "by_step": {
+    "translate": {
+      "batches": 2,
+      "rows": 20,
+      "success": 10,
+      "failed": 10,
+      "latency_ms": 5295,
+      "models": [
+        "claude-haiku-4-5-20251001",
+        "gpt-4.1-mini"
+      ]
+    }
+  },
+  "by_model": {
+    "claude-haiku-4-5-20251001": {
+      "batches": 1,
+      "rows": 10,
+      "latency_ms": 13
+    },
+    "gpt-4.1-mini": {
+      "batches": 1,
+      "rows": 10,
+      "latency_ms": 5282
+    }
+  }
+}

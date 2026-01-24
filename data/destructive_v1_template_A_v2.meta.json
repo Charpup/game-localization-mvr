@@ -1,0 +1,12 @@
+{
+  "source_dataset_id": "normalized_pool_v1",
+  "sha256": "6862566cdd1f5280292f82d06cdef0152d10b38e57d8bb62bc109994080a2891",
+  "template_type": "A_v2",
+  "total_rows": 30,
+  "composition": {
+    "long_text": 24,
+    "long_text_threshold": 300,
+    "others": 6
+  },
+  "created_at": "2026-01-23T12:41:07.860020"
+}

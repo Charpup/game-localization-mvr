@@ -1,0 +1,16 @@
+{
+  "version": "2.0",
+  "mode": "batch",
+  "has_findings": true,
+  "summary": {
+    "major": 23,
+    "minor": 33,
+    "total_tasks": 56,
+    "batch_errors": 0,
+    "rows_processed": 295,
+    "batches_processed": 6
+  },
+  "outputs": {
+    "repair_tasks_jsonl": "data/repair_tasks.jsonl"
+  }
+}

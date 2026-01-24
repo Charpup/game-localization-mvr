@@ -1,0 +1,18 @@
+{
+  "has_errors": false,
+  "total_rows": 7,
+  "error_counts": {
+    "token_mismatch": 0,
+    "tag_unbalanced": 0,
+    "forbidden_hit": 0,
+    "new_placeholder_found": 0
+  },
+  "errors": [],
+  "metadata": {
+    "version": "2.0",
+    "generated_at": "2026-01-10T03:52:08.278546",
+    "input_file": "data\\translated_good.csv",
+    "total_errors": 0,
+    "errors_truncated": false
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "gpt-4.1-mini": {
+    "model": "gpt-4.1-mini",
+    "trials": 3,
+    "total_batches": 15,
+    "json_valid_count": 15,
+    "n_to_n_count": 15,
+    "total_ids_sent": 150,
+    "total_ids_received": 150,
+    "total_latency_ms": 114634,
+    "p95_latency_ms": 9128,
+    "errors": [],
+    "sample_sha256": "47e0c5e98790cef1f9dd378d8b9f677fbb55a44997be85f067194cb8832c4d06",
+    "status": "PASS"
+  },
+  "gpt-4.1": {
+    "model": "gpt-4.1",
+    "trials": 3,
+    "total_batches": 15,
+    "json_valid_count": 15,
+    "n_to_n_count": 15,
+    "total_ids_sent": 150,
+    "total_ids_received": 150,
+    "total_latency_ms": 54936,
+    "p95_latency_ms": 5316,
+    "errors": [],
+    "sample_sha256": "47e0c5e98790cef1f9dd378d8b9f677fbb55a44997be85f067194cb8832c4d06",
+    "status": "PASS"
+  }
+}

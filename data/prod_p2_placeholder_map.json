@@ -1,0 +1,13 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "generated_at": "2026-01-24T05:01:49.769720",
+    "input_file": "data/prod_p2_normalized.csv",
+    "total_placeholders": 1,
+    "ph_count": 1,
+    "tag_count": 0
+  },
+  "mappings": {
+    "PH_1": "{0}"
+  }
+}

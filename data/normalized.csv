@@ -1,0 +1,6 @@
+string_id,source_zh,module_tag,module_confidence,max_len_target,len_tier,source_locale,placeholder_flags,status,is_empty_source
+id_1,确定,ui_button,0.95,10,S,zh-CN,count=0,ok,False
+id_2,前往地下城,ui_button,0.8,10,S,zh-CN,count=0,ok,False
+id_3,获得攻击力提升50%,skill_desc,0.8,21,S,zh-CN,count=0,ok,False
+id_4,,empty,1.0,10,S,zh-CN,count=0,skipped_empty,True
+id_5,Very long dialogue text that should be tagged as dialogue because it exceeds the length threshold and contains some punctuation...,dialogue,0.6,280,L,zh-CN,count=0,ok,False

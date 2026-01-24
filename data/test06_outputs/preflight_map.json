@@ -1,0 +1,11 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "generated_at": "2026-01-18T17:32:08.331682",
+    "input_file": "data/test06_outputs/preflight_ingested.csv",
+    "total_placeholders": 0,
+    "ph_count": 0,
+    "tag_count": 0
+  },
+  "mappings": {}
+}

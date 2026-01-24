@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-01-24T05:40:54.091723",
+  "phase": "Production Validation P1+P2",
+  "environment": "Docker gate_v2",
+  "powershell_version": "7.x",
+  "results": {
+    "P1_smoke_50": {
+      "status": "PASS",
+      "row_count": 50,
+      "translated_file": "data/prod_p1_translated.csv",
+      "qa_report": "reports/prod_p1/qa_report.json"
+    },
+    "P2_functional": {
+      "status": "PASS",
+      "row_count": 295,
+      "translation_column": "target_text",
+      "translated_count": 295,
+      "module_distribution": {
+        "ui_button": 144,
+        "ui_label": 66,
+        "dialogue": 27,
+        "system_notice": 22,
+        "skill_desc": 18,
+        "item_desc": 14,
+        "misc": 4
+      },
+      "qa_summary": {
+        "major": 23,
+        "minor": 33,
+        "total_tasks": 56,
+        "batch_errors": 0,
+        "rows_processed": 295,
+        "batches_processed": 6
+      },
+      "translated_file": "data/prod_p2_translated.csv",
+      "qa_report": "reports/prod_p2_qa_report.json"
+    }
+  },
+  "overall_status": "PASS"
+}

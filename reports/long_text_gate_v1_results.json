@@ -1,0 +1,164 @@
+{
+  "gate": "long_text_gate_v1",
+  "timestamp": "2026-01-23T04:41:30.490725",
+  "template_meta": {
+    "source_dataset_id": "normalized_pool_v1",
+    "sha256": "6862566cdd1f5280292f82d06cdef0152d10b38e57d8bb62bc109994080a2891",
+    "template_type": "A_v2",
+    "total_rows": 30,
+    "composition": {
+      "long_text": 24,
+      "long_text_threshold": 300,
+      "others": 6
+    },
+    "created_at": "2026-01-23T12:41:07.860020"
+  },
+  "models": {
+    "gpt-4.1-mini": {
+      "template_A_v2": {
+        "results": {
+          "1": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 4159,
+            "max_latency_ms": 4639
+          },
+          "2": {
+            "status": "FAIL",
+            "iterations_attempted": 2,
+            "reason": "LLMError: Request timeout after 300s: HTTPSConnectionPool(host='api.apiyi.com', port=443): Read timed out. (re"
+          }
+        },
+        "max_pass": 1
+      },
+      "max_batch_size_long_text": 1
+    },
+    "claude-haiku-4-5-20251001": {
+      "template_A_v2": {
+        "results": {
+          "1": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 5381,
+            "max_latency_ms": 5935
+          },
+          "2": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 8498,
+            "max_latency_ms": 10170
+          },
+          "5": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 16962,
+            "max_latency_ms": 20237
+          },
+          "10": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 31202,
+            "max_latency_ms": 34653
+          }
+        },
+        "max_pass": 10
+      },
+      "max_batch_size_long_text": 10
+    },
+    "gpt-5.1": {
+      "template_A_v2": {
+        "results": {
+          "1": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 8148,
+            "max_latency_ms": 11802
+          },
+          "2": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 16307,
+            "max_latency_ms": 18819
+          },
+          "5": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 26196,
+            "max_latency_ms": 33939
+          },
+          "10": {
+            "status": "FAIL",
+            "iterations_attempted": 2,
+            "reason": "JSON parse error: Expecting ':' delimiter: line 1 column 5464 (char "
+          }
+        },
+        "max_pass": 5
+      },
+      "max_batch_size_long_text": 5
+    },
+    "gpt-5.2": {
+      "template_A_v2": {
+        "results": {
+          "1": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 6458,
+            "max_latency_ms": 8083
+          },
+          "2": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 12936,
+            "max_latency_ms": 15911
+          },
+          "5": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 30103,
+            "max_latency_ms": 44692
+          },
+          "10": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 52266,
+            "max_latency_ms": 56037
+          }
+        },
+        "max_pass": 10
+      },
+      "max_batch_size_long_text": 10
+    },
+    "claude-sonnet-4-5-20250929": {
+      "template_A_v2": {
+        "results": {
+          "1": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 7750,
+            "max_latency_ms": 10182
+          },
+          "2": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 13707,
+            "max_latency_ms": 16587
+          },
+          "5": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 29048,
+            "max_latency_ms": 33437
+          },
+          "10": {
+            "status": "PASS",
+            "iterations": 3,
+            "avg_latency_ms": 53277,
+            "max_latency_ms": 59510
+          }
+        },
+        "max_pass": 10
+      },
+      "max_batch_size_long_text": 10
+    }
+  }
+}

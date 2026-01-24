@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-4-5-20250929",
+  "timestamp": "2026-01-23T04:33:20.525804",
+  "overall": "PASS",
+  "results": {
+    "step1_direct_api": {
+      "status": "PASS",
+      "latency_ms": 4354,
+      "response": "Hello"
+    },
+    "step2_single_call": {
+      "status": "PASS",
+      "latency_ms": 4371
+    },
+    "step3_batch_10": {
+      "status": "PASS",
+      "latency_ms": 15673,
+      "items_returned": 10
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+    "items": [
+        {
+            "string_id": "item_001",
+            "issues": [
+                {
+                    "dimension": "style",
+                    "severity": "minor",
+                    "suggested_fix": "Fix"
+                }
+            ]
+        }
+    ],
+    "summary": {
+        "minor": 1
+    }
+}

@@ -1,0 +1,4 @@
+{"string_id": "id5", "type": "terminology", "severity": "minor", "note": "术语不一致：'暴击率' 应使用更标准的游戏术语，'Шанс крита' 过于口语化。 | Suggestion: 改为 'Вероятность крита' 或 'Крит. шанс' 以保持专业性。", "suggested_fix": "Вероятность крита"}
+{"string_id": "id7", "type": "terminology", "severity": "major", "note": "术语不一致：根据术语表，'金币' 应译为 'Золотые монеты'，而非简化的 'Золото'。 | Suggestion: 改为 'Золотые монеты' 以符合术语表规范。", "suggested_fix": "Золотые монеты"}
+{"string_id": "id5", "type": "terminology", "severity": "minor", "note": "术语不一致：'暴击率' 应使用更标准的游戏术语，'Шанс крита' 过于口语化。 | Suggestion: 改为 'Вероятность крита' 或 'Крит. шанс' 以保持专业性。", "suggested_fix": "Вероятность крита"}
+{"string_id": "id7", "type": "terminology", "severity": "major", "note": "术语不一致：根据术语表，'金币' 应译为 'Золотые монеты'，而非简化的 'Золото'。 | Suggestion: 改为 'Золотые монеты' 以符合术语表规范。", "suggested_fix": "Золотые монеты"}

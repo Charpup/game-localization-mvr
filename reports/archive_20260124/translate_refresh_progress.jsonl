@@ -1,0 +1,11 @@
+{"timestamp": "2026-01-23T16:31:37.189808", "step": "translate_refresh", "event": "step_start", "data": {"total_rows": 2, "batch_size": 50, "total_batches": 1, "model": "claude-haiku-4-5-20251001", "content_type": "normal", "timeout": 180, "cooldown": 30, "partial_match": false}}
+{"timestamp": "2026-01-23T16:31:37.194410", "step": "translate_refresh", "event": "batch_start", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 2}}
+{"timestamp": "2026-01-23T16:31:39.316639", "step": "translate_refresh", "event": "batch_complete", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 2, "status": "FAIL", "error": "Missing 'items' key in response"}}
+{"timestamp": "2026-01-23T16:32:39.635617", "step": "translate_refresh", "event": "step_start", "data": {"total_rows": 2, "batch_size": 50, "total_batches": 1, "model": "claude-haiku-4-5-20251001", "content_type": "normal", "timeout": 180, "cooldown": 30, "partial_match": false}}
+{"timestamp": "2026-01-23T16:32:39.639916", "step": "translate_refresh", "event": "batch_start", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 2}}
+{"timestamp": "2026-01-23T16:32:41.868059", "step": "translate_refresh", "event": "batch_complete", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 2, "status": "SUCCESS", "latency_ms": 2216}}
+{"timestamp": "2026-01-23T16:32:41.870609", "step": "translate_refresh", "event": "step_complete", "data": {"total_rows": 2, "success_count": 2, "failed_count": 0}}
+{"timestamp": "2026-01-23T16:34:01.734208", "step": "translate_refresh", "event": "step_start", "data": {"total_rows": 2, "batch_size": 50, "total_batches": 1, "model": "claude-haiku-4-5-20251001", "content_type": "normal", "timeout": 180, "cooldown": 30, "partial_match": false}}
+{"timestamp": "2026-01-23T16:34:01.737388", "step": "translate_refresh", "event": "batch_start", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 2}}
+{"timestamp": "2026-01-23T16:34:03.865980", "step": "translate_refresh", "event": "batch_complete", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 2, "status": "SUCCESS", "latency_ms": 2121}}
+{"timestamp": "2026-01-23T16:34:03.869354", "step": "translate_refresh", "event": "step_complete", "data": {"total_rows": 2, "success_count": 2, "failed_count": 0}}

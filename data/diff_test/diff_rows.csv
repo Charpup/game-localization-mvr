@@ -1,0 +1,3 @@
+string_id,status,a_target,b_target
+id_1,modified,Old Value,New Value
+id_3,added,,Added Value

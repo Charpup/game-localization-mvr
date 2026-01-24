@@ -1,0 +1,4 @@
+﻿string_id,source_zh,target_text,refresh_status,refresh_error
+id1,你获得了螺旋丸技能。,Вы получили навык Расенган (Мощный).,ok,
+id2,前往木叶村寻找纲手。,Отправляйтесь в Деревню Скрытого Листа,ok,
+id3,系统检测到错误。,Система обнаружила ошибку.,not_in_impact,

@@ -1,0 +1,95 @@
+{
+  "total_calls": 41315,
+  "total_prompt_tokens": 40002306,
+  "total_completion_tokens": 933851,
+  "total_tokens": 40936157,
+  "total_cost_usd": 88.6908907,
+  "rows_translated": 18820,
+  "total_rows": 30453,
+  "cost_per_1k_rows": 4.712587178533475,
+  "steps": {
+    "llm_ping": {
+      "calls": 1,
+      "prompt_tokens": 23,
+      "completion_tokens": 2,
+      "total_tokens": 25
+    },
+    "glossary_translate": {
+      "calls": 29,
+      "prompt_tokens": 16676,
+      "completion_tokens": 30579,
+      "total_tokens": 47255
+    },
+    "glossary_review": {
+      "calls": 58,
+      "prompt_tokens": 23957,
+      "completion_tokens": 27954,
+      "total_tokens": 51911
+    },
+    "translate": {
+      "calls": 41226,
+      "prompt_tokens": 39960696,
+      "completion_tokens": 874321,
+      "total_tokens": 40835017
+    },
+    "style_guide_generate": {
+      "calls": 1,
+      "prompt_tokens": 954,
+      "completion_tokens": 995,
+      "total_tokens": 1949
+    }
+  },
+  "models": {
+    "gpt-4.1-nano": {
+      "calls": 1,
+      "prompt_tokens": 23,
+      "completion_tokens": 2,
+      "total_tokens": 25
+    },
+    "gpt-4.1-mini": {
+      "calls": 343,
+      "prompt_tokens": 306142,
+      "completion_tokens": 61623,
+      "total_tokens": 367765
+    },
+    "unknown": {
+      "calls": 2139,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_tokens": 0
+    },
+    "gpt-4o-mini": {
+      "calls": 3,
+      "prompt_tokens": 1468,
+      "completion_tokens": 2118,
+      "total_tokens": 3586
+    },
+    "gpt-4.1": {
+      "calls": 37544,
+      "prompt_tokens": 37918938,
+      "completion_tokens": 821194,
+      "total_tokens": 38740132
+    },
+    "claude-sonnet-4-5-20250929": {
+      "calls": 1285,
+      "prompt_tokens": 1775735,
+      "completion_tokens": 48914,
+      "total_tokens": 1824649
+    }
+  },
+  "step_costs": {
+    "llm_ping": 9.9e-05,
+    "glossary_translate": 0.508713,
+    "glossary_review": 0.491181,
+    "translate": 132.996903,
+    "style_guide_generate": 0.017787
+  },
+  "model_costs": {
+    "gpt-4.1-nano": 3.1e-06,
+    "gpt-4.1-mini": 0.22105360000000002,
+    "unknown": 0.0,
+    "gpt-4o-mini": 0.0014910000000000001,
+    "gpt-4.1": 82.407428,
+    "claude-sonnet-4-5-20250929": 6.0609150000000005
+  }
+}

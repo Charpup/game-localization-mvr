@@ -1,0 +1,4 @@
+{"timestamp": "2026-01-23T16:29:02.023947", "step": "glossary_extract", "event": "step_start", "data": {"total_rows": 5, "batch_size": 50, "total_batches": 1, "model": "claude-haiku-4-5-20251001", "content_type": "normal", "timeout": 180, "cooldown": 30, "partial_match": true}}
+{"timestamp": "2026-01-23T16:29:02.029558", "step": "glossary_extract", "event": "batch_start", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 5}}
+{"timestamp": "2026-01-23T16:29:05.293086", "step": "glossary_extract", "event": "batch_complete", "data": {"batch_index": 1, "total_batches": 1, "batch_size": 5, "status": "SUCCESS", "latency_ms": 3252}}
+{"timestamp": "2026-01-23T16:29:05.295147", "step": "glossary_extract", "event": "step_complete", "data": {"total_rows": 5, "success_count": 4, "failed_count": 1}}

@@ -1,0 +1,78 @@
+{
+    "diagnosis_summary": {
+        "timestamp": "2026-01-22T20:15:00",
+        "objective": "Diagnose network failures for 4 models during destructive batch testing",
+        "root_cause": "CONCURRENT_CALL_OVERLOAD"
+    },
+    "test_results": {
+        "step1_direct_api": {
+            "description": "Single simple call, no batch",
+            "passed": 5,
+            "total": 5,
+            "conclusion": "All models accessible at API level"
+        },
+        "step2_single_call": {
+            "description": "Single batch item with translation prompt",
+            "passed": 2,
+            "total": 5,
+            "failed_models": [
+                "claude-haiku-4-5-20251001",
+                "gpt-5.2",
+                "claude-sonnet-4-5-20250929"
+            ],
+            "conclusion": "Multiple failures under rapid sequential calls"
+        },
+        "step3_sequential_batch": {
+            "description": "batch_size=10 with 30s inter-model delay",
+            "passed": 4,
+            "total": 5,
+            "failed_models": [
+                "claude-sonnet-4-5-20250929"
+            ],
+            "conclusion": "Most models stable with adequate cooldown period"
+        }
+    },
+    "per_model_diagnosis": {
+        "gpt-4.1-mini": {
+            "status": "STABLE",
+            "root_cause": null,
+            "recommendation": "Continue as primary model, max_batch_size=15"
+        },
+        "claude-haiku-4-5-20251001": {
+            "status": "CONDITIONALLY_STABLE",
+            "root_cause": "RATE_LIMIT_SENSITIVITY",
+            "evidence": "Passed Step 3 with 30s delay, failed Step 2 without delay",
+            "recommendation": "Use with mandatory 30s cooldown between batches"
+        },
+        "gpt-5.1": {
+            "status": "CONDITIONALLY_STABLE",
+            "root_cause": "RATE_LIMIT_SENSITIVITY",
+            "evidence": "Passed all tests but with higher latency",
+            "recommendation": "Use with 30s cooldown, max_batch_size=10"
+        },
+        "gpt-5.2": {
+            "status": "CONDITIONALLY_STABLE",
+            "root_cause": "RATE_LIMIT_SENSITIVITY",
+            "evidence": "Passed Step 3 with delay, failed Step 2 with SSLEOFError",
+            "recommendation": "Use with 30s cooldown, max_batch_size=10"
+        },
+        "claude-sonnet-4-5-20250929": {
+            "status": "UNSTABLE",
+            "root_cause": "PROVIDER_CONNECTION_INSTABILITY",
+            "evidence": "Failed Step 3 even with 30s delay due to SSLEOFError",
+            "recommendation": "MARK_FOR_DISCARD or use only with retry logic enabled"
+        }
+    },
+    "recommended_fixes": {
+        "immediate": [
+            "Implement mandatory 30s+ cooldown between model switches in batch processing",
+            "Mark claude-sonnet-4-5-20250929 as UNSTABLE in batch_runtime_v1.json",
+            "Enable retry logic for all non-gpt-4.1-mini models"
+        ],
+        "long_term": [
+            "Implement per-model rate limiting in runtime_adapter",
+            "Add exponential backoff for SSL errors",
+            "Consider API provider diversity for redundancy"
+        ]
+    }
+}

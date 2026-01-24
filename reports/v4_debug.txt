@@ -1,0 +1,234 @@
+MODEL: gpt-4.1-mini
+OUTPUT: {
+  "items": [
+    {
+      "string_id": "UI_BUTTON_OK",
+      "translated_text": "OK"
+    },
+    {
+      "string_id": "DIA_TUTORIAL_01",
+      "translated_text": "Welcome to the new world!"
+    },
+    {
+      "string_id": "SYS_ERR_NET",
+      "translated_text": "Network connection failed, please try again."
+    },
+    {
+      "string_id": "ITEM_DESC_POTION",
+      "translated_text": "Restores 50 HP."
+    },
+    {
+      "string_id": "UI_LABEL_cancel",
+      "translated_text": "Cancel"
+    },
+    {
+      "string_id": "UI_SPACER_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "DIA_SILENCE_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "SYS_EMPTY_LOG",
+      "translated_text": ""
+    },
+    {
+      "string_id": "PHO_001",
+      "translated_text": ""
+    },
+    {
+      "string_id": "UI_HIDDEN_LABEL",
+      "translated_text": ""
+    }
+  ]
+}
+----------------------------------------
+MODEL: claude-haiku-4-5-20251001
+OUTPUT: ```json
+{
+  "items": [
+    {
+      "string_id": "UI_BUTTON_OK",
+      "translated_text": "OK"
+    },
+    {
+      "string_id": "DIA_TUTORIAL_01",
+      "translated_text": "Welcome to the new world!"
+    },
+    {
+      "string_id": "SYS_ERR_NET",
+      "translated_text": "Network connection failed, please try again."
+    },
+    {
+      "string_id": "ITEM_DESC_POTION",
+      "translated_text": "Restore 50 HP."
+    },
+    {
+      "string_id": "UI_LABEL_cancel",
+      "translated_text": "Cancel"
+    },
+    {
+      "string_id": "UI_SPACER_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "DIA_SILENCE_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "SYS_EMPTY_LOG",
+      "translated_text": ""
+    },
+    {
+      "string_id": "PHO_001",
+      "translated_text": ""
+    },
+    {
+      "string_id": "UI_HIDDEN_LABEL",
+      "translated_text": ""
+    }
+  ]
+}
+```
+----------------------------------------
+MODEL: gpt-5.1
+OUTPUT: {
+  "items": [
+    {
+      "string_id": "UI_BUTTON_OK",
+      "translated_text": "OK"
+    },
+    {
+      "string_id": "DIA_TUTORIAL_01",
+      "translated_text": "Welcome to the new world!"
+    },
+    {
+      "string_id": "SYS_ERR_NET",
+      "translated_text": "Network connection failed, please try again."
+    },
+    {
+      "string_id": "ITEM_DESC_POTION",
+      "translated_text": "Restores 50 HP."
+    },
+    {
+      "string_id": "UI_LABEL_cancel",
+      "translated_text": "Cancel"
+    },
+    {
+      "string_id": "UI_SPACER_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "DIA_SILENCE_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "SYS_EMPTY_LOG",
+      "translated_text": ""
+    },
+    {
+      "string_id": "PHO_001",
+      "translated_text": ""
+    },
+    {
+      "string_id": "UI_HIDDEN_LABEL",
+      "translated_text": ""
+    }
+  ]
+}
+----------------------------------------
+MODEL: gpt-5.2
+OUTPUT: {
+  "items": [
+    {
+      "string_id": "UI_BUTTON_OK",
+      "translated_text": "OK"
+    },
+    {
+      "string_id": "DIA_TUTORIAL_01",
+      "translated_text": "Welcome to the new world!"
+    },
+    {
+      "string_id": "SYS_ERR_NET",
+      "translated_text": "Network connection failed. Please try again."
+    },
+    {
+      "string_id": "ITEM_DESC_POTION",
+      "translated_text": "Restores 50 HP."
+    },
+    {
+      "string_id": "UI_LABEL_cancel",
+      "translated_text": "Cancel"
+    },
+    {
+      "string_id": "UI_SPACER_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "DIA_SILENCE_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "SYS_EMPTY_LOG",
+      "translated_text": ""
+    },
+    {
+      "string_id": "PHO_001",
+      "translated_text": ""
+    },
+    {
+      "string_id": "UI_HIDDEN_LABEL",
+      "translated_text": ""
+    }
+  ]
+}
+----------------------------------------
+MODEL: claude-sonnet-4-5-20250929
+OUTPUT: ```json
+{
+  "items": [
+    {
+      "string_id": "UI_BUTTON_OK",
+      "translated_text": "OK"
+    },
+    {
+      "string_id": "DIA_TUTORIAL_01",
+      "translated_text": "Welcome to the new world!"
+    },
+    {
+      "string_id": "SYS_ERR_NET",
+      "translated_text": "Network connection failed, please try again."
+    },
+    {
+      "string_id": "ITEM_DESC_POTION",
+      "translated_text": "Restores 50 HP."
+    },
+    {
+      "string_id": "UI_LABEL_cancel",
+      "translated_text": "Cancel"
+    },
+    {
+      "string_id": "UI_SPACER_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "DIA_SILENCE_01",
+      "translated_text": ""
+    },
+    {
+      "string_id": "SYS_EMPTY_LOG",
+      "translated_text": ""
+    },
+    {
+      "string_id": "PHO_001",
+      "translated_text": ""
+    },
+    {
+      "string_id": "UI_HIDDEN_LABEL",
+      "translated_text": ""
+    }
+  ]
+}
+```
+----------------------------------------

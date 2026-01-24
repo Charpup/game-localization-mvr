@@ -1,0 +1,31 @@
+{
+  "version": "v1",
+  "seed": 42,
+  "source_file": "draft.csv",
+  "reality_gate": {
+    "path": "reality_gate_v1.csv",
+    "sha256": "38185cd90bb890b9fe6d77cac872705aa2f2571eada54e36eed400c0cfae2c98",
+    "row_count": 33,
+    "bucket_distribution": {
+      "ui_short": 10,
+      "ui_mid": 6,
+      "dialogue_long": 10,
+      "system_rules": 4,
+      "placeholder": 1,
+      "adversarial": 2
+    }
+  },
+  "empty_gate": {
+    "path": "empty_gate_v2.csv",
+    "sha256": "5defd995e580ce4471c7f9d6b77614fcc73dc6759c9eed7ff93d99a51fb9b6eb",
+    "row_count": 10
+  },
+  "bucket_rules": {
+    "ui_short": "UI short text (len<=8)",
+    "ui_mid": "UI mid text (9<=len<=30)",
+    "dialogue_long": "Dialogue long text (len>=60)",
+    "system_rules": "System/rules text",
+    "placeholder": "Contains placeholders/variables",
+    "adversarial": "Adversarial/extreme characters"
+  }
+}

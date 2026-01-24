@@ -1,0 +1,200 @@
+meta:
+  generated_at: '2026-01-18T17:36:06.847803'
+  step: glossary_translate
+  total_translated: 38
+  source_proposals: data/test06_outputs/preflight_terms.yaml
+  style_guide: workflow/style_guide.md
+  batch_size: 20
+entries:
+- term_zh: 忍者
+  term_ru: нинзя
+  confidence: 1.0
+  reason: Персонаж с навыками скрытности и боевых искусств, типичный для игры в стиле
+    Наруто | noun
+  context: null
+- term_zh: 技能
+  term_ru: умение
+  confidence: 1.0
+  reason: Способность или навык персонажа, используемый в бою или игре | noun
+  context: null
+- term_zh: 消耗
+  term_ru: расход
+  confidence: 0.95
+  reason: Ресурсы, затрачиваемые на использование навыков или действий | noun
+  context: null
+- term_zh: 属性
+  term_ru: характеристика
+  confidence: 1.0
+  reason: Параметры персонажа, влияющие на его способности и эффективность | noun
+  context: null
+- term_zh: 进行
+  term_ru: выполнять
+  confidence: 0.9
+  reason: Осуществлять действие или процесс в игре | verb
+  context: null
+- term_zh: 金币
+  term_ru: золото
+  confidence: 1.0
+  reason: Внутриигровая валюта для покупок и улучшений | noun
+  context: null
+- term_zh: 升星
+  term_ru: повышение звёздности
+  confidence: 0.9
+  reason: Улучшение персонажа или предмета за счёт увеличения количества звёзд | phrase
+  context: null
+- term_zh: 分为
+  term_ru: делиться на
+  confidence: 0.85
+  reason: Разделять на категории или части | verb
+  context: null
+- term_zh: 等级
+  term_ru: уровень
+  confidence: 1.0
+  reason: Показатель развития персонажа или предмета | noun
+  context: null
+- term_zh: 回合
+  term_ru: ход
+  confidence: 1.0
+  reason: Один этап в пошаговом бою | noun
+  context: null
+- term_zh: 奖励
+  term_ru: награда
+  confidence: 1.0
+  reason: Вознаграждение за выполнение заданий или достижений | noun
+  context: null
+- term_zh: 召唤
+  term_ru: призыв
+  confidence: 1.0
+  reason: Вызов существа или помощника в бою | noun
+  context: null
+- term_zh: 升级
+  term_ru: повышение уровня
+  confidence: 1.0
+  reason: Процесс улучшения персонажа или предмета | phrase
+  context: null
+- term_zh: 提高
+  term_ru: повышать
+  confidence: 1.0
+  reason: Увеличивать характеристики или способности | verb
+  context: null
+- term_zh: 部分
+  term_ru: часть
+  confidence: 1.0
+  reason: Отдельный элемент или сегмент | noun
+  context: null
+- term_zh: 突破
+  term_ru: прорыв
+  confidence: 0.95
+  reason: Существенное улучшение или преодоление ограничения | noun
+  context: null
+- term_zh: 还有
+  term_ru: ещё
+  confidence: 0.9
+  reason: Указывает на добавление или продолжение | adv
+  context: null
+- term_zh: 通过
+  term_ru: через
+  confidence: 0.9
+  reason: Указывает способ или средство достижения | prep
+  context: null
+- term_zh: 操作
+  term_ru: управление
+  confidence: 1.0
+  reason: Действия игрока для взаимодействия с игрой | noun
+  context: null
+- term_zh: 主动
+  term_ru: активный
+  confidence: 1.0
+  reason: Тип навыка или действия, требующий инициативы игрока | adj
+  context: null
+- term_zh: 时会
+  term_ru: время встречи
+  confidence: 0.9
+  reason: обычно используется в контексте событий или встреч в игре. | noun
+  context: null
+- term_zh: 本体
+  term_ru: основа
+  confidence: 0.8
+  reason: может относиться к основному персонажу или объекту. | noun
+  context: null
+- term_zh: 冷却
+  term_ru: перезарядка
+  confidence: 0.95
+  reason: используется для обозначения времени ожидания между действиями. | noun
+  context: null
+- term_zh: 伤害
+  term_ru: урон
+  confidence: 0.98
+  reason: относится к количеству повреждений, наносимых противнику. | noun
+  context: null
+- term_zh: 自动
+  term_ru: автоматически
+  confidence: 0.9
+  reason: описывает действия, выполняемые без вмешательства игрока. | adj
+  context: null
+- term_zh: 扫荡
+  term_ru: зачистка
+  confidence: 0.85
+  reason: обычно означает быстрое прохождение уровней или миссий. | verb
+  context: null
+- term_zh: 每次
+  term_ru: каждый раз
+  confidence: 0.9
+  reason: используется для обозначения повторяющихся действий. | phrase
+  context: null
+- term_zh: 选择
+  term_ru: выбор
+  confidence: 0.95
+  reason: относится к процессу выбора персонажей или действий. | noun
+  context: null
+- term_zh: 累积
+  term_ru: накопление
+  confidence: 0.85
+  reason: описывает процесс накопления ресурсов или очков. | noun
+  context: null
+- term_zh: 排名
+  term_ru: рейтинг
+  confidence: 0.9
+  reason: используется для обозначения позиций игроков или команд. | noun
+  context: null
+- term_zh: 抽取
+  term_ru: извлечение
+  confidence: 0.9
+  reason: обычно относится к механике получения новых персонажей или предметов. |
+    verb
+  context: null
+- term_zh: 精英
+  term_ru: элита
+  confidence: 0.85
+  reason: может относиться к сильным персонажам или отрядам. | noun
+  context: null
+- term_zh: 招募
+  term_ru: набор
+  confidence: 0.9
+  reason: относится к процессу привлечения новых персонажей в команду. | verb
+  context: null
+- term_zh: 获得
+  term_ru: получение
+  confidence: 0.95
+  reason: описывает процесс получения предметов или ресурсов. | verb
+  context: null
+- term_zh: 积分
+  term_ru: очки
+  confidence: 0.9
+  reason: используется для обозначения очков, получаемых в игре. | noun
+  context: null
+- term_zh: 高级
+  term_ru: высший
+  confidence: 0.85
+  reason: обычно описывает уровень сложности или качества. | adj
+  context: null
+- term_zh: 提升
+  term_ru: повышение
+  confidence: 0.9
+  reason: относится к улучшению характеристик персонажа или предмета. | verb
+  context: null
+- term_zh: 改名
+  term_ru: переименование
+  confidence: 0.85
+  reason: используется для изменения имени персонажа или объекта. | verb
+  context: null

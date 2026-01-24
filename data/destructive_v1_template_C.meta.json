@@ -1,0 +1,9 @@
+{
+  "gate": "destructive_batch_v1",
+  "template": "C",
+  "source_dataset_id": "normalized_pool_v1",
+  "total_rows": 120,
+  "sha256": "8ec1b9ce22e3f9d19e18945b18713a47a2ee3cdd52de7789ac7bdd252a7dc154",
+  "rules_version": "1.0",
+  "immutable": true
+}

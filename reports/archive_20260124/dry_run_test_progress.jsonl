@@ -1,0 +1,4 @@
+{"timestamp": "2026-01-23T22:14:20.684301", "step": "dry_run_test", "event": "step_start", "data": {"total_rows": 10, "batch_size": 50, "model": "claude-haiku-4-5-20251001"}}
+{"timestamp": "2026-01-23T22:14:20.685053", "step": "dry_run_test", "event": "step_complete", "data": {"total_rows": 10, "success_count": 3, "failed_count": 0}}
+{"timestamp": "2026-01-23T14:17:49.085733", "step": "dry_run_test", "event": "step_start", "data": {"total_rows": 10, "batch_size": 50, "model": "claude-haiku-4-5-20251001"}}
+{"timestamp": "2026-01-23T14:17:49.089421", "step": "dry_run_test", "event": "step_complete", "data": {"total_rows": 10, "success_count": 3, "failed_count": 0}}

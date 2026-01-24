@@ -1,0 +1,51 @@
+﻿string_id,source_zh,type
+DIA_006,这是对话文本测试_6，用于检查长句子的翻译完整性。,Dialogue
+DIA_004,这是对话文本测试_4，用于检查长句子的翻译完整性。,Dialogue
+UI_020,这是UI文本测试_20,UI
+UI_012,这是UI文本测试_12,UI
+UI_005,这是UI文本测试_5,UI
+PHO_001,⟦PH_0⟧,Placeholder
+DIA_007,这是对话文本测试_7，用于检查长句子的翻译完整性。,Dialogue
+UI_010,这是UI文本测试_10,UI
+DIA_010,这是对话文本测试_10，用于检查长句子的翻译完整性。,Dialogue
+UI_017,这是UI文本测试_17,UI
+DIA_012,这是对话文本测试_12，用于检查长句子的翻译完整性。,Dialogue
+DIA_002,这是对话文本测试_2，用于检查长句子的翻译完整性。,Dialogue
+UI_013,这是UI文本测试_13,UI
+UI_004,这是UI文本测试_4,UI
+SYS_005,System_Error_5: ⟦PH_0⟧ connection failed.,System
+SYS_004,System_Error_4: ⟦PH_0⟧ connection failed.,System
+UI_011,这是UI文本测试_11,UI
+DIA_005,这是对话文本测试_5，用于检查长句子的翻译完整性。,Dialogue
+SYS_001,System_Error_1: ⟦PH_0⟧ connection failed.,System
+UI_001,这是UI文本测试_1,UI
+EMP_004,,Empty
+UI_019,这是UI文本测试_19,UI
+DIA_014,这是对话文本测试_14，用于检查长句子的翻译完整性。,Dialogue
+PHO_004,⟦PH_3⟧,Placeholder
+EMP_002,,Empty
+DIA_011,这是对话文本测试_11，用于检查长句子的翻译完整性。,Dialogue
+DIA_009,这是对话文本测试_9，用于检查长句子的翻译完整性。,Dialogue
+DIA_001,这是对话文本测试_1，用于检查长句子的翻译完整性。,Dialogue
+DIA_003,这是对话文本测试_3，用于检查长句子的翻译完整性。,Dialogue
+EMP_003,,Empty
+PHO_002,⟦PH_1⟧,Placeholder
+SYS_002,System_Error_2: ⟦PH_0⟧ connection failed.,System
+DIA_013,这是对话文本测试_13，用于检查长句子的翻译完整性。,Dialogue
+EMP_005,,Empty
+UI_014,这是UI文本测试_14,UI
+PHO_005,⟦PH_4⟧,Placeholder
+PHO_003,⟦PH_2⟧,Placeholder
+UI_003,这是UI文本测试_3,UI
+DIA_008,这是对话文本测试_8，用于检查长句子的翻译完整性。,Dialogue
+SYS_003,System_Error_3: ⟦PH_0⟧ connection failed.,System
+UI_006,这是UI文本测试_6,UI
+DIA_015,这是对话文本测试_15，用于检查长句子的翻译完整性。,Dialogue
+UI_007,这是UI文本测试_7,UI
+UI_009,这是UI文本测试_9,UI
+UI_015,这是UI文本测试_15,UI
+UI_016,这是UI文本测试_16,UI
+UI_018,这是UI文本测试_18,UI
+UI_002,这是UI文本测试_2,UI
+UI_008,这是UI文本测试_8,UI
+EMP_001,,Empty

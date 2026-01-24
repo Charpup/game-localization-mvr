@@ -1,0 +1,58 @@
+meta:
+  generated_at: '2026-01-23T15:47:24.875751'
+  step: glossary_translate
+  total_translated: 10
+  source_proposals: data/test_glossary_10.yaml
+  style_guide: workflow/style_guide.md
+  batch_size: 20
+entries:
+- term_zh: 生命值
+  term_ru: Здоровье
+  confidence: 0.95
+  reason: 游戏中的生命点数，不可变格使用 | noun
+  context: 角色的生命值降低到0时死亡
+- term_zh: 魔法值
+  term_ru: Мана
+  confidence: 0.95
+  reason: 技能消耗资源，可变格（Маны, Манe等） | noun
+  context: 施放技能需要消耗魔法值
+- term_zh: 攻击力
+  term_ru: Атака
+  confidence: 0.92
+  reason: 属性值，表示伤害输出能力 | noun
+  context: 攻击力越高造成的伤害越大
+- term_zh: 防御力
+  term_ru: Защита
+  confidence: 0.92
+  reason: 属性值，表示伤害减免能力 | noun
+  context: 防御力可以减少受到的伤害
+- term_zh: 暴击率
+  term_ru: Шанс крита
+  confidence: 0.88
+  reason: 概率类属性，可简化为 «Крит» 在UI空间受限时 | phrase
+  context: 暴击率决定造成暴击的概率
+- term_zh: 经验值
+  term_ru: Опыт
+  confidence: 0.94
+  reason: 升级资源，可变格（Опыта, Опыте等） | noun
+  context: 获得足够经验值后角色升级
+- term_zh: 金币
+  term_ru: Золото
+  confidence: 0.95
+  reason: 游戏货币，可变格（Золота, Золоте等） | noun
+  context: 金币可用于购买道具和装备
+- term_zh: 背包
+  term_ru: Инвентарь
+  confidence: 0.93
+  reason: 物品存储系统，可变格（Инвентаря等） | noun
+  context: 背包用于存放收集的物品
+- term_zh: 任务
+  term_ru: Задание
+  confidence: 0.94
+  reason: 玩家目标/任务系统，可变格（Задания, Задании等） | noun
+  context: 完成任务可获得奖励
+- term_zh: 副本
+  term_ru: Подземелье
+  confidence: 0.85
+  reason: 多人合作副本，可变格；也可用 «Рейд» 强调团队性 | noun
+  context: 副本是多人合作挑战的玩法
