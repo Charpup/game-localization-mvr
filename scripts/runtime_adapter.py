@@ -912,6 +912,14 @@ def log_llm_progress(step: str, event_type: str, data: Dict[str, Any],
         **data
     }
 
+    # 确保关键字段在顶级存在，便于检索
+    if event_type == "step_start":
+        log_entry['model'] = data.get('model') or data.get('model_name') or 'unspecified'
+    elif event_type == "batch_complete":
+        log_entry['rows_in_batch'] = data.get('rows_in_batch') or data.get('batch_size') or 0
+        if 'model' not in log_entry and _progress_state.get('current_model'):
+            log_entry['model'] = _progress_state['current_model']
+
     log_dir = "reports"
     os.makedirs(log_dir, exist_ok=True)
     log_path = os.path.join(log_dir, f"{step}_progress.jsonl")
@@ -929,7 +937,10 @@ def log_llm_progress(step: str, event_type: str, data: Dict[str, Any],
         _progress_state['total_rows'] = data.get('total_rows', 0)
         _progress_state['processed_rows'] = 0
 
-        model = data.get('model', 'unknown')
+        # 确保 model 有默认值
+        model = data.get('model') or data.get('model_name') or 'unspecified'
+        _progress_state['current_model'] = model # 暂存以便后续批次使用
+        
         batch_size = data.get('batch_size', 'N/A')
         total = _progress_state['total_rows']
 
@@ -939,9 +950,12 @@ def log_llm_progress(step: str, event_type: str, data: Dict[str, Any],
         print(f"{'='*60}")
 
     elif event_type == "batch_complete":
-        batch_num = data.get('batch_index', 0)  # Use batch_index to match existing logic
+        batch_num = data.get('batch_index') or data.get('batch_num', 0)
         total_batches = data.get('total_batches', 0)
-        rows_in_batch = data.get('batch_size', 0)
+        
+        # 统一字段名: 优先使用 rows_in_batch，兼容 batch_size
+        rows_in_batch = data.get('rows_in_batch') or data.get('batch_size') or 0
+        
         latency_ms = data.get('latency_ms', 0)
         status = data.get('status', 'SUCCESS')
 
@@ -1108,9 +1122,9 @@ def batch_llm_call(
 
         # 批次开始
         log_llm_progress(step, "batch_start", {
-            "batch_index": i + 1,
+            "batch_num": i + 1, # 统一使用 batch_num
             "total_batches": total_batches,
-            "batch_size": len(batch_rows)
+            "rows_in_batch": len(batch_rows) # 统一使用 rows_in_batch
         })
 
         # 调用 LLM
@@ -1138,22 +1152,24 @@ def batch_llm_call(
 
             # 批次完成
             log_llm_progress(step, "batch_complete", {
-                "batch_index": i + 1,
+                "batch_num": i + 1,
                 "total_batches": total_batches,
-                "batch_size": len(batch_rows),
-                "status": "SUCCESS",
-                "latency_ms": latency_ms
+                "rows_in_batch": len(batch_rows),
+                "latency_ms": latency_ms,
+                "status": "ok",
+                "model": model
             })
 
         except Exception as e:
             latency_ms = int((time.time() - t0) * 1000)
             log_llm_progress(step, "batch_complete", {
-                "batch_index": i + 1,
+                "batch_num": i + 1,
                 "total_batches": total_batches,
-                "batch_size": len(batch_rows),
-                "status": "FAIL",
+                "rows_in_batch": len(batch_rows),
                 "latency_ms": latency_ms,
-                "error": str(e)[:200]
+                "status": "error",
+                "error": str(e)[:200],
+                "model": model
             })
             raise  # 中断整个步骤
 

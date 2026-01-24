@@ -60,13 +60,20 @@ def aggregate_metrics(events: list) -> dict:
         step = event.get('step', 'unknown')
         event_type = event.get('event', '')
 
+        # 跳过 unknown 步骤 (历史残留)
+        if step == 'unknown':
+            continue
+
         if event_type == 'step_start':
             steps_seen.add(step)
-            model = event.get('model', 'unknown')
-            metrics['by_step'][step]['models'].add(model)
+            # 兼容多种 model 字段名
+            model = event.get('model') or event.get('model_name') or 'unspecified'
+            if model and model != 'unknown' and model != 'unspecified':
+                metrics['by_step'][step]['models'].add(model)
 
         elif event_type == 'batch_complete':
-            rows = event.get('batch_size', 0)
+            # 兼容多种行数字段名
+            rows = event.get('rows_in_batch') or event.get('batch_size') or 0
             latency = event.get('latency_ms', 0)
             status = event.get('status', 'SUCCESS')
 
@@ -74,7 +81,7 @@ def aggregate_metrics(events: list) -> dict:
             metrics['summary']['total_rows'] += rows
             metrics['summary']['total_latency_ms'] += latency
 
-            if status == 'SUCCESS' or status == 'ok':
+            if status in ('SUCCESS', 'ok', 'success'):
                 metrics['summary']['total_success'] += rows
             else:
                 metrics['summary']['total_failed'] += rows
@@ -83,10 +90,17 @@ def aggregate_metrics(events: list) -> dict:
             metrics['by_step'][step]['rows'] += rows
             metrics['by_step'][step]['latency_ms'] += latency
 
-            if status == 'SUCCESS' or status == 'ok':
+            if status in ('SUCCESS', 'ok', 'success'):
                 metrics['by_step'][step]['success'] += rows
             else:
                 metrics['by_step'][step]['failed'] += rows
+
+            # 记录 by_model 统计
+            model = event.get('model') or event.get('model_name') or 'unspecified'
+            if model and model != 'unknown':
+                metrics['by_model'][model]['batches'] += 1
+                metrics['by_model'][model]['rows'] += rows
+                metrics['by_model'][model]['latency_ms'] += latency
 
     metrics['summary']['total_steps'] = len(steps_seen)
 
