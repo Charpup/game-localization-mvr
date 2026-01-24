@@ -1,29 +1,23 @@
-# Python & PyCharm
-__pycache__/
-*.py[cod]
-.idea/
-.vscode/
-*.swp
 
-# Artifacts & Outputs
-reports/**
-*.log
-*.tmp
-
-# Data - Default Ignore
-data/**
-
-# Data - Whitelist (Keep Gates & Validation Sets)
-!data/gate*_v*.csv
-!data/gate*_v*.meta.json
-!data/validation_*_v*.csv
-!data/validation_*_v*.meta.json
-!data/placeholder_map.json
-!data/glossary.yaml
-
-# Secrets & Configs
-*.secret*
+# 环境变量文件
 .env
-**/api_key.txt
-**/api access token.txt
-config/secrets.yaml
+.env.*
+!.env.example
+
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+.dockerignore
