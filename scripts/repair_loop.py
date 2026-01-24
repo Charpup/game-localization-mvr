@@ -180,7 +180,8 @@ def build_user(row: dict, issues: List[str], glossary_entries: List[GlossaryEntr
     sid =  row.get("string_id", "")
     
     # Build glossary excerpt
-    approved, banned, proposed = build_glossary_constraints(glossary_entries, tokenized_zh)
+    approved = build_glossary_constraints(glossary_entries, tokenized_zh)
+    banned, proposed = {}, {}
     
     glossary_lines = []
     if approved:
@@ -247,9 +248,9 @@ def main():
     soft_tasks = iter_jsonl(args.repair_tasks_jsonl)
     
     style = load_text(args.style_guide_md)
-    glossary_text = ""
+    glossary_entries = []
     if args.glossary_yaml and Path(args.glossary_yaml).exists():
-        glossary_text = load_text(args.glossary_yaml)
+        glossary_entries, _ = load_glossary(args.glossary_yaml)
 
     # Build issue map: string_id -> [issues...]
     # Priority: hard errors first, then soft major
@@ -294,7 +295,7 @@ def main():
         print()
         print(f"[OK] Input CSV: {len(rows)} rows")
         print(f"[OK] Style guide: {len(style)} chars")
-        print(f"[OK] Glossary: {len(glossary_text)} chars")
+        print(f"[OK] Glossary: {len(glossary_entries)} entries")
         print(f"[OK] Hard errors to fix: {len(hard_ids)}")
         print(f"[OK] Soft issues to fix: {len(soft_major_ids)}")
         print(f"[OK] Total repair items: {len(issue_map)}")
@@ -371,7 +372,7 @@ def main():
         print(f"  [{idx}/{len(targets)}] {sid} [{priority}]: repairing ({len(issues)} issues)...")
 
         system = build_system(style)
-        user = build_user(row, issues, glossary_text)
+        user = build_user(row, issues, glossary_entries, style)
 
         tokenized_zh = row.get("tokenized_zh") or row.get("source_zh") or ""
         current = row.get("target_text") or ""

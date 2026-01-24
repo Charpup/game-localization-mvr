@@ -1,44 +1,65 @@
 ---
-description: 翻译风格指导
+description: 翻译风格指导 (Consolidated Version)
 ---
 
-# RU Localization Style Guide (Naruto-themed mobile game)
-目标语言：ru-RU
-总体基调：官方系统文案为主；在角色台词/活动文案可少量二次元口语，但不得影响清晰度与一致性。
+# RU Localization Style Guide (Consolidated)
 
-## 1. 语域与口吻
-### 1.1 官方系统文案（默认）
-- 风格：清晰、直接、可操作
-- 优先使用简短祈使句与标准 UI 术语
-- 示例：
-  - 「确定」→ "ОК" / "Подтвердить"（按 UI 风格选择）
-  - 「取消」→ "Отмена"
-  - 「网络异常」→ "Ошибка сети" / "Проблема с сетью"
-  - 「请稍后再试」→ "Повторите попытку позже."
+> [!NOTE]
+> Source: `.agent/workflows/style-guide.md` (Naruto-themed project context)
+> Last Sync: 2026-01-24
 
-### 1.2 二次元口语（少量使用）
-适用：活动标题、轻量提示、角色语气台词。系统关键提示/错误/支付相关禁止“过度口语化”。
-- 可用：
-  - 简短感叹： "Ну что, вперёд!" / "Поехали!"
-- 禁止：
-  - 影响理解的俚语堆砌
-  - 过于“网感”的梗（易过期、不可控）
+## 1. Register and Tone (语域与口吻)
 
-## 2. 火影题材基本一致性（术语待表）
-- 在 glossary.yaml 中状态为 approved 的术语必须强制使用。
-- 未收录术语：先保持直译 + 保守译法，不要“自创别名”。
+### 1.1 Official System Content (官方系统文案 - 默认)
 
-## 3. UI 文本长度（原则）
-- 按钮/页签：尽量 ≤ 14–18 个字符（俄语较长，优先简短词）
-- 系统提示：一屏能读完；可拆句，但避免长从句
-- 若中文很短但俄语必然变长：优先“信息保真”，其次再压缩。
+- **Style**: Clear, direct, and actionable.
+- **Tone**: Professional and friendly.
+- **Preference**: Short imperative sentences and standard UI terminology.
+- **Examples**:
+  - "Confirm" → "ОК" / "Подтвердить"
+  - "Cancel" → "Отмена"
+  - "Network error" → "Ошибка сети"
+  - "Please try again later" → "Повторите попытку позже."
 
-## 4. 标点与格式
-- 俄语引号优先「ёлочки」：« »
-- 省略号用 …（可接受三个点 ...，但保持统一）
-- 冒号后空格：": "
-- 保留原有换行与格式（由 token/placeholder 机制保证）
+### 1.2 Anime/Themed Style (二次元口语 - 少量使用)
 
-## 5. 严格禁止
-- 破坏占位符/标签：{0}、%s、<color=...>、\n 等必须原样保留（会被冻结为 token）
-- 修改变量语义：如 “%d 秒” 不得变成 “%d минут”
+- **Applicability**: Event titles, lightweight tips, character dialogue.
+- **Restriction**: Forbidden in system critical tips, errors, or payment-related strings.
+- **Allowed**: Short exclamations like "Ну что, вперёд!" / "Поехали!"
+- **Forbidden**: Excessive slang or ephemeral internet memes.
+
+## 2. Terminology Consistency (术语一致性)
+
+- **Glossary First**: Approved terms in `glossary.yaml` (status: approved) are **mandatory**.
+- **Missing Terms**: Use literal and conservative translations; do not invent aliases.
+- **Proper Nouns**: Do not translate character names or specific location names unless they have established localized forms (e.g., Hidden Leaf Village).
+
+## 3. Formatting and Placeholders (格式与占位符)
+
+- **Placeholder Guard (CRITICAL)**: Always preserve placeholders (`{0}`, `%s`, `⟦PH_xx⟧`, `⟦TAG_xx⟧`, etc.) exactly as they appear in the tokenized source.
+- **Variable Semantics**: Do not change the meaning of units (e.g., "%d seconds" must not become "%d minutes").
+- **Tags**: Keep `<color=...>`, `\n`, and other markup intact.
+
+## 4. Punctuation and Typography (标点与排版)
+
+- **Quotes**: Prefer Russian "Guillemets": « »
+- **Ellipsis**: Use the single character `…` or maintain system consistency with `...`.
+- **Spacing**: Ensure a space after colons and commas: `:`
+- **Symbols**: Avoid Chinese brackets 【 】; use `« »` or list format `X: ...` in Russian.
+
+## 5. UI and Length Constraints (UI 与长度限制)
+
+| Element Type | Target Length (Characters) | Strategy |
+| :--- | :--- | :--- |
+| **Buttons/Tabs** | ≤ 14–18 | Use concise words; prioritize readability. |
+| **System Tips** | Fit in one screen | Avoid complex subordinate clauses. |
+| **Text Overflow** | Respect `max_length` | Prioritize information accuracy, then compress. |
+
+## 6. Quality Checklist
+
+- [ ] All placeholders and tags preserved exactly.
+- [ ] Terminology matched with approved glossary entries.
+- [ ] No Chinese brackets 【 】 or leftover CJK characters.
+- [ ] Russian punctuation (quotes, spacing) followed.
+- [ ] Tone appropriate for the content type (System vs Dialogue).
+- [ ] Length constraints respected.

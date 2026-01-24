@@ -96,7 +96,10 @@ class RehydrateExporter:
     
     def load_punctuation_mappings(self) -> bool:
         """加载分层标点符号配置 (Base + Locale)"""
-        from scripts.lib_text import load_punctuation_config
+        try:
+            from scripts.lib_text import load_punctuation_config
+        except ImportError:
+            from lib_text import load_punctuation_config
         
         base_conf = str(self.translated_csv.parent.parent / "config" / "punctuation" / "base.yaml")
         locale_conf = str(self.translated_csv.parent.parent / "config" / "punctuation" / f"{self.target_lang}.yaml")
@@ -109,7 +112,10 @@ class RehydrateExporter:
 
     def normalize_punctuation(self, text: str) -> str:
         """将源语言标点符号转换为目标语言等价符号"""
-        from scripts.lib_text import sanitize_punctuation
+        try:
+            from scripts.lib_text import sanitize_punctuation
+        except ImportError:
+            from lib_text import sanitize_punctuation
         
         if not text or not self.punctuation_mappings:
             return text
