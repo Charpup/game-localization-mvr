@@ -1,0 +1,59 @@
+meta:
+  version: 2
+  mode: batch
+  generated_at: '2026-01-25T17:15:14.986576'
+  min_support: 1
+  stats:
+    candidate_rows: 58
+    batches_processed: 4
+    unique_pairs: 4
+    proposals: 4
+proposals:
+- term_zh: 战斗
+  term_ru: бой
+  status: proposed
+  confidence: 0.8
+  support: 1
+  scope: project_default
+  language_pair: zh-CN->ru-RU
+  evidence:
+    examples:
+    - string_id: '2032'
+    notes:
+    - before_ru中“боевое мастерство”改为after_ru“бой”，为系统词
+- term_zh: 争斗
+  term_ru: драка
+  status: proposed
+  confidence: 0.7
+  support: 1
+  scope: project_default
+  language_pair: zh-CN->ru-RU
+  evidence:
+    examples:
+    - string_id: '2022'
+    notes:
+    - before_ru和after_ru中“争斗”对应词由“борьба”改为“драка”，为系统词
+- term_zh: 信心
+  term_ru: уверенность
+  status: proposed
+  confidence: 0.7
+  support: 1
+  scope: project_default
+  language_pair: zh-CN->ru-RU
+  evidence:
+    examples:
+    - string_id: '2083'
+    notes:
+    - before_ru中“уверенность в груди”改为after_ru“свою уверенность”，为系统词
+- term_zh: 信念
+  term_ru: убеждённость
+  status: proposed
+  confidence: 0.6
+  support: 1
+  scope: project_default
+  language_pair: zh-CN->ru-RU
+  evidence:
+    examples:
+    - string_id: '2081'
+    notes:
+    - before_ru中“Хорошо посмотри на мою убеждённость”简化为after_ru“Посмотри на мою убеждённость”，为一般词
