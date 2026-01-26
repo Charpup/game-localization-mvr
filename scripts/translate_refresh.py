@@ -182,6 +182,7 @@ def main():
                     help="Style guide markdown")
     ap.add_argument("--out_csv", default="data/refreshed.csv",
                     help="Output refreshed CSV")
+    ap.add_argument("--report", help="Output JSON report")
     ap.add_argument("--batch_size", type=int, default=15,
                     help="Items per batch")
     ap.add_argument("--model", help="Model override")
@@ -359,6 +360,20 @@ def main():
     print(f"✅ Saved to: {args.out_csv} ({len(rows)} rows)")
     print()
     print(f"📊 Row count verification: input={len(rows)}, output={len(rows)} ✅")
+    
+    if args.report:
+        report_data = {
+            "total_rows": len(rows),
+            "refreshed_rows": ok_count,
+            "no_change_rows": no_change_count,
+            "model": model,
+            "latency_s": round(total_elapsed, 2),
+            "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S")
+        }
+        Path(args.report).parent.mkdir(parents=True, exist_ok=True)
+        with open(args.report, "w", encoding="utf-8") as f:
+            json.dump(report_data, f, indent=2)
+        print(f"✅ Report saved to: {args.report}")
     
     return 0
 

@@ -1,8 +1,8 @@
-
-# 环境变量文件
+# Environment
 .env
 .env.*
 !.env.example
+.env.ps1
 
 # Python
 **/__pycache__/
@@ -21,3 +21,16 @@ env/
 
 # Docker
 .dockerignore
+
+# Data & Cache (Local only)
+data/
+cache/
+logs/
+
+# Logs
+reports/*.jsonl
+*.log
+
+# Backups
+*.bak
+*.bak.*

@@ -1,7 +1,0 @@
-{"timestamp": "2026-01-24T10:49:48.298416", "step": "translate", "event": "step_start", "total_rows": 10, "batch_size": 50, "total_batches": 1, "model": "claude-haiku-4-5-20251001", "content_type": "normal", "timeout": 180, "cooldown": 30, "partial_match": false}
-{"timestamp": "2026-01-24T10:49:48.302576", "step": "translate", "event": "batch_start", "batch_num": 1, "total_batches": 1, "rows_in_batch": 10}
-{"timestamp": "2026-01-24T10:49:48.322586", "step": "translate", "event": "batch_complete", "batch_num": 1, "total_batches": 1, "rows_in_batch": 10, "latency_ms": 13, "status": "error", "error": "Missing LLM configuration. Set env vars: LLM_BASE_URL, LLM_API_KEY", "model": "claude-haiku-4-5-20251001"}
-{"timestamp": "2026-01-24T12:10:53.373394", "step": "translate", "event": "step_start", "total_rows": 10, "batch_size": 50, "total_batches": 1, "model": "gpt-4.1-mini", "content_type": "normal", "timeout": 180, "cooldown": 0, "partial_match": false}
-{"timestamp": "2026-01-24T12:10:53.377596", "step": "translate", "event": "batch_start", "batch_num": 1, "total_batches": 1, "rows_in_batch": 10}
-{"timestamp": "2026-01-24T12:10:58.671616", "step": "translate", "event": "batch_complete", "batch_num": 1, "total_batches": 1, "rows_in_batch": 10, "latency_ms": 5282, "status": "ok", "model": "gpt-4.1-mini"}
-{"timestamp": "2026-01-24T12:10:58.679221", "step": "translate", "event": "step_complete", "total_rows": 10, "success_count": 10, "failed_count": 0}

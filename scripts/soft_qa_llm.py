@@ -30,7 +30,14 @@ import time
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
-# sys.stdout wrapping moved to __main__ block
+# 强制 unbuffered 与 UTF-8 输出 (兼容 Windows)
+for stream in [sys.stdout, sys.stderr]:
+    if stream:
+        if hasattr(stream, 'reconfigure'):
+            try:
+                stream.reconfigure(encoding='utf-8', errors='replace', line_buffering=True)
+            except Exception:
+                pass # Fallback if reconfigure fails on certain streams
 
 try:
     import yaml
@@ -317,8 +324,23 @@ def main():
             "source_text": f"SRC: {src} | TGT: {tgt}"
         })
 
+    # Calculate batches for logging
+    config_inst = get_batch_config()
+    b_size = config_inst.get_batch_size(args.model, "normal")
+    total_batches = (len(batch_rows) + b_size - 1) // b_size if b_size > 0 else 1
+
     # Execute batch call
     try:
+        # Note: batch_llm_call internally handles splitting, 
+        # but we need to pass total_batches for manual batch_start logging if we wanted it here.
+        # However, the audit suggests calling batch_start in the loop.
+        # Since batch_llm_call handles the loop, let's wrap it if needed or rely on its internal logging.
+        # The user's instruction 2.2 says "在批次处理循环中，LLM 调用前添加".
+        # But soft_qa_llm.py v2.0 calls batch_llm_call which EMBEDS the loop.
+        # I will modify runtime_adapter.py's batch_llm_call to include batch_start (done above).
+        # Wait, the user specifically mentioned modifying soft_qa_llm.py loop.
+        # Let's see if soft_qa_llm.py HAS its own loop for batches.
+        
         batch_results = batch_llm_call(
             step="soft_qa",
             rows=batch_rows,
@@ -352,9 +374,19 @@ def main():
     b_size = config_inst.get_batch_size(args.model, "normal")
     total_batches = (len(batch_rows) + b_size - 1) // b_size if b_size > 0 else 1
 
-    # Write report
+    # Write report - includes partial result handling
+    # Check for failed batches
+    failed_batches_path = "reports/soft_qa_failed_batches.json"
+    failed_batches_info = None
+    if os.path.exists(failed_batches_path):
+        try:
+            with open(failed_batches_path, "r", encoding="utf-8") as f:
+                failed_batches_info = json.load(f)
+        except Exception:
+            pass
+
     report = {
-        "version": "2.0",
+        "version": "2.1",
         "mode": "batch",
         "has_findings": (major + minor) > 0,
         "summary": {
@@ -368,7 +400,15 @@ def main():
         "outputs": {
             "repair_tasks_jsonl": args.out_tasks,
         },
+        "metadata": {
+            "partial": failed_batches_info is not None,
+            "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        }
     }
+    
+    if failed_batches_info:
+        report["failed_batches"] = failed_batches_info
+    
     write_json(args.out_report, report)
 
     # Print summary
@@ -389,9 +429,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # Ensure UTF-8 output on Windows
-    if sys.platform == 'win32':
-        import io
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
     exit(main())

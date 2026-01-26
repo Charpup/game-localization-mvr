@@ -1,0 +1,8 @@
+{
+  "total_rows": 100,
+  "refreshed_rows": 7,
+  "no_change_rows": 0,
+  "model": "claude-sonnet-4-5-20250929",
+  "latency_s": 5.94,
+  "generated_at": "2026-01-25T17:57:45"
+}

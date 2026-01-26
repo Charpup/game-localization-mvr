@@ -23,6 +23,7 @@ Env:
 from __future__ import annotations
 import json
 import os
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
@@ -484,7 +485,8 @@ class LLMClient:
              temperature: Optional[float] = None,
              max_tokens: Optional[int] = None,
              response_format: Optional[Dict[str, Any]] = None,
-             metadata: Optional[Dict[str, Any]] = None) -> LLMResult:
+             metadata: Optional[Dict[str, Any]] = None,
+             timeout: Optional[int] = None) -> LLMResult:
         """
         Send a chat completion request with automatic model routing.
         
@@ -599,7 +601,8 @@ class LLMClient:
                     router_chain_len=router_chain_len,
                     model_override=model_override,
                     fallback_used=fallback_used,
-                    fallback_reason=fallback_reason
+                    fallback_reason=fallback_reason,
+                    timeout=timeout
                 )
                 return result
                 
@@ -624,7 +627,8 @@ class LLMClient:
                            router_chain_len: int,
                            model_override: Optional[str],
                            fallback_used: bool,
-                           fallback_reason: Optional[str]) -> LLMResult:
+                           fallback_reason: Optional[str],
+                           timeout: Optional[int] = None) -> LLMResult:
         """Execute a single model call with full tracing."""
         url = f"{self.base_url}/chat/completions"
         headers = {
@@ -649,8 +653,11 @@ class LLMClient:
         t0 = time.time()
         http_status = None
         
+        # 使用传入的 timeout，如果没有则使用默认值
+        effective_timeout = timeout if timeout is not None else self.timeout_s
+
         try:
-            resp = requests.post(url, headers=headers, json=payload, timeout=self.timeout_s)
+            resp = requests.post(url, headers=headers, json=payload, timeout=effective_timeout)
             http_status = resp.status_code
         except requests.Timeout as e:
             self._trace_error("timeout", str(e), step, model, attempt_no, 
@@ -948,8 +955,16 @@ def log_llm_progress(step: str, event_type: str, data: Dict[str, Any],
         print(f"[{step}] 🚀 Starting")
         print(f"  Total rows: {total} | Batch size: {batch_size} | Model: {model}")
         print(f"{'='*60}")
+        sys.stdout.flush()
 
-    elif event_type == "batch_complete":
+    elif event_type == "batch_start":
+        batch_num = data.get('batch_index') or data.get('batch_num', 0)
+        total_batches = data.get('total_batches', 0)
+        rows_in_batch = data.get('rows_in_batch') or data.get('batch_size', 0)
+
+        print(f"⏳ [{step}] Batch {batch_num}/{total_batches} starting | "
+              f"{rows_in_batch} rows")
+        sys.stdout.flush()
         batch_num = data.get('batch_index') or data.get('batch_num', 0)
         total_batches = data.get('total_batches', 0)
         
@@ -980,6 +995,7 @@ def log_llm_progress(step: str, event_type: str, data: Dict[str, Any],
               f"Latency: {latency_ms}ms | "
               f"Δt: {elapsed_since_last:.1f}s | "
               f"Total: {elapsed_total:.1f}s")
+        sys.stdout.flush()
 
     elif event_type == "step_complete":
         success = data.get('success_count', 0)
@@ -993,6 +1009,7 @@ def log_llm_progress(step: str, event_type: str, data: Dict[str, Any],
         print(f"  Success: {success} | Failed: {failed} | Total: {total}")
         print(f"  Total time: {elapsed_total:.1f}s")
         print(f"{'='*60}\n")
+        sys.stdout.flush()
 
 
 def parse_llm_response(response_text: str, expected_rows: list, partial_match: bool = False) -> list:
@@ -1020,12 +1037,48 @@ def parse_llm_response(response_text: str, expected_rows: list, partial_match: b
                 text = inner[4:].strip()
             else:
                 text = inner
-    
-    # 解析 JSON
+
+    # === 新增: JSON 修复尝试 ===
+    def try_fix_json(raw: str) -> str:
+        """尝试修复常见的 JSON 格式错误"""
+        import re as fix_re
+        fixed = raw
+
+        # 1. 修复尾部多余逗号: {"a": 1,} -> {"a": 1}
+        fixed = fix_re.sub(r',(\s*[}\]])', r'\1', fixed)
+
+        # 2. 修复缺失逗号 (在 } 或 ] 后面紧跟 { 或 " 的情况)
+        fixed = fix_re.sub(r'(\}|\])(\s*)(\{|")', r'\1,\2\3', fixed)
+
+        # 3. 修复单引号: {'a': 1} -> {"a": 1}
+        # 注意: 只在值不包含双引号时替换
+        if "'" in fixed and '"' not in fixed:
+            fixed = fixed.replace("'", '"')
+
+        return fixed
+
+    # 第一次尝试: 原始文本
+    parse_error = None
     try:
         data = json.loads(text)
     except json.JSONDecodeError as e:
-        raise ValueError(f"JSON parse error: {str(e)[:100]}")
+        parse_error = e
+        # 第二次尝试: 修复后的文本
+        try:
+            fixed_text = try_fix_json(text)
+            data = json.loads(fixed_text)
+            parse_error = None  # 修复成功
+            _trace({
+                "type": "json_repair_success",
+                "original_error": str(e),
+                "repair_applied": True
+            })
+        except json.JSONDecodeError:
+            pass  # 修复失败，保留原始错误
+
+    if parse_error:
+        raise ValueError(f"JSON parse error: {str(parse_error)[:100]}")
+    # === 修复尝试结束 ===
 
     # 验证结构
     if "items" not in data:
@@ -1062,12 +1115,13 @@ def batch_llm_call(
     system_prompt: str,
     user_prompt_template,
     content_type: str = "normal",
-    retry: int = 0,
+    retry: int = 1,  # 增加默认重试次数
     allow_fallback: bool = False,
-    partial_match: bool = False
+    partial_match: bool = False,
+    save_partial: bool = True  # 新增: 是否保存部分结果
 ) -> list:
     """
-    批次化 LLM 调用 (统一接口)
+    批次化 LLM 调用 (统一接口) - v2.0 with fail-skip
 
     Args:
         step: 步骤名称 (用于日志,如 "glossary_translate")
@@ -1079,15 +1133,13 @@ def batch_llm_call(
         user_prompt_template: 函数,接收 items 列表,返回 user prompt 字符串
             示例: lambda items: json.dumps({"items": items}, ensure_ascii=False)
         content_type: "normal" | "long_text" (影响批次大小和超时)
-        retry: 重试次数
+        retry: 重试次数 (默认1次)
         allow_fallback: 是否允许模型降级
         partial_match: 是否允许返回 ID 为输入的子集 (用于 QA 等仅报问题的场景)
+        save_partial: 是否保存失败批次信息
 
     Returns:
-        list: 处理结果 (与 rows 顺序一致, partial_match 模式下可能更少)
-
-    Raises:
-        Exception: 如果任何批次失败
+        list: 处理结果 (partial_match 模式下可能不完整)
     """
     config = get_batch_config()
 
@@ -1098,6 +1150,7 @@ def batch_llm_call(
 
     total_batches = (len(rows) + batch_size - 1) // batch_size
     results = []
+    failed_batches = []  # 新增: 记录失败批次
 
     # 步骤开始
     log_llm_progress(step, "step_start", {
@@ -1111,10 +1164,13 @@ def batch_llm_call(
         "partial_match": partial_match
     })
 
+    client = LLMClient()
+
     for i in range(total_batches):
         start_idx = i * batch_size
         end_idx = min(start_idx + batch_size, len(rows))
         batch_rows = rows[start_idx:end_idx]
+        batch_num = i + 1
 
         # 构造 user prompt
         items = [{"id": r["id"], "source_text": r.get("source_text", "")} for r in batch_rows]
@@ -1122,67 +1178,131 @@ def batch_llm_call(
 
         # 批次开始
         log_llm_progress(step, "batch_start", {
-            "batch_num": i + 1, # 统一使用 batch_num
+            "batch_num": batch_num,
             "total_batches": total_batches,
-            "rows_in_batch": len(batch_rows) # 统一使用 rows_in_batch
+            "rows_in_batch": len(batch_rows)
         })
 
-        # 调用 LLM
-        t0 = time.time()
-        try:
-            client = LLMClient()
-            response = client.chat(
-                system=system_prompt,
-                user=user_prompt,
-                temperature=0,
-                metadata={
-                    "step": step,
-                    "model_override": model,
-                    "force_llm": True,
-                    "allow_fallback": allow_fallback,
-                    "retry": retry
-                }
-            )
+        # === 新增: 带重试的批次处理 ===
+        batch_success = False
+        batch_error = None
+        batch_items = []
 
-            latency_ms = int((time.time() - t0) * 1000)
+        for attempt in range(retry + 1):
+            try:
+                t0 = time.time()
+                response = client.chat(
+                    system=system_prompt,
+                    user=user_prompt,
+                    temperature=0,
+                    metadata={
+                        "step": step,
+                        "model_override": model,
+                        "force_llm": True,
+                        "allow_fallback": allow_fallback,
+                        "retry": retry,
+                        "attempt": attempt
+                    },
+                    timeout=timeout
+                )
 
-            # 解析响应
-            batch_results = parse_llm_response(response.text, batch_rows, partial_match=partial_match)
-            results.extend(batch_results)
+                latency_ms = int((time.time() - t0) * 1000)
+                batch_items = parse_llm_response(response.text, batch_rows, partial_match=partial_match)
+                batch_success = True
 
-            # 批次完成
+                # 记录成功
+                log_llm_progress(step, "batch_complete", {
+                    "batch_num": batch_num,
+                    "total_batches": total_batches,
+                    "rows_in_batch": len(batch_rows),
+                    "latency_ms": latency_ms,
+                    "status": "ok",
+                    "model": model,
+                    "request_id": response.request_id,
+                    "usage": response.usage
+                })
+                break  # 成功，退出重试循环
+
+            except (ValueError, LLMError) as e:
+                batch_error = str(e)
+                if attempt < retry:
+                    # 还有重试机会
+                    _trace({
+                        "type": "batch_retry",
+                        "step": step,
+                        "batch_num": batch_num,
+                        "attempt": attempt,
+                        "error": batch_error
+                    })
+                    time.sleep(2)  # 短暂等待后重试
+                    continue
+            except Exception as e:
+                batch_error = str(e)
+                if attempt < retry:
+                    _trace({
+                        "type": "batch_retry",
+                        "step": step,
+                        "batch_num": batch_num,
+                        "attempt": attempt,
+                        "error": batch_error
+                    })
+                    time.sleep(2)
+                    continue
+
+        if batch_success:
+            results.extend(batch_items)
+        else:
+            # 批次失败，记录并跳过
+            latency_ms = int((time.time() - t0) * 1000) if 't0' in dir() else 0
             log_llm_progress(step, "batch_complete", {
-                "batch_num": i + 1,
-                "total_batches": total_batches,
-                "rows_in_batch": len(batch_rows),
-                "latency_ms": latency_ms,
-                "status": "ok",
-                "model": model
-            })
-
-        except Exception as e:
-            latency_ms = int((time.time() - t0) * 1000)
-            log_llm_progress(step, "batch_complete", {
-                "batch_num": i + 1,
+                "batch_num": batch_num,
                 "total_batches": total_batches,
                 "rows_in_batch": len(batch_rows),
                 "latency_ms": latency_ms,
                 "status": "error",
-                "error": str(e)[:200],
+                "error": batch_error[:200] if batch_error else "Unknown error",
                 "model": model
             })
-            raise  # 中断整个步骤
+
+            failed_batches.append({
+                "batch_num": batch_num,
+                "start_idx": start_idx,
+                "end_idx": end_idx,
+                "error": batch_error
+            })
+
+            # 不抛出异常，继续处理下一批次
+            print(f"⚠️ [{step}] Batch {batch_num}/{total_batches} failed, skipping. Error: {batch_error[:100] if batch_error else 'Unknown'}")
+            sys.stdout.flush()
+        # === 批次处理结束 ===
 
         # 冷却期 (除了最后一个批次)
         if i < total_batches - 1 and cooldown > 0:
             time.sleep(cooldown)
 
-    # 步骤完成
+    # 记录 step_complete
+    success_count = len(results)
+    failed_count = sum(fb["end_idx"] - fb["start_idx"] for fb in failed_batches)
+
     log_llm_progress(step, "step_complete", {
         "total_rows": len(rows),
-        "success_count": len(results),
-        "failed_count": len(rows) - len(results)
+        "success_count": success_count,
+        "failed_count": failed_count,
+        "failed_batches": len(failed_batches)
     })
+
+    # === 新增: 保存失败批次信息 ===
+    if failed_batches and save_partial:
+        failed_report_path = f"reports/{step}_failed_batches.json"
+        with open(failed_report_path, "w", encoding="utf-8") as f:
+            json.dump({
+                "step": step,
+                "total_batches": total_batches,
+                "failed_batches": failed_batches,
+                "timestamp": datetime.now().isoformat()
+            }, f, indent=2, ensure_ascii=False)
+        print(f"⚠️ [{step}] {len(failed_batches)} batches failed. Details: {failed_report_path}")
+        sys.stdout.flush()
 
     return results
 

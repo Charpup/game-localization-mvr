@@ -1,3 +1,0 @@
-{"string_id": "UI_5", "type": "terminology", "severity": "major", "note": "术语不一致：使用 'Золото' 而术语表规定为 'Золотые монеты' | Suggestion: 改为 'Золотые монеты: 50' 以保持术语一致性", "suggested_fix": "Золотые монеты: 50"}
-{"string_id": "UI_25", "type": "terminology", "severity": "major", "note": "术语不一致：使用 'Золото' 而术语表规定为 'Золотые монеты' | Suggestion: 改为 'Золотые монеты: 250' 以保持术语一致性", "suggested_fix": "Золотые монеты: 250"}
-{"string_id": "UI_45", "type": "terminology", "severity": "major", "note": "术语不一致：使用 'Золото' 而术语表规定为 'Золотые monety' | Suggestion: 改为 'Золотые монеты: 450' 以保持术语一致性", "suggested_fix": "Золотые монеты: 450"}

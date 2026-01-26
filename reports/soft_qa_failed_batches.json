@@ -1,0 +1,13 @@
+{
+  "step": "soft_qa",
+  "total_batches": 199,
+  "failed_batches": [
+    {
+      "batch_num": 54,
+      "start_idx": 1325,
+      "end_idx": 1350,
+      "error": "JSON parse error: Expecting ',' delimiter: line 43 column 55 (char 1400)"
+    }
+  ],
+  "timestamp": "2026-01-25T20:43:59.942966"
+}

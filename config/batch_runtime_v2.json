@@ -4,12 +4,12 @@
     "models": {
         "claude-haiku-4-5-20251001": {
             "status": "QUALIFIED",
-            "max_batch_size": 50,
+            "max_batch_size": 25,
             "max_batch_size_long_text": 10,
             "timeout_normal": 180,
             "timeout_long_text": 300,
             "cooldown_required": 0,
-            "notes": "Phase 2 Gate: 推荐批次模型"
+            "notes": "Phase 3 修复: 降低 batch size 提高 JSON 稳定性"
         },
         "claude-sonnet-4-5-20250929": {
             "status": "QUALIFIED",

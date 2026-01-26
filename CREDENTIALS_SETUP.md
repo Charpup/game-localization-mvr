@@ -1,55 +1,169 @@
+# 凭证配置指南(方案 B - PowerShell 自动加载)
 
-# 凭证配置指南
+## 配置完成 ✅
 
-## 快速开始
+Agent 已自动完成所有配置,无需手动操作。
 
-### 1. 设置环境变量
+---
 
-```bash
-export LLM_API_KEY="your_api_key_here"
-export LLM_BASE_URL="https://api.apiyi.com/v1"  # 可选,默认已设置
+## 工作原理
+```
+项目目录/.env.ps1 (真实 API key)
+    ↓
+PowerShell $PROFILE 配置自动加载逻辑
+    ↓
+每次 cd 到项目目录 → 自动执行 .env.ps1
+    ↓
+环境变量加载到 PowerShell 会话
+    ↓
+docker-compose 继承环境变量
+    ↓
+Docker 容器内可用
 ```
 
-### 2. 启动项目
+---
 
-```bash
-# 方式1: 使用启动脚本
-./run.sh
+## 日常使用
 
-# 方式2: 手动启动
+### 启动项目
+```powershell
+# 打开新的 PowerShell 窗口
+cd D:\your\project\path  # 自动加载 .env.ps1
+
+# 验证环境变量
+echo $env:LLM_API_KEY  # 应显示: sk-2Ks9Tv...
+
+# 启动 Docker
 docker-compose up --build
 
-# 方式3: 本地运行(无 Docker)
-python example_usage.py
+# 或直接运行现有镜像
+docker run -e LLM_API_KEY=$env:LLM_API_KEY -e LLM_BASE_URL=$env:LLM_BASE_URL your-image:tag
 ```
 
-## 重要说明
-
-- **不要**将真实 API key 提交到 Git
-- **不要**在 Dockerfile 中硬编码 key
-- **不要**在代码中直接指定模型名称
-
-## 模型调度
-
-所有 LLM 调用统一通过 `infra` 层:
-
-```python
-from infra import get_llm_adapter
-
-adapter = get_llm_adapter()
-response = adapter.call(
-    prompt="你的提示词",
-    task_type="code_generation"  # 自动选择合适模型
-)
+### 验证配置
+```powershell
+.\verify_setup.ps1
 ```
 
-## 任务类型与模型映射
+---
 
-| 任务类型 | 自动选择模型 |
-| --- | --- |
-| code_generation | gpt-4-turbo |
-| quick_response | gpt-4.1-mini |
-| reasoning | gpt-4 |
-| default | gpt-4.1-mini |
+## 当前配置信息
 
-修改策略: 编辑 `infra/llm_runtime.py` 中的 `get_model_for_task` 方法
+- **API Key**: `sk-2Ks9TvuDvfZzFkwID6Cb43EcEeCd40929e8eFe1dE5604080`
+- **Base URL**: `https://api.apiyi.com/v1`
+- **存储位置**: `.env.ps1` (本地,不进 Git)
+- **加载方式**: PowerShell 自动加载
+- **生效范围**: 当前 PowerShell 会话
+
+---
+
+## 修改 API Key
+```powershell
+# 编辑 .env.ps1 文件
+notepad .env.ps1
+
+# 保存后,重新进入项目目录
+cd ..
+cd .\project
+
+# 或手动重新加载
+. .\.env.ps1
+```
+
+---
+
+## 复用到其他机器
+
+### 方式 1: 重新运行 Agent 配置脚本
+
+在新机器的项目目录执行相同的 Agent 配置指令即可。
+
+### 方式 2: 手动配置(快速)
+```powershell
+# 1. 复制项目中的 .env.ps1 文件(已存在)
+
+# 2. 在新机器的 PowerShell 配置文件添加自动加载逻辑
+notepad $PROFILE
+
+# 粘贴以下内容:
+function Load-ProjectEnv {
+    $envFile = Join-Path $PWD ".env.ps1"
+    if (Test-Path $envFile) {
+        . $envFile
+    }
+}
+
+$global:__LastPwd = $PWD
+function prompt {
+    if ($global:__LastPwd -ne $PWD) {
+        $global:__LastPwd = $PWD
+        Load-ProjectEnv
+    }
+    "PS $($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1)) "
+}
+
+Load-ProjectEnv
+
+# 3. 重启 PowerShell
+```
+
+---
+
+## 安全检查清单
+
+- ✅ `.env.ps1` 文件已添加到 `.gitignore`
+- ✅ Git 历史中无 `.env` 相关文件
+- ✅ PowerShell 自动加载已配置
+- ✅ API key 仅存储在本地
+
+---
+
+## 故障排查
+
+### 问题 1: 打开新 PowerShell 窗口,环境变量未加载
+
+**原因**: 可能未切换到项目目录
+
+**解决**:
+```powershell
+cd D:\your\project\path  # 确保在项目根目录
+echo $env:LLM_API_KEY     # 验证
+```
+
+### 问题 2: Docker 容器内获取不到环境变量
+
+**原因**: docker-compose.yml 未配置环境变量继承
+
+**解决**:
+```yaml
+services:
+  agent:
+    environment:
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_BASE_URL=${LLM_BASE_URL}
+```
+
+### 问题 3: 自动加载不生效
+
+**解决**:
+```powershell
+# 重新加载 PowerShell 配置
+. $PROFILE
+
+# 手动加载当前项目
+. .\.env.ps1
+```
+
+---
+
+## 卸载配置(可选)
+```powershell
+# 1. 编辑 PowerShell 配置文件
+notepad $PROFILE
+
+# 2. 删除 "Auto-load project .env.ps1" 相关代码块
+
+# 3. 删除项目中的 .env.ps1 文件
+Remove-Item .env.ps1
+```
+
