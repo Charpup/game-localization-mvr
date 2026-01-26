@@ -19,6 +19,20 @@ trigger: always_on
 9) Repair Loop 的输出必须是"只改动被标记行"的 repaired.csv；并且必须保存 repair_checkpoint.json 以支持断点续传。
 10) Runtime Adapter 是唯一允许的 LLM 调用入口：业务脚本不得直接写 HTTP 调用逻辑，必须通过 scripts/runtime_adapter.py 统一处理与留痕。
 11) **流水线遵从性 (Pipeline Compliance)**：Agent 在运行标准流水线任务时，必须以 `docs/localization_pipeline_workflow.md` 为基准流程，按 Phase 1-6 顺序执行。严禁在未完成前置阶段（如 Normalization）的情况下执行后续步骤（如 Translation）。
+12) **Docker 容器强制执行**：所有调用 LLM API 的脚本必须在 gate_v2 容器内运行。禁止在宿主机直接执行以下脚本：
+    - scripts/translate_llm.py
+    - scripts/soft_qa_llm.py
+    - scripts/repair_loop_v2.py
+    - scripts/glossary_autopromote.py
+    容器启动模板：
+
+    ```bash
+    docker run --rm -v ${PWD}:/workspace -w /workspace \
+      -e LLM_BASE_URL -e LLM_API_KEY -e LLM_API_KEY_FILE \
+      gate_v2 python -u -m scripts.<script_name> <args>
+    ```
+
+    例外：纯工具脚本(metrics_aggregator.py / qa_hard.py)可本地运行。
 
 ## LLM 调用规则 (12-14)
 

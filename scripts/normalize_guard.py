@@ -22,6 +22,7 @@ import csv
 import json
 import re
 import sys
+import jieba
 from pathlib import Path
 from typing import List, Dict, Tuple, Set
 from datetime import datetime
@@ -85,11 +86,12 @@ class PlaceholderFreezer:
             print(f"❌ Error loading schema: {str(e)}")
             sys.exit(1)
     
-    def freeze_text(self, text: str) -> Tuple[str, Dict[str, str]]:
+    def freeze_text(self, text: str, source_lang: str = 'zh-CN') -> Tuple[str, Dict[str, str]]:
         """
         冻结文本中的占位符和标签
         
         重要：使用 token 重用机制，相同的占位符重用相同的 token
+        新增：中文分词预处理 (source_lang='zh-CN' related)
         
         Returns:
             (tokenized_text, local_map) - token 化的文本和本次冻结的映射
@@ -99,6 +101,12 @@ class PlaceholderFreezer:
         
         local_map = {}
         result = text
+
+        # 新增: 中文分词预处理
+        if source_lang.startswith('zh'):
+            # 分词并用空格分隔(临时标记词边界)
+            words = jieba.lcut(result)
+            result = ' '.join(words)
         
         # 编译所有模式的正则表达式
         compiled_patterns = []
@@ -179,7 +187,8 @@ class NormalizeGuard:
     """主处理类：规范化输入并生成 draft.csv 和 placeholder_map.json"""
     
     def __init__(self, input_path: str, output_draft_path: str,
-                 output_map_path: str, schema_path: str):
+                 output_map_path: str, schema_path: str, source_lang: str = "zh-CN"):
+        self.source_lang = source_lang
         self.input_path = Path(input_path)
         self.output_draft_path = Path(output_draft_path)
         self.output_map_path = Path(output_map_path)
@@ -239,7 +248,7 @@ class NormalizeGuard:
                         })
                     
                     # 冻结占位符
-                    tokenized_zh, local_map = self.freezer.freeze_text(source_zh)
+                    tokenized_zh, local_map = self.freezer.freeze_text(source_zh, self.source_lang)
                     
                     # 构建输出行
                     output_row = {
@@ -431,18 +440,22 @@ class NormalizeGuard:
 
 def main():
     """主入口"""
-    if len(sys.argv) != 5:
-        print("Usage: python normalize_guard.py <input_csv> <output_draft_csv> <output_map_json> <schema_yaml>")
-        print()
-        print("Example:")
-        print("  python normalize_guard.py data/input.csv data/draft.csv data/placeholder_map.json workflow/placeholder_schema.yaml")
-        sys.exit(1)
+    import argparse
+    parser = argparse.ArgumentParser(description="Normalize Guard v2.0")
+    parser.add_argument("input_csv", help="Input CSV path")
+    parser.add_argument("output_draft", help="Output draft CSV path")
+    parser.add_argument("output_map", help="Output map JSON path")
+    parser.add_argument("schema_yaml", help="Schema YAML path")
+    parser.add_argument("--source-lang", default="zh-CN", help="Source language (default: zh-CN)")
+    
+    args = parser.parse_args()
     
     guard = NormalizeGuard(
-        input_path=sys.argv[1],
-        output_draft_path=sys.argv[2],
-        output_map_path=sys.argv[3],
-        schema_path=sys.argv[4]
+        input_path=args.input_csv,
+        output_draft_path=args.output_draft,
+        output_map_path=args.output_map,
+        schema_path=args.schema_yaml,
+        source_lang=args.source_lang
     )
     
     success = guard.run()

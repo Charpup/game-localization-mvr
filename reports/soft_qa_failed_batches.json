@@ -1,13 +1,157 @@
 {
   "step": "soft_qa",
-  "total_batches": 199,
+  "total_batches": 94,
   "failed_batches": [
     {
-      "batch_num": 54,
-      "start_idx": 1325,
-      "end_idx": 1350,
-      "error": "JSON parse error: Expecting ',' delimiter: line 43 column 55 (char 1400)"
+      "batch_num": 1,
+      "start_idx": 0,
+      "end_idx": 25,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 4,
+      "start_idx": 75,
+      "end_idx": 100,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 9,
+      "start_idx": 200,
+      "end_idx": 225,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 18,
+      "start_idx": 425,
+      "end_idx": 450,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 26,
+      "start_idx": 625,
+      "end_idx": 650,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 32,
+      "start_idx": 775,
+      "end_idx": 800,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 35,
+      "start_idx": 850,
+      "end_idx": 875,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 41,
+      "start_idx": 1000,
+      "end_idx": 1025,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 42,
+      "start_idx": 1025,
+      "end_idx": 1050,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 47,
+      "start_idx": 1150,
+      "end_idx": 1175,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 52,
+      "start_idx": 1275,
+      "end_idx": 1300,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 53,
+      "start_idx": 1300,
+      "end_idx": 1325,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 56,
+      "start_idx": 1375,
+      "end_idx": 1400,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 61,
+      "start_idx": 1500,
+      "end_idx": 1525,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 64,
+      "start_idx": 1575,
+      "end_idx": 1600,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 66,
+      "start_idx": 1625,
+      "end_idx": 1650,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 67,
+      "start_idx": 1650,
+      "end_idx": 1675,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 68,
+      "start_idx": 1675,
+      "end_idx": 1700,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 73,
+      "start_idx": 1800,
+      "end_idx": 1825,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 77,
+      "start_idx": 1900,
+      "end_idx": 1925,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 82,
+      "start_idx": 2025,
+      "end_idx": 2050,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 84,
+      "start_idx": 2075,
+      "end_idx": 2100,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 88,
+      "start_idx": 2175,
+      "end_idx": 2200,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 89,
+      "start_idx": 2200,
+      "end_idx": 2225,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
+    },
+    {
+      "batch_num": 94,
+      "start_idx": 2325,
+      "end_idx": 2340,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     }
   ],
-  "timestamp": "2026-01-25T20:43:59.942966"
+  "timestamp": "2026-01-26T15:50:18.367447"
 }

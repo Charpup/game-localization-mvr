@@ -1,0 +1,10 @@
+{
+  "total_tasks": 30,
+  "repaired": 30,
+  "escalated": 0,
+  "by_round": {
+    "1": 30,
+    "2": 0,
+    "3": 0
+  }
+}
