@@ -209,6 +209,7 @@ def main():
                     help="Enable semantic scoring pre-filter (requires semantic_scorer)")
     ap.add_argument("--rag-top-k", type=int, default=15,
                     help="Top-K terms to retrieve for RAG (default: 15)")
+    ap.add_argument("--resume", action="store_true", help="Resume from existing tasks file")
     args = ap.parse_args()
 
     # Resolve input path
@@ -324,6 +325,20 @@ def main():
             "source_text": f"SRC: {src} | TGT: {tgt}"
         })
 
+    # Resume logic
+    output_dir = os.path.dirname(args.out_report) or "reports"
+    checkpoint_path = os.path.join(output_dir, "soft_qa_checkpoint.json")
+    if args.resume and os.path.exists(checkpoint_path):
+        try:
+            with open(checkpoint_path, 'r', encoding='utf-8') as f:
+                cp = json.load(f)
+                skip_count = cp.get("rows_processed", 0)
+                if skip_count > 0:
+                    print(f"   ⏩ Resuming from checkpoint: skipping {skip_count} rows")
+                    batch_rows = batch_rows[skip_count:]
+        except Exception as e:
+            print(f"   ⚠️ Failed to load checkpoint: {e}")
+
     # Calculate batches for logging
     config_inst = get_batch_config()
     b_size = config_inst.get_batch_size(args.model, "normal")
@@ -331,16 +346,6 @@ def main():
 
     # Execute batch call
     try:
-        # Note: batch_llm_call internally handles splitting, 
-        # but we need to pass total_batches for manual batch_start logging if we wanted it here.
-        # However, the audit suggests calling batch_start in the loop.
-        # Since batch_llm_call handles the loop, let's wrap it if needed or rely on its internal logging.
-        # The user's instruction 2.2 says "在批次处理循环中，LLM 调用前添加".
-        # But soft_qa_llm.py v2.0 calls batch_llm_call which EMBEDS the loop.
-        # I will modify runtime_adapter.py's batch_llm_call to include batch_start (done above).
-        # Wait, the user specifically mentioned modifying soft_qa_llm.py loop.
-        # Let's see if soft_qa_llm.py HAS its own loop for batches.
-        
         batch_results = batch_llm_call(
             step="soft_qa",
             rows=batch_rows,
@@ -350,7 +355,8 @@ def main():
             content_type="normal",
             retry=1,
             allow_fallback=True,
-            partial_match=True
+            partial_match=True,
+            output_dir=output_dir
         )
         
         print("   Batch results received, processing tasks...")

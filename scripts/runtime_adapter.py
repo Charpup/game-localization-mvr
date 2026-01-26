@@ -1115,31 +1115,14 @@ def batch_llm_call(
     system_prompt: str,
     user_prompt_template,
     content_type: str = "normal",
-    retry: int = 1,  # 增加默认重试次数
+    retry: int = 1,
     allow_fallback: bool = False,
     partial_match: bool = False,
-    save_partial: bool = True  # 新增: 是否保存部分结果
+    save_partial: bool = True,
+    output_dir: str = None
 ) -> list:
     """
-    批次化 LLM 调用 (统一接口) - v2.0 with fail-skip
-
-    Args:
-        step: 步骤名称 (用于日志,如 "glossary_translate")
-        rows: 数据行列表,每行需包含:
-            - id: 唯一标识
-            - source_text: 源文本 (或其他必要字段)
-        model: 模型名称 (需在 batch_runtime_v2.json 中定义)
-        system_prompt: 系统提示 (字符串)
-        user_prompt_template: 函数,接收 items 列表,返回 user prompt 字符串
-            示例: lambda items: json.dumps({"items": items}, ensure_ascii=False)
-        content_type: "normal" | "long_text" (影响批次大小和超时)
-        retry: 重试次数 (默认1次)
-        allow_fallback: 是否允许模型降级
-        partial_match: 是否允许返回 ID 为输入的子集 (用于 QA 等仅报问题的场景)
-        save_partial: 是否保存失败批次信息
-
-    Returns:
-        list: 处理结果 (partial_match 模式下可能不完整)
+    批次化 LLM 调用 (统一接口) - v2.1 with progress reporting
     """
     config = get_batch_config()
 
@@ -1150,7 +1133,7 @@ def batch_llm_call(
 
     total_batches = (len(rows) + batch_size - 1) // batch_size
     results = []
-    failed_batches = []  # 新增: 记录失败批次
+    failed_batches = []
 
     # 步骤开始
     log_llm_progress(step, "step_start", {
@@ -1164,6 +1147,32 @@ def batch_llm_call(
         "partial_match": partial_match
     })
 
+    # Progress helpers
+    def write_heartbeat(status: str):
+        if output_dir:
+            try:
+                os.makedirs(output_dir, exist_ok=True)
+                path = os.path.join(output_dir, f"{step}_heartbeat.txt")
+                with open(path, 'w', encoding='utf-8') as f:
+                    f.write(f"{datetime.now().isoformat()} | {status}\n")
+            except Exception: pass
+
+    def write_checkpoint(batch_num: int, processed: int):
+        if output_dir:
+            try:
+                checkpoint = {
+                    "timestamp": datetime.now().isoformat(),
+                    "step": step,
+                    "batch_num": batch_num,
+                    "total_batches": total_batches,
+                    "rows_processed": processed,
+                    "total_rows": len(rows)
+                }
+                path = os.path.join(output_dir, f"{step}_checkpoint.json")
+                with open(path, 'w', encoding='utf-8') as f:
+                    json.dump(checkpoint, f, indent=2)
+            except Exception: pass
+
     client = LLMClient()
 
     for i in range(total_batches):
@@ -1175,6 +1184,12 @@ def batch_llm_call(
         # 构造 user prompt
         items = [{"id": r["id"], "source_text": r.get("source_text", "")} for r in batch_rows]
         user_prompt = user_prompt_template(items)
+        
+        # Determine system prompt (static or dynamic)
+        if callable(system_prompt):
+            final_system_prompt = system_prompt(batch_rows)
+        else:
+            final_system_prompt = system_prompt
 
         # 批次开始
         log_llm_progress(step, "batch_start", {
@@ -1182,6 +1197,13 @@ def batch_llm_call(
             "total_batches": total_batches,
             "rows_in_batch": len(batch_rows)
         })
+        
+        # Heartbeat
+        if batch_num % 5 == 1:
+            write_heartbeat(f"Processing batch {batch_num}/{total_batches}")
+
+        # === 新增: 带重试的批次处理 === (Keep existing logic)
+        # ... (omitted for brevity, just ensuring we don't delete it)
 
         # === 新增: 带重试的批次处理 ===
         batch_success = False
@@ -1192,7 +1214,7 @@ def batch_llm_call(
             try:
                 t0 = time.time()
                 response = client.chat(
-                    system=system_prompt,
+                    system=final_system_prompt,
                     user=user_prompt,
                     temperature=0,
                     metadata={
@@ -1221,6 +1243,10 @@ def batch_llm_call(
                     "request_id": response.request_id,
                     "usage": response.usage
                 })
+                
+                # Checkpoint
+                write_checkpoint(batch_num, min(end_idx, len(rows)))
+                
                 break  # 成功，退出重试循环
 
             except (ValueError, LLMError) as e:
@@ -1284,12 +1310,23 @@ def batch_llm_call(
     success_count = len(results)
     failed_count = sum(fb["end_idx"] - fb["start_idx"] for fb in failed_batches)
 
+    # 记录 step_complete
+    success_count = len(results)
+    failed_count = sum(fb["end_idx"] - fb["start_idx"] for fb in failed_batches)
+
     log_llm_progress(step, "step_complete", {
         "total_rows": len(rows),
         "success_count": success_count,
         "failed_count": failed_count,
         "failed_batches": len(failed_batches)
     })
+
+    if output_dir:
+        try:
+             path = os.path.join(output_dir, f"{step}_DONE")
+             with open(path, 'w') as f:
+                 f.write(f"Completed at {datetime.now().isoformat()}\n")
+        except Exception: pass
 
     # === 新增: 保存失败批次信息 ===
     if failed_batches and save_partial:

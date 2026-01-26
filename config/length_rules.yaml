@@ -1,0 +1,46 @@
+# Length Expansion Rules for zh-CN -> ru-RU
+version: '1.0'
+
+default:
+  multiplier: 3.0
+  min_buffer: 5
+  max_absolute: 500
+
+by_content_type:
+  ui_button:
+    multiplier: 3.5
+    max_absolute: 20
+  ui_menu:
+    multiplier: 3.2
+    max_absolute: 30
+  ui_label:
+    multiplier: 3.0
+    max_absolute: 40
+  dialogue:
+    multiplier: 2.8
+    max_absolute: 150
+  narrative:
+    multiplier: 2.5
+    max_absolute: 300
+  system_message:
+    multiplier: 3.0
+    max_absolute: 100
+  skill_description:
+    multiplier: 2.8
+    max_absolute: 200
+  item_description:
+    multiplier: 2.8
+    max_absolute: 180
+  tutorial:
+    multiplier: 2.6
+    max_absolute: 250
+  glossary_term:
+    multiplier: 4.0
+    max_absolute: 25
+    strict: true
+
+by_tag:
+  dialogue: { multiplier: 2.8, max_absolute: 150 }
+  ui: { multiplier: 3.2, max_absolute: 40 }
+  system: { multiplier: 3.0, max_absolute: 100 }
+  narration: { multiplier: 2.5, max_absolute: 300 }

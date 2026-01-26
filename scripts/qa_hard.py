@@ -359,7 +359,7 @@ class QAHardValidator:
                     self.total_rows += 1
                     
                     string_id = row.get('string_id', '')
-                    source_text = row.get('tokenized_zh', '')
+                    source_text = row.get('tokenized_zh') or row.get('source_zh') or ''
                     target_text = row.get(target_field, '')
                     
                     # 跳过空翻译
@@ -371,8 +371,10 @@ class QAHardValidator:
                     self.check_tag_balance(string_id, target_text, idx)
                     self.check_forbidden_patterns(string_id, target_text, idx)
                     self.check_new_placeholders(string_id, target_text, idx)
+                    self.check_length_overflow(string_id, target_text, row, idx)
                 
                 return True
+
                 
         except FileNotFoundError:
             print(f"❌ Error: Translated CSV not found: {self.translated_csv}")
@@ -383,6 +385,34 @@ class QAHardValidator:
             traceback.print_exc()
             return False
     
+    def check_length_overflow(self, string_id: str, target_text: str, row: Dict, row_num: int):
+        """检查长度溢出"""
+        max_len = row.get("max_length_target") or row.get("max_len_target")
+        if not max_len:
+            return
+            
+        try:
+            limit = int(float(max_len))
+            if limit <= 0: return
+        except ValueError:
+            return
+
+        actual_len = len(target_text)
+        if actual_len > limit:
+            overflow_ratio = actual_len / limit
+            severity = "critical" if overflow_ratio > 1.5 else "major"
+            
+            self.errors.append({
+                "row": row_num,
+                "string_id": string_id,
+                "type": "length_overflow",
+                "severity": severity,
+                "detail": f"Length {actual_len} > {limit} (ratio: {overflow_ratio:.2f})",
+                "source": row.get('tokenized_zh', '')[:50],
+                "target": target_text[:50]
+            })
+            self.error_counts['length_overflow'] = self.error_counts.get('length_overflow', 0) + 1
+
     def generate_report(self) -> None:
         """生成 JSON 报告（限制错误数量）"""
         report = {

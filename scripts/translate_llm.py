@@ -103,20 +103,38 @@ def validate_translation(tokenized_zh: str, ru: str) -> Tuple[bool, str]:
 # -----------------------------
 # Prompt Builders
 # -----------------------------
-def build_system_prompt(style_guide: str, glossary_summary: str) -> str:
-    return (
-        '你是严谨的手游本地化译者（zh-CN → ru-RU）。\n\n'
-        '【Output Contract v6】\n'
-        '1. Output MUST be valid JSON (Object with "items" key).\n'
-        '2. Structure MUST be: {"items": [{"id": "...", "target_ru": "..."}]}\n'
-        '3. Every input "id" MUST appear in the output.\n\n'
-        '【Translation Rules】\n'
-        '- 术语匹配必须一致。\n'
-        '- 占位符 ⟦PH_xx⟧ / ⟦TAG_xx⟧ 必须保留。\n'
-        '- 禁止中文括号【】。\n\n'
-        f'术语表摘要：\n{glossary_summary}\n\n'
-        f'style_guide：\n{style_guide}\n'
-    )
+def build_system_prompt_factory(style_guide: str, glossary_summary: str):
+    """Factory to create a dynamic system prompt builder."""
+    def _builder(rows: List[Dict]) -> str:
+        constraints = ""
+        for r in rows:
+            max_len = r.get("max_length_target") or r.get("max_len_target")
+            if max_len and int(max_len) > 0:
+                constraints += f"- Row {r.get('string_id')}: max {max_len} chars\n"
+        
+        constraint_section = ""
+        if constraints:
+            constraint_section = (
+                f"\n【Length Constraints (Mandatory)】\n"
+                f"Each translation MUST NOT exceed its limit:\n{constraints}\n"
+                f"If too long: use abbreviations/synonyms but preserve meaning.\n"
+            )
+
+        return (
+            '你是严谨的手游本地化译者（zh-CN → ru-RU）。\n\n'
+            '【Output Contract v6】\n'
+            '1. Output MUST be valid JSON (Object with "items" key).\n'
+            '2. Structure MUST be: {"items": [{"id": "...", "target_ru": "..."}]}\n'
+            '3. Every input "id" MUST appear in the output.\n\n'
+            '【Translation Rules】\n'
+            '- 术语匹配必须一致。\n'
+            '- 占位符 ⟦PH_xx⟧ / ⟦TAG_xx⟧ 必须保留。\n'
+            '- 禁止中文括号【】。\n'
+            f'{constraint_section}\n'
+            f'术语表摘要：\n{glossary_summary}\n\n'
+            f'style_guide：\n{style_guide}\n'
+        )
+    return _builder
 
 def build_user_prompt(rows: List[Dict]) -> str:
     # rows are items prepared for batch_llm_call
@@ -199,11 +217,13 @@ def main():
 
     # Execute
     try:
+        system_prompt_builder = build_system_prompt_factory(style_guide, glossary_summary)
+        
         results = batch_llm_call(
             step="translate",
             rows=batch_inputs,
             model=args.model,
-            system_prompt=build_system_prompt(style_guide, glossary_summary),
+            system_prompt=system_prompt_builder,
             user_prompt_template=build_user_prompt,
             content_type=content_type,
             retry=2,
