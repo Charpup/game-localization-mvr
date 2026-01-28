@@ -225,7 +225,12 @@ class BatchRepairLoop:
                         success_count=success_count,
                         failed_count=len(batch_tasks) - success_count,
                         latency_ms=latency_ms,
-                        metadata={"model": model, "round": round_num}
+                        metadata={
+                            "model": model, 
+                            "round": round_num,
+                            "request_id": getattr(result, "request_id", None),
+                            "usage": getattr(result, "usage", None)
+                        }
                     )
                     sys.stdout.flush()
 
@@ -491,7 +496,7 @@ def main():
 
     config = load_repair_config(args.config)
 
-    df = pd.read_csv(args.input, encoding='utf-8')
+    df = pd.read_csv(args.input, encoding='utf-8', dtype={'string_id': str})
     print(f"✅ Loaded {len(df)} rows")
 
     tasks = []

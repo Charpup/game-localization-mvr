@@ -248,6 +248,9 @@ def main():
                 new_done.add(sid)
             else:
                 print(f"⚠️  Validation failed for {sid}: {err}")
+                print(f"    Target was: {ru[:50]}...")
+        
+        print(f"DEBUG: Batch processed. New done: {len(new_done)}")
         
         # Write Output
         write_mode = "a" if Path(args.output).exists() else "w"

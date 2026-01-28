@@ -9,7 +9,7 @@
             "timeout_normal": 180,
             "timeout_long_text": 300,
             "cooldown_required": 0,
-            "notes": "Phase 3 修复: 降低 batch size 提高 JSON 稳定性"
+            "notes": "Downgrade to 25: Found rows > 700 chars, 50-batch risks overflow"
         },
         "claude-sonnet-4-5-20250929": {
             "status": "QUALIFIED",
@@ -22,8 +22,8 @@
         },
         "gpt-4.1": {
             "status": "QUALIFIED_WITH_LIMITS",
-            "max_batch_size": 50,
-            "max_batch_size_long_text": 5,
+            "max_batch_size": 5,
+            "max_batch_size_long_text": 1,
             "timeout_normal": 180,
             "timeout_long_text": 300,
             "cooldown_required": 5,
@@ -31,7 +31,7 @@
         },
         "gpt-4.1-mini": {
             "status": "QUALIFIED_WITH_LIMITS",
-            "max_batch_size": 50,
+            "max_batch_size": 10,
             "max_batch_size_long_text": 1,
             "timeout_normal": 120,
             "timeout_long_text": 180,

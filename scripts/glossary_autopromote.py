@@ -60,6 +60,14 @@ except ImportError:
 # Token pattern for placeholder detection
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 
+# Progress Reporting (Metrics Compat)
+try:
+    from progress_reporter import ProgressReporter, ProgressInfo
+except ImportError:
+    print("WARNING: progress_reporter.py not found. Metrics will be skipped.")
+    ProgressReporter = None
+
+
 
 # -----------------------------
 # IO Helpers
@@ -373,7 +381,7 @@ def process_batch(
     scope: str,
     batch_idx: int,
     max_retries: int = 2
-) -> List[dict]:
+) -> Tuple[List[dict], Dict[str, Any]]:
     """Process a batch of candidate rows."""
     if not batch:
         return []
@@ -399,15 +407,21 @@ def process_batch(
             )
             
             candidates = extract_candidates_from_response(result.text)
-            return candidates
+            
+            metrics = {
+                "request_id": getattr(result, "request_id", None),
+                "usage": getattr(result, "usage", None),
+                "model": result.model if hasattr(result, "model") else llm.default_model
+            }
+            return candidates, metrics
             
         except Exception as e:
             if attempt >= max_retries:
                 print(f"    ⚠️ Batch {batch_idx} error: {e}")
-                return []
+                return [], {}
             time.sleep(1)
     
-    return []
+    return [], {}
 
 
 # -----------------------------
@@ -505,13 +519,20 @@ def main():
     
     # Process batches
     start_time = time.time()
+    
+    # Init progress reporter
+    reporter = None
+    if ProgressReporter:
+        reporter = ProgressReporter("glossary_autopromote", len(candidate_rows), args.batch_size)
+    
     stats: Dict[Tuple[str, str], TermStats] = {}
+
     processed_batches = 0
     
     for batch_idx, batch in enumerate(batches):
         batch_start = time.time()
         
-        candidates = process_batch(
+        candidates, metrics = process_batch(
             batch, llm, glossary_excerpt, args.scope, batch_idx
         )
         
@@ -542,6 +563,26 @@ def main():
                 s.notes.append(note)
         
         processed_batches += 1
+        
+        # Report progress
+        if reporter:
+            latency_ms = int((time.time() - batch_start) * 1000)
+            
+            # Use metrics from process_batch
+            reporter.batch_complete(
+                batch_idx + 1, len(batches),
+                success_count=len(batch), # Assuming batch success if no exception 
+                failed_count=0,
+                latency_ms=latency_ms,
+                metadata={
+                    "model": metrics.get("model", "unknown"),
+                    "scope": args.scope,
+                    "request_id": metrics.get("request_id"),
+                    "usage": metrics.get("usage")
+                }
+            )
+
+
         
         # Progress
         batch_time = time.time() - batch_start

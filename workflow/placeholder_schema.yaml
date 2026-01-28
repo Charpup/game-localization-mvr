@@ -37,19 +37,19 @@ patterns:
       - "%+5d"
 
   # Unity/NGUI rich text tags: <color=...>, </color>, <b>, </b>, <i>, </i>, <size=...>
-  - name: angle_tag
-    type: tag
-    regex: "</?\\w+(?:\\s*=?\\s*[^>]*)?>"
-    description: "Unity 富文本标签和 HTML 风格标签"
-    examples:
-      - "<color=#FF00FF>"
-      - "</color>"
-      - "<b>"
-      - "</b>"
-      - "<i>"
-      - "</i>"
-      - "<size=14>"
-      - "</size>"
+  #- name: angle_tag
+  #  type: tag
+  #  regex: "</?\\w+(?:\\s*=?\\s*[^>]*)?>"
+  #  description: "Unity 富文本标签和 HTML 风格标签"
+  #  examples:
+  #    - "<color=#FF00FF>"
+  #    - "</color>"
+  #    - "<b>"
+  #    - "</b>"
+  #    - "<i>"
+  #    - "</i>"
+  #    - "<size=14>"
+  #    - "</size>"
 
   # Square bracket placeholders: [NAME], [0], [PLAYER_NAME]
   # NOTE: Only matches technical placeholders (ALL CAPS or pure numbers)
@@ -71,14 +71,14 @@ patterns:
       - "[Name]"
 
   # Escape sequences: \n \t \r
-  - name: escapes
-    type: placeholder
-    regex: "\\\\[ntr]"
-    description: "转义序列"
-    examples:
-      - "\\n"
-      - "\\t"
-      - "\\r"
+  #- name: escapes
+  #  type: placeholder
+  #  regex: "\\\\[ntr]"
+  #  description: "转义序列"
+  #  examples:
+  #    - "\\n"
+  #    - "\\t"
+  #    - "\\r"
 
 # 用于检测"标签平衡"的配对规则
 # QA 脚本会检查开放标签和闭合标签是否成对出现
@@ -86,25 +86,25 @@ paired_tags:
   - open: "<color"
     close: "</color>"
     description: "Unity 颜色标签"
-  
+
   - open: "<b>"
     close: "</b>"
     description: "粗体标签"
-  
+
   - open: "<i>"
     close: "</i>"
     description: "斜体标签"
-  
+
   - open: "<size"
     close: "</size>"
     description: "Unity 大小标签"
 
 # 验证规则
 validation:
-  preserve_all: true  # 所有源文本中的 token 必须在翻译中保留
-  allow_reorder: true  # token 可以在翻译中重新排序以适应目标语言语法
-  case_sensitive: true  # token 名称区分大小写
-  check_tag_balance: true  # 检查配对标签是否平衡
+  preserve_all: true # 所有源文本中的 token 必须在翻译中保留
+  allow_reorder: true # token 可以在翻译中重新排序以适应目标语言语法
+  case_sensitive: true # token 名称区分大小写
+  check_tag_balance: true # 检查配对标签是否平衡
 
 # 使用说明
 usage:

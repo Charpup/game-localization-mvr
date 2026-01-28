@@ -1,0 +1,120 @@
+{
+  "summary": {
+    "total_steps": 5,
+    "total_batches": 2972,
+    "total_rows": 68607,
+    "total_success": 63332,
+    "total_failed": 5275,
+    "total_latency_ms": 24488138,
+    "total_prompt_tokens": 5673488,
+    "total_completion_tokens": 3270228,
+    "total_tokens": 8943716,
+    "estimated_cost_usd": 7.845084
+  },
+  "by_step": {
+    "glossary_translate": {
+      "batches": 388,
+      "rows": 9904,
+      "success": 9069,
+      "failed": 835,
+      "latency_ms": 3862609,
+      "prompt_tokens": 307734,
+      "completion_tokens": 590203,
+      "estimated_cost_usd": 1.067418,
+      "models": [
+        "claude-haiku-4-5-20251001"
+      ]
+    },
+    "normalize_tag": {
+      "batches": 86,
+      "rows": 2648,
+      "success": 2548,
+      "failed": 100,
+      "latency_ms": 418863,
+      "prompt_tokens": 85041,
+      "completion_tokens": 54825,
+      "estimated_cost_usd": 0.121736,
+      "models": [
+        "claude-haiku-4-5-20251001"
+      ]
+    },
+    "soft_qa": {
+      "batches": 399,
+      "rows": 9942,
+      "success": 9102,
+      "failed": 840,
+      "latency_ms": 3143818,
+      "prompt_tokens": 1011630,
+      "completion_tokens": 380673,
+      "estimated_cost_usd": 1.013729,
+      "models": [
+        "claude-haiku-4-5-20251001"
+      ]
+    },
+    "translate": {
+      "batches": 2097,
+      "rows": 46099,
+      "success": 42599,
+      "failed": 3500,
+      "latency_ms": 17051433,
+      "prompt_tokens": 4266315,
+      "completion_tokens": 2243833,
+      "estimated_cost_usd": 5.623487,
+      "models": [
+        "claude-sonnet-4-5-20250929",
+        "gpt-4.1-mini",
+        "gpt-4.1",
+        "claude-haiku-4-5-20251001"
+      ]
+    },
+    "translate_refresh": {
+      "batches": 2,
+      "rows": 14,
+      "success": 14,
+      "failed": 0,
+      "latency_ms": 11415,
+      "prompt_tokens": 2768,
+      "completion_tokens": 694,
+      "estimated_cost_usd": 0.018714,
+      "models": [
+        "claude-sonnet-4-5-20250929",
+        "claude-haiku-4-5-20251001"
+      ]
+    }
+  },
+  "by_model": {
+    "claude-haiku-4-5-20251001": {
+      "batches": 2933,
+      "rows": 68148,
+      "latency_ms": 24217296,
+      "prompt_tokens": 5613974,
+      "completion_tokens": 3247168,
+      "estimated_cost_usd": 7.441058
+    },
+    "claude-sonnet-4-5-20250929": {
+      "batches": 10,
+      "rows": 254,
+      "latency_ms": 128372,
+      "prompt_tokens": 24176,
+      "completion_tokens": 13346,
+      "estimated_cost_usd": 0.272718
+    },
+    "gpt-4.1": {
+      "batches": 26,
+      "rows": 175,
+      "latency_ms": 111786,
+      "prompt_tokens": 30995,
+      "completion_tokens": 8131,
+      "estimated_cost_usd": 0.127038
+    },
+    "gpt-4.1-mini": {
+      "batches": 3,
+      "rows": 30,
+      "latency_ms": 30684,
+      "prompt_tokens": 4343,
+      "completion_tokens": 1583,
+      "estimated_cost_usd": 0.00427
+    }
+  },
+  "api_balance": null
+}

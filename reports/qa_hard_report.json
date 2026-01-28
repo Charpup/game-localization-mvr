@@ -1,0 +1,302 @@
+{
+  "has_errors": true,
+  "total_rows": 30454,
+  "error_counts": {
+    "token_mismatch": 0,
+    "tag_unbalanced": 0,
+    "forbidden_hit": 37,
+    "new_placeholder_found": 3
+  },
+  "errors": [
+    {
+      "row": 3568,
+      "string_id": "210182",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Опыт ниндзя       50,00%\nКамень прорыва               38,00%\nНиндзя 3 звезды           10,00%\nНиндзя 4 звезды           1,50%\nНиндзя 5 звезд           0,50%"
+    },
+    {
+      "row": 3569,
+      "string_id": "210183",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Камень прорыва           35.00% \\ n3-звёздный ниндзя       50.00% \\ n4-звёздный ниндзя       14.00% \\ n5-звёздный ниндзя       1.00%"
+    },
+    {
+      "row": 3570,
+      "string_id": "210184",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "3-звёздный ниндзя       77.00% \\ n4-звёздный ниндзя       13.00% \\ n5-звёздный ниндзя       10.00%"
+    },
+    {
+      "row": 3572,
+      "string_id": "210186",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "3-звёздный ниндзя       77.00% \\ n4-звёздный ниндзя       13.00% \\ n5-звёздный ниндзя       10.00%"
+    },
+    {
+      "row": 4551,
+      "string_id": "312310",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "< img   src = ' ⟦PH_1⟧ '   height = 60   align = center   / >     x   ⟦PH_2⟧"
+    },
+    {
+      "row": 13836,
+      "string_id": "40100100",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Если в игровом чате вы часто встречаете спам и беспокойные сообщения, командир может быстро пожаловаться, нажав на аватар игрока. Официальная команда также активно борется с нарушениями в канале. ~\\n             Кроме того, не покупайте игровые аккаунты на сторонних платформах — остерегайтесь мошенничества, блокировки аккаунта и других рисков. ~"
+    },
+    {
+      "row": 16811,
+      "string_id": "300193",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#FFFFFF>Боевой вызов</color> <color=#B73030>     (Имеется: ⟦PH_1⟧)</color>"
+    },
+    {
+      "row": 17446,
+      "string_id": "302074",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#464B65>UID:</color><color=#cc3939>       ⟦PH_1⟧</color>"
+    },
+    {
+      "row": 17449,
+      "string_id": "302077",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Сервер:       ⟦PH_1⟧"
+    },
+    {
+      "row": 17450,
+      "string_id": "302078",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Организация:       ⟦PH_1⟧"
+    },
+    {
+      "row": 17451,
+      "string_id": "302079",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Ранг:       ⟦PH_1⟧"
+    },
+    {
+      "row": 17548,
+      "string_id": "302183",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#000000>Время сезона:</color> <color=#006600>⟦PH_1⟧             (Обратный отсчёт завершения: ⟦PH_2⟧)</color>"
+    },
+    {
+      "row": 17661,
+      "string_id": "302303",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Время открытия: ⟦PH_1⟧         (Обратный отсчёт: в процессе)"
+    },
+    {
+      "row": 17731,
+      "string_id": "302373",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Выбрано:       ⟦PH_1⟧ / ⟦PH_2⟧"
+    },
+    {
+      "row": 17775,
+      "string_id": "302417",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Мощный ниндзя       Привилегия награды       Бесплатная быстрая очистка"
+    },
+    {
+      "row": 17783,
+      "string_id": "302425",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#000000>Время сезона: </color><color=#006600>⟦PH_1⟧             (Обратный отсчёт: ⟦PH_2⟧)</color>"
+    },
+    {
+      "row": 18115,
+      "string_id": "302757",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "< img   src = ' ggbtn _ sx '   / > < / c > < color = # 000000 >       Обновить < / c >"
+    },
+    {
+      "row": 18209,
+      "string_id": "302955",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#353a5c>⟦PH_1⟧</color>                     <color=#0c0200>⟦PH_2⟧</color>"
+    },
+    {
+      "row": 18696,
+      "string_id": "304103",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "⟦PH_1⟧     <color=#1a202b>куплено</color> <color=#096409>⟦PH_2⟧</color> <color=#1a202b>     ⟦PH_3⟧ шт.</color>"
+    },
+    {
+      "row": 19134,
+      "string_id": "304554",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<img src='⟦PH_1⟧' height=40 align=center /> ⟦PH_2⟧     Ускорить"
+    },
+    {
+      "row": 19534,
+      "string_id": "305345",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#FF9E00>1000</ c><color=#ffffff>многократных вытягиваний\\n                   Бесплатный выбор!</ c>"
+    },
+    {
+      "row": 19631,
+      "string_id": "305442",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#ffffff>Сброс каждые 2 дня       Обратный отсчёт: </c><color=#12ff00>⟦PH_1⟧</c>"
+    },
+    {
+      "row": 20493,
+      "string_id": "309150",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "< color = # FFFFFF > ⟦PH_1⟧ < / c > < color = # 00FF00 >     ⟦PH_2⟧ < / color >"
+    },
+    {
+      "row": 20494,
+      "string_id": "309151",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "< color = # FFFFFF > ⟦PH_1⟧ < / c > < color = # 00FF00 >     + ⟦PH_2⟧ < / color >"
+    },
+    {
+      "row": 20495,
+      "string_id": "309152",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "< color = # FFFFFF > ⟦PH_1⟧ : < / c > < color = # 00FF00 >     ⟦PH_2⟧ < / color >"
+    },
+    {
+      "row": 20496,
+      "string_id": "309153",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "< color = # FFFFFF > ⟦PH_1⟧ : < / c > < color = # 00FF00 >     + ⟦PH_2⟧ < / color >"
+    },
+    {
+      "row": 20544,
+      "string_id": "309251",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#585858>⟦PH_1⟧</color> <color=#585858>       (⟦PH_2⟧%)</color>"
+    },
+    {
+      "row": 20612,
+      "string_id": "309375",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#FFFFFF>⟦PH_1⟧     + ⟦PH_2⟧   (макс. ⟦PH_3⟧)</color>"
+    },
+    {
+      "row": 20637,
+      "string_id": "309400",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#1A202B>⟦PH_1⟧</c> <color=#008900>       Выполнено</color>"
+    },
+    {
+      "row": 20638,
+      "string_id": "309401",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#1A202B>⟦PH_1⟧</c> <color=#cc3939>       Не выполнено</color>"
+    },
+    {
+      "row": 20762,
+      "string_id": "309673",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "Ур. ⟦PH_1⟧     ⟦PH_2⟧. Стена замка"
+    },
+    {
+      "row": 20822,
+      "string_id": "309805",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#⟦PH_1⟧>⟦PH_2⟧</color>       <color=#ffffff>Lv. ⟦PH_3⟧</color>"
+    },
+    {
+      "row": 21315,
+      "string_id": "320059",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "<color=#1A202B>Суммарный вход</ c><color=#008900>1/2/3/4/7/15/30 дней</ c><color=#1A202B>, можно получить один раунд билета ниндзя!       (</ c><color=#008900>⟦PH_1⟧/⟦PH_2⟧</ c><color=#1A202B>)раунд</ c>"
+    },
+    {
+      "row": 21935,
+      "string_id": "9050044",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "          Деревянный стиль · Спуск цветущего леса"
+    },
+    {
+      "row": 21999,
+      "string_id": "9060064",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "              Ночь бешенства Девятихвоста"
+    },
+    {
+      "row": 24188,
+      "string_id": "9140055",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "      Совсем недавно… …"
+    },
+    {
+      "row": 24257,
+      "string_id": "8137660",
+      "type": "new_placeholder_found",
+      "detail": "found unfrozen placeholder: % H",
+      "target": "Носитель восстанавливает 6% HP в конце каждого хода",
+      "pattern": "%(?:\\d+\\$)?[\\-\\+0# ]*(?:\\d+)?(?:\\.\\d+)?[a-zA-Z]"
+    },
+    {
+      "row": 24258,
+      "string_id": "8137680",
+      "type": "new_placeholder_found",
+      "detail": "found unfrozen placeholder: % H",
+      "target": "Если собственное HP ниже 50%, дополнительно восстанавливает 3% HP",
+      "pattern": "%(?:\\d+\\$)?[\\-\\+0# ]*(?:\\d+)?(?:\\.\\d+)?[a-zA-Z]"
+    },
+    {
+      "row": 25514,
+      "string_id": "7390962",
+      "type": "new_placeholder_found",
+      "detail": "found unfrozen placeholder: % H",
+      "target": "При получении смертельного урона блокировать весь урон в текущем ходу и восстановить ⟦PH_1⟧ % HP в конце хода (перезарядка: ⟦PH_2⟧ ходов)",
+      "pattern": "%(?:\\d+\\$)?[\\-\\+0# ]*(?:\\d+)?(?:\\.\\d+)?[a-zA-Z]"
+    },
+    {
+      "row": 28248,
+      "string_id": "366100",
+      "type": "forbidden_hit",
+      "detail": "matched forbidden pattern: \\s{4,}",
+      "target": "              Пробуждение:"
+    }
+  ],
+  "metadata": {
+    "version": "2.0",
+    "generated_at": "2026-01-28T23:22:41.634039",
+    "input_file": "data\\Production Batch\\01. Omni Production_go\\Production_go_translated.csv",
+    "total_errors": 40,
+    "errors_truncated": false
+  }
+}

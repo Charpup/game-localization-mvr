@@ -8,9 +8,9 @@ currency: USD
 # ============================================
 # Platform billing formula (API平台计费规则)
 # ============================================
-# 
+#
 # 费用计算公式:
-#   cost = conversion_rate × group_rate × model_rate × 
+#   cost = conversion_rate × group_rate × model_rate ×
 #          (prompt_tokens + completion_tokens × completion_ratio) / 500000
 #
 # 其中:
@@ -24,25 +24,25 @@ currency: USD
 billing:
   # Platform conversion parameters
   recharge_rate:
-    old: 1.0      # 原充值倍率
-    new: 1.0      # 新充值倍率
+    old: 1.0 # 原充值倍率
+    new: 1.0 # 新充值倍率
   group_rate:
-    old: 1.0      # 原分组倍率
-    new: 1.0      # 新分组倍率
-  
+    old: 1.0 # 原分组倍率
+    new: 1.0 # 新分组倍率
+
   # User group multiplier (用户分组倍率)
   user_group_multiplier: 1.00
-  
+
   # Base divisor for token calculation
   token_divisor: 500000
-  
+
   # Formula mode: "multiplier" (倍率模式) or "per_1m" (每百万token模式)
   mode: multiplier
 
 # ============================================
 # Model pricing (模型定价)
 # ============================================
-# 
+#
 # Each model has:
 #   prompt_mult: 提示倍率 (model_rate)
 #   completion_mult: 补全倍率 (completion_ratio)
@@ -328,6 +328,11 @@ models:
     output_per_1M: 12.00
 
   # === Claude 4.5 Haiku ===
+  claude-haiku-4-5-20251001:
+    prompt_mult: 0.2
+    completion_mult: 4.0
+    input_per_1M: 0.40
+    output_per_1M: 1.60
   claude-haiku-4-5-20251001-thinking:
     prompt_mult: 0.6
     completion_mult: 5.0
@@ -347,7 +352,7 @@ models:
     input_per_1M: 0.60
     output_per_1M: 2.40
 
-# Optional: Additional surcharges
+  # Optional: Additional surcharges
 
   # === New Scraped Models ===
   o3-mini-2025-01-31-medium:

@@ -1,727 +1,103 @@
 {
   "step": "translate",
-  "total_batches": 120,
+  "total_batches": 1199,
   "failed_batches": [
     {
-      "batch_num": 1,
-      "start_idx": 0,
-      "end_idx": 25,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261048159213859414116675)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1107,
+      "start_idx": 27650,
+      "end_idx": 27675,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 2,
-      "start_idx": 25,
-      "end_idx": 50,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610482376148616475891839)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1115,
+      "start_idx": 27850,
+      "end_idx": 27875,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 3,
-      "start_idx": 50,
-      "end_idx": 75,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610483079633603997390147)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1116,
+      "start_idx": 27875,
+      "end_idx": 27900,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 4,
-      "start_idx": 75,
-      "end_idx": 100,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610483886050411247485372)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1119,
+      "start_idx": 27950,
+      "end_idx": 27975,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 5,
-      "start_idx": 100,
-      "end_idx": 125,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610484654261102987764829)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1120,
+      "start_idx": 27975,
+      "end_idx": 28000,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 6,
-      "start_idx": 125,
-      "end_idx": 150,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610485367805530022161373)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1123,
+      "start_idx": 28050,
+      "end_idx": 28075,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 7,
-      "start_idx": 150,
-      "end_idx": 175,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610490093469995638542841)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1124,
+      "start_idx": 28075,
+      "end_idx": 28100,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 8,
-      "start_idx": 175,
-      "end_idx": 200,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610490779930187873759298)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1126,
+      "start_idx": 28125,
+      "end_idx": 28150,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 9,
-      "start_idx": 200,
-      "end_idx": 225,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610491483783738399225011)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1132,
+      "start_idx": 28275,
+      "end_idx": 28300,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 10,
-      "start_idx": 225,
-      "end_idx": 250,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610492260518235504418477)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1134,
+      "start_idx": 28325,
+      "end_idx": 28350,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 11,
-      "start_idx": 250,
-      "end_idx": 275,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610492985325768759582404)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1135,
+      "start_idx": 28350,
+      "end_idx": 28375,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 12,
-      "start_idx": 275,
-      "end_idx": 300,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261049376731736650792938)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1142,
+      "start_idx": 28525,
+      "end_idx": 28550,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 13,
-      "start_idx": 300,
-      "end_idx": 325,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610494416139617873440312)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1145,
+      "start_idx": 28600,
+      "end_idx": 28625,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 14,
-      "start_idx": 325,
-      "end_idx": 350,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610495140364221802373847)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1146,
+      "start_idx": 28625,
+      "end_idx": 28650,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 15,
-      "start_idx": 350,
-      "end_idx": 375,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610495846878130890003569)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1156,
+      "start_idx": 28875,
+      "end_idx": 28900,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     },
     {
-      "batch_num": 16,
-      "start_idx": 375,
-      "end_idx": 400,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610500516894548694945663)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 17,
-      "start_idx": 400,
-      "end_idx": 425,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610501358591722548601282)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 18,
-      "start_idx": 425,
-      "end_idx": 450,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610502067232193747413748)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 19,
-      "start_idx": 450,
-      "end_idx": 475,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610502753611684570865918)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 20,
-      "start_idx": 475,
-      "end_idx": 500,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610503448933014536496734)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 21,
-      "start_idx": 500,
-      "end_idx": 525,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610504174295084095948562)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 22,
-      "start_idx": 525,
-      "end_idx": 550,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610504918962739148708505)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 23,
-      "start_idx": 550,
-      "end_idx": 575,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610505628636935162350398)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 24,
-      "start_idx": 575,
-      "end_idx": 600,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610510728373344316536060)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 25,
-      "start_idx": 600,
-      "end_idx": 625,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610511437753232757610951)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 26,
-      "start_idx": 625,
-      "end_idx": 650,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610512149411006127724334)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 27,
-      "start_idx": 650,
-      "end_idx": 675,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610512865687107415961131)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 28,
-      "start_idx": 675,
-      "end_idx": 700,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610513571377250035818042)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 29,
-      "start_idx": 700,
-      "end_idx": 725,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261051442599964661018802)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 30,
-      "start_idx": 725,
-      "end_idx": 750,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610515160961909057671233)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 31,
-      "start_idx": 750,
-      "end_idx": 775,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610515897453316898751623)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 32,
-      "start_idx": 775,
-      "end_idx": 800,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610520651144092726689041)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 33,
-      "start_idx": 800,
-      "end_idx": 825,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610521345563987373466725)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 34,
-      "start_idx": 825,
-      "end_idx": 850,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610522042959891400352564)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 35,
-      "start_idx": 850,
-      "end_idx": 875,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610522797791380831901255)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 36,
-      "start_idx": 875,
-      "end_idx": 900,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610523543689054862985841)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 37,
-      "start_idx": 900,
-      "end_idx": 925,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610524266555593567595403)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 38,
-      "start_idx": 925,
-      "end_idx": 950,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610524958849396219051005)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 39,
-      "start_idx": 950,
-      "end_idx": 975,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610525687730468747386884)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 40,
-      "start_idx": 975,
-      "end_idx": 1000,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610530386706378605425572)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 41,
-      "start_idx": 1000,
-      "end_idx": 1025,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610531089254131164566503)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 42,
-      "start_idx": 1025,
-      "end_idx": 1050,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610531838093367466779161)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 43,
-      "start_idx": 1050,
-      "end_idx": 1075,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610532558303989151466532)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 44,
-      "start_idx": 1075,
-      "end_idx": 1100,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610533255939304195746536)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 45,
-      "start_idx": 1100,
-      "end_idx": 1125,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610533987015994421072093)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 46,
-      "start_idx": 1125,
-      "end_idx": 1150,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261053472026412969905409)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 47,
-      "start_idx": 1150,
-      "end_idx": 1175,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261053545920323597879883)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 48,
-      "start_idx": 1175,
-      "end_idx": 1200,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610540117810119717539974)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 49,
-      "start_idx": 1200,
-      "end_idx": 1225,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610540899458578890249432)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 50,
-      "start_idx": 1225,
-      "end_idx": 1250,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 20260126105416858616345004050)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 51,
-      "start_idx": 1250,
-      "end_idx": 1275,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261054236298895981893455)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 52,
-      "start_idx": 1275,
-      "end_idx": 1300,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610543020272429226195328)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 53,
-      "start_idx": 1300,
-      "end_idx": 1325,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610543726828171027402286)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 54,
-      "start_idx": 1325,
-      "end_idx": 1350,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610544447415159334444432)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 55,
-      "start_idx": 1350,
-      "end_idx": 1375,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610545164211018455137416)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 56,
-      "start_idx": 1375,
-      "end_idx": 1400,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610545895885428693589659)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 57,
-      "start_idx": 1400,
-      "end_idx": 1425,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610550568638479307302789)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 58,
-      "start_idx": 1425,
-      "end_idx": 1450,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261055134458759647825961)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 59,
-      "start_idx": 1450,
-      "end_idx": 1475,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610552026694638472754506)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 60,
-      "start_idx": 1475,
-      "end_idx": 1500,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610552759625894330659186)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 61,
-      "start_idx": 1500,
-      "end_idx": 1525,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610553468285707041874149)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 62,
-      "start_idx": 1525,
-      "end_idx": 1550,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610554195870372791328359)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 63,
-      "start_idx": 1550,
-      "end_idx": 1575,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610554883184146739477698)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 64,
-      "start_idx": 1575,
-      "end_idx": 1600,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610555646200524980031476)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 65,
-      "start_idx": 1600,
-      "end_idx": 1625,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610560356545899363737585)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 66,
-      "start_idx": 1625,
-      "end_idx": 1650,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610561059318468685976350)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 67,
-      "start_idx": 1650,
-      "end_idx": 1675,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610561796636185297502669)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 68,
-      "start_idx": 1675,
-      "end_idx": 1700,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610562954156589126498807)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 69,
-      "start_idx": 1700,
-      "end_idx": 1725,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610563664158633806594724)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 70,
-      "start_idx": 1725,
-      "end_idx": 1750,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610564387612804900849659)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 71,
-      "start_idx": 1750,
-      "end_idx": 1775,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610565117218452023487233)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 72,
-      "start_idx": 1775,
-      "end_idx": 1800,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261056582203106542317704)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 73,
-      "start_idx": 1800,
-      "end_idx": 1825,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610570547694725084396597)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 74,
-      "start_idx": 1825,
-      "end_idx": 1850,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610571239079000482549457)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 75,
-      "start_idx": 1850,
-      "end_idx": 1875,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610571963583297470196565)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 76,
-      "start_idx": 1875,
-      "end_idx": 1900,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610572685338260300683616)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 77,
-      "start_idx": 1900,
-      "end_idx": 1925,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261057349535615819783895)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 78,
-      "start_idx": 1925,
-      "end_idx": 1950,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610574170460353038988450)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 79,
-      "start_idx": 1950,
-      "end_idx": 1975,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610574857555878273619681)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 80,
-      "start_idx": 1975,
-      "end_idx": 2000,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610575569763492068220972)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 81,
-      "start_idx": 2000,
-      "end_idx": 2025,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610580244868783714838901)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 82,
-      "start_idx": 2025,
-      "end_idx": 2050,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610580918340930880854066)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 83,
-      "start_idx": 2050,
-      "end_idx": 2075,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610581626927609516227942)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 84,
-      "start_idx": 2075,
-      "end_idx": 2100,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610582341367207469593551)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 85,
-      "start_idx": 2100,
-      "end_idx": 2125,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610583067172962906994462)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 86,
-      "start_idx": 2125,
-      "end_idx": 2150,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610583814509421256417418)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 87,
-      "start_idx": 2150,
-      "end_idx": 2175,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610584565815278843509339)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 88,
-      "start_idx": 2175,
-      "end_idx": 2200,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610585265992684823598010)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 89,
-      "start_idx": 2200,
-      "end_idx": 2225,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610585962408051265541485)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 90,
-      "start_idx": 2225,
-      "end_idx": 2250,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610590653653893190418851)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 91,
-      "start_idx": 2250,
-      "end_idx": 2275,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610591345123797299448654)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 92,
-      "start_idx": 2275,
-      "end_idx": 2300,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610592015377073993995447)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 93,
-      "start_idx": 2300,
-      "end_idx": 2325,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610592725767249047764646)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 94,
-      "start_idx": 2325,
-      "end_idx": 2350,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610593435858850506606329)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 95,
-      "start_idx": 2350,
-      "end_idx": 2375,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610594561410022866981958)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 96,
-      "start_idx": 2375,
-      "end_idx": 2400,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610595292227739138037130)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 97,
-      "start_idx": 2400,
-      "end_idx": 2425,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012610595993160899719191025)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 98,
-      "start_idx": 2425,
-      "end_idx": 2450,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611001090794702885958749)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 99,
-      "start_idx": 2450,
-      "end_idx": 2475,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261100181214566183063181)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 100,
-      "start_idx": 2475,
-      "end_idx": 2500,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611002521726302664818829)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 101,
-      "start_idx": 2500,
-      "end_idx": 2525,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611003224916152861670715)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 102,
-      "start_idx": 2525,
-      "end_idx": 2550,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611003946735577376816666)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 103,
-      "start_idx": 2550,
-      "end_idx": 2575,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611004715534133994360217)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 104,
-      "start_idx": 2575,
-      "end_idx": 2600,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611005449674820318350516)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 105,
-      "start_idx": 2600,
-      "end_idx": 2625,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611010151295957168065176)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 106,
-      "start_idx": 2625,
-      "end_idx": 2650,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611010890591050450248913)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 107,
-      "start_idx": 2650,
-      "end_idx": 2675,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611011566634347222658118)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 108,
-      "start_idx": 2675,
-      "end_idx": 2700,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611012349861196542801314)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 109,
-      "start_idx": 2700,
-      "end_idx": 2725,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611013035815377287030992)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 110,
-      "start_idx": 2725,
-      "end_idx": 2750,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611013735797802608660121)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 111,
-      "start_idx": 2750,
-      "end_idx": 2775,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611014440949297539252560)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 112,
-      "start_idx": 2775,
-      "end_idx": 2800,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611015169175841830814199)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 113,
-      "start_idx": 2800,
-      "end_idx": 2825,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611015839999353151619897)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 114,
-      "start_idx": 2825,
-      "end_idx": 2850,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261102061095757731640602)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 115,
-      "start_idx": 2850,
-      "end_idx": 2875,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611021359179255383175207)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 116,
-      "start_idx": 2875,
-      "end_idx": 2900,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611022069265369670203685)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 117,
-      "start_idx": 2900,
-      "end_idx": 2925,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 202601261102286231020924459730)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 118,
-      "start_idx": 2925,
-      "end_idx": 2950,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611023589971444257384741)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 119,
-      "start_idx": 2950,
-      "end_idx": 2975,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611024276671119287341854)\",\"type\":\"shell_api_error\"}}"
-    },
-    {
-      "batch_num": 120,
-      "start_idx": 2975,
-      "end_idx": 3000,
-      "error": "HTTP error 401: {\"error\":{\"message\":\"[wNHbZyfkSyTVwYO2EcC3E29aE94f4369B7529aE92aBc7cC8]无效的令牌 (request id: 2026012611024972905788950987175)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 1159,
+      "start_idx": 28950,
+      "end_idx": 28975,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"
     }
   ],
-  "timestamp": "2026-01-26T11:02:48.482746"
+  "timestamp": "2026-01-27T07:49:13.548737"
 }
