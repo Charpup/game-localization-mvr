@@ -34,3 +34,10 @@ reports/*.jsonl
 # Backups
 *.bak
 *.bak.*
+
+# 敏感信息
+.env
+*.env
+api_key.txt
+**/api_key*.txt
+**/credentials*.json
