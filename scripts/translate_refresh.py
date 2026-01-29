@@ -48,16 +48,7 @@ try:
 except ImportError:
     yaml = None
 
-from runtime_adapter import LLMClient, LLMError
-
-# Import batch utilities
-try:
-    from batch_utils import (
-        BatchConfig, split_into_batches, parse_json_array, format_progress
-    )
-except ImportError:
-    print("ERROR: batch_utils.py not found. Please ensure it exists in scripts/")
-    sys.exit(1)
+from runtime_adapter import LLMClient, LLMError, BatchConfig, get_batch_config, batch_llm_call, log_llm_progress
 
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 
@@ -114,127 +105,67 @@ def validate_placeholder_signature(source: str, target: str) -> bool:
 def build_system_prompt_batch(style: str) -> str:
     """Build system prompt for batch translate refresh."""
     return (
-        "你是"术语变更刷新器"（zh-CN → ru-RU）。\n"
+        "你是'术语变更刷新器'（zh-CN → ru-RU）。\n"
         "任务：根据变更后的术语表，仅替换 current_ru 中过时的术语；保持其他内容（尤其占位符与句式）不变。\n\n"
         "输入格式：JSON 数组，每项包含 string_id、source_zh、current_ru、changed_terms。\n"
-        "输出格式（硬性）：JSON 数组，每项包含 string_id、updated_ru。\n\n"
+        "输出格式（硬性 JSON）：\n"
+        "{\n"
+        '  "items": [\n'
+        "    {\n"
+        '      "id": "<string_id>",\n'
+        '      "updated_ru": "<new_text>"\n'
+        "    }\n"
+        "  ]\n"
+        "}\n\n"
         "硬约束：\n"
         "- token（⟦PH_xx⟧ / ⟦TAG_xx⟧）必须原样保留且数量一致。\n"
         "- 只替换 changed_terms 中列出的术语，不要改变句子结构。\n"
         "- 如果没有需要替换的术语，updated_ru 应与 current_ru 相同。\n\n"
-        "示例输出：[{\"string_id\": \"XXX\", \"updated_ru\": \"Новый текст ⟦PH_0⟧\"}]\n"
+        "示例输出：{\"items\": [{\"id\": \"XXX\", \"updated_ru\": \"Новый текст ⟦PH_0⟧\"}]}\n"
         "不要输出中文括号【】，不要解释。\n\n"
         f"style_guide（节选）：\n{style[:1000]}\n"
     )
 
 
-def build_batch_input(rows: List[Dict[str, str]], changed_terms: List[Dict]) -> List[Dict]:
-    """Build batch input for refresh."""
-    batch_items = []
-    for row in rows:
-        source_zh = row.get("source_zh") or row.get("tokenized_zh") or ""
-        
-        # Filter to terms that appear in this source
-        relevant_terms = [t for t in changed_terms if t["term_zh"] in source_zh]
-        
-        if not relevant_terms:
-            # No relevant changes for this row
-            continue
-        
-        changes_text = "; ".join([
-            f"{t['term_zh']}: {t.get('old_ru', '?')} → {t['new_ru']}"
-            for t in relevant_terms[:5]  # Limit to 5 terms per row
-        ])
-        
-        batch_items.append({
-            "string_id": row.get("string_id", ""),
-            "source_zh": source_zh,
-            "current_ru": row.get("target_text", ""),
-            "changed_terms": changes_text
-        })
-    
-    return batch_items
-
-
-def process_batch(
-    batch: List[Dict[str, str]],
-    llm: LLMClient,
-    style: str,
-    hash_old: str,
-    hash_new: str,
-    changed_terms: List[Dict],
-    batch_idx: int,
-    max_retries: int = 2
-) -> Dict[str, str]:
-    """
-    Process a batch of rows for refresh.
-    
-    Returns:
-        Dict mapping string_id -> updated_ru
-    """
-    if not batch:
-        return {}
-    
-    # Build batch input
-    batch_input = build_batch_input(batch, changed_terms)
-    
-    if not batch_input:
-        # No rows need refresh in this batch
-        return {}
-    
-    system = build_system_prompt_batch(style)
-    user_prompt = json.dumps(batch_input, ensure_ascii=False, indent=None)
-    
-    # Build id -> source map for validation
-    id_to_source = {row.get("string_id", ""): row.get("source_zh") or row.get("tokenized_zh") or "" 
-                    for row in batch}
-    
-    for attempt in range(max_retries + 1):
+def build_user_prompt_refresh(items: List[Dict]) -> str:
+    """Build user prompt for refresh from batch items."""
+    # items comes from batch_llm_call where 'source_text' is a JSON string 
+    # containing current_ru and changed_terms
+    candidates = []
+    for it in items:
         try:
-            result = llm.chat(
-                system=system,
-                user=user_prompt,
-                metadata={
-                    "step": "translate_refresh",
-                    "batch_idx": batch_idx,
-                    "batch_size": len(batch_input),
-                    "glossary_hash_old": hash_old,
-                    "glossary_hash_new": hash_new,
-                    "attempt": attempt
-                },
-                response_format={"type": "json_object"}
-            )
-            
-            parsed = parse_json_array(result.text)
-            if parsed is None:
-                raise ValueError("Failed to parse JSON array")
-            
-            # Build result map
-            results = {}
-            for item in parsed:
-                sid = item.get("string_id", "")
-                updated_ru = item.get("updated_ru", "")
-                
-                if not sid:
-                    continue
-                
-                # Validate placeholder signature
-                source = id_to_source.get(sid, "")
-                if source and not validate_placeholder_signature(source, updated_ru):
-                    # Placeholder mismatch - skip this item
-                    continue
-                
-                results[sid] = updated_ru
-            
-            return results
-            
-        except Exception as e:
-            if attempt >= max_retries:
-                print(f"    ⚠️ Batch {batch_idx} error: {e}")
-                return {}
-            time.sleep(1)
+            extra = json.loads(it["source_text"])
+            candidates.append({
+                "string_id": it["id"],
+                "source_zh": extra.get("source_zh", ""),
+                "current_ru": extra.get("current_ru", ""),
+                "changed_terms": extra.get("changed_terms", "")
+            })
+        except:
+            candidates.append({
+                "string_id": it["id"],
+                "source_zh": it["source_text"] # Fallback
+            })
     
-    return {}
+    return json.dumps(candidates, ensure_ascii=False, indent=2)
+
+def process_refresh_results(batch_results: List[Dict], id_to_source: Dict[str, str]) -> Dict[str, str]:
+    """Normalize batch output items into refresh map."""
+    refresh_map = {}
+    for it in batch_results:
+        sid = str(it.get("id", ""))
+        updated_ru = it.get("updated_ru", "")
+        
+        if not sid or not updated_ru:
+            continue
+            
+        # Validate placeholder signature
+        source = id_to_source.get(sid, "")
+        if source and not validate_placeholder_signature(source, updated_ru):
+            continue
+            
+        refresh_map[sid] = updated_ru
+    return refresh_map
 
 
 def main():
@@ -251,8 +182,10 @@ def main():
                     help="Style guide markdown")
     ap.add_argument("--out_csv", default="data/refreshed.csv",
                     help="Output refreshed CSV")
+    ap.add_argument("--report", help="Output JSON report")
     ap.add_argument("--batch_size", type=int, default=15,
                     help="Items per batch")
+    ap.add_argument("--model", help="Model override")
     ap.add_argument("--dry-run", action="store_true",
                     help="Validate without making LLM calls")
     args = ap.parse_args()
@@ -325,42 +258,64 @@ def main():
         print("=" * 60)
         return 0
     
-    # Initialize LLM
-    llm = LLMClient()
-    print(f"✅ LLM: {llm.default_model}")
-    
-    # Split impacted rows into batches
-    config = BatchConfig(max_items=args.batch_size, max_tokens=4000)
-    config.text_fields = ["source_zh", "tokenized_zh", "target_text"]
-    batches = split_into_batches(impacted_rows, config)
-    print(f"   Batches: {len(batches)}")
-    print()
-    
-    # Process batches and collect results
-    start_time = time.time()
-    refresh_map: Dict[str, str] = {}  # string_id -> updated_ru
-    
-    for batch_idx, batch in enumerate(batches):
-        batch_start = time.time()
+    # Prepare rows for batch_llm_call
+    batch_rows = []
+    id_to_source = {}
+    for row in impacted_rows:
+        source_zh = row.get("source_zh") or row.get("tokenized_zh") or ""
+        id_to_source[row["string_id"]] = source_zh
         
-        results = process_batch(
-            batch, llm, style, hash_old, hash_new, changed_terms, batch_idx
+        # Filter to terms that appear in this source
+        relevant_terms = [t for t in changed_terms if t["term_zh"] in source_zh]
+        if not relevant_terms:
+            continue
+            
+        changes_text = "; ".join([
+            f"{t['term_zh']}: {t.get('old_ru', '?')} → {t['new_ru']}"
+            for t in relevant_terms[:5]
+        ])
+        
+        # We pack current_ru and changes into source_text as JSON
+        extra_info = {
+            "source_zh": source_zh,
+            "current_ru": row.get("target_text", ""),
+            "changed_terms": changes_text
+        }
+        
+        batch_rows.append({
+            "id": row["string_id"],
+            "source_text": json.dumps(extra_info, ensure_ascii=False)
+        })
+
+    if not batch_rows:
+        print("ℹ️  No relevant term changes found in impacted rows.")
+        return 0
+
+    # Execute batch call
+    start_time = time.time()
+    model = args.model or "claude-haiku-4-5-20251001"
+    try:
+        batch_results = batch_llm_call(
+            step="translate_refresh",
+            rows=batch_rows,
+            model=model,
+            system_prompt=build_system_prompt_batch(style),
+            user_prompt_template=build_user_prompt_refresh,
+            content_type="normal",
+            retry=1,
+            allow_fallback=True
         )
         
-        refresh_map.update(results)
+        print("   Batch results received, processing refreshes...")
+        refresh_map = process_refresh_results(batch_results, id_to_source)
         
-        # Progress
-        batch_time = time.time() - batch_start
-        elapsed = time.time() - start_time
-        
-        if (batch_idx + 1) % 3 == 0 or batch_idx == len(batches) - 1:
-            print(format_progress(
-                batch_idx + 1, len(batches), batch_idx + 1, len(batches),
-                elapsed, batch_time
-            ))
+    except Exception as e:
+        print(f"❌ Refresh failed: {e}")
+        return 1
     
     # Apply refreshes to all rows (preserving non-impacted rows)
-    fieldnames = list(rows[0].keys()) if rows else []
+    all_fields = list(rows[0].keys()) if rows else []
+    fieldnames = [f for f in all_fields if f is not None]
     if "refresh_status" not in fieldnames:
         fieldnames.append("refresh_status")
     if "refresh_error" not in fieldnames:
@@ -368,27 +323,33 @@ def main():
     
     ok_count = 0
     no_change_count = 0
+    clean_rows = []
     
     for row in rows:
         string_id = row.get("string_id", "")
         
+        # Ensure row only has keys in fieldnames to avoid DictWriter error
+        clean_row = {k: v for k, v in row.items() if k in fieldnames}
+        
         if string_id not in impact_set:
-            row["refresh_status"] = "not_in_impact"
-            row["refresh_error"] = ""
+            clean_row["refresh_status"] = "not_in_impact"
+            clean_row["refresh_error"] = ""
+            clean_rows.append(clean_row)
             continue
         
         if string_id in refresh_map:
-            row["target_text"] = refresh_map[string_id]
-            row["refresh_status"] = "ok"
-            row["refresh_error"] = ""
+            clean_row["target_text"] = refresh_map[string_id]
+            clean_row["refresh_status"] = "ok"
+            clean_row["refresh_error"] = ""
             ok_count += 1
         else:
-            row["refresh_status"] = "no_changes"
-            row["refresh_error"] = ""
+            clean_row["refresh_status"] = "no_changes"
+            clean_row["refresh_error"] = ""
             no_change_count += 1
+        clean_rows.append(clean_row)
     
     # Write output
-    write_csv(args.out_csv, rows, fieldnames)
+    write_csv(args.out_csv, clean_rows, fieldnames)
     
     total_elapsed = time.time() - start_time
     print()
@@ -399,6 +360,20 @@ def main():
     print(f"✅ Saved to: {args.out_csv} ({len(rows)} rows)")
     print()
     print(f"📊 Row count verification: input={len(rows)}, output={len(rows)} ✅")
+    
+    if args.report:
+        report_data = {
+            "total_rows": len(rows),
+            "refreshed_rows": ok_count,
+            "no_change_rows": no_change_count,
+            "model": model,
+            "latency_s": round(total_elapsed, 2),
+            "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S")
+        }
+        Path(args.report).parent.mkdir(parents=True, exist_ok=True)
+        with open(args.report, "w", encoding="utf-8") as f:
+            json.dump(report_data, f, indent=2)
+        print(f"✅ Report saved to: {args.report}")
     
     return 0
 

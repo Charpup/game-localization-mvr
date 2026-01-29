@@ -57,7 +57,8 @@ def format_examples(examples: List[str], max_count: int = 3) -> str:
 def proposals_to_csv_rows(data: Dict[str, Any]) -> List[Dict[str, str]]:
     """Convert proposals to CSV rows."""
     rows = []
-    proposals = data.get("proposals", [])
+    # Support both 'proposals' and 'entries' keys
+    proposals = data.get("proposals") or data.get("entries") or []
     
     for p in proposals:
         term_zh = (p.get("term_zh") or "").strip()
@@ -124,7 +125,7 @@ def main():
         return 1
     
     data = load_proposals(args.proposals)
-    proposals = data.get("proposals", [])
+    proposals = data.get("proposals") or data.get("entries") or []
     
     print(f"✅ Loaded {len(proposals)} proposals")
     

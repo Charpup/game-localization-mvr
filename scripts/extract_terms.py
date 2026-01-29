@@ -32,6 +32,12 @@ from datetime import datetime
 from collections import Counter, defaultdict
 from abc import ABC, abstractmethod
 
+# Unified batch infrastructure
+try:
+    from runtime_adapter import batch_llm_call, log_llm_progress, BatchConfig
+except ImportError:
+    batch_llm_call = None
+
 try:
     import yaml
 except ImportError:
@@ -387,6 +393,41 @@ class WeightedExtractor(BaseExtractor):
 # LLM 模式
 # ============================================================================
 
+def build_system_prompt_extract() -> str:
+    """Build system prompt for term extraction."""
+    return (
+        "你是手游本地化术语提取专家。\n\n"
+        "任务：从提供的文本中提取候选术语（zh-CN）。\n"
+        "目标：识别具有专业性、代表性或翻译难度的词汇，包括：\n"
+        "- 游戏机制/数值名称\n"
+        "- 专属名词（人名、地名、组织、技能名、道具名）\n"
+        "- UI 界面固定用语\n\n"
+        "输出格式（硬性 JSON）：\n"
+        "{\n"
+        '  "items": [\n'
+        "    {\n"
+        '      "id": "<string_id>",\n'
+        '      "terms": ["术语1", "术语2", ...]\n'
+        "    }\n"
+        "  ]\n"
+        "}\n"
+        "规则：\n"
+        "- 如果行内没有术语，不要出现在 items 中。\n"
+        "- 术语应为 2-8 字，避免提取长难句。\n"
+        "- 排除通用代词和极简常用词。\n"
+    )
+
+def build_user_prompt_extract(items: List[Dict]) -> str:
+    """Build user prompt for extraction."""
+    # items from batch_llm_call: list of {'id', 'source_text'}
+    clean_items = []
+    for it in items:
+        clean_items.append({
+            "string_id": it["id"],
+            "text": it["source_text"]
+        })
+    return json.dumps(clean_items, ensure_ascii=False, indent=2)
+
 class LLMExtractor(BaseExtractor):
     """使用 LLM API 的术语提取器"""
     
@@ -394,46 +435,7 @@ class LLMExtractor(BaseExtractor):
                  provider: str = None, model: str = None):
         super().__init__(glossary_terms)
         self.provider = provider
-        self.model = model
-        self.config = self._load_config()
-    
-    def _load_config(self) -> Dict:
-        """加载 LLM 配置"""
-        config_path = Path(__file__).parent.parent / 'workflow' / 'llm_config.yaml'
-        
-        if not config_path.exists():
-            print(f"⚠️  警告：未找到 LLM 配置文件：{config_path}")
-            return {}
-        
-        with open(config_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
-    
-    def _get_api_key(self) -> str:
-        """获取 API 密钥"""
-        llm_config = self.config.get('llm', {})
-        
-        # 优先使用配置文件中的密钥
-        if llm_config.get('api_key'):
-            return llm_config['api_key']
-        
-        # 根据提供商从环境变量获取
-        provider = self.provider or llm_config.get('provider', 'openai')
-        env_vars = {
-            'openai': 'OPENAI_API_KEY',
-            'anthropic': 'ANTHROPIC_API_KEY',
-            'gemini': 'GOOGLE_API_KEY',
-        }
-        
-        env_var = env_vars.get(provider, 'OPENAI_API_KEY')
-        api_key = os.environ.get(env_var)
-        
-        if not api_key:
-            raise RuntimeError(
-                f"❌ 未找到 API 密钥\n"
-                f"   请设置环境变量 {env_var} 或在 workflow/llm_config.yaml 中配置 api_key"
-            )
-        
-        return api_key
+        self.model = model or "claude-haiku-4-5-20251001"
     
     @property
     def mode_name(self) -> str:
@@ -441,32 +443,77 @@ class LLMExtractor(BaseExtractor):
     
     def extract(self, texts: List[Dict]) -> List[Dict]:
         """使用 LLM 提取术语"""
-        llm_config = self.config.get('llm', {})
+        if not batch_llm_call:
+            raise RuntimeError("batch_llm_call is not available")
         
-        # 获取配置
-        provider = self.provider or llm_config.get('provider', 'openai')
-        model = self.model or llm_config.get('model', 'gpt-4o-mini')
+        print(f"✅ 使用 LLM 模式: {self.model}")
         
-        # 验证 API 密钥
+        # 准备 batch_rows
+        batch_rows = []
+        id_to_original_text = {}
+        for item in texts:
+            sid = str(item['string_id'])
+            text = item['text']
+            batch_rows.append({
+                "id": sid,
+                "source_text": text
+            })
+            id_to_original_text[sid] = text
+
+        # 执行批次调用
         try:
-            api_key = self._get_api_key()
-        except RuntimeError as e:
-            print(str(e))
-            print("\n💡 提示：LLM 模式需要配置 API 密钥")
-            print("   1. 设置环境变量：export OPENAI_API_KEY='your-key'")
-            print("   2. 或编辑配置文件：workflow/llm_config.yaml")
-            sys.exit(1)
+            batch_results = batch_llm_call(
+                step="glossary_extract",
+                rows=batch_rows,
+                model=self.model,
+                system_prompt=build_system_prompt_extract(),
+                user_prompt_template=build_user_prompt_extract,
+                content_type="normal",
+                retry=1,
+                allow_fallback=True,
+                partial_match=True
+            )
+        except Exception as e:
+            print(f"❌ LLM 提取失败: {e}")
+            return []
+
+        # 聚合结果
+        term_freq = Counter()
+        term_examples = defaultdict(list)
         
-        print(f"✅ 使用 LLM 模式: {provider}/{model}")
-        print(f"   API 密钥: {api_key[:8]}...")
-        
-        # TODO: 实现 LLM API 调用
-        print("\n⚠️  LLM 提取功能尚未完全实现")
-        print("   当前仅验证 API 配置是否正确")
-        print("   实际 API 调用将在后续版本实现")
-        
-        # 返回空列表（占位）
-        return []
+        for item in batch_results:
+            sid = str(item.get("id", ""))
+            terms = item.get("terms", [])
+            if not isinstance(terms, list):
+                continue
+                
+            orig_text = id_to_original_text.get(sid, "")
+            
+            for term in terms:
+                term = term.strip()
+                if not term or term in self.glossary_terms:
+                    continue
+                if term in self.stopwords:
+                    continue
+                
+                term_freq[term] += 1
+                if len(term_examples[term]) < 5:
+                    term_examples[term].append({
+                        "string_id": sid,
+                        "source_zh": orig_text
+                    })
+
+        # 构建最终候选列表
+        candidates = []
+        for term, count in term_freq.most_common():
+            candidates.append({
+                'term_zh': term,
+                'score': count,
+                'status': 'proposed',
+                'examples': term_examples[term]
+            })
+            
+        return candidates
 
 
 # ============================================================================

@@ -1,0 +1,23 @@
+{
+  "summary": {
+    "total_steps": 1,
+    "total_batches": 2,
+    "total_rows": 10,
+    "total_success": 10,
+    "total_failed": 0,
+    "total_latency_ms": 2100
+  },
+  "by_step": {
+    "test": {
+      "batches": 2,
+      "rows": 10,
+      "success": 10,
+      "failed": 0,
+      "latency_ms": 2100,
+      "models": [
+        "gpt-4.1-mini"
+      ]
+    }
+  },
+  "by_model": {}
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "script": "scripts\\glossary_autopromote.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\ndef build_system_prompt(style: str, language_pair: str) -> str:\n    \"\"\"Buil...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Mention 'JSON Schema' or provide example JSON structure."
+  },
+  {
+    "script": "scripts\\glossary_review_llm.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\nYou are a professional game localization reviewer for zh-CN → ru-RU transla...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Mention 'JSON Schema' or provide example JSON structure."
+  },
+  {
+    "script": "scripts\\glossary_translate_llm.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\nYou are a professional game localization translator for zh-CN → ru-RU.\n\n---...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Mention 'JSON Schema' or provide example JSON structure."
+  },
+  {
+    "script": "scripts\\llm_ping.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\nYou are a connectivity test.\n\n--- Argument: user ---\nReply with exactly: PO...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Add explicit 'Constraints' section (e.g. Forbidden tokens matching)."
+  },
+  {
+    "script": "scripts\\repair_loop.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\ndef build_system(style: str) -> str:\n    \"\"\"Build system prompt for repair....",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Mention 'JSON Schema' or provide example JSON structure."
+  },
+  {
+    "script": "scripts\\runtime_adapter.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\nVariable(system) - Definition not found\n\n--- Argument: user ---\nVariable(us...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Add explicit 'Constraints' section (e.g. Forbidden tokens matching)."
+  },
+  {
+    "script": "scripts\\soft_qa_llm.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\ndef build_system(style: str) -> str:\n    \"\"\"Build system prompt for soft QA...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Mention 'JSON Schema' or provide example JSON structure."
+  },
+  {
+    "script": "scripts\\style_guide_score.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\nYou are a QA Specialist for Game Localization Style Guides.\nScore the provi...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Mention 'JSON Schema' or provide example JSON structure."
+  },
+  {
+    "script": "scripts\\translate_llm.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\ndef build_system_prompt(style_guide: str) -> str:\n    return (\n        \"你是一...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Mention 'JSON Schema' or provide example JSON structure."
+  },
+  {
+    "script": "scripts\\translate_llm.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\ndef build_system_prompt(style_guide: str) -> str:\n    return (\n        \"你是一...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Mention 'JSON Schema' or provide example JSON structure."
+  },
+  {
+    "script": "scripts\\translate_llm.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\ndef build_system_prompt(style_guide: str) -> str:\n    return (\n        \"你是一...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Mention 'JSON Schema' or provide example JSON structure."
+  },
+  {
+    "script": "scripts\\translate_refresh.py",
+    "function": "chat",
+    "current_snippet_preview": "--- Argument: system ---\nYou are a professional translator performing minimal glossary updates.\n\n---...",
+    "proposal_type": "clarity_improvement",
+    "suggestion": "Add explicit 'Constraints' section (e.g. Forbidden tokens matching)."
+  }
+]

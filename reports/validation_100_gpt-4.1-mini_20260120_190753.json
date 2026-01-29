@@ -1,0 +1,26 @@
+{
+  "model": "gpt-4.1-mini",
+  "input_path": "data/validation_100_v1.csv",
+  "input_sha256": "e1ca657ac1ebd34260fc7f9f486e4853d172976f02f9adf689fcca804fecfd46",
+  "timestamp": "2026-01-20T19:07:53.577966",
+  "scoring_formula": "score = 100 - (missing_rate*40 + escalation_rate*30 + parse_error_rate*20 + cost_norm*10)",
+  "baseline_cost_per_100_rows": 0.1,
+  "metrics": {
+    "total_rows": 100,
+    "total_batches": 10,
+    "missing_count": 0,
+    "missing_rate": 0.0,
+    "escalation_count": 0,
+    "escalation_rate": 0.0,
+    "parse_error_count": 0,
+    "parse_error_rate": 0.0,
+    "avg_latency_ms": 7459.3,
+    "p95_latency_ms": 24896,
+    "total_input_tokens": 2844,
+    "total_output_tokens": 3127,
+    "cost_usd": 0.0061408,
+    "cost_norm": 0.061408,
+    "errors": [],
+    "score": 99.38592
+  }
+}

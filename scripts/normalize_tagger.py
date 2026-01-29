@@ -23,8 +23,15 @@ import json
 import os
 import re
 import sys
+import time
 from dataclasses import dataclass, asdict
 from typing import Dict, List, Any, Optional, Tuple
+
+# Unified batch infrastructure
+try:
+    from runtime_adapter import BatchConfig, batch_llm_call, log_llm_progress
+except ImportError:
+    batch_llm_call = None
 
 # Ensure UTF-8 output on Windows
 if sys.platform == 'win32':
@@ -51,7 +58,33 @@ KEYWORDS = {
     'ui_button': ['确定', '取消', '返回', '领取', '购买', '前往', '开始']
 }
 
+# ID Prefix rules (High confidence classification)
+ID_PREFIX_RULES = {
+    'ui_button': ['BTN_', 'BUTTON_', 'UI_BTN'],
+    'ui_label': ['UI_', 'LABEL_', 'TXT_'],
+    'skill_desc': ['SKILL_', 'ABILITY_', 'SPELL_'],
+    'item_desc': ['ITEM_', 'EQUIP_', 'MATERIAL_'],
+    'dialogue': ['DIALOG_', 'NPC_', 'STORY_', 'QUEST_'],
+    'system_notice': ['SYS_', 'MSG_', 'NOTICE_', 'ERROR_'],
+}
+
+# Thresholds
+LONG_TEXT_THRESHOLD = 200  # Character count
 PLACEHOLDER_PATTERN = re.compile(r'\{[\d\w]+\}|%[sd]|\u003c[^>]+\u003e|\[.+?\]|【.+?】')
+
+TAGGER_SYSTEM_PROMPT = """You are a game localization text classifier.
+Classify each text entry into exactly ONE category:
+- ui_button: Short action buttons (≤6 chars), e.g., "确定", "取消"
+- ui_label: UI labels (≤15 chars), e.g., "等级", "金币"
+- skill_desc: Skill/ability descriptions with damage/effect terms
+- item_desc: Item/equipment descriptions
+- dialogue: NPC dialogue, story text, quest descriptions
+- system_notice: System messages, warnings, errors
+- misc: Everything else
+
+Return JSON format:
+{"items": [{"id": "<string_id>", "tag": "<category>", "confidence": <0.0-1.0>}]}
+"""
 
 @dataclass
 class TagResult:
@@ -65,6 +98,7 @@ class TagResult:
     placeholder_flags: str
     status: str = "ok"
     is_empty_source: bool = False
+    is_long_text: bool = False
 
 def count_placeholders(text: str) -> int:
     return len(PLACEHOLDER_PATTERN.findall(text))
@@ -86,21 +120,28 @@ def calculate_max_len_target(text: str, source_locale: str) -> int:
     target_est = int(char_len * expansion) + (base_len - char_len)
     return max(10, int(target_est * 1.2))  # Buffer
 
-def heuristic_tag(text: str) -> Tuple[str, float]:
-    """Heuristic tagging logic."""
+def heuristic_tag(text: str, string_id: str = "") -> Tuple[str, float]:
+    """Heuristic tagging with ID prefix support."""
     if not text:
         return "misc", 0.0
-        
+
+    # 1. ID Prefix Priority (High confidence)
+    if string_id:
+        sid_upper = string_id.upper()
+        for tag, prefixes in ID_PREFIX_RULES.items():
+            if any(sid_upper.startswith(p) for p in prefixes):
+                return tag, 0.95
+
     length = len(text)
     
-    # 1. Length-based high confidence
+    # 2. Length-based high confidence
     if length <= 4:
         # Check if button keyword
         if any(k in text for k in KEYWORDS['ui_button']):
             return "ui_button", 0.95
         return "ui_button", 0.7  # Short text default
         
-    # 2. Keywords
+    # 3. Keywords
     scores = {}
     for tag, kws in KEYWORDS.items():
         score = sum(1 for kw in kws if kw in text)
@@ -111,15 +152,62 @@ def heuristic_tag(text: str) -> Tuple[str, float]:
         best_tag = max(scores, key=scores.get)
         return best_tag, 0.8
         
-    # 3. Structure
+    # 4. Structure
     if '...' in text or len(text) > 60:
         return "dialogue", 0.6
         
     return "misc", 0.5
 
-def process_entries(input_csv: str, source_locale: str, llm_threshold: float, use_llm: bool) -> List[TagResult]:
+def build_tagger_prompt(items: List[Dict]) -> str:
+    """Build user prompt for LLM classification."""
+    # items from batch_llm_call: list of {'id', 'source_text'}
+    clean_items = []
+    for it in items:
+        clean_items.append({
+            "id": it["id"],
+            "text": it["source_text"][:500] # Truncate for efficiency
+        })
+    return f"Classify these texts:\n{json.dumps(clean_items, ensure_ascii=False, indent=2)}"
+
+def llm_tag_fallback(low_conf_entries: List[Dict], model: str) -> Dict[str, Tuple[str, float]]:
+    """Call LLM to classify low-confidence entries."""
+    if not low_conf_entries or not batch_llm_call:
+        return {}
+    
+    # Row format for batch_llm_call
+    batch_rows = [{"id": e["string_id"], "source_text": e["source_zh"]} for e in low_conf_entries]
+    
+    print(f"  [Tagger] {len(batch_rows)} entries below threshold, invoking LLM...")
+    
+    try:
+        results = batch_llm_call(
+            step="normalize_tag",
+            rows=batch_rows,
+            model=model,
+            system_prompt=TAGGER_SYSTEM_PROMPT,
+            user_prompt_template=build_tagger_prompt,
+            content_type="normal",
+            retry=1,
+            allow_fallback=True
+        )
+        
+        tag_map = {}
+        for it in results:
+            sid = str(it.get("id", ""))
+            tag = it.get("tag", "misc")
+            conf = it.get("confidence", 0.85)
+            if sid and tag in MODULE_TAGS:
+                tag_map[sid] = (tag, conf)
+        
+        return tag_map
+    except Exception as e:
+        print(f"⚠️  LLM Tag Fallback failed: {e}")
+        return {}
+
+def process_entries(input_csv: str, source_locale: str, llm_threshold: float, 
+                    use_llm: bool, model: str = "claude-haiku-4-5-20251001") -> List[TagResult]:
     results = []
-    low_conf_buffer = []
+    low_conf_buffer = []  # Store metadata for fallback
     
     try:
         with open(input_csv, 'r', encoding='utf-8-sig') as f:
@@ -131,20 +219,18 @@ def process_entries(input_csv: str, source_locale: str, llm_threshold: float, us
         
     print(f"Processing {len(rows)} rows...")
     
-    # Pass 1: Heuristic
+    # Pass 1: Heuristic & Long Text detection
     for i, row in enumerate(rows):
-        # Header normalization fallback
         sid = row.get('string_id') or row.get('id') or row.get('ID')
         src = row.get('source_zh') or row.get('source') or row.get('zh') or ''
         
-        # Invariant: Must have ID
         if not sid:
             continue
             
         is_empty = not bool(src.strip())
-        tag, conf = heuristic_tag(src) if not is_empty else ("empty", 1.0)
+        tag, conf = heuristic_tag(src, string_id=sid) if not is_empty else ("empty", 1.0)
         
-        # Calculate derived fields
+        is_long = len(src) > LONG_TEXT_THRESHOLD
         max_len = calculate_max_len_target(src, source_locale)
         len_tier = get_len_tier(len(src))
         
@@ -158,18 +244,36 @@ def process_entries(input_csv: str, source_locale: str, llm_threshold: float, us
             source_locale=source_locale,
             placeholder_flags=f"count={count_placeholders(src)}",
             status="skipped_empty" if is_empty else "ok",
-            is_empty_source=is_empty
+            is_empty_source=is_empty,
+            is_long_text=is_long
         )
         
         if not is_empty and conf < llm_threshold and use_llm:
-            low_conf_buffer.append(i)
+            low_conf_buffer.append({
+                "index": i,
+                "string_id": str(sid),
+                "source_zh": src
+            })
             
         results.append(res)
         
-    # Pass 2: LLM Fallback (skipping implementation for brevity, relying on heuristic for now as per plan/time)
-    # Ideally we'd batch call LLM here. For Normalize 2.0 MVP, heuristic is primary.
+    # Pass 2: LLM Fallback
     if low_conf_buffer and use_llm:
-        print(f"  [Info] {len(low_conf_buffer)} entries below threshold {llm_threshold}, but LLM fallback skipped in this script version (Feature A).")
+        tag_map = llm_tag_fallback(low_conf_buffer, model)
+        
+        # Apply updates
+        update_count = 0
+        for entry in low_conf_buffer:
+            idx = entry["index"]
+            sid = entry["string_id"]
+            if sid in tag_map:
+                new_tag, new_conf = tag_map[sid]
+                results[idx].module_tag = new_tag
+                results[idx].module_confidence = new_conf
+                results[idx].status = "llm_tagged"
+                update_count += 1
+        
+        print(f"  [Tagger] LLM updated {update_count} entries")
         
     return results
 
@@ -180,7 +284,7 @@ def write_csv(path: str, results: List[TagResult]):
         fieldnames = [
             'string_id', 'source_zh', 'module_tag', 'module_confidence',
             'max_len_target', 'len_tier', 'source_locale', 
-            'placeholder_flags', 'status', 'is_empty_source'
+            'placeholder_flags', 'status', 'is_empty_source', 'is_long_text'
         ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -194,6 +298,7 @@ def main():
     parser.add_argument("--source-locale", default="zh-CN")
     parser.add_argument("--llm-threshold", type=float, default=0.7)
     parser.add_argument("--no-llm", action="store_true")
+    parser.add_argument("--model", default="claude-haiku-4-5-20251001")
     
     args = parser.parse_args()
     
@@ -201,7 +306,8 @@ def main():
         args.input, 
         args.source_locale, 
         args.llm_threshold, 
-        not args.no_llm
+        not args.no_llm,
+        args.model
     )
     
     if results:

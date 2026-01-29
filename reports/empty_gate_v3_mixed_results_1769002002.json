@@ -1,0 +1,402 @@
+{
+  "gpt-4.1-mini": {
+    "trials": [
+      {
+        "trial": 1,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.014740467071533203
+      },
+      {
+        "trial": 2,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0008137226104736328
+      },
+      {
+        "trial": 3,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0014140605926513672
+      }
+    ],
+    "status": "FAIL"
+  },
+  "gpt-5.2": {
+    "trials": [
+      {
+        "trial": 1,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0007982254028320312
+      },
+      {
+        "trial": 2,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0008013248443603516
+      },
+      {
+        "trial": 3,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0010259151458740234
+      }
+    ],
+    "status": "FAIL"
+  },
+  "gpt-5.1": {
+    "trials": [
+      {
+        "trial": 1,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0007889270782470703
+      },
+      {
+        "trial": 2,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0013055801391601562
+      },
+      {
+        "trial": 3,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0007905960083007812
+      }
+    ],
+    "status": "FAIL"
+  },
+  "claude-sonnet-4-5-20250929": {
+    "trials": [
+      {
+        "trial": 1,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0008091926574707031
+      },
+      {
+        "trial": 2,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0016071796417236328
+      },
+      {
+        "trial": 3,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.000850677490234375
+      }
+    ],
+    "status": "FAIL"
+  },
+  "claude-haiku-4-5-20251001": {
+    "trials": [
+      {
+        "trial": 1,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0009419918060302734
+      },
+      {
+        "trial": 2,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.00118255615234375
+      },
+      {
+        "trial": 3,
+        "status": "FAIL",
+        "failures": [
+          "Batch 0 Error: client_init: config",
+          "Batch 1 Error: client_init: config",
+          "Batch 2 Error: client_init: config",
+          "Batch 3 Error: client_init: config",
+          "Batch 4 Error: client_init: config",
+          "Batch 5 Error: client_init: config",
+          "Batch 6 Error: client_init: config",
+          "Batch 7 Error: client_init: config",
+          "Batch 8 Error: client_init: config",
+          "Batch 9 Error: client_init: config",
+          "\u274c Count Mismatch: Input 100, Output 0",
+          "\u274c ID Mismatch. Missing: 92, Extra: 0"
+        ],
+        "stats": {
+          "llm_call_count": 10,
+          "sent_row_count": 100,
+          "pollution_count": 0,
+          "empty_pass_count": 0
+        },
+        "latency": 0.0007848739624023438
+      }
+    ],
+    "status": "FAIL"
+  }
+}

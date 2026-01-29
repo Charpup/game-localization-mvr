@@ -1,0 +1,131 @@
+{
+  "gate": "destructive_batch_v1",
+  "timestamp": "2026-01-22T03:07:47.310606",
+  "models": {
+    "gpt-4.1-mini": {
+      "templates": {
+        "A": {
+          "results": {
+            "10": {
+              "status": "PASS",
+              "p95_latency_ms": 18102,
+              "avg_tokens": 2472
+            },
+            "15": {
+              "status": "FAIL",
+              "reason": "Exception: Network error: ('Connection aborted.', RemoteDisco"
+            }
+          },
+          "max_pass": 10
+        },
+        "B": {
+          "results": {},
+          "max_pass": 0
+        },
+        "C": {
+          "results": {},
+          "max_pass": 0
+        }
+      },
+      "max_pass_batch_size_overall": 0,
+      "fail_reason": "Exception: Network error: ('Connection aborted.', RemoteDisco"
+    },
+    "claude-haiku-4-5-20251001": {
+      "templates": {
+        "A": {
+          "results": {
+            "10": {
+              "status": "FAIL",
+              "reason": "Exception: Network error: ('Connection aborted.', RemoteDisco"
+            }
+          },
+          "max_pass": 0
+        },
+        "B": {
+          "results": {},
+          "max_pass": 0
+        },
+        "C": {
+          "results": {},
+          "max_pass": 0
+        }
+      },
+      "max_pass_batch_size_overall": 0,
+      "fail_reason": "Exception: Network error: ('Connection aborted.', RemoteDisco"
+    },
+    "gpt-5.1": {
+      "templates": {
+        "A": {
+          "results": {
+            "10": {
+              "status": "FAIL",
+              "reason": "Exception: Network error: ('Connection aborted.', RemoteDisco"
+            }
+          },
+          "max_pass": 0
+        },
+        "B": {
+          "results": {},
+          "max_pass": 0
+        },
+        "C": {
+          "results": {},
+          "max_pass": 0
+        }
+      },
+      "max_pass_batch_size_overall": 0,
+      "fail_reason": "Exception: Network error: ('Connection aborted.', RemoteDisco"
+    },
+    "gpt-5.2": {
+      "templates": {
+        "A": {
+          "results": {
+            "10": {
+              "status": "PASS",
+              "p95_latency_ms": 55192,
+              "avg_tokens": 2584
+            },
+            "15": {
+              "status": "FAIL",
+              "reason": "JSON Parse Failure"
+            }
+          },
+          "max_pass": 10
+        },
+        "B": {
+          "results": {},
+          "max_pass": 0
+        },
+        "C": {
+          "results": {},
+          "max_pass": 0
+        }
+      },
+      "max_pass_batch_size_overall": 0,
+      "fail_reason": "JSON Parse Failure"
+    },
+    "claude-sonnet-4-5-20250929": {
+      "templates": {
+        "A": {
+          "results": {
+            "10": {
+              "status": "FAIL",
+              "reason": "Exception: Network error: ('Connection aborted.', RemoteDisco"
+            }
+          },
+          "max_pass": 0
+        },
+        "B": {
+          "results": {},
+          "max_pass": 0
+        },
+        "C": {
+          "results": {},
+          "max_pass": 0
+        }
+      },
+      "max_pass_batch_size_overall": 0,
+      "fail_reason": "Exception: Network error: ('Connection aborted.', RemoteDisco"
+    }
+  }
+}

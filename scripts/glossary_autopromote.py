@@ -187,7 +187,7 @@ def build_system_prompt_batch(glossary_excerpt: str) -> str:
     """Build system prompt for batch term extraction."""
     return (
         "你是资深手游本地化术语工程师（zh-CN → ru-RU）。\n"
-        "任务：从给定的批量数据中，抽取"可沉淀为术语表"的候选项。\n\n"
+        "任务：从给定的批量数据中，抽取'可沉淀为术语表'的候选项。\n\n"
         "输入：JSON 数组，每项包含 string_id、source_zh、before_ru、after_ru。\n"
         "输出：JSON 对象，包含 candidates 数组。\n\n"
         "输出格式（仅输出 JSON）：\n"

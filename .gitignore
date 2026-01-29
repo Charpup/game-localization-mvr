@@ -1,77 +1,36 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-*.egg-info/
-dist/
-build/
-
-# Environment secrets (NEVER commit)
+# Environment
 .env
-.env.local
-*.key
+.env.*
+!.env.example
+.env.ps1
 
-# Virtual environments
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
 venv/
 env/
-ENV/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
+# Docker
+.dockerignore
 
-# Generated/temporary test files
-data/temp_*/
-data/*_output.csv
-data/*_e2e.csv
-data/qa_report*.json
-data/placeholder_map_output.json
-data/placeholder_map_e2e.json
-data/draft_output.csv
-data/final_output.csv
-data/final_bad_output.csv
-data/final_e2e.csv
-data/draft_e2e.csv
-
-# Keep example/production files
-!data/input.csv
-!data/draft.csv
-!data/final.csv
-!data/placeholder_map.json
-!data/qa_hard_report.json
-!data/translated_good.csv
-!data/translated_bad.csv
-!data/translated.csv
-!data/repaired.csv
-
-# Keep test fixtures (IMPORTANT for deployment)
-!data/fixtures/
-!data/fixtures/*.csv
-!data/fixtures/*.json
-!data/fixtures/*.md
+# Data & Cache (Local only)
+data/
+cache/
+logs/
 
 # Logs
+reports/*.jsonl
 *.log
-data/llm_trace.jsonl
-data/metrics_*.json
-data/metrics_*.md
 
-# Test coverage
-.coverage
-htmlcov/
-
-# Temporary
-*.tmp
+# Backups
 *.bak
-
-artifacts/
+*.bak.*

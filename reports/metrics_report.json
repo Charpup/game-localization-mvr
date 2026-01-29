@@ -1,0 +1,91 @@
+{
+  "summary": {
+    "total_steps": 7,
+    "total_batches": 109,
+    "total_rows": 0,
+    "total_success": 0,
+    "total_failed": 0,
+    "total_latency_ms": 0
+  },
+  "by_step": {
+    "unknown": {
+      "batches": 58,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": []
+    },
+    "dry_run_test": {
+      "batches": 0,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "unknown"
+      ]
+    },
+    "glossary_extract": {
+      "batches": 1,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "haiku-3"
+      ]
+    },
+    "glossary_translate": {
+      "batches": 2,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "haiku-3"
+      ]
+    },
+    "normalize_tag": {
+      "batches": 5,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "haiku-3"
+      ]
+    },
+    "soft_qa": {
+      "batches": 8,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "sonnet-3"
+      ]
+    },
+    "translate": {
+      "batches": 32,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "haiku-3"
+      ]
+    },
+    "translate_refresh": {
+      "batches": 3,
+      "rows": 0,
+      "success": 0,
+      "failed": 0,
+      "latency_ms": 0,
+      "models": [
+        "haiku-3"
+      ]
+    }
+  },
+  "by_model": {}
+}

@@ -17,6 +17,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+# Ensure UTF-8 output on Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 
 def run_dry_run(cmd: list, name: str) -> bool:
     """Run a script in dry-run mode and check success."""
@@ -58,10 +64,10 @@ def test_translate_dry_run():
     
     return run_dry_run([
         "python", "scripts/translate_llm.py",
-        str(fixtures / "input_valid.csv"),
-        "data/temp_test_translated.csv",
-        "workflow/style_guide.md",
-        str(fixtures / "placeholder_map.json"),
+        "--input", str(fixtures / "input_valid.csv"),
+        "--output", "data/temp_test_translated.csv",
+        "--style", "workflow/style_guide.md",
+        "--glossary", str(fixtures / "placeholder_map.json"),
         "--dry-run"
     ], "translate_llm.py --dry-run")
 

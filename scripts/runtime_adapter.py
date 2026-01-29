@@ -23,9 +23,11 @@ Env:
 from __future__ import annotations
 import json
 import os
+import sys
 import time
 from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
 from typing import Optional, Dict, Any
 
 import requests
@@ -39,6 +41,7 @@ class LLMResult:
     raw: Optional[dict] = None
     request_id: Optional[str] = None
     usage: Optional[dict] = None  # {"prompt_tokens": int, "completion_tokens": int, "total_tokens": int}
+    model: Optional[str] = None  # Model used for the call
 
 
 class LLMError(Exception):
@@ -466,6 +469,7 @@ class LLMClient:
         elif LLMClient._router is None:
             LLMClient._router = LLMRouter()
         self.router = LLMClient._router
+        self.timeout_s = timeout_s or int(os.getenv("LLM_TIMEOUT_S", "60"))
 
         # Validate base config (model can come from router)
         if not self.base_url or not self.api_key:
@@ -481,7 +485,8 @@ class LLMClient:
              temperature: Optional[float] = None,
              max_tokens: Optional[int] = None,
              response_format: Optional[Dict[str, Any]] = None,
-             metadata: Optional[Dict[str, Any]] = None) -> LLMResult:
+             metadata: Optional[Dict[str, Any]] = None,
+             timeout: Optional[int] = None) -> LLMResult:
         """
         Send a chat completion request with automatic model routing.
         
@@ -596,7 +601,8 @@ class LLMClient:
                     router_chain_len=router_chain_len,
                     model_override=model_override,
                     fallback_used=fallback_used,
-                    fallback_reason=fallback_reason
+                    fallback_reason=fallback_reason,
+                    timeout=timeout
                 )
                 return result
                 
@@ -621,7 +627,8 @@ class LLMClient:
                            router_chain_len: int,
                            model_override: Optional[str],
                            fallback_used: bool,
-                           fallback_reason: Optional[str]) -> LLMResult:
+                           fallback_reason: Optional[str],
+                           timeout: Optional[int] = None) -> LLMResult:
         """Execute a single model call with full tracing."""
         url = f"{self.base_url}/chat/completions"
         headers = {
@@ -646,8 +653,11 @@ class LLMClient:
         t0 = time.time()
         http_status = None
         
+        # 使用传入的 timeout，如果没有则使用默认值
+        effective_timeout = timeout if timeout is not None else self.timeout_s
+
         try:
-            resp = requests.post(url, headers=headers, json=payload, timeout=self.timeout_s)
+            resp = requests.post(url, headers=headers, json=payload, timeout=effective_timeout)
             http_status = resp.status_code
         except requests.Timeout as e:
             self._trace_error("timeout", str(e), step, model, attempt_no, 
@@ -777,7 +787,8 @@ class LLMClient:
             latency_ms=latency_ms,
             raw=data,
             request_id=request_id,
-            usage=usage
+            usage=usage,
+            model=model
         )
     
     def _trace_error(self, kind: str, msg: str, step: str, model: str,
@@ -806,3 +817,749 @@ def chat(system: str, user: str, **kwargs) -> str:
     client = LLMClient()
     return client.chat(system=system, user=user, **kwargs).text
 
+
+# ===================================================
+# Batch Infrastructure (Phase 3 Week 1)
+# ===================================================
+
+class BatchConfig:
+    """批次配置管理器,从 batch_runtime_v2.json 加载模型批次配置"""
+
+    def __init__(self, config_path: str = "config/batch_runtime_v2.json"):
+        """从 JSON 文件加载批次配置"""
+        # Try relative to script directory first
+        script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        full_path = os.path.join(script_dir, config_path)
+        if not os.path.exists(full_path):
+            full_path = config_path  # Try as-is
+        
+        with open(full_path, "r", encoding="utf-8") as f:
+            self.config = json.load(f)
+        self.models = self.config.get("models", {})
+
+    def get_batch_size(self, model: str, content_type: str = "normal") -> int:
+        """
+        动态获取批次大小
+
+        Args:
+            model: 模型名称
+            content_type: "normal" | "long_text"
+
+        Returns:
+            int: 批次大小
+        """
+        model_config = self.models.get(model, {})
+
+        if content_type == "long_text":
+            return model_config.get("max_batch_size_long_text", 10)
+        else:
+            return model_config.get("max_batch_size", 10)
+
+    def get_cooldown(self, model: str) -> int:
+        """获取模型冷却期 (秒)"""
+        return self.models.get(model, {}).get("cooldown_required", 0)
+
+    def get_timeout(self, model: str, content_type: str = "normal") -> int:
+        """获取超时配置 (秒)"""
+        model_config = self.models.get(model, {})
+
+        if content_type == "long_text":
+            return model_config.get("timeout_long_text", 300)
+        else:
+            return model_config.get("timeout_normal", 180)
+
+    def get_status(self, model: str) -> str:
+        """获取模型状态"""
+        return self.models.get(model, {}).get("status", "UNKNOWN")
+
+
+# 全局单例
+_batch_config: Optional[BatchConfig] = None
+
+
+def get_batch_config() -> BatchConfig:
+    """获取全局批次配置单例"""
+    global _batch_config
+    if _batch_config is None:
+        _batch_config = BatchConfig()
+    return _batch_config
+
+
+# 全局计时器 (模块级)
+_progress_state = {
+    'start_time': None,
+    'last_report_time': None,
+    'total_rows': 0,
+    'processed_rows': 0
+}
+
+def log_llm_progress(step: str, event_type: str, data: Dict[str, Any], 
+                     silent: bool = False) -> None:
+    """
+    双路线进度汇报:
+    1. 写入 JSONL 文件 (结构化资产)
+    2. 打印到终端 (实时可读)
+
+    Args:
+        step: 步骤名称 (如 "translate", "soft_qa")
+        event_type: 事件类型 (step_start, batch_start, batch_complete, step_complete)
+        data: 事件数据
+        silent: 是否静默 (仅写文件，不打印)
+    """
+    global _progress_state
+
+    now = time.time()
+    timestamp = datetime.now().isoformat()
+
+    # === 路线 1: JSONL 文件输出 (保持原有逻辑) ===
+    log_entry = {
+        "timestamp": timestamp,
+        "step": step,
+        "event": event_type,
+        **data
+    }
+
+    # 确保关键字段在顶级存在，便于检索
+    if event_type == "step_start":
+        log_entry['model'] = data.get('model') or data.get('model_name') or 'unspecified'
+    elif event_type == "batch_complete":
+        log_entry['rows_in_batch'] = data.get('rows_in_batch') or data.get('batch_size') or 0
+        if 'model' not in log_entry and _progress_state.get('current_model'):
+            log_entry['model'] = _progress_state['current_model']
+
+    log_dir = "reports"
+    os.makedirs(log_dir, exist_ok=True)
+    log_path = os.path.join(log_dir, f"{step}_progress.jsonl")
+
+    with open(log_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
+
+    # === 路线 2: 终端实时输出 ===
+    if silent:
+        return
+
+    if event_type == "step_start":
+        _progress_state['start_time'] = now
+        _progress_state['last_report_time'] = now
+        _progress_state['total_rows'] = data.get('total_rows', 0)
+        _progress_state['processed_rows'] = 0
+
+        # 确保 model 有默认值
+        model = data.get('model') or data.get('model_name') or 'unspecified'
+        _progress_state['current_model'] = model # 暂存以便后续批次使用
+        
+        batch_size = data.get('batch_size', 'N/A')
+        total = _progress_state['total_rows']
+
+        print(f"\n{'='*60}")
+        print(f"[{step}] 🚀 Starting")
+        print(f"  Total rows: {total} | Batch size: {batch_size} | Model: {model}")
+        print(f"{'='*60}")
+        sys.stdout.flush()
+
+    elif event_type == "batch_start":
+        batch_num = data.get('batch_index') or data.get('batch_num', 0)
+        total_batches = data.get('total_batches', 0)
+        rows_in_batch = data.get('rows_in_batch') or data.get('batch_size', 0)
+
+        print(f"⏳ [{step}] Batch {batch_num}/{total_batches} starting | "
+              f"{rows_in_batch} rows")
+        sys.stdout.flush()
+        batch_num = data.get('batch_index') or data.get('batch_num', 0)
+        total_batches = data.get('total_batches', 0)
+        
+        # 统一字段名: 优先使用 rows_in_batch，兼容 batch_size
+        rows_in_batch = data.get('rows_in_batch') or data.get('batch_size') or 0
+        
+        latency_ms = data.get('latency_ms', 0)
+        status = data.get('status', 'SUCCESS')
+
+        _progress_state['processed_rows'] += rows_in_batch
+        processed = _progress_state['processed_rows']
+        total = _progress_state['total_rows']
+
+        # 计算百分比
+        pct = (processed / total * 100) if total > 0 else 0
+
+        # 计算时间
+        elapsed_total = now - _progress_state['start_time']
+        elapsed_since_last = now - _progress_state['last_report_time']
+        _progress_state['last_report_time'] = now
+
+        # 状态图标
+        icon = "✅" if status == "SUCCESS" else "❌"
+
+        # 格式化输出
+        print(f"{icon} [{step}] Batch {batch_num}/{total_batches} | "
+              f"{processed}/{total} rows ({pct:.1f}%) | "
+              f"Latency: {latency_ms}ms | "
+              f"Δt: {elapsed_since_last:.1f}s | "
+              f"Total: {elapsed_total:.1f}s")
+        sys.stdout.flush()
+
+    elif event_type == "step_complete":
+        success = data.get('success_count', 0)
+        failed = data.get('failed_count', 0)
+        total = success + failed
+
+        elapsed_total = now - _progress_state['start_time'] if _progress_state['start_time'] else 0
+
+        print(f"\n{'='*60}")
+        print(f"[{step}] 🏁 Complete")
+        print(f"  Success: {success} | Failed: {failed} | Total: {total}")
+        print(f"  Total time: {elapsed_total:.1f}s")
+        print(f"{'='*60}\n")
+        sys.stdout.flush()
+
+
+def parse_llm_response(response_text: str, expected_rows: list, partial_match: bool = False) -> list:
+    """
+    解析 LLM JSON 响应
+
+    Args:
+        response_text: LLM 原始响应文本
+        expected_rows: 期望的数据行 (用于验证 ID 覆盖率)
+        partial_match: 是否允许返回 ID 为输入的子集 (用于 QA 等仅报问题的场景)
+
+    Returns:
+        list: 解析后的结果 (items 数组)
+
+    Raises:
+        ValueError: 如果解析失败或 ID 不匹配
+    """
+    # 去除可能的 Markdown 代码块
+    text = response_text.strip()
+    if text.startswith("```"):
+        parts = text.split("```")
+        if len(parts) >= 3:
+            inner = parts[1].strip()
+            if inner.startswith("json"):
+                text = inner[4:].strip()
+            else:
+                text = inner
+
+    # === 新增: JSON 修复尝试 ===
+    def try_fix_json(raw: str) -> str:
+        """尝试修复常见的 JSON 格式错误"""
+        import re as fix_re
+        fixed = raw
+
+        # 1. 修复尾部多余逗号: {"a": 1,} -> {"a": 1}
+        fixed = fix_re.sub(r',(\s*[}\]])', r'\1', fixed)
+
+        # 2. 修复缺失逗号 (在 } 或 ] 后面紧跟 { 或 " 的情况)
+        fixed = fix_re.sub(r'(\}|\])(\s*)(\{|")', r'\1,\2\3', fixed)
+
+        # 3. 修复单引号: {'a': 1} -> {"a": 1}
+        # 注意: 只在值不包含双引号时替换
+        if "'" in fixed and '"' not in fixed:
+            fixed = fixed.replace("'", '"')
+
+        return fixed
+
+    # 第一次尝试: 原始文本
+    parse_error = None
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as e:
+        parse_error = e
+        # 第二次尝试: 修复后的文本
+        try:
+            fixed_text = try_fix_json(text)
+            data = json.loads(fixed_text)
+            parse_error = None  # 修复成功
+            _trace({
+                "type": "json_repair_success",
+                "original_error": str(e),
+                "repair_applied": True
+            })
+        except json.JSONDecodeError:
+            pass  # 修复失败，保留原始错误
+
+    if parse_error:
+        raise ValueError(f"JSON parse error: {str(parse_error)[:100]}")
+    # === 修复尝试结束 ===
+
+    # 验证结构
+    if "items" not in data:
+        raise ValueError("Missing 'items' key in response")
+
+    items = data["items"]
+
+    if not isinstance(items, list):
+        raise ValueError("'items' must be an array")
+
+    # 验证 ID 覆盖率
+    expected_ids = {str(r["id"]) for r in expected_rows}
+    returned_ids = {str(item.get("id", "")) for item in items if item.get("id")}
+
+    if partial_match:
+        # 子集校验
+        extra = returned_ids - expected_ids
+        if extra:
+            raise ValueError(f"ID mismatch: extra={extra}")
+    else:
+        # 完全匹配校验
+        if expected_ids != returned_ids:
+            missing = expected_ids - returned_ids
+            extra = returned_ids - expected_ids
+            raise ValueError(f"ID mismatch: missing={missing}, extra={extra}")
+
+    return items
+
+
+def batch_llm_call(
+    step: str,
+    rows: list,
+    model: str,
+    system_prompt: str,
+    user_prompt_template,
+    content_type: str = "normal",
+    retry: int = 1,
+    allow_fallback: bool = False,
+    partial_match: bool = False,
+    save_partial: bool = True,
+    output_dir: str = None
+) -> list:
+    """
+    批次化 LLM 调用 (统一接口) - v2.1 with progress reporting
+    """
+    config = get_batch_config()
+
+    # 动态获取批次配置
+    batch_size = config.get_batch_size(model, content_type)
+    timeout = config.get_timeout(model, content_type)
+    cooldown = config.get_cooldown(model)
+
+    total_batches = (len(rows) + batch_size - 1) // batch_size
+    results = []
+    failed_batches = []
+
+    # 步骤开始
+    log_llm_progress(step, "step_start", {
+        "total_rows": len(rows),
+        "batch_size": batch_size,
+        "total_batches": total_batches,
+        "model": model,
+        "content_type": content_type,
+        "timeout": timeout,
+        "cooldown": cooldown,
+        "partial_match": partial_match
+    })
+
+    # Progress helpers
+    def write_heartbeat(status: str):
+        if output_dir:
+            try:
+                os.makedirs(output_dir, exist_ok=True)
+                path = os.path.join(output_dir, f"{step}_heartbeat.txt")
+                with open(path, 'w', encoding='utf-8') as f:
+                    f.write(f"{datetime.now().isoformat()} | {status}\n")
+            except Exception: pass
+
+    def write_checkpoint(batch_num: int, processed: int):
+        if output_dir:
+            try:
+                checkpoint = {
+                    "timestamp": datetime.now().isoformat(),
+                    "step": step,
+                    "batch_num": batch_num,
+                    "total_batches": total_batches,
+                    "rows_processed": processed,
+                    "total_rows": len(rows)
+                }
+                path = os.path.join(output_dir, f"{step}_checkpoint.json")
+                with open(path, 'w', encoding='utf-8') as f:
+                    json.dump(checkpoint, f, indent=2)
+            except Exception: pass
+
+    client = LLMClient()
+
+    for i in range(total_batches):
+        start_idx = i * batch_size
+        end_idx = min(start_idx + batch_size, len(rows))
+        batch_rows = rows[start_idx:end_idx]
+        batch_num = i + 1
+
+        # 构造 user prompt
+        items = [{"id": r["id"], "source_text": r.get("source_text", "")} for r in batch_rows]
+        user_prompt = user_prompt_template(items)
+        
+        # Determine system prompt (static or dynamic)
+        if callable(system_prompt):
+            final_system_prompt = system_prompt(batch_rows)
+        else:
+            final_system_prompt = system_prompt
+
+        # 批次开始
+        log_llm_progress(step, "batch_start", {
+            "batch_num": batch_num,
+            "total_batches": total_batches,
+            "rows_in_batch": len(batch_rows)
+        })
+        
+        # Heartbeat
+        if batch_num % 5 == 1:
+            write_heartbeat(f"Processing batch {batch_num}/{total_batches}")
+
+        # === 新增: 带重试的批次处理 === (Keep existing logic)
+        # ... (omitted for brevity, just ensuring we don't delete it)
+
+        # === 新增: 带重试的批次处理 ===
+        batch_success = False
+        batch_error = None
+        batch_items = []
+
+        for attempt in range(retry + 1):
+            try:
+                t0 = time.time()
+                response = client.chat(
+                    system=final_system_prompt,
+                    user=user_prompt,
+                    temperature=0,
+                    metadata={
+                        "step": step,
+                        "model_override": model,
+                        "force_llm": True,
+                        "allow_fallback": allow_fallback,
+                        "retry": retry,
+                        "attempt": attempt
+                    },
+                    timeout=timeout
+                )
+
+                latency_ms = int((time.time() - t0) * 1000)
+                batch_items = parse_llm_response(response.text, batch_rows, partial_match=partial_match)
+                batch_success = True
+
+                # 记录成功
+                log_llm_progress(step, "batch_complete", {
+                    "batch_num": batch_num,
+                    "total_batches": total_batches,
+                    "rows_in_batch": len(batch_rows),
+                    "latency_ms": latency_ms,
+                    "status": "ok",
+                    "model": model,
+                    "request_id": response.request_id,
+                    "usage": response.usage
+                })
+                
+                # Checkpoint
+                write_checkpoint(batch_num, min(end_idx, len(rows)))
+                
+                break  # 成功，退出重试循环
+
+            except (ValueError, LLMError) as e:
+                batch_error = str(e)
+                if attempt < retry:
+                    # 还有重试机会
+                    _trace({
+                        "type": "batch_retry",
+                        "step": step,
+                        "batch_num": batch_num,
+                        "attempt": attempt,
+                        "error": batch_error
+                    })
+                    time.sleep(2)  # 短暂等待后重试
+                    continue
+            except Exception as e:
+                batch_error = str(e)
+                if attempt < retry:
+                    _trace({
+                        "type": "batch_retry",
+                        "step": step,
+                        "batch_num": batch_num,
+                        "attempt": attempt,
+                        "error": batch_error
+                    })
+                    time.sleep(2)
+                    continue
+
+        if batch_success:
+            results.extend(batch_items)
+        else:
+            # 批次失败，记录并跳过
+            latency_ms = int((time.time() - t0) * 1000) if 't0' in dir() else 0
+            log_llm_progress(step, "batch_complete", {
+                "batch_num": batch_num,
+                "total_batches": total_batches,
+                "rows_in_batch": len(batch_rows),
+                "latency_ms": latency_ms,
+                "status": "error",
+                "error": batch_error[:200] if batch_error else "Unknown error",
+                "model": model
+            })
+
+            failed_batches.append({
+                "batch_num": batch_num,
+                "start_idx": start_idx,
+                "end_idx": end_idx,
+                "error": batch_error
+            })
+
+            # 不抛出异常，继续处理下一批次
+            print(f"⚠️ [{step}] Batch {batch_num}/{total_batches} failed, skipping. Error: {batch_error[:100] if batch_error else 'Unknown'}")
+            sys.stdout.flush()
+        # === 批次处理结束 ===
+
+        # 冷却期 (除了最后一个批次)
+        if i < total_batches - 1 and cooldown > 0:
+            time.sleep(cooldown)
+
+    # 记录 step_complete
+    success_count = len(results)
+    failed_count = sum(fb["end_idx"] - fb["start_idx"] for fb in failed_batches)
+
+    # 记录 step_complete
+    success_count = len(results)
+    failed_count = sum(fb["end_idx"] - fb["start_idx"] for fb in failed_batches)
+
+    log_llm_progress(step, "step_complete", {
+        "total_rows": len(rows),
+        "success_count": success_count,
+        "failed_count": failed_count,
+        "failed_batches": len(failed_batches)
+    })
+
+    if output_dir:
+        try:
+             path = os.path.join(output_dir, f"{step}_DONE")
+             with open(path, 'w') as f:
+                 f.write(f"Completed at {datetime.now().isoformat()}\n")
+        except Exception: pass
+
+    # === 新增: 保存失败批次信息 ===
+    if failed_batches and save_partial:
+        failed_report_path = f"reports/{step}_failed_batches.json"
+        with open(failed_report_path, "w", encoding="utf-8") as f:
+            json.dump({
+                "step": step,
+                "total_batches": total_batches,
+                "failed_batches": failed_batches,
+                "timestamp": datetime.now().isoformat()
+            }, f, indent=2, ensure_ascii=False)
+        print(f"⚠️ [{step}] {len(failed_batches)} batches failed. Details: {failed_report_path}")
+        sys.stdout.flush()
+
+    return results
+
+
+# -----------------------------
+# Embedding Client (v1.0)
+# Text vectorization with caching
+# -----------------------------
+
+import numpy as np
+import hashlib
+
+# Embedding configuration
+EMBEDDING_MODEL = "text-embedding-3-small"
+EMBEDDING_DIMENSIONS = 1536
+EMBEDDING_CACHE_DIR = "cache/embeddings"
+
+
+class EmbeddingClient:
+    """
+    文本向量化客户端
+    
+    Features:
+    - 单条/批量文本向量化
+    - 本地文件缓存 (避免重复调用)
+    - 余弦相似度计算
+    
+    Usage:
+        from runtime_adapter import EmbeddingClient
+        
+        client = EmbeddingClient()
+        emb = client.embed_single("测试文本")
+        print(f"Embedding shape: {emb.shape}")  # (1536,)
+    """
+    
+    def __init__(self, cache_dir: str = EMBEDDING_CACHE_DIR):
+        """
+        Initialize embedding client.
+        
+        Uses same env vars as LLMClient:
+        - LLM_BASE_URL (default: https://api.apiyi.com/v1)
+        - LLM_API_KEY or LLM_API_KEY_FILE
+        """
+        self.base_url = os.getenv("LLM_BASE_URL", "https://api.apiyi.com/v1").strip().rstrip("/")
+        self.api_key = LLMClient._load_api_key()
+        self.model = EMBEDDING_MODEL
+        self.cache_dir = cache_dir
+        
+        if cache_dir:
+            os.makedirs(cache_dir, exist_ok=True)
+        
+        if not self.api_key:
+            raise LLMError("config", "Missing API key for EmbeddingClient", retryable=False)
+    
+    def _cache_key(self, text: str) -> str:
+        """生成缓存键 (MD5 hash of text + model)"""
+        content = f"{text}_{self.model}"
+        return hashlib.md5(content.encode('utf-8')).hexdigest()
+    
+    def _get_cache_path(self, cache_key: str) -> str:
+        """获取缓存文件路径"""
+        return os.path.join(self.cache_dir, f"{cache_key}.npy")
+    
+    def embed_single(self, text: str, use_cache: bool = True) -> np.ndarray:
+        """
+        单条文本向量化
+        
+        Args:
+            text: 输入文本
+            use_cache: 是否使用缓存 (默认 True)
+            
+        Returns:
+            np.ndarray: 向量 (shape: EMBEDDING_DIMENSIONS,)
+        """
+        if not text or not text.strip():
+            return np.zeros(EMBEDDING_DIMENSIONS)
+        
+        # Check cache
+        if use_cache and self.cache_dir:
+            cache_key = self._cache_key(text)
+            cache_path = self._get_cache_path(cache_key)
+            if os.path.exists(cache_path):
+                return np.load(cache_path)
+        
+        # API call
+        url = f"{self.base_url}/embeddings"
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "input": text,
+            "model": self.model
+        }
+        
+        try:
+            resp = requests.post(url, headers=headers, json=payload, timeout=30)
+            resp.raise_for_status()
+            data = resp.json()
+            embedding = np.array(data["data"][0]["embedding"])
+        except requests.RequestException as e:
+            raise LLMError("network", f"Embedding API error: {e}", retryable=True)
+        except (KeyError, IndexError) as e:
+            raise LLMError("parse", f"Embedding response parse error: {e}", retryable=False)
+        
+        # Save to cache
+        if use_cache and self.cache_dir:
+            np.save(cache_path, embedding)
+        
+        return embedding
+    
+    def embed_batch(self, texts: list, use_cache: bool = True) -> np.ndarray:
+        """
+        批量文本向量化
+        
+        Args:
+            texts: 输入文本列表
+            use_cache: 是否使用缓存 (默认 True)
+            
+        Returns:
+            np.ndarray: 向量矩阵 (shape: len(texts), EMBEDDING_DIMENSIONS)
+        """
+        if not texts:
+            return np.array([]).reshape(0, EMBEDDING_DIMENSIONS)
+        
+        embeddings = []
+        texts_to_fetch = []
+        fetch_indices = []
+        
+        # Check cache for each text
+        for i, text in enumerate(texts):
+            if not text or not text.strip():
+                embeddings.append((i, np.zeros(EMBEDDING_DIMENSIONS)))
+                continue
+                
+            if use_cache and self.cache_dir:
+                cache_key = self._cache_key(text)
+                cache_path = self._get_cache_path(cache_key)
+                if os.path.exists(cache_path):
+                    embeddings.append((i, np.load(cache_path)))
+                    continue
+            
+            texts_to_fetch.append(text)
+            fetch_indices.append(i)
+        
+        # Batch API call for uncached texts
+        if texts_to_fetch:
+            url = f"{self.base_url}/embeddings"
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "input": texts_to_fetch,
+                "model": self.model
+            }
+            
+            try:
+                resp = requests.post(url, headers=headers, json=payload, timeout=60)
+                resp.raise_for_status()
+                data = resp.json()
+                
+                for j, item in enumerate(data["data"]):
+                    idx = fetch_indices[j]
+                    emb = np.array(item["embedding"])
+                    embeddings.append((idx, emb))
+                    
+                    # Save to cache
+                    if use_cache and self.cache_dir:
+                        cache_key = self._cache_key(texts_to_fetch[j])
+                        cache_path = self._get_cache_path(cache_key)
+                        np.save(cache_path, emb)
+                        
+            except requests.RequestException as e:
+                raise LLMError("network", f"Embedding batch API error: {e}", retryable=True)
+            except (KeyError, IndexError) as e:
+                raise LLMError("parse", f"Embedding batch response parse error: {e}", retryable=False)
+        
+        # Sort by original index and return
+        embeddings.sort(key=lambda x: x[0])
+        return np.array([e[1] for e in embeddings])
+    
+    def cosine_similarity(self, vec_a: np.ndarray, vec_b: np.ndarray) -> float:
+        """
+        计算两个向量的余弦相似度
+        
+        Args:
+            vec_a: 向量 A
+            vec_b: 向量 B
+            
+        Returns:
+            float: 相似度 [-1, 1]
+        """
+        norm_a = np.linalg.norm(vec_a)
+        norm_b = np.linalg.norm(vec_b)
+        if norm_a == 0 or norm_b == 0:
+            return 0.0
+        return float(np.dot(vec_a, vec_b) / (norm_a * norm_b))
+    
+    def batch_cosine_similarity(self, query_vec: np.ndarray, corpus_vecs: np.ndarray) -> np.ndarray:
+        """
+        批量计算余弦相似度 (query vs corpus)
+        
+        Args:
+            query_vec: 查询向量 (shape: D,)
+            corpus_vecs: 语料向量矩阵 (shape: N, D)
+            
+        Returns:
+            np.ndarray: 相似度数组 (shape: N,)
+        """
+        if corpus_vecs.size == 0:
+            return np.array([])
+        
+        query_norm = np.linalg.norm(query_vec)
+        if query_norm == 0:
+            return np.zeros(len(corpus_vecs))
+        
+        query_normalized = query_vec / query_norm
+        corpus_norms = np.linalg.norm(corpus_vecs, axis=1, keepdims=True)
+        corpus_norms = np.where(corpus_norms == 0, 1, corpus_norms)  # Avoid div by zero
+        corpus_normalized = corpus_vecs / corpus_norms
+        
+        return np.dot(corpus_normalized, query_normalized)

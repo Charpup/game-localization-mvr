@@ -59,6 +59,17 @@ entries:
 python -c "import yaml; yaml.safe_load(open('data/glossary.yaml', encoding='utf-8'))"
 ```
 
+### 4. 编译为运行时格式
+
+使用 compilation 脚本将审批后的通过项编译为 `compiled.yaml`（含 version/hash）：
+
+```bash
+python scripts/glossary_compile.py \
+    --approved data/glossary.yaml \
+    --out_compiled glossary/compiled.yaml \
+    --resolve_by_scope
+```
+
 ## 下一步
 
 审批完成后，继续执行 `/loc-normalize` 和 `/loc-translate`。

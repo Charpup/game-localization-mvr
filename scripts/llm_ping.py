@@ -42,10 +42,28 @@ if sys.platform == 'win32':
 def check_env_vars() -> tuple[bool, list[str]]:
     """Check required environment variables.
     
+    Supports file-based API key injection via LLM_API_KEY_FILE.
+    
     Returns: (all_present, missing_vars)
     """
-    required = ['LLM_BASE_URL', 'LLM_API_KEY']
-    missing = [var for var in required if not os.environ.get(var)]
+    missing = []
+    
+    # Check LLM_BASE_URL
+    if not os.environ.get('LLM_BASE_URL'):
+        missing.append('LLM_BASE_URL')
+    
+    # Check API key: LLM_API_KEY_FILE or LLM_API_KEY
+    api_key_file = os.environ.get('LLM_API_KEY_FILE', '').strip()
+    api_key = os.environ.get('LLM_API_KEY', '').strip()
+    
+    if not api_key:
+        # Try file-based injection
+        if api_key_file and os.path.exists(api_key_file):
+            # File exists, will be read by runtime_adapter
+            pass
+        else:
+            missing.append('LLM_API_KEY')
+    
     return len(missing) == 0, missing
 
 

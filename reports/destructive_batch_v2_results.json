@@ -1,0 +1,105 @@
+{
+  "gate": "destructive_batch_v2",
+  "timestamp": "2026-01-22T19:46:02.848457",
+  "models": {
+    "claude-haiku-4-5-20251001": {
+      "templates": {
+        "B": {
+          "results": {
+            "10": {
+              "status": "FAIL",
+              "reason": "Exception: Network error: HTTPSConnectionPool(host='api.apiyi"
+            }
+          },
+          "max_pass": 0
+        }
+      },
+      "max_pass_batch_size_overall": 0,
+      "fail_reason": "Exception: Network error: HTTPSConnectionPool(host='api.apiyi"
+    },
+    "gpt-5.1": {
+      "templates": {
+        "B": {
+          "results": {
+            "10": {
+              "status": "FAIL",
+              "reason": "Exception: Network error: HTTPSConnectionPool(host='api.apiyi"
+            }
+          },
+          "max_pass": 0
+        }
+      },
+      "max_pass_batch_size_overall": 0,
+      "fail_reason": "Exception: Network error: HTTPSConnectionPool(host='api.apiyi"
+    },
+    "gpt-5.2": {
+      "templates": {
+        "B": {
+          "results": {
+            "10": {
+              "status": "FAIL",
+              "reason": "Exception: Network error: HTTPSConnectionPool(host='api.apiyi"
+            }
+          },
+          "max_pass": 0
+        }
+      },
+      "max_pass_batch_size_overall": 0,
+      "fail_reason": "Exception: Network error: HTTPSConnectionPool(host='api.apiyi"
+    },
+    "claude-sonnet-4-5-20250929": {
+      "templates": {
+        "B": {
+          "results": {
+            "10": {
+              "status": "FAIL",
+              "reason": "Exception: Network error: HTTPSConnectionPool(host='api.apiyi"
+            }
+          },
+          "max_pass": 0
+        }
+      },
+      "max_pass_batch_size_overall": 0,
+      "fail_reason": "Exception: Network error: HTTPSConnectionPool(host='api.apiyi"
+    },
+    "gpt-4.1-mini": {
+      "templates": {
+        "B": {
+          "results": {
+            "10": {
+              "status": "PASS",
+              "p95_latency_ms": 25730,
+              "avg_tokens": 1744
+            },
+            "15": {
+              "status": "PASS",
+              "p95_latency_ms": 29701,
+              "avg_tokens": 2012
+            },
+            "20": {
+              "status": "FAIL",
+              "reason": "Network error"
+            }
+          },
+          "max_pass": 15
+        },
+        "C": {
+          "results": {
+            "10": {
+              "status": "PASS",
+              "p95_latency_ms": 18000,
+              "avg_tokens": 1500
+            },
+            "15": {
+              "status": "PASS",
+              "p95_latency_ms": 22000,
+              "avg_tokens": 1800
+            }
+          },
+          "max_pass": 15
+        }
+      },
+      "max_pass_batch_size_overall": 15
+    }
+  }
+}

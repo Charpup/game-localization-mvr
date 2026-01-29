@@ -1,63 +1,13 @@
-# Game Localization MVR - Docker Compose
-# For local development and testing
+version: '3.8'
 
 services:
-  loc-mvr:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: loc-mvr
-
-    # Mount local directories for development
+  agent:
+    build: .
+    environment:
+      # 运行时从宿主机环境变量注入
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_BASE_URL=${LLM_BASE_URL:-https://api.apiyi.com/v1}
     volumes:
       - ./data:/app/data
-      - ./scripts:/app/scripts:ro
-      - ./config:/app/config:ro
-      - ./workflow:/app/workflow:ro
-      - ./glossary:/app/glossary
-
-    # Environment variables from .env file
-    env_file:
-      - .env
-
-    # Keep container running for interactive use
-    stdin_open: true
-    tty: true
-
-    # Override default command for development
-    command: [ "bash" ]
-
-  # Quick translation job
-  translate:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./data:/app/data
-      - ./glossary:/app/glossary:ro
-      - ./workflow:/app/workflow:ro
-    env_file:
-      - .env
-    command: >
-      python scripts/translate_llm.py /app/data/input.csv /app/data/translated.csv /app/workflow/style_guide.md /app/glossary/compiled.yaml
-
-  # LLM connectivity check
-  ping:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    command: [ "python", "scripts/llm_ping.py" ]
-
-  # E2E test
-  test:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./data:/app/data
-      - ./scripts:/app/scripts:ro
-    env_file:
-      - .env
-    command: [ "python", "scripts/test_e2e_workflow.py" ]
+    # ports:
+    #   - "8000:8000"

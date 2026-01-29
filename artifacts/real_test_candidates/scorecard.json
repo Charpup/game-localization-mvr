@@ -1,0 +1,14 @@
+{
+  "timestamp": 0,
+  "results": [
+    {
+      "file": "candidate_1.md",
+      "disqualified": false,
+      "disqualified_reason": [],
+      "score_details": {
+        "total_score": 92,
+        "reasoning": "Coverage is strong (28/30): All major sections are present and detailed, but some could benefit from more granular examples (e.g., more edge cases for gender handling or abbreviation). Enforceability is excellent (29/30): Rules are specific, actionable, and leave little ambiguity, though a few points (like 'approved abbreviations') could be clarified further. Naturalness is high (18/20): Russian examples are idiomatic and native-sounding, but a few more complex examples would help. IP Fit is solid (17/20): The guide is generally adaptable, but without explicit IP context, some tone/terminology alignment could be more tailored. Overall, this is a robust and practical style guide draft."
+      }
+    }
+  ]
+}

@@ -15,38 +15,52 @@ description: Full 14-step localization pipeline with dual repair loops
 ### Phase 1: Preparation
 
 // turbo
+0. **Style Guide Sync Check**
+
+```bash
+python scripts/style_sync_check.py
+```
+
+// turbo
+
 1. **Normalize** - Freeze placeholders
+
 ```bash
 python scripts/normalize_guard.py data/input.csv data/draft.csv data/placeholder_map.json workflow/placeholder_schema.yaml
 ```
 
-2. **Check Glossary** - Verify compiled.yaml exists with matching scope
+1. **Check Glossary** - Verify compiled.yaml exists with matching scope
+
 ```bash
 # If glossary/compiled.lock.json exists and matches language_pair+genre+franchise, skip Step 3
 ```
 
-3. **Extract & Translate Glossary** (if needed)
+1. **Extract & Translate Glossary** (if needed)
+
 ```bash
 python scripts/extract_terms.py data/draft.csv --out data/term_candidates.yaml
 # Then manually translate or use LLM, then compile
 python scripts/glossary_compile.py --approved glossary/approved.yaml
 ```
 
-4. **Check Style Guide** - Verify workflow/style_guide.md
+1. **Check Style Guide** - Verify workflow/style_guide.md
 
 ### Phase 2: Translation (Loop A - Hard Gate)
 
-5. **Translate**
+1. **Translate**
+
 ```bash
 python scripts/translate_llm.py data/draft.csv data/translated.csv workflow/style_guide.md data/glossary.yaml --target ru-RU
 ```
 
-6. **QA Hard**
+1. **QA Hard**
+
 ```bash
 python scripts/qa_hard.py data/translated.csv data/placeholder_map.json workflow/placeholder_schema.yaml workflow/forbidden_patterns.txt data/qa_hard_report.json
 ```
 
-7. **Repair Loop Hard** (if qa_hard fails, max 3 attempts)
+1. **Repair Loop Hard** (if qa_hard fails, max 3 attempts)
+
 ```bash
 python scripts/repair_loop.py data/translated.csv data/qa_hard_report.json data/repair_tasks.jsonl workflow/style_guide.md data/glossary.yaml --out_csv data/repaired.csv
 # Then repeat Step 6
@@ -54,17 +68,20 @@ python scripts/repair_loop.py data/translated.csv data/qa_hard_report.json data/
 
 ### Phase 3: Soft QA (Loop B - Safety)
 
-8. **Soft QA**
+1. **Soft QA**
+
 ```bash
 python scripts/soft_qa_llm.py data/translated.csv workflow/style_guide.md data/glossary.yaml workflow/soft_qa_rubric.yaml
 ```
 
-9. **Repair Loop Soft**
+1. **Repair Loop Soft**
+
 ```bash
 python scripts/repair_loop.py data/translated.csv data/qa_hard_report.json data/repair_tasks.jsonl workflow/style_guide.md --only_soft_major
 ```
 
 6b. **QA Hard Recheck** (verify soft repair didn't break hard constraints)
+
 ```bash
 python scripts/qa_hard.py data/repaired.csv data/placeholder_map.json workflow/placeholder_schema.yaml workflow/forbidden_patterns.txt data/qa_recheck_report.json
 ```
@@ -75,31 +92,36 @@ python scripts/qa_hard.py data/repaired.csv data/placeholder_map.json workflow/p
 
 // turbo
 10. **Export** - Rehydrate placeholders
+
 ```bash
 python scripts/rehydrate_export.py data/repaired.csv data/placeholder_map.json data/final.csv
 ```
 
 // turbo
 11. **Metrics** - Aggregate LLM costs
+
 ```bash
 python scripts/metrics_aggregator.py
 ```
 
 ### Phase 5: Glossary Lifecycle
 
-12. **Glossary Autopromote** - Generate proposals
+1. **Glossary Autopromote** - Generate proposals
+
 ```bash
 python scripts/glossary_autopromote.py --before data/translated.csv --after data/repaired.csv --style workflow/style_guide.md --glossary data/glossary.yaml
 ```
 
-13. **Review Proposals** - User fills decision in CSV
+1. **Review Proposals** - User fills decision in CSV
+
 ```bash
 python scripts/glossary_make_review_queue.py --proposals data/glossary_proposals.yaml --out_csv data/glossary_review_queue.csv
 # User edits CSV: approve/reject/edit
 python scripts/glossary_apply_review.py --review_csv data/glossary_review_queue.csv
 ```
 
-14. **Publish Glossary** - Compile for next round
+1. **Publish Glossary** - Compile for next round
+
 ```bash
 python scripts/glossary_compile.py --approved glossary/approved.yaml --language_pair zh-CN->ru-RU
 ```

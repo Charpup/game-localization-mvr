@@ -127,48 +127,48 @@ class BatchResult:
 def parse_json_array(text: str) -> Optional[List[Dict[str, Any]]]:
     """
     Parse JSON array from LLM response.
-    Handles common issues: markdown code blocks, trailing text.
-    
-    Returns:
-        Parsed list of dicts, or None if parsing fails.
+    Handles issues: <thinking> tags, markdown content, prefix/suffix text.
     """
-    text = (text or "").strip()
+    if not text:
+        return None
+        
+    # 1. Strip <thinking> tags (DotAll)
+    text = re.sub(r'<thinking>.*?</thinking>', '', text, flags=re.DOTALL).strip()
     
-    # Remove markdown code blocks
-    if text.startswith("```"):
-        lines = text.split("\n")
-        # Find the actual JSON content
-        start_idx = 1 if lines[0].startswith("```") else 0
-        end_idx = len(lines)
-        for i in range(len(lines) - 1, -1, -1):
-            if lines[i].strip() == "```":
-                end_idx = i
-                break
-        text = "\n".join(lines[start_idx:end_idx]).strip()
-    
-    # Try direct parse
+    # 2. Extract from markdown code blocks
+    code_block_match = re.search(r'```(?:json)?\s*(.*?)```', text, re.DOTALL)
+    if code_block_match:
+        content = code_block_match.group(1).strip()
+        try:
+            obj = json.loads(content)
+            if isinstance(obj, list): return obj
+            # Check inner keys
+            for key in ["results", "items", "data", "translations"]:
+                if isinstance(obj, dict) and key in obj and isinstance(obj[key], list):
+                    return obj[key]
+        except json.JSONDecodeError:
+            text = content # Try falling through with inner content
+            
+    # 3. Direct parse
     try:
         obj = json.loads(text)
-        if isinstance(obj, list):
-            return obj
-        # If it's a dict with a results/items/data array, extract it
-        for key in ["results", "items", "data", "translations", "outputs"]:
-            if key in obj and isinstance(obj[key], list):
+        if isinstance(obj, list): return obj
+        for key in ["results", "items", "data", "translations"]:
+            if isinstance(obj, dict) and key in obj and isinstance(obj[key], list):
                 return obj[key]
     except json.JSONDecodeError:
         pass
-    
-    # Find first [ to last ]
+        
+    # 4. Greedy match: find first '[' to last ']'
     start = text.find("[")
     end = text.rfind("]")
     if start != -1 and end != -1 and end > start:
         try:
             obj = json.loads(text[start:end + 1])
-            if isinstance(obj, list):
-                return obj
+            if isinstance(obj, list): return obj
         except json.JSONDecodeError:
             pass
-    
+            
     return None
 
 

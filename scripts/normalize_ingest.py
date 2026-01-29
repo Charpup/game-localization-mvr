@@ -6,35 +6,30 @@ import argparse
 import pandas as pd
 from typing import Optional
 
-def normalize_headers(df: pd.DataFrame) -> pd.DataFrame:
-    """Normalize column headers to standard schema."""
-    # Case-insensitive mapping
-    column_map = {}
-    
-    for col in df.columns:
-        c_lower = str(col).lower().strip()
-        
-        # ID Priority
-        if c_lower in ['id', 'string_id', 'stringid', 'key', 'uid']:
-            column_map[col] = 'string_id'
-            
-        # Source Priority
-        elif c_lower in ['source', 'zh', 'source_zh', 'zh-cn', 'text', 'original']:
-            column_map[col] = 'source_zh'
-            
-        # Target Priority (if present in input)
-        elif c_lower in ['target', 'ru', 'target_ru', 'ru-ru', 'translation']:
-            column_map[col] = 'target_ru'
-            
-        # Context
-        elif c_lower in ['context', 'desc', 'description', 'comment', 'memo']:
-            column_map[col] = 'context'
+# HEADER ALIASES
+HEADER_ALIASES = {
+    'string_id': ['id', 'stringid', 'key', 'uid', 'ID', 'Id', 'STRING_ID', 'StringId'],
+    'source_zh': ['zh', 'source', 'zh-cn', 'text', 'original', 'ZH', 'Chinese', 'SOURCE', 'Source'],
+    'context': ['desc', 'description', 'comment', 'memo', 'note', 'Context', 'CONTEXT'],
+}
 
-    # Apply mapping
+def normalize_headers(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalize column headers using alias mapping."""
+    column_map = {}
+
+    for col in df.columns:
+        col_clean = str(col).strip()
+        col_lower = col_clean.lower()
+
+        for standard_name, aliases in HEADER_ALIASES.items():
+            if col_lower in [a.lower() for a in aliases]:
+                column_map[col] = standard_name
+                break
+
     if column_map:
-        print(f"  Mapping columns: {column_map}")
+        print(f"  [Ingest] Header mapping: {column_map}")
         df = df.rename(columns=column_map)
-        
+
     return df
 
 def ingest_file(input_path: str, output_path: str):
