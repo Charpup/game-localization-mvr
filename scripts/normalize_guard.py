@@ -42,6 +42,9 @@ except ImportError:
 # 长文本阈值（字符数）
 LONG_TEXT_THRESHOLD = 500
 
+# 标签保护正则（匹配 HTML/Unity 标签）
+TAG_PATTERN = re.compile(r'<[^>]+>')
+
 
 class PlaceholderFreezer:
     """占位符冻结器 - 使用 schema v2.0"""
@@ -89,6 +92,25 @@ class PlaceholderFreezer:
             print(f"❌ Error loading schema: {str(e)}")
             sys.exit(1)
     
+    def protect_tags(self, text: str) -> Tuple[str, List[str]]:
+        """冻结 HTML/Unity 标签避免被分词破坏"""
+        protected = []
+        
+        def replacer(match):
+            tag = match.group(0)
+            token = f"__TAG_{len(protected)}__"
+            protected.append(tag)
+            return token
+        
+        frozen_text = TAG_PATTERN.sub(replacer, text)
+        return frozen_text, protected
+    
+    def restore_tags(self, text: str, protected: List[str]) -> str:
+        """还原标签"""
+        for i, tag in enumerate(protected):
+            text = text.replace(f"__TAG_{i}__", tag)
+        return text
+    
     def freeze_text(self, text: str, source_lang: str = 'zh-CN') -> Tuple[str, Dict[str, str]]:
         """
         冻结文本中的占位符和标签
@@ -107,9 +129,13 @@ class PlaceholderFreezer:
 
         # 新增: 中文分词预处理
         if source_lang.startswith('zh'):
+            # 先保护标签，避免被 jieba 破坏
+            frozen_text, protected_tags = self.protect_tags(result)
             # 分词并用空格分隔(临时标记词边界)
-            words = jieba.lcut(result)
-            result = ' '.join(words)
+            words = jieba.lcut(frozen_text)
+            segmented = ' '.join(words)
+            # 还原标签
+            result = self.restore_tags(segmented, protected_tags)
         
         # 编译所有模式的正则表达式
         compiled_patterns = []
