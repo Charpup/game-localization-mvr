@@ -36,6 +36,16 @@ patterns:
       - "%1$d"
       - "%+5d"
 
+  # Percent-space-letter placeholders: % H, % S, % D
+  - name: percent_space_letter
+    type: placeholder
+    regex: "% [A-Z]"
+    description: "Matches patterns like '% H', '% S' (percent + space + uppercase letter)"
+    examples:
+      - "% H"
+      - "% S"
+      - "% D"
+
   # Unity/NGUI rich text tags: <color=...>, </color>, <b>, </b>, <i>, </i>, <size=...>
   - name: angle_tag
     type: tag
@@ -86,25 +96,25 @@ paired_tags:
   - open: "<color"
     close: "</color>"
     description: "Unity 颜色标签"
-  
+
   - open: "<b>"
     close: "</b>"
     description: "粗体标签"
-  
+
   - open: "<i>"
     close: "</i>"
     description: "斜体标签"
-  
+
   - open: "<size"
     close: "</size>"
     description: "Unity 大小标签"
 
 # 验证规则
 validation:
-  preserve_all: true  # 所有源文本中的 token 必须在翻译中保留
-  allow_reorder: true  # token 可以在翻译中重新排序以适应目标语言语法
-  case_sensitive: true  # token 名称区分大小写
-  check_tag_balance: true  # 检查配对标签是否平衡
+  preserve_all: true # 所有源文本中的 token 必须在翻译中保留
+  allow_reorder: true # token 可以在翻译中重新排序以适应目标语言语法
+  case_sensitive: true # token 名称区分大小写
+  check_tag_balance: true # 检查配对标签是否平衡
 
 # 使用说明
 usage:
