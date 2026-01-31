@@ -39,6 +39,9 @@ except ImportError:
     print("❌ Error: PyYAML is required. Install with: pip install pyyaml")
     sys.exit(1)
 
+# 长文本阈值（字符数）
+LONG_TEXT_THRESHOLD = 500
+
 
 class PlaceholderFreezer:
     """占位符冻结器 - 使用 schema v2.0"""
@@ -250,11 +253,15 @@ class NormalizeGuard:
                     # 冻结占位符
                     tokenized_zh, local_map = self.freezer.freeze_text(source_zh, self.source_lang)
                     
+                    # 检测长文本
+                    is_long_text = 1 if len(source_zh) > LONG_TEXT_THRESHOLD else 0
+                    
                     # 构建输出行
                     output_row = {
                         'string_id': string_id,
                         'source_zh': source_zh,
                         'tokenized_zh': tokenized_zh,
+                        'is_long_text': is_long_text,
                     }
                     
                     # 保留其他列
@@ -286,8 +293,8 @@ class NormalizeGuard:
                 self.warnings.append("No rows to write")
                 return True
             
-            # 确保列顺序：string_id, source_zh, tokenized_zh, 其他列
-            fieldnames = ['string_id', 'source_zh', 'tokenized_zh']
+            # 确保列顺序：string_id, source_zh, tokenized_zh, is_long_text, 其他列
+            fieldnames = ['string_id', 'source_zh', 'tokenized_zh', 'is_long_text']
             for key in rows[0].keys():
                 if key not in fieldnames:
                     fieldnames.append(key)

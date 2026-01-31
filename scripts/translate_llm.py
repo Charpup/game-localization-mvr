@@ -199,8 +199,11 @@ def main():
     print(f"   Total rows: {len(all_rows)}, Pending: {len(pending_rows)}")
     
     # Detect long text status for ANY row in the pending set
-    # (Simplified: if any row is long, treat the whole batch set as long_text for safety)
-    has_long_text = any(str(r.get("is_long_text", "")).lower() == "true" for r in pending_rows)
+    # Check for is_long_text == 1 or is_long_text == "1"
+    has_long_text = any(
+        str(r.get("is_long_text", "0")) == "1" or r.get("is_long_text") == 1
+        for r in pending_rows
+    )
     content_type = "long_text" if has_long_text else "normal"
     
     if has_long_text:
