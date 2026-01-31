@@ -193,6 +193,7 @@ class BatchRepairLoop:
                     result = client.chat(
                         system=prompt["system"],
                         user=prompt["user"],
+                        model=model,  # 显式传递 model，确保与 Terminal log 一致
                         temperature=temperature,
                         metadata={
                             "step": f"repair_{self.qa_type}",
