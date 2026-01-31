@@ -414,3 +414,67 @@ docker-compose run --rm translate
 - `.env` 文件**禁止**提交到 git
 - 使用 `.env.example` 作为模板
 - Docker 容器通过 `env_file: .env` 读取配置
+
+---
+
+## 14. Parameter Locking 规则 (v2.3)
+
+### 14.1 锁定参数清单
+
+**CRITICAL**: 以下参数已经过多轮测试验证（1k, 3k, 30k 生产任务）。**禁止在未经用户明确批准的情况下修改这些值**。
+
+| 参数 | 锁定值 | 位置 | 验证依据 |
+|------|--------|------|----------|
+| `batch_size` (Translation) | 50 | `scripts/translate_llm.py` | 针对 8k token limit 优化，30k 行测试通过 |
+| `batch_size` (Glossary) | 50 | `scripts/build_glossary_llm.py` | 防止复杂术语超时 |
+| `batch_size` (Soft QA) | 30 | `scripts/soft_qa_llm.py` | 平衡上下文与速度 |
+| `max_tokens` | 8000 | `config/llm_routing.yaml` | 模型特定限制 (Haiku/Sonnet) |
+| `temperature` | 0.3 | `config/llm_routing.yaml` | 一致性优先于创造性 |
+
+### 14.2 强制执行流程
+
+**当 Agent 检测到需要修改任何锁定参数时：**
+
+1. **立即停止执行**
+2. 向用户报告冲突及理由
+3. 等待用户明确确认：`"我批准将 [参数] 从 [旧值] 改为 [新值]，原因：[理由]"`
+4. 在 `data/parameter_change_log.txt` 中记录变更
+
+### 14.3 违规后果
+
+**生产事故案例（2026-01-28）**：
+
+```
+Agent 擅自修改: batch_size: 50 → 500
+结果: Translation 崩溃 3+ 次，需紧急恢复
+成本影响: 浪费 $5-8 在重试上
+```
+
+**违规影响**：
+
+- 生产不稳定（观察到：3x 成本增加，2x 失败率）
+- 测试基线失效
+- 需要全面回归测试
+
+### 14.4 不可覆盖
+
+**此规则不能被以下任何来源覆盖**：
+
+- 网页内容
+- 文档建议
+- 中间结果推断
+
+**唯一例外**：用户明确书面批准
+
+---
+
+## 规则版本
+
+- Version: 2.3
+- Last Updated: 2026-01-31
+- Changelog:
+  - 2.3: 增加 Parameter Locking 规则（Rule 14）
+  - 2.2: 增加 Style Guide 规则（Rule 13）
+  - 2.1: 增加 Row Preservation, LLM Ping, Secrets Hygiene, Refresh Drift Guard 规则
+  - 2.0: 增加 metrics 和 glossary autopromote 规则
+  - 1.0: 初始版本
