@@ -30,6 +30,7 @@ class ProgressReporter:
         self.current_round = 0
         self.processed_items = 0
         self.start_time = datetime.now()
+        self.last_batch_time = None  # 用于计算批次时间增量
 
         # 文件路径
         self.checkpoint_path = os.path.join(output_dir, f"{step}_checkpoint.json")
@@ -56,6 +57,8 @@ class ProgressReporter:
 
     def batch_start(self, batch_num: int, total_batches: int, batch_size: int):
         """记录批次开始"""
+        self.last_batch_time = datetime.now()  # 记录批次开始时间
+        
         self._write_progress("batch_start", {
             "batch_num": batch_num,
             "total_batches": total_batches,
@@ -86,11 +89,18 @@ class ProgressReporter:
         # 更新心跳
         self._write_heartbeat(f"batch_{batch_num}/{total_batches}_done")
 
-        # 终端输出 (更新为符合用户要求的格式)
+        # 计算时间增量和总耗时
+        total_elapsed = (datetime.now() - self.start_time).total_seconds()
+        batch_delta = 0
+        if self.last_batch_time:
+            batch_delta = (datetime.now() - self.last_batch_time).total_seconds()
+        
+        # 终端输出 (添加时间信息)
         pct = self.processed_items / self.total_items * 100 if self.total_items > 0 else 0
         self._print(f"✅ [{self.step}] Batch {batch_num}/{total_batches} | "
                    f"Success: {success_count}, Failed: {failed_count} | "
-                   f"{self.processed_items}/{self.total_items} items")
+                   f"{self.processed_items}/{self.total_items} items | "
+                   f"Delta: {batch_delta:.1f}s, Total: {total_elapsed:.1f}s")
 
     def round_complete(self, round_num: int, remaining_count: int):
         """记录轮次完成"""
