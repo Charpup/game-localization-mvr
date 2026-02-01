@@ -5,6 +5,32 @@
   <a href="README_zh.md">中文文档</a>
 </p>
 
+## 🎯 Quick Start with Skill
+
+**Download the pre-packaged Skill** (Recommended for first-time users):
+
+[![Download Skill](https://img.shields.io/badge/Download-Skill_v1.1.0-blue?style=for-the-badge)](https://github.com/Charpup/game-localization-mvr/releases/download/v1.1.0-patch1/loc-mvr-v1.1.0-patch1.skill)
+
+```bash
+# 1. Download and extract
+unzip loc-mvr-v1.1.0-patch1.skill
+
+# 2. Verify checksum
+sha256sum -c loc-mvr-v1.1.0-patch1.skill.sha256
+
+# 3. Follow Quick Start in SKILL.md
+cd skill/
+python scripts/normalize_guard.py examples/sample_input.csv ...
+```
+
+**Or clone the full repository**:
+
+```bash
+git clone https://github.com/Charpup/game-localization-mvr.git
+cd game-localization-mvr
+pip install -r requirements.txt
+```
+
 ## 🎯 Key Features
 
 - **70%+ Cost Reduction**: $1.5/1k rows vs traditional $6-10/1k

@@ -36,6 +36,44 @@ pip install -r requirements.txt
 
 ## Quick Start (5 rows demo)
 
+**Docker Environment (Recommended for Production)**:
+
+```bash
+# Set environment variables
+export LLM_API_KEY="your_key"
+export LLM_BASE_URL="https://api.example.com/v1"
+
+# Run translation in container (example)
+docker run --rm -v ${PWD}:/workspace -w /workspace \
+  -e LLM_BASE_URL -e LLM_API_KEY \
+  gate_v2 python -u -m scripts.translate_llm \
+  output/normalized.csv output/translated.csv \
+  workflow/style_guide.md glossary/compiled.yaml
+```
+
+**Note**: LLM-calling scripts (translate_llm, soft_qa_llm, repair_loop) MUST run in Docker per Rule 12.
+
+**Local Environment (Development Only)**:
+
+**Docker Environment (Recommended for Production)**:
+
+```bash
+# Set environment variables
+export LLM_API_KEY="your_key"
+export LLM_BASE_URL="https://api.example.com/v1"
+
+# Run translation in container (example)
+docker run --rm -v ${PWD}:/workspace -w /workspace \
+  -e LLM_BASE_URL -e LLM_API_KEY \
+  gate_v2 python -u -m scripts.translate_llm \
+  output/normalized.csv output/translated.csv \
+  workflow/style_guide.md glossary/compiled.yaml
+```
+
+**Note**: LLM-calling scripts (translate_llm, soft_qa_llm, repair_loop) MUST run in Docker per Rule 12.
+
+**Local Environment (Development Only)**:
+
 **Docker 环境 (推荐生产使用)**:
 
 ```bash
@@ -229,21 +267,36 @@ $env:LLM_API_KEY = "your_key"
 
 ### Issue 5: Metrics Incomplete
 
-**Symptom**: `llm_trace.jsonl` missing phases
-**Fix**: Use `trace_config.setup_trace_path()` at script start
-
-### Issue 6: Metrics Incomplete
-
-**Symptom**: `metrics_report.md` shows unknown step > 10%
-**Fix**:
+**Symptom**: `llm_trace.jsonl` missing phases or `metrics_report.md` shows unknown steps > 10%
+**Diagnosis**:
 
 ```bash
-# Check Trace Config
+# Check if trace path is configured
 python -c "from scripts.runtime_adapter import trace_config; print(trace_config.llm_trace_path)"
+# Expected output: data/llm_trace.jsonl
+# If output is 'None', trace is not configured
+```
 
-# If None, add to script header:
+**Fix**: Add at the start of your script:
+
+```python
 from scripts.runtime_adapter import trace_config
 trace_config.setup_trace_path('data/llm_trace.jsonl')
+```
+
+### Issue 6: Docker Container Not Used
+
+**Symptom**: Script runs but violates Rule 12 (container enforcement)
+**Fix**: Always use Docker for LLM-calling scripts:
+
+```bash
+# Wrong (local execution)
+python scripts/translate_llm.py input.csv output.csv
+
+# Correct (container execution)
+docker run --rm -v ${PWD}:/workspace -w /workspace \
+  -e LLM_BASE_URL -e LLM_API_KEY \
+  gate_v2 python -u -m scripts.translate_llm input.csv output.csv
 ```
 
 ## References

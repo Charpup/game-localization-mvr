@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/Charpup/game-localization-mvr/blob/main/skill/SKILL.md
+    about: Read the full Skill documentation
+  - name: Discussions
+    url: https://github.com/Charpup/game-localization-mvr/discussions
+    about: Ask questions or share ideas
