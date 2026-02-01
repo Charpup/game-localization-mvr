@@ -43,53 +43,34 @@ pip install -r requirements.txt
 export LLM_API_KEY="your_key"
 export LLM_BASE_URL="https://api.example.com/v1"
 
-# Run translation in container (example)
+# Run in container (all 4 steps)
 docker run --rm -v ${PWD}:/workspace -w /workspace \
   -e LLM_BASE_URL -e LLM_API_KEY \
-  gate_v2 python -u -m scripts.translate_llm \
-  output/normalized.csv output/translated.csv \
-  workflow/style_guide.md glossary/compiled.yaml
+  gate_v2 bash -c "
+  python -u scripts/normalize_guard.py \
+    examples/sample_input.csv \
+    output/normalized.csv \
+    output/placeholder_map.json \
+    workflow/placeholder_schema.yaml &&
+  python -u scripts/translate_llm.py \
+    output/normalized.csv \
+    output/translated.csv \
+    workflow/style_guide.md \
+    glossary/compiled.yaml &&
+  python -u scripts/qa_hard.py \
+    output/translated.csv \
+    output/qa_report.json \
+    output/placeholder_map.json &&
+  python -u scripts/rehydrate_export.py \
+    output/translated.csv \
+    output/placeholder_map.json \
+    output/final_export.csv
+"
 ```
 
 **Note**: LLM-calling scripts (translate_llm, soft_qa_llm, repair_loop) MUST run in Docker per Rule 12.
 
 **Local Environment (Development Only)**:
-
-**Docker Environment (Recommended for Production)**:
-
-```bash
-# Set environment variables
-export LLM_API_KEY="your_key"
-export LLM_BASE_URL="https://api.example.com/v1"
-
-# Run translation in container (example)
-docker run --rm -v ${PWD}:/workspace -w /workspace \
-  -e LLM_BASE_URL -e LLM_API_KEY \
-  gate_v2 python -u -m scripts.translate_llm \
-  output/normalized.csv output/translated.csv \
-  workflow/style_guide.md glossary/compiled.yaml
-```
-
-**Note**: LLM-calling scripts (translate_llm, soft_qa_llm, repair_loop) MUST run in Docker per Rule 12.
-
-**Local Environment (Development Only)**:
-
-**Docker 环境 (推荐生产使用)**:
-
-```bash
-# 设置环境变量
-export LLM_API_KEY="your_key"
-export LLM_BASE_URL="https://api.example.com/v1"
-
-# 在容器内运行 (以 translate 为例)
-docker run --rm -v ${PWD}:/workspace -w /workspace \
-  -e LLM_BASE_URL -e LLM_API_KEY \
-  gate_v2 python -u -m scripts.translate_llm \
-  --input output/normalized.csv --output output/translated.csv \
-  --style workflow/style_guide.md --glossary glossary/compiled.yaml
-```
-
-**本地环境 (开发调试)**:
 
 ```bash
 cd skill/
@@ -103,18 +84,16 @@ python scripts/normalize_guard.py \
 
 # 2. Translation
 python scripts/translate_llm.py \
-  --input output/normalized.csv \
-  --output output/translated.csv \
-  --style workflow/style_guide.md \
-  --glossary glossary/compiled.yaml
+  output/normalized.csv \
+  output/translated.csv \
+  workflow/style_guide.md \
+  glossary/compiled.yaml
 
 # 3. QA
 python scripts/qa_hard.py \
   output/translated.csv \
-  output/placeholder_map.json \
-  workflow/placeholder_schema.yaml \
-  workflow/forbidden_patterns.txt \
-  output/qa_report.json
+  output/qa_report.json \
+  output/placeholder_map.json
 
 # 4. Export
 python scripts/rehydrate_export.py \
