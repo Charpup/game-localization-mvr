@@ -272,15 +272,15 @@ $env:LLM_API_KEY = "your_key"
 
 ```bash
 # Check if trace path is configured
-python -c "from scripts.runtime_adapter import trace_config; print(trace_config.llm_trace_path)"
+python -c "from scripts import trace_config; print(trace_config.get_trace_path())"
 # Expected output: data/llm_trace.jsonl
-# If output is 'None', trace is not configured
+# If output is 'None' or default default, might need explicit setup
 ```
 
 **Fix**: Add at the start of your script:
 
 ```python
-from scripts.runtime_adapter import trace_config
+from scripts import trace_config
 trace_config.setup_trace_path('data/llm_trace.jsonl')
 ```
 
