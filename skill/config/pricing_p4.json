@@ -1,0 +1,702 @@
+[
+    {
+        "model": "claude-opus-4-1-20250805-thinking",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 15.0000 / 1M tokens Completion price: $ 75.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 7.5 Completion ratio: 5.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-image-1-mini",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 2.0000 / 1M tokens Completion price: $ 8.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 1 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "minimax-m2",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.3000 / 1M tokens Completion price: $ 1.2000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.15 Completion ratio: 4.0000",
+        "grouping": "Default SVIP ChinaOpenSource"
+    },
+    {
+        "model": "o1-mini",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.55 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "qwen-vl-plus",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 2.8572 / 1M tokens Completion price: $ 2.8572 / 1M tokens",
+        "magnification": "Prompt multiplier: 1.4286 Completion ratio: 1.0000",
+        "grouping": "Default SVIP AlibabaCloud ChinaOpenSource"
+    },
+    {
+        "model": "qwen3-30b-a3b-thinking-2507",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.2000 / 1M tokens Completion price: $ 2.4000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.1 Completion ratio: 12.0000",
+        "grouping": "Default SVIP AlibabaCloud ChinaOpenSource"
+    },
+    {
+        "model": "qwen3-coder",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 2.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 1 Completion ratio: 10.0000",
+        "grouping": "Default SVIP ChinaOpenSource"
+    },
+    {
+        "model": "gemini-2.0-flash-lite",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.05 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-4.1-nano-2025-04-14",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.05 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-mini-high",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 1 Completion ratio: 1.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "kimi-k2-0711-preview",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.8000 / 1M tokens Completion price: $ 3.2000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.4 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "o4-mini",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.55 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-4o-mini-tts",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2000 / 1M tokens Completion price: $ 18.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.6 Completion ratio: 15.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.2-codex",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.875 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "moonshot-v1-8k-vision-preview",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 1 Completion ratio: 1.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "qwen3-coder-flash",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.5000 / 1M tokens Completion price: $ 5.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.25 Completion ratio: 10.0000",
+        "grouping": "Default SVIP AlibabaCloud ChinaOpenSource"
+    },
+    {
+        "model": "qwen3-max",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2000 / 1M tokens Completion price: $ 6.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.6 Completion ratio: 5.0000",
+        "grouping": "Default SVIP AlibabaCloud ChinaOpenSource"
+    },
+    {
+        "model": "qwen3-vl-plus",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.15 Completion ratio: 8.0000",
+        "grouping": "Default SVIP AlibabaCloud ChinaOpenSource"
+    },
+    {
+        "model": "text-embedding-3-large",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.1300 / 1M tokens Completion price: $ 0.1300 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.065 Completion ratio: 1.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "claude-sonnet-4-20250514-thinking",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 1.5 Completion ratio: 5.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-low",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.15 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "qwen-turbo",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.6000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.1 Completion ratio: 3.0000",
+        "grouping": "Default SVIP AlibabaCloud ChinaOpenSource"
+    },
+    {
+        "model": "gemini-2.5-pro-deepsearch",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.625 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-chat-latest",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.625 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "kimi-k2-250711",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.8000 / 1M tokens Completion price: $ 3.2000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.4 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "llama-3-3-70b-instruct",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.3000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.05 Completion ratio: 3.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "o3",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 3.0000 / 1M tokens Completion price: $ 12.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 1.5 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "doubao-seed-1-6-thinking-250615",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 1.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.05 Completion ratio: 10.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.625 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "moonshot-v1-32k",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 4.0000 / 1M tokens Completion price: $ 4.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 2 Completion ratio: 1.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "qwen2-vl-7b-instruct",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 2.8572 / 1M tokens Completion price: $ 2.8572 / 1M tokens",
+        "magnification": "Prompt multiplier: 1.4286 Completion ratio: 1.0000",
+        "grouping": "Default SVIP ChinaOpenSource"
+    },
+    {
+        "model": "qwen3-next-80b-a3b-instruct",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.1500 / 1M tokens Completion price: $ 1.2000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.075 Completion ratio: 8.0000",
+        "grouping": "Default SVIP AlibabaCloud ChinaOpenSource"
+    },
+    {
+        "model": "gpt-5.1-minimal",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.625 Completion ratio: 5.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gemini-2.5-flash-preview-05-20-thinking",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.15 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gemini-2.5-pro-nothinking",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.625 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gemini-3-flash-preview-thinking",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.5000 / 1M tokens Completion price: $ 3.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.25 Completion ratio: 6.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "deepseek-v3.2-fast",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2000 / 1M tokens Completion price: $ 3.6000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.6 Completion ratio: 3.0000",
+        "grouping": "Default SVIP ChinaOpenSource"
+    },
+    {
+        "model": "doubao-seed-1-6-thinking-250715",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 1.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.05 Completion ratio: 10.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "deepseek-v3-20250324",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.2500 / 1M tokens Completion price: $ 1.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.125 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "deepseek-v3.1",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.5000 / 1M tokens Completion price: $ 1.5000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.25 Completion ratio: 3.0000",
+        "grouping": "Default SVIP ChinaOpenSource"
+    },
+    {
+        "model": "gpt-4o-mini-transcribe",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.5000 / 1M tokens Completion price: $ 6.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.75 Completion ratio: 4.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "claude-3-7-sonnet-20250219-thinking",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 1.5 Completion ratio: 5.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "doubao-seed-1-6-flash-250828",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.0300 / 1M tokens Completion price: $ 0.3000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.015 Completion ratio: 10.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gemini-2.5-flash-preview-04-17-nothinking",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.15 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gemini-embedding-exp-03-07",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.3000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.05 Completion ratio: 3.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-2025-11-13",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.625 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-medium",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.625 Completion ratio: 8.0000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "grok-4-fast",
+        "type": "Pay-per-use - Chat",
+        "price": "Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.5000 / 1M tokens",
+        "magnification": "Prompt multiplier: 0.1 Completion ratio: 2.5000",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "claude-haiku-4-5-20251001-all",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "claude-haiku-4-5-20251001-thinking-all",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0150 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "claude-sonnet-4-5-20250929-all",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0150 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "claude-sonnet-4-5-20250929-thinking-all",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "flux-2-flex",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0350 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "flux-2-max",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0700 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "flux-2-pro",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0350 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "flux-dev",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "flux-kontext-max",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0700 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "flux-kontext-pro",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0350 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "flux-pro",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0400 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "flux-pro-1.1",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0350 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "flux-pro-1.1-ultra",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0500 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gemini-2.5-flash-image",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default NanoBanana企业 SVIP"
+    },
+    {
+        "model": "gemini-2.5-flash-image-oss",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default NanoBanana企业 SVIP"
+    },
+    {
+        "model": "gemini-2.5-flash-image-preview",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default NanoBanana企业 SVIP"
+    },
+    {
+        "model": "gemini-2.5-flash-image-preview-oss",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default NanoBanana企业 SVIP"
+    },
+    {
+        "model": "gemini-3-pro-image-preview",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0500 / time",
+        "magnification": "-",
+        "grouping": "Default NanoBanana企业 SVIP"
+    },
+    {
+        "model": "gemini-3-pro-image-preview-1k",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0500 / time",
+        "magnification": "-",
+        "grouping": "Default NanoBanana企业 SVIP"
+    },
+    {
+        "model": "gemini-3-pro-image-preview-2k",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0500 / time",
+        "magnification": "-",
+        "grouping": "Default NanoBanana企业 SVIP"
+    },
+    {
+        "model": "gemini-3-pro-image-preview-4k",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0500 / time",
+        "magnification": "-",
+        "grouping": "Default NanoBanana企业 SVIP"
+    },
+    {
+        "model": "gemini-3-pro-image-preview-oss",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0500 / time",
+        "magnification": "-",
+        "grouping": "Default NanoBanana企业 SVIP"
+    },
+    {
+        "model": "gpt-4o-all",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-4o-image",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-4o-image-vip",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-codex-high",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0250 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-codex-low",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0150 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-codex-medium",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-codex-mini",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-codex-mini-high",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-codex-mini-medium",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0150 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-high",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0250 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-low",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0150 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-medium",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5-minimal",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-all",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.1000 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-low",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-max",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-max-high",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0250 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-max-low",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-max-medium",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0150 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-max-xhigh",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0250 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-mini-high",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-mini-medium",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0150 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-high",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0250 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-low",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0100 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-medium",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0150 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.1-minimal",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.2-all",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.1000 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.2-codex-high",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.1000 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    },
+    {
+        "model": "gpt-5.2-codex-low",
+        "type": "Pay-per-use - Chat",
+        "price": "$ 0.0200 / time",
+        "magnification": "-",
+        "grouping": "Default SVIP"
+    }
+]

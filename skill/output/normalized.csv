@@ -1,0 +1,6 @@
+﻿string_id,source_zh,tokenized_zh,is_long_text,context
+1,Welcome to the game!,Welcome   to   the   game !,0,UI/MainMenu
+2,Press <color=#ff0000>START</color> to begin,Press   __ TAG _ 0 __ START __ TAG _ 1 __   to   begin,0,UI/Button
+3,Your score: % d points,Your   score :   ⟦PH_1⟧   points,0,UI/ScoreDisplay
+4,Loading...,Loading ...,0,UI/LoadingScreen
+5,Game Over,Game   Over,0,UI/EndScreen

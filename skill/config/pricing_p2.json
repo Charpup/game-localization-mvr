@@ -1,0 +1,702 @@
+[
+    {
+        "model": "o3-mini-2025-01-31-medium",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.1000 / 1M tokens\n Completion price: $ 4.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.55\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "o3-mini-medium",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.1000 / 1M tokens\n Completion price: $ 4.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.55\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "o4-mini-2025-04-16",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.1000 / 1M tokens\n Completion price: $ 4.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.55\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen3-coder",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.0000 / 1M tokens\n Completion price: $ 20.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1\n Completion ratio: 10.0000",
+        "tags": "Default\nSVIP\nChinaOpenSource"
+    },
+    {
+        "model": "gemini-2.0-flash-lite-preview-02-05",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.1000 / 1M tokens\n Completion price: $ 0.2000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.05\n Completion ratio: 2.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-2.5-flash",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.3000 / 1M tokens\n Completion price: $ 2.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.15\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-2.5-pro-preview-06-05",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-3.5-turbo-16k-0613",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 3.0000 / 1M tokens\n Completion price: $ 3.9000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.5\n Completion ratio: 1.3000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5-pro",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 15.0000 / 1M tokens\n Completion price: $ 120.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 7.5\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-image-1.5-2025-12-16",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 5.0000 / 1M tokens\n Completion price: $ 32.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 2.5\n Completion ratio: 6.4000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-3-flash-preview-nothinking",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.5000 / 1M tokens\n Completion price: $ 3.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.25\n Completion ratio: 6.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-medium",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5.2",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.7500 / 1M tokens\n Completion price: $ 14.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.875\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "grok-4-1-fast-reasoning-latest",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 0.5000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 2.5000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "o3-mini-2025-01-31-low",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.1000 / 1M tokens\n Completion price: $ 4.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.55\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "o4-mini",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.1000 / 1M tokens\n Completion price: $ 4.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.55\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "claude-3-5-sonnet-20241022",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 3.0000 / 1M tokens\n Completion price: $ 15.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.5\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-2.5-pro",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-4o",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.5000 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.25\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen3-vl-30b-a3b-thinking",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.1200 / 1M tokens\n Completion price: $ 1.2000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.06\n Completion ratio: 10.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "text-embedding-3-small",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.0200 / 1M tokens\n Completion price: $ 0.0200 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.01\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "glm-4.5",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.5000 / 1M tokens\n Completion price: $ 2.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.25\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "o1-2024-12-17",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 15.0000 / 1M tokens\n Completion price: $ 60.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 7.5\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "o3-mini-low",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.1000 / 1M tokens\n Completion price: $ 4.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.55\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen3-coder-plus-2025-07-22",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.0000 / 1M tokens\n Completion price: $ 20.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1\n Completion ratio: 10.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "qwen2.5-32b-instruct",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.8572 / 1M tokens\n Completion price: $ 2.8572 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.4286\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP\nChinaOpenSource"
+    },
+    {
+        "model": "claude-sonnet-4-20250514",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 3.0000 / 1M tokens\n Completion price: $ 15.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.5\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-2.5-flash-preview-09-2025-nothinking",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.3000 / 1M tokens\n Completion price: $ 2.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.15\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "glm-4.5-air",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 1.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "grok-2-image-1212",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 20.0000 / 1M tokens\n Completion price: $ 20.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 10\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "grok-3-deepsearch",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 4.0000 / 1M tokens\n Completion price: $ 20.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 2\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "grok-4-deepsearch",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 4.0000 / 1M tokens\n Completion price: $ 20.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 2\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "omni-moderation-2024-09-26",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 0.2000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen-turbo-latest",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 0.6000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 3.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "claude-3-7-sonnet-20250219-thinking",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 3.0000 / 1M tokens\n Completion price: $ 15.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.5\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "deepseek-v3-0324",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2500 / 1M tokens\n Completion price: $ 1.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.125\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-2.5-pro-preview-05-06",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "o1",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 15.0000 / 1M tokens\n Completion price: $ 60.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 7.5\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen-vl-plus",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.8572 / 1M tokens\n Completion price: $ 2.8572 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.4286\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "gemini-2.5-pro-deepsearch",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5.2-medium",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.7500 / 1M tokens\n Completion price: $ 14.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.875\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "grok-4-fast-reasoning",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 0.5000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 2.5000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen3-30b-a3b-thinking-2507",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 2.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 12.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "claude-3-sonnet-20240229",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 3.0000 / 1M tokens\n Completion price: $ 15.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.5\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-2.5-flash-lite",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.1000 / 1M tokens\n Completion price: $ 0.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.05\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5-mini-2025-08-07",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2500 / 1M tokens\n Completion price: $ 2.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.125\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "kimi-k2-0711-preview",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.8000 / 1M tokens\n Completion price: $ 3.2000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.4\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "claude-opus-4-1-20250805",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 15.0000 / 1M tokens\n Completion price: $ 75.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 7.5\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "glm-4.6v",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2800 / 1M tokens\n Completion price: $ 0.8400 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.14\n Completion ratio: 3.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "gpt-4o-mini-audio-preview",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.0000 / 1M tokens\n Completion price: $ 8.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "moonshot-v1-32k-vision-preview",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 4.0000 / 1M tokens\n Completion price: $ 4.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 2\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen3-vl-235b-a22b-instruct",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.3000 / 1M tokens\n Completion price: $ 3.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.15\n Completion ratio: 10.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "gpt-4o-transcribe",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 8.0000 / 1M tokens\n Completion price: $ 16.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 4\n Completion ratio: 2.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-image-1.5",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 5.0000 / 1M tokens\n Completion price: $ 32.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 2.5\n Completion ratio: 6.4000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "grok-4-1-thinking-1108b",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 3.0000 / 1M tokens\n Completion price: $ 15.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.5\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen2.5-vl-7b-instruct",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.1400 / 1M tokens\n Completion price: $ 0.7000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.07\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP\nChinaOpenSource"
+    },
+    {
+        "model": "chatgpt-4o-latest",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 5.0000 / 1M tokens\n Completion price: $ 15.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 2.5\n Completion ratio: 3.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-2.5-flash-preview-04-17",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.3000 / 1M tokens\n Completion price: $ 2.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.15\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5.1-all",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 6.2500 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen3-235b-a22b",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.0000 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.5\n Completion ratio: 10.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "tts-1",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 30.0000 / 1M tokens\n Completion price: $ 30.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 15\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "doubao-seed-1-6-250615",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.1000 / 1M tokens\n Completion price: $ 1.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.05\n Completion ratio: 10.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-4o-2024-11-20",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.5000 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.25\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5-minimal",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 1.6000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-image-1",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 5.0000 / 1M tokens\n Completion price: $ 40.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 2.5\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "deepseek-r1-distill-qwen-32b",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.5000 / 1M tokens\n Completion price: $ 6.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.75\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP\nChinaOpenSource"
+    },
+    {
+        "model": "glm-4.5v",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.5000 / 1M tokens\n Completion price: $ 1.5000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.25\n Completion ratio: 3.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "kimi-k2-0905",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.6000 / 1M tokens\n Completion price: $ 2.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.3\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP\nChinaOpenSource"
+    },
+    {
+        "model": "qvq-max-2025-05-15",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.0000 / 1M tokens\n Completion price: $ 4.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.5\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "qvq-max-latest",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2000 / 1M tokens\n Completion price: $ 4.8000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.6\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "qwen-mt-plus",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.0000 / 1M tokens\n Completion price: $ 8.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "gemini-2.5-flash-thinking",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.3000 / 1M tokens\n Completion price: $ 2.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.15\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-max-low",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 3.7500 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 3.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "grok-4-fast-non-reasoning-latest",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 0.5000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 2.5000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "llama-3-1-405b-instruct",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.0000 / 1M tokens\n Completion price: $ 2.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen2-vl-7b-instruct",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.8572 / 1M tokens\n Completion price: $ 2.8572 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.4286\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP\nChinaOpenSource"
+    },
+    {
+        "model": "qwen3-max-2025-09-23",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2000 / 1M tokens\n Completion price: $ 6.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.6\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "qwen3-next-80b-a3b-instruct",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.1500 / 1M tokens\n Completion price: $ 1.2000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.075\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "deepseek-r1-250528",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.5700 / 1M tokens\n Completion price: $ 2.2800 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.285\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP\nChinaOpenSource"
+    },
+    {
+        "model": "gemini-2.5-flash-nothinking",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.3000 / 1M tokens\n Completion price: $ 2.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.15\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "glm-4.7",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.6000 / 1M tokens\n Completion price: $ 2.1960 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.3\n Completion ratio: 3.6600",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "grok-3-mini-latest",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.3000 / 1M tokens\n Completion price: $ 1.8000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.15\n Completion ratio: 6.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "grok-code-fast-1-0825",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 0.3000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 1.5000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "moonshot-v1-128k",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 10.0000 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 5\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-2.5-pro-nothinking",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5-codex-high",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "grok-2-image-latest",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 20.0000 / 1M tokens\n Completion price: $ 20.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 10\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "grok-4-fast-reasoning-latest",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 0.5000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 2.5000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "o3",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 3.0000 / 1M tokens\n Completion price: $ 12.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.5\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "claude-sonnet-4-5-20250929",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 3.0000 / 1M tokens\n Completion price: $ 15.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.5\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gemini-3-pro-preview",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.0000 / 1M tokens\n Completion price: $ 12.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1\n Completion ratio: 6.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5.1-codex-max",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "o1-preview-2024-09-12",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 15.0000 / 1M tokens\n Completion price: $ 60.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 7.5\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "qwen2.5-72b-instruct",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 2.8572 / 1M tokens\n Completion price: $ 2.8572 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.4286\n Completion ratio: 1.0000",
+        "tags": "Default\nSVIP\nChinaOpenSource"
+    },
+    {
+        "model": "qwen3-30b-a3b-instruct-2507",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.2000 / 1M tokens\n Completion price: $ 0.8000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.1\n Completion ratio: 4.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "qwq-plus-2025-03-05",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.8000 / 1M tokens\n Completion price: $ 2.4000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.4\n Completion ratio: 3.0000",
+        "tags": "Default\nSVIP\nAlibabaCloud\nChinaOpenSource"
+    },
+    {
+        "model": "sora-2-pro",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 300.0000 / 1M tokens\n Completion price: $ 300.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 150\n Completion ratio: 1.0000",
+        "tags": "Sora2官转"
+    },
+    {
+        "model": "gemini-embedding-exp",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 0.1000 / 1M tokens\n Completion price: $ 0.3000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.05\n Completion ratio: 3.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "gpt-5-codex",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 1.2500 / 1M tokens\n Completion price: $ 10.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 0.625\n Completion ratio: 8.0000",
+        "tags": "Default\nSVIP"
+    },
+    {
+        "model": "claude-3-5-sonnet-20240620",
+        "billing_type": "Pay-per-use - Chat",
+        "pricing": "Suggested price: $ 3.0000 / 1M tokens\n Completion price: $ 15.0000 / 1M tokens",
+        "multipliers": "Prompt multiplier: 1.5\n Completion ratio: 5.0000",
+        "tags": "Default\nSVIP"
+    }
+]

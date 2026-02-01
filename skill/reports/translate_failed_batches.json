@@ -1,0 +1,13 @@
+{
+  "step": "translate",
+  "total_batches": 1,
+  "failed_batches": [
+    {
+      "batch_num": 1,
+      "start_idx": 0,
+      "end_idx": 5,
+      "error": "Network error: HTTPConnectionPool(host='dummy', port=80): Max retries exceeded with url: /chat/completions (Caused by NameResolutionError(\"HTTPConnection(host='dummy', port=80): Failed to resolve 'dummy' ([Errno 11001] getaddrinfo failed)\"))"
+    }
+  ],
+  "timestamp": "2026-02-02T01:06:02.979041"
+}

@@ -1,0 +1,17 @@
+# Trigger Test Cases (共 3 场景)
+
+## Case 1: 明确提及游戏本地化
+User: "我需要把这个中文游戏文本翻译成俄文,有很多 <color> 标签"
+Expected: Skill 被触发
+
+## Case 2: CSV 文件 + 占位符特征
+User: "帮我处理这个 CSV,里面有 %d 和 {0} 这种占位符"
+Expected: Skill 被触发
+
+## Case 3: 批量翻译 + QA 需求
+User: "批量翻译并做质量检查"
+Expected: Skill 被触发
+
+## Case 4: 负例 - 普通翻译
+User: "把这段英文翻译成中文"
+Expected: Skill 不应触发
