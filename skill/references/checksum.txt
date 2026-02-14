@@ -1,0 +1,7 @@
+
+Algorithm Hash                                                             Path
+--------- ----                                                             ----
+SHA256    2176BE8115D217D272FA1208A450E0A2A6F0860B48D726AA96681A515E9A5284 C:\Users\bob_c\.gemini\antigravity\auto_Localization\skill\references\glossary_spec.md
+SHA256    CA71E8E9678E58BD45EF740B5EB5BF61CDA4DC8617BA247A5CA19E5F669479C8 C:\Users\bob_c\.gemini\antigravity\auto_Localization\skill\references\metrics_guide.md
+SHA256    251FF5B7CB11EDFB984FFD5C6A633C0E75EFD50F64EB9523D4897A556665FCEF C:\Users\bob_c\.gemini\antigravity\auto_Localization\skill\references\qa_rules.md
+

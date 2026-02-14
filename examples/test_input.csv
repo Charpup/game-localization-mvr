@@ -1,0 +1,6 @@
+string_id,source_zh
+1,你好世界
+2,欢迎来到游戏
+3,<color=#ff0000>红色文字</color>
+4,Player Name: {player_name}
+5,消耗%d点能量

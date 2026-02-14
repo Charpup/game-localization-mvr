@@ -1,0 +1,20 @@
+# Game Localization MVR - Python Dependencies
+# For Docker and local development
+
+# Core dependencies
+pyyaml>=6.0
+requests>=2.28.0
+
+# Async/Concurrent execution (Phase 3.4)
+aiohttp>=3.8.0
+aiofiles>=23.0.0
+
+# Chinese text processing
+jieba>=0.42.1
+
+# Optional: faster JSON parsing
+# orjson>=3.8.0
+
+# Excel support
+pandas>=2.0.0
+openpyxl>=3.1.0

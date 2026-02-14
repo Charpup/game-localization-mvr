@@ -1,0 +1,59 @@
+# Repair Loop Configuration
+version: "1.0"
+
+repair_loop:
+  max_rounds: 3
+
+  # 每轮使用的模型策略
+  rounds:
+    1:
+      model: claude-haiku-4-5-20251001
+      prompt_variant: standard
+      temperature: 0.3
+    2:
+      model: claude-haiku-4-5-20251001
+      prompt_variant: detailed
+      temperature: 0.5
+    3:
+      model: claude-sonnet-4-5-20250929
+      prompt_variant: expert
+      temperature: 0.7
+
+  # 每轮修复后的验证
+  verify_after_each_round: true
+
+  # 超时配置
+  timeout_per_round_s: 120
+
+escalation:
+  # 触发条件
+  trigger_after_rounds: 3
+
+  # 输出格式
+  output_format: csv
+
+  # 包含的字段
+  include_fields:
+    - string_id
+    - source_text
+    - current_translation
+    - content_type
+    - max_length_target
+    - qa_issues # QA 检出的问题
+    - qa_comments # QA 评语
+    - repair_history # 各轮修复尝试历史
+    - suggested_action # 建议的人工处理方式
+
+  # 严重度分类
+  severity_levels:
+    critical:
+      - placeholder_mismatch
+      - tag_corruption
+      - meaning_reversal
+    major:
+      - length_overflow
+      - glossary_violation
+      - style_inconsistency
+    minor:
+      - punctuation_issue
+      - capitalization_issue

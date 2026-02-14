@@ -1,0 +1,208 @@
+meta:
+  generated_at: '2026-01-24T09:21:21.877910'
+  step: glossary_translate
+  total_translated: 40
+  source_proposals: data/smoke_term_candidates.yaml
+  style_guide: workflow/style_guide.md
+  batch_size: 20
+entries:
+- term_zh: 点生命值
+  term_ru: HP
+  confidence: 0.95
+  reason: 游戏UI中的数值单位，通常作为计数词使用 | noun
+  context: null
+- term_zh: 使用后恢复
+  term_ru: Восстановление после использования
+  confidence: 0.85
+  reason: 物品效果描述，可变格 | phrase
+  context: null
+- term_zh: 返回
+  term_ru: Назад
+  confidence: 0.95
+  reason: UI按钮，命令式 | verb
+  context: null
+- term_zh: 领取奖励
+  term_ru: Получить награду
+  confidence: 0.9
+  reason: 按钮文本，完成体 | verb
+  context: null
+- term_zh: 当前等级
+  term_ru: Текущий уровень
+  confidence: 0.95
+  reason: UI标签 | noun
+  context: null
+- term_zh: 金币
+  term_ru: Золото
+  confidence: 0.95
+  reason: 游戏货币，可变格 | noun
+  context: null
+- term_zh: 经验值
+  term_ru: Опыт
+  confidence: 0.95
+  reason: 游戏资源，可变格 | noun
+  context: null
+- term_zh: 生命值
+  term_ru: Здоровье
+  confidence: 0.95
+  reason: 角色属性，可变格 | noun
+  context: null
+- term_zh: 释放火球术
+  term_ru: Выпустить огненный шар
+  confidence: 0.9
+  reason: 技能名，完成体 | verb
+  context: null
+- term_zh: 对敌人造成
+  term_ru: Наносит врагу
+  confidence: 0.9
+  reason: 伤害描述，可变格 | verb
+  context: null
+- term_zh: 点火焰伤害
+  term_ru: урона огнём
+  confidence: 0.85
+  reason: 伤害类型，属格形式 | noun
+  context: null
+- term_zh: 并附加燃烧效果
+  term_ru: и применяет эффект горения
+  confidence: 0.85
+  reason: 技能效果描述 | phrase
+  context: null
+- term_zh: 召唤冰霜之刃
+  term_ru: Призвать ледяной клинок
+  confidence: 0.9
+  reason: 技能名，完成体 | verb
+  context: null
+- term_zh: 对范围内敌人造成
+  term_ru: Наносит урон врагам в области
+  confidence: 0.9
+  reason: 范围伤害描述 | verb
+  context: null
+- term_zh: 点冰冻伤害
+  term_ru: урона льдом
+  confidence: 0.85
+  reason: 伤害类型，属格形式 | noun
+  context: null
+- term_zh: 使用治疗术
+  term_ru: Использовать исцеление
+  confidence: 0.9
+  reason: 技能名，完成体 | verb
+  context: null
+- term_zh: 恢复
+  term_ru: Восстановление
+  confidence: 0.9
+  reason: 效果类型，可变格 | noun
+  context: null
+- term_zh: 提升攻击力
+  term_ru: Повысить атаку
+  confidence: 0.9
+  reason: 增益效果，完成体 | verb
+  context: null
+- term_zh: 持续
+  term_ru: Длится
+  confidence: 0.85
+  reason: 持续时间描述 | verb
+  context: null
+- term_zh: 生命药水
+  term_ru: Зелье здоровья
+  confidence: 0.95
+  reason: 物品名，可变格 | noun
+  context: null
+- term_zh: 魔法药水
+  term_ru: Зелье маны
+  confidence: 0.95
+  reason: 物品名，可变格 | noun
+  context: null
+- term_zh: 点魔法值
+  term_ru: MP
+  confidence: 0.95
+  reason: 游戏UI中的数值单位 | noun
+  context: null
+- term_zh: 传说武器
+  term_ru: Легендарное оружие
+  confidence: 0.95
+  reason: 物品稀有度，可变格 | noun
+  context: null
+- term_zh: 攻击力
+  term_ru: Атака
+  confidence: 0.95
+  reason: 角色属性，可变格 | noun
+  context: null
+- term_zh: 暴击率
+  term_ru: Шанс крита
+  confidence: 0.9
+  reason: 角色属性，可变格 | noun
+  context: null
+- term_zh: 勇士
+  term_ru: Воин
+  confidence: 0.95
+  reason: 角色称号或职业，可变格 | noun
+  context: null
+- term_zh: 你终于来了
+  term_ru: Ты наконец пришёл
+  confidence: 0.85
+  reason: NPC对话，整句 | phrase
+  context: null
+- term_zh: 我等你很久了
+  term_ru: Я долго тебя ждал
+  confidence: 0.85
+  reason: NPC对话，整句 | phrase
+  context: null
+- term_zh: 这个世界正面临着
+  term_ru: Этот мир сталкивается с
+  confidence: 0.8
+  reason: 剧情对话片段 | phrase
+  context: null
+- term_zh: 前所未有的危机
+  term_ru: беспрецедентным кризисом
+  confidence: 0.8
+  reason: 剧情对话片段 | phrase
+  context: null
+- term_zh: 只有你能拯救它
+  term_ru: Только ты можешь его спасти
+  confidence: 0.85
+  reason: NPC对话，整句 | phrase
+  context: null
+- term_zh: 欢迎来到新手村
+  term_ru: Добро пожаловать в деревню новичков
+  confidence: 0.9
+  reason: 系统提示，整句 | phrase
+  context: null
+- term_zh: 这里是所有冒险者
+  term_ru: Здесь начинают все искатели приключений
+  confidence: 0.8
+  reason: 系统提示片段 | phrase
+  context: null
+- term_zh: 的起点
+  term_ru: начало пути
+  confidence: 0.8
+  reason: 系统提示片段 | noun
+  context: null
+- term_zh: 网络连接失败
+  term_ru: Ошибка подключения к сети
+  confidence: 0.95
+  reason: 系统错误提示 | phrase
+  context: null
+- term_zh: 请检查网络设置
+  term_ru: Проверьте параметры сети
+  confidence: 0.9
+  reason: 系统提示，命令式 | phrase
+  context: null
+- term_zh: 您的背包已满
+  term_ru: Ваш инвентарь полон
+  confidence: 0.95
+  reason: 系统提示 | phrase
+  context: null
+- term_zh: 无法拾取更多物品
+  term_ru: Невозможно подобрать больше предметов
+  confidence: 0.9
+  reason: 系统提示 | phrase
+  context: null
+- term_zh: 服务器维护中
+  term_ru: Сервер на техническом обслуживании
+  confidence: 0.95
+  reason: 系统提示 | phrase
+  context: null
+- term_zh: 请稍后再试
+  term_ru: Попробуйте позже
+  confidence: 0.9
+  reason: 系统提示，命令式 | phrase
+  context: null

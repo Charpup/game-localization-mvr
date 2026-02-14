@@ -1,0 +1,125 @@
+meta:
+  type: compiled
+  entry_count: 40
+  note: Runtime read-only. Do not edit directly.
+entries:
+- term_zh: 点生命值
+  term_ru: HP
+  scope: base
+- term_zh: 使用后恢复
+  term_ru: Восстановление после использования
+  scope: base
+- term_zh: 返回
+  term_ru: Назад
+  scope: base
+- term_zh: 领取奖励
+  term_ru: Получить награду
+  scope: base
+- term_zh: 当前等级
+  term_ru: Текущий уровень
+  scope: base
+- term_zh: 金币
+  term_ru: Золото
+  scope: base
+- term_zh: 经验值
+  term_ru: Опыт
+  scope: base
+- term_zh: 生命值
+  term_ru: Здоровье
+  scope: base
+- term_zh: 释放火球术
+  term_ru: Выпустить огненный шар
+  scope: base
+- term_zh: 对敌人造成
+  term_ru: Наносит врагу
+  scope: base
+- term_zh: 点火焰伤害
+  term_ru: урона огнём
+  scope: base
+- term_zh: 并附加燃烧效果
+  term_ru: и применяет эффект горения
+  scope: base
+- term_zh: 召唤冰霜之刃
+  term_ru: Призвать ледяной клинок
+  scope: base
+- term_zh: 对范围内敌人造成
+  term_ru: Наносит урон врагам в области
+  scope: base
+- term_zh: 点冰冻伤害
+  term_ru: урона льдом
+  scope: base
+- term_zh: 使用治疗术
+  term_ru: Использовать исцеление
+  scope: base
+- term_zh: 恢复
+  term_ru: Восстановление
+  scope: base
+- term_zh: 提升攻击力
+  term_ru: Повысить атаку
+  scope: base
+- term_zh: 持续
+  term_ru: Длится
+  scope: base
+- term_zh: 生命药水
+  term_ru: Зелье здоровья
+  scope: base
+- term_zh: 魔法药水
+  term_ru: Зелье маны
+  scope: base
+- term_zh: 点魔法值
+  term_ru: MP
+  scope: base
+- term_zh: 传说武器
+  term_ru: Легендарное оружие
+  scope: base
+- term_zh: 攻击力
+  term_ru: Атака
+  scope: base
+- term_zh: 暴击率
+  term_ru: Шанс крита
+  scope: base
+- term_zh: 勇士
+  term_ru: Воин
+  scope: base
+- term_zh: 你终于来了
+  term_ru: Ты наконец пришёл
+  scope: base
+- term_zh: 我等你很久了
+  term_ru: Я долго тебя ждал
+  scope: base
+- term_zh: 这个世界正面临着
+  term_ru: Этот мир сталкивается с
+  scope: base
+- term_zh: 前所未有的危机
+  term_ru: беспрецедентным кризисом
+  scope: base
+- term_zh: 只有你能拯救它
+  term_ru: Только ты можешь его спасти
+  scope: base
+- term_zh: 欢迎来到新手村
+  term_ru: Добро пожаловать в деревню новичков
+  scope: base
+- term_zh: 这里是所有冒险者
+  term_ru: Здесь начинают все искатели приключений
+  scope: base
+- term_zh: 的起点
+  term_ru: начало пути
+  scope: base
+- term_zh: 网络连接失败
+  term_ru: Ошибка подключения к сети
+  scope: base
+- term_zh: 请检查网络设置
+  term_ru: Проверьте параметры сети
+  scope: base
+- term_zh: 您的背包已满
+  term_ru: Ваш инвентарь полон
+  scope: base
+- term_zh: 无法拾取更多物品
+  term_ru: Невозможно подобрать больше предметов
+  scope: base
+- term_zh: 服务器维护中
+  term_ru: Сервер на техническом обслуживании
+  scope: base
+- term_zh: 请稍后再试
+  term_ru: Попробуйте позже
+  scope: base

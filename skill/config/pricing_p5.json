@@ -1,0 +1,752 @@
+[
+    {
+        "model": "qwen3-omni-flash",
+        "type": "Suggested price: $ 2.0000 / 1M tokens Completion price: $ 20.0000 / 1M tokens",
+        "pricing": "DefaultMore (3)",
+        "tags": []
+    },
+    {
+        "model": "tts-1-hd-1106",
+        "type": "Suggested price: $ 60.0000 / 1M tokens Completion price: $ 60.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "claude-haiku-4-5-20251001-thinking",
+        "type": "Suggested price: $ 1.0000 / 1M tokens Completion price: $ 5.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gemini-2.5-flash-preview-09-2025-nothinking",
+        "type": "Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-4.1-mini-2025-04-14",
+        "type": "Suggested price: $ 0.4000 / 1M tokens Completion price: $ 1.6000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-4o-transcribe",
+        "type": "Suggested price: $ 8.0000 / 1M tokens Completion price: $ 16.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "kimi-k2-128k",
+        "type": "Suggested price: $ 0.5600 / 1M tokens Completion price: $ 2.2400 / 1M tokens",
+        "pricing": "DefaultMore (2)",
+        "tags": []
+    },
+    {
+        "model": "qwen3-coder-480b-a35b-instruct",
+        "type": "Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens",
+        "pricing": "DefaultMore (3)",
+        "tags": []
+    },
+    {
+        "model": "glm-4.7",
+        "type": "Suggested price: $ 0.6000 / 1M tokens Completion price: $ 2.1960 / 1M tokens",
+        "pricing": "DefaultMore (3)",
+        "tags": []
+    },
+    {
+        "model": "gpt-5",
+        "type": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-5-codex-medium",
+        "type": "Suggested price: $ 0.6000 / 1M tokens Completion price: $ 4.8000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "grok-4-auto",
+        "type": "Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "kimi-k2-0711-preview",
+        "type": "Suggested price: $ 0.8000 / 1M tokens Completion price: $ 3.2000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gemini-3-flash-preview-nothinking",
+        "type": "Suggested price: $ 0.5000 / 1M tokens Completion price: $ 3.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-5.1-chat-latest",
+        "type": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-5.2-codex-low",
+        "type": "Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "doubao-seed-1-6-flash-250615",
+        "type": "Suggested price: $ 0.0300 / 1M tokens Completion price: $ 0.3000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gemini-2.0-flash-lite-001",
+        "type": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "qwen-long",
+        "type": "Suggested price: $ 0.0700 / 1M tokens Completion price: $ 0.2800 / 1M tokens",
+        "pricing": "DefaultMore (3)",
+        "tags": []
+    },
+    {
+        "model": "qwen-max-longcontext",
+        "type": "Suggested price: $ 3.2000 / 1M tokens Completion price: $ 3.2000 / 1M tokens",
+        "pricing": "DefaultMore (3)",
+        "tags": []
+    },
+    {
+        "model": "sora-2",
+        "type": "Suggested price: $ 100.0000 / 1M tokens Completion price: $ 100.0000 / 1M tokens",
+        "pricing": "Sora2官转",
+        "tags": []
+    },
+    {
+        "model": "claude-3-5-haiku-latest",
+        "type": "Suggested price: $ 0.8000 / 1M tokens Completion price: $ 4.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "deepseek-v3.1-terminus",
+        "type": "Suggested price: $ 0.5000 / 1M tokens Completion price: $ 2.0000 / 1M tokens",
+        "pricing": "DefaultMore (2)",
+        "tags": []
+    },
+    {
+        "model": "gemini-2.5-computer-use-preview-10-2025",
+        "type": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-5-pro-2025-10-06",
+        "type": "Suggested price: $ 15.0000 / 1M tokens Completion price: $ 120.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-5.2-low",
+        "type": "Suggested price: $ 1.7500 / 1M tokens Completion price: $ 14.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "grok-3",
+        "type": "Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "grok-4-0709",
+        "type": "Suggested price: $ 3.0000 / 1M tokens Completion price: $ 15.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "deepseek-v3.2",
+        "type": "Suggested price: $ 0.2800 / 1M tokens Completion price: $ 0.4200 / 1M tokens",
+        "pricing": "DefaultMore (2)",
+        "tags": []
+    },
+    {
+        "model": "doubao-seed-1-8-251215",
+        "type": "Suggested price: $ 0.1140 / 1M tokens Completion price: $ 1.1400 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-3.5-turbo-0125",
+        "type": "Suggested price: $ 0.5000 / 1M tokens Completion price: $ 1.5000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-5-medium",
+        "type": "Suggested price: $ 0.6000 / 1M tokens Completion price: $ 4.8000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "o1-preview",
+        "type": "Suggested price: $ 15.0000 / 1M tokens Completion price: $ 60.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "text-moderation-stable",
+        "type": "Suggested price: $ 0.2000 / 1M tokens Completion price: $ 0.2000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "deepseek-v3-0324",
+        "type": "Suggested price: $ 0.2500 / 1M tokens Completion price: $ 1.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "deepseek-v3.1",
+        "type": "Suggested price: $ 0.5000 / 1M tokens Completion price: $ 1.5000 / 1M tokens",
+        "pricing": "DefaultMore (2)",
+        "tags": []
+    },
+    {
+        "model": "gemini-2.5-flash-preview-09-2025",
+        "type": "Suggested price: $ 0.3000 / 1M tokens Completion price: $ 2.4000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-5.1-low",
+        "type": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 6.2500 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "doubao-seed-1-6-thinking-250615",
+        "type": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 1.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gemini-2.0-flash-001",
+        "type": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.4000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gemini-2.5-pro-preview-05-06",
+        "type": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-4.1-2025-04-14",
+        "type": "Suggested price: $ 2.0000 / 1M tokens Completion price: $ 8.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "moonshot-v1-8k",
+        "type": "Suggested price: $ 2.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "o1-mini",
+        "type": "Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "o3-mini-2025-01-31",
+        "type": "Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-3.5-turbo-1106",
+        "type": "Suggested price: $ 1.0000 / 1M tokens Completion price: $ 2.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "gpt-5.1-codex-medium",
+        "type": "Suggested price: $ 1.2500 / 1M tokens Completion price: $ 10.0000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "llama-3-3-70b-instruct",
+        "type": "Suggested price: $ 0.1000 / 1M tokens Completion price: $ 0.3000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "o3-mini-2025-01-31-low",
+        "type": "Suggested price: $ 1.1000 / 1M tokens Completion price: $ 4.4000 / 1M tokens",
+        "pricing": "DefaultSVIP",
+        "tags": []
+    },
+    {
+        "model": "qwen3-max-preview",
+        "type": "Suggested price: $ 1.2000 / 1M tokens Completion price: $ 6.0000 / 1M tokens",
+        "pricing": "DefaultMore (3)",
+        "tags": []
+    },
+    {
+        "model": "gpt-5.2-medium",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "gpt-image-1.5-all",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0100 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "grok-2-image",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0700 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "grok-2-image-1212",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0700 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "grok-3-deepsearch",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0100 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "grok-4-1-thinking-1108b",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "grok-4-1-thinking-1129-all",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1000 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "grok-4-all",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0100 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "grok-4-auto-deepsearch",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "grok-4-deepsearch",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0300 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "nano-banana",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0250 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "NanoBanana企业",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "nano-banana-oss",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0250 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "NanoBanana企业",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "nano-banana-pro",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "NanoBanana企业",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "qwen-image",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0250 / time",
+        "multiplier": "-",
+        "tags": [
+            "Lab"
+        ]
+    },
+    {
+        "model": "qwen-image-edit-2509",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0300 / time",
+        "multiplier": "-",
+        "tags": [
+            "Lab"
+        ]
+    },
+    {
+        "model": "seedream-4-0-250828",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0350 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "seedream-4-5-251128",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0450 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "sora-2",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora-2-character",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0100 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora-2-pro",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.8000 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora-2-remix",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora-character",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0100 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora-image",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0100 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "sora_image",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.0100 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "sora_video2",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora_video2-15s",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora_video2-15s-openaicdn",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora_video2-landscape",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora_video2-landscape-15s",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora_video2-landscape-15s-openaicdn",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora_video2-landscape-openaicdn",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "sora_video2-openaicdn",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1200 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP",
+            "Sora2"
+        ]
+    },
+    {
+        "model": "veo-2.0-generate-001",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.5000 / time",
+        "multiplier": "-",
+        "tags": [
+            "Lab"
+        ]
+    },
+    {
+        "model": "veo-3.0-fast-generate-001",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.2000 / time",
+        "multiplier": "-",
+        "tags": [
+            "Lab"
+        ]
+    },
+    {
+        "model": "veo-3.0-generate-001",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.6000 / time",
+        "multiplier": "-",
+        "tags": [
+            "Lab"
+        ]
+    },
+    {
+        "model": "veo-3.1",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.2500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "veo-3.1-fast",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "veo-3.1-fast-fl",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "veo-3.1-fast-generate-preview",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.2000 / time",
+        "multiplier": "-",
+        "tags": [
+            "Lab"
+        ]
+    },
+    {
+        "model": "veo-3.1-fl",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.2500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "veo-3.1-landscape",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.2500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "veo-3.1-landscape-fast",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "veo-3.1-landscape-fast-fl",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.1500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    },
+    {
+        "model": "veo-3.1-landscape-fl",
+        "type": "Pay-per-use - Chat",
+        "pricing": "$ 0.2500 / time",
+        "multiplier": "-",
+        "tags": [
+            "Default",
+            "SVIP"
+        ]
+    }
+]

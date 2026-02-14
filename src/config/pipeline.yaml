@@ -1,0 +1,111 @@
+# Pipeline Configuration for Game Localization MVR
+# Phase 3.4: Async/Concurrent Execution Configuration
+
+# =============================================================================
+# Async Execution Settings
+# =============================================================================
+async:
+  # Master switch for async execution
+  enabled: true
+  
+  # Maximum concurrent LLM calls globally
+  max_concurrent_llm_calls: 10
+  
+  # Semaphore acquisition timeout (seconds)
+  # Prevents indefinite waiting under heavy load
+  semaphore_timeout: 60
+  
+  # Pipeline buffer size between stages
+  # Larger buffers allow more overlap but use more memory
+  buffer_size: 100
+  
+  # Maximum worker threads for CPU-bound operations
+  max_workers: 4
+  
+  # Pipeline stages in execution order
+  pipeline_stages:
+    - normalize
+    - translate
+    - qa
+    - export
+  
+  # Per-stage concurrency limits
+  # Allows fine-tuning based on stage characteristics
+  stage_concurrency:
+    normalize: 5      # CPU-bound, moderate parallelism
+    translate: 10     # IO-bound (LLM calls), high parallelism
+    qa: 8             # IO-bound but more complex prompts
+    export: 3         # Disk IO, limited parallelism
+  
+  # Enable streaming pipeline (start next stage before previous completes)
+  enable_streaming: true
+  
+  # Backpressure handling
+  # When enabled, slow consumers block fast producers to prevent OOM
+  backpressure_enabled: true
+  
+  # Maximum queue size for backpressure
+  queue_maxsize: 200
+
+# =============================================================================
+# Performance Tuning
+# =============================================================================
+performance:
+  # Batch size for reading/writing CSV files
+  io_batch_size: 1000
+  
+  # Chunk size for async generators
+  generator_chunk_size: 100
+  
+  # Connection pool settings for aiohttp
+  connection_pool:
+    total_limit: 100
+    limit_per_host: 20
+    enable_cleanup_closed: true
+    force_close: false
+  
+  # Timeout settings (seconds)
+  timeouts:
+    connect: 10
+    read: 60
+    total: 120
+  
+  # Retry configuration for failed async operations
+  retry:
+    max_attempts: 3
+    backoff_base: 1.0
+    backoff_max: 30.0
+
+# =============================================================================
+# Monitoring & Observability
+# =============================================================================
+monitoring:
+  # Enable detailed tracing
+  enable_tracing: true
+  
+  # Trace file path
+  trace_path: data/async_trace.jsonl
+  
+  # Progress reporting interval (seconds)
+  progress_interval: 5
+  
+  # Metrics collection
+  collect_metrics:
+    latency_histogram: true
+    throughput_gauge: true
+    queue_depth: true
+    semaphore_wait_time: true
+
+# =============================================================================
+# Resource Limits
+# =============================================================================
+resources:
+  # Maximum memory usage (MB) - triggers backpressure
+  max_memory_mb: 2048
+  
+  # Maximum open file descriptors
+  max_open_files: 100
+  
+  # Semaphore priority (fairness)
+  # When true, acquires are served in FIFO order
+  fair_semaphore: true

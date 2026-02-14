@@ -1,0 +1,10 @@
+{
+  "version": "2026.01.24.2",
+  "hash": "sha256:2ab240a7d6b17b2b",
+  "compiled_at": "2026-01-24T09:21:22.596047",
+  "entry_count": 40,
+  "language_pair": "zh-CN->ru-RU",
+  "genre": "",
+  "franchise": "",
+  "source": "workflow/smoke_glossary_approved.yaml"
+}

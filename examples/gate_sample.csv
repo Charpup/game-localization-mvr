@@ -1,0 +1,20 @@
+string_id,source_zh,module_tag,module_confidence,max_len_target,len_tier,source_locale,placeholder_flags,status,is_empty_source,is_long_text,target_text,tokenized_zh
+10001531,医术秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение медицины,医术秘传
+10001532,健壮秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение силы,健壮秘传
+10001533,穿透秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение пробивания,穿透秘传
+10001534,幻术秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение иллюзии,幻术秘传
+10001535,御敌秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение защиты,御敌秘传
+10001536,嗜血秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение жажды крови,嗜血秘传
+10001537,抵御秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение сопротивления,抵御秘传
+10001538,守护秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение опеки,守护秘传
+10001539,净化秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение очищения,净化秘传
+10001540,荆棘秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение шипов,荆棘秘传
+10001541,猛攻秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение яростной атаки,猛攻秘传
+10001542,超然秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение отрешённости,超然秘传
+10001543,虹吸秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение всасывания,虹吸秘传
+10001544,吞噬秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение поглощения,吞噬秘传
+10001545,续疗秘传,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Секретное учение исцеления,续疗秘传
+10001601,二位柚木门,misc,0.5,20,S,zh-CN,count=0,ok,False,False,Юки Ниби,二位柚木门
+10001602,枸橘矢仓,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Ягура Кагаяма,枸橘矢仓
+10001603,汉,ui_button,0.7,8,S,zh-CN,count=0,ok,False,False,Хан,汉
+10001604,枫,ui_button,0.7,8,S,zh-CN,count=0,ok,False,False,Каэдэ,枫

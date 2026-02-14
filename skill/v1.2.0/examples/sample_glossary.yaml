@@ -1,0 +1,45 @@
+# Sample Glossary for Game Localization
+# Language Pair: zhCN → ruRU
+
+general:
+  忍者:
+    translation: "ниндзя"
+    pos: noun
+    notes: "Use for all ninja characters"
+    
+  法师:
+    translation: "маг"
+    pos: noun
+    notes: "Generic magic user"
+    
+  战士:
+    translation: "воин"
+    pos: noun
+    
+  治疗术:
+    translation: "исцеление"
+    pos: noun
+    
+  火球术:
+    translation: "огненный шар"
+    pos: noun
+    
+  暴击:
+    translation: "критический удар"
+    pos: noun
+    
+  经验值:
+    translation: "опыт"
+    pos: noun
+    
+  任务:
+    translation: "задание"
+    pos: noun
+    
+  装备:
+    translation: "экипировка"
+    pos: noun
+    
+  技能:
+    translation: "навык"
+    pos: noun
