@@ -1,0 +1,84 @@
+================================================================================
+Game Localization MVR - Skill Package v1.2.0
+================================================================================
+
+Package Information:
+-------------------
+Name:        loc-mvr-v1.2.0
+Version:     1.2.0
+Release:     stable
+Date:        2026-02-14
+License:     MIT
+
+Description:
+------------
+LLM-powered game localization pipeline replacing traditional outsourcing.
+Features intelligent model routing, async execution, glossary AI system,
+and response caching for optimal cost/quality balance.
+
+Contents:
+---------
+skill/v1.2.0/
+├── SKILL.md              - Main documentation and usage guide
+├── MANIFEST.txt          - This file
+├── requirements.txt      - Python dependencies
+├── scripts/              - Core Python scripts (25+ modules)
+├── config/               - Configuration files (YAML/JSON)
+├── tests/                - Test suite
+├── examples/             - Sample data and usage examples
+└── workflow/             - Workflow configuration files
+
+Core Scripts:
+-------------
+- model_router.py         - Intelligent model routing
+- async_adapter.py        - Async/concurrent execution
+- cache_manager.py        - Response caching layer
+- glossary_matcher.py     - Glossary matching AI
+- glossary_corrector.py   - Glossary correction AI
+- glossary_learner.py     - Self-learning glossary
+- translate_llm.py        - Main translation engine
+- normalize_guard.py      - Input normalization
+- qa_hard.py              - Hard QA validation
+- qa_soft.py              - Soft QA validation
+- repair_loop_v2.py       - Translation repair loop
+- batch_runtime.py        - Batch processing runtime
+- runtime_adapter.py      - LLM client adapter
+
+Key Features (v1.2.0):
+----------------------
+1. Intelligent Model Routing - 20-40% cost reduction
+2. Async Execution - 30-50% latency reduction
+3. Glossary AI System - 95%+ auto-approval rate
+4. Response Caching - 50%+ cost savings on repeats
+5. Multi-model support - GPT-4o, Claude, Kimi-k2.5
+
+System Requirements:
+--------------------
+- Python 3.9+
+- 4GB RAM minimum
+- Docker (optional, for containerized execution)
+- LLM API access (APIYi/OpenAI/Claude)
+
+Installation:
+-------------
+1. Extract this package
+2. pip install -r requirements.txt
+3. Configure API keys in environment
+4. Run: python scripts/translate_llm.py --help
+
+Documentation:
+--------------
+- SKILL.md (this package)
+- README.md (full repository)
+- docs/ (extended documentation)
+
+Support:
+--------
+GitHub: https://github.com/Charpup/game-localization-mvr
+Issues: https://github.com/Charpup/game-localization-mvr/issues
+
+Checksum:
+---------
+SHA256: (see loc-mvr-v1.2.0.skill.sha256)
+
+================================================================================

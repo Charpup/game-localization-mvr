@@ -1,0 +1,11 @@
+source_id,source_text,context
+1,忍者的攻击力很高,combat
+2,法师释放了一个火球术,magic
+3,战士的防御力提升了,buff
+4,治疗术恢复了500点生命值,healing
+5,暴击！造成了200%伤害,combat
+6,获得经验值：1000,reward
+7,任务完成：击败哥布林王,quest
+8,装备强化成功，武器等级+1,enhancement
+9,技能冷却中，剩余5秒,cooldown
+10,进入副本：黑暗森林,dungeon
