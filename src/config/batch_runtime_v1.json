@@ -1,0 +1,47 @@
+{
+  "gate_version": "v1.0",
+  "last_updated": "2026-01-23T05:08:09",
+  "notes": "Generated from Phase 2 Long Text Gate V1 test results",
+  "models": {
+    "gpt-4.1-mini": {
+      "max_batch_size": 15,
+      "max_batch_size_long_text": 1,
+      "timeout_normal": 180,
+      "timeout_long_text": 300,
+      "cooldown_required": 0,
+      "status": "QUALIFIED"
+    },
+    "claude-haiku-4-5-20251001": {
+      "max_batch_size": 10,
+      "max_batch_size_long_text": 10,
+      "timeout_normal": 180,
+      "timeout_long_text": 300,
+      "cooldown_required": 30,
+      "status": "CONDITIONALLY_STABLE"
+    },
+    "gpt-5.1": {
+      "max_batch_size": 10,
+      "max_batch_size_long_text": 5,
+      "timeout_normal": 180,
+      "timeout_long_text": 300,
+      "cooldown_required": 30,
+      "status": "CONDITIONALLY_STABLE"
+    },
+    "gpt-5.2": {
+      "max_batch_size": 10,
+      "max_batch_size_long_text": 10,
+      "timeout_normal": 180,
+      "timeout_long_text": 300,
+      "cooldown_required": 30,
+      "status": "CONDITIONALLY_STABLE"
+    },
+    "claude-sonnet-4-5-20250929": {
+      "max_batch_size": 10,
+      "max_batch_size_long_text": 10,
+      "timeout_normal": 180,
+      "timeout_long_text": 300,
+      "cooldown_required": 30,
+      "status": "CONDITIONALLY_STABLE"
+    }
+  }
+}

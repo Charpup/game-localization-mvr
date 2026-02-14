@@ -1,0 +1,253 @@
+# LLM Routing Configuration (v3.0 - Phase 3 Validated)
+#
+# Model selection based on step, with fallback chains.
+# Router does NOT retry - only switches models on failure.
+# Retry logic is handled by callers (translate_llm, repair_loop, etc.)
+#
+# IMPORTANT: Batch parameters (batch_size, timeout, cooldown) are defined
+# in config/batch_runtime_v2.json, NOT here. This file only defines:
+# - Step → Model mapping
+# - Fallback chains
+# - Generation parameters (temperature, max_tokens, response_format)
+
+routing:
+  # ============================================
+  # Phase 1: Normalization (标准化阶段)
+  # ============================================
+
+  normalize_ingest:
+    # No LLM needed - pure data transformation
+    default: null
+
+  normalize_tag:
+    # 分类打标 - 需要 JSON 输出能力
+    # Phase 2 Gate: claude-haiku 批次表现最佳
+    default: claude-haiku-4-5-20251001
+    fallback: [gpt-4.1-mini, gpt-4.1]
+    temperature: 0.0
+    max_tokens: 2000
+    response_format: { "type": "json_object" }
+
+  normalize_guard:
+    # No LLM needed - rule-based placeholder protection
+    default: null
+
+  # ============================================
+  # Phase 2: Style Guide & Glossary (风格与术语)
+  # ============================================
+
+  style_guide_generate:
+    # 风格指南生成 - 需要高创造力
+    default: gpt-4.1
+    fallback: [claude-sonnet-4-5-20250929]
+    temperature: 0.7
+    max_tokens: 4000
+
+  glossary_extract:
+    # 术语提取 - 需要理解上下文
+    # Phase 2 Gate: claude-haiku 性价比最优
+    default: claude-haiku-4-5-20251001
+    fallback: [gpt-4.1-mini]
+    temperature: 0.1
+    max_tokens: 4000
+    response_format: { "type": "json_object" }
+
+  glossary_translate:
+    # 术语翻译 - 批次化，需要 JSON 稳定性
+    # Phase 2 Gate: claude-haiku batch=50 稳定通过
+    default: claude-haiku-4-5-20251001
+    fallback: [gpt-4.1-mini, gpt-4.1]
+    temperature: 0.1
+    max_tokens: 6000
+    response_format: { "type": "json_object" }
+
+  glossary_review:
+    # 术语审核 - 需要判断能力
+    default: gpt-4.1-mini
+    fallback: [claude-haiku-4-5-20251001]
+    temperature: 0.0
+    max_tokens: 2000
+    response_format: { "type": "json_object" }
+
+  # ============================================
+  # Phase 3: Translation (翻译阶段)
+  # ============================================
+
+  translate:
+    # 主翻译 - 批次化核心步骤
+    # Phase 2 Gate: claude-haiku 常规 batch=50, 长文本 batch=10
+    # 长文本自动降级由 translate_llm.py 根据 is_long_text 字段处理
+    default: claude-haiku-4-5-20251001
+    fallback: [claude-sonnet-4-5-20250929, gpt-4.1]
+    temperature: 0.1
+    max_tokens: 8000
+    response_format: { "type": "json_object" }
+
+  translate_refresh:
+    # Round 2 增量刷新 - 仅处理术语变更影响的行
+    # Phase 2 Gate: claude-sonnet 质量最优
+    default: claude-sonnet-4-5-20250929
+    fallback: [claude-haiku-4-5-20251001, gpt-4.1]
+    temperature: 0.1
+    max_tokens: 6000
+    response_format: { "type": "json_object" }
+
+  # ============================================
+  # Phase 4: QA & Repair (质量保证)
+  # ============================================
+
+  qa_hard:
+    # 硬规则检查 - 无 LLM，纯规则
+    default: null
+
+  soft_qa:
+    # 软质检 - 批次化，支持 partial_match
+    # Phase 2 Gate: claude-haiku 检出率高，误报低
+    # 配合 RAG (glossary_vectorstore) 和语义评分 (semantic_scorer) 使用
+    default: claude-haiku-4-5-20251001
+    fallback: [gpt-4.1-mini, gpt-4.1]
+    temperature: 0.1
+    max_tokens: 6000
+    response_format: { "type": "json_object" }
+
+  repair_hard:
+    # 硬错误修复 - 需要精确遵循规则
+    default: claude-sonnet-4-5-20250929
+    fallback: [gpt-4.1]
+    temperature: 0.0
+    max_tokens: 4000
+    response_format: { "type": "json_object" }
+
+  repair_soft_major:
+    # 软质量主要问题修复 - 需要语言能力
+    default: claude-sonnet-4-5-20250929
+    fallback: [gpt-4.1]
+    temperature: 0.2
+    max_tokens: 4000
+    response_format: { "type": "json_object" }
+
+  repair_post_soft:
+    # 软质量后处理修复
+    default: claude-haiku-4-5-20251001
+    fallback: [gpt-4.1-mini]
+    temperature: 0.1
+    max_tokens: 4000
+    response_format: { "type": "json_object" }
+
+  # ============================================
+  # Phase 5: Lifecycle (生命周期维护)
+  # ============================================
+
+  glossary_autopromote:
+    # 术语自动晋升 - 分析修复差异
+    default: gpt-4.1-mini
+    fallback: [claude-haiku-4-5-20251001]
+    temperature: 0.1
+    max_tokens: 4000
+    response_format: { "type": "json_object" }
+
+  glossary_delta:
+    # 术语差异计算 - 无 LLM，纯比对
+    default: null
+
+  # ============================================
+  # Utility Steps (工具步骤)
+  # ============================================
+
+  llm_ping:
+    # 连通性检查 - 使用最便宜的模型
+    default: gpt-4.1-nano
+    fallback: [gpt-4.1-mini]
+    temperature: 0.0
+    max_tokens: 100
+
+  _default:
+    # 未配置步骤的默认值
+    default: claude-haiku-4-5-20251001
+    fallback: [gpt-4.1-mini]
+    temperature: 0.1
+    max_tokens: 4000
+
+# ============================================
+# Embedding Models (文本向量化模型)
+# ============================================
+# Phase 3 开发: 用于 Soft QA RAG + 语义一致性评分
+embedding:
+  default: text-embedding-3-small
+  fallback: [text-embedding-ada-002]
+  config:
+    text-embedding-3-small:
+      dimensions: 1536
+      max_input_tokens: 8191
+      cost_per_1m_tokens: 0.02  # USD
+      notes: "Phase 3 验证: 性价比最优，推荐用于 RAG 和语义评分"
+    text-embedding-ada-002:
+      dimensions: 1536
+      max_input_tokens: 8191
+      cost_per_1m_tokens: 0.10  # USD
+      notes: "备选模型，成本较高"
+
+  # 使用场景配置
+  usage:
+    glossary_vectorstore:
+      # 术语表向量存储 - 用于 RAG 动态注入
+      model: text-embedding-3-small
+      cache_path: cache/glossary_embeddings.npz
+      top_k: 15  # 默认检索 Top-K 相关术语
+
+    semantic_scorer:
+      # 翻译语义一致性评分 - zh-ru 翻译对质量评估
+      model: text-embedding-3-small
+      cache_path: cache/embeddings/
+      thresholds:
+        warning: 0.65  # 相似度 < 0.65 触发警告
+        error: 0.50    # 相似度 < 0.50 触发错误
+
+# ============================================
+# Fallback Triggers (触发降级的条件)
+# ============================================
+fallback_triggers:
+  http_codes: [429, 500, 502, 503, 504]
+  on_timeout: true
+  on_network_error: true
+  on_parse_error: true
+  # Router 不做重试，只换模型；重试上移到调用方/loop 控制
+  max_attempts_total: 1
+
+# ============================================
+# Batch Capabilities (批次能力声明)
+# ============================================
+# IMPORTANT: 详细的 batch_size/timeout/cooldown 在 batch_runtime_v2.json 定义
+# 这里仅声明模型的批次兼容性等级
+capabilities:
+  claude-haiku-4-5-20251001:
+    batch: ok
+    # Phase 2 Gate 验证: 常规 batch=50, 长文本 batch=10
+    notes: "推荐批次模型，性价比最优"
+
+  claude-sonnet-4-5-20250929:
+    batch: ok
+    # Phase 2 Gate 验证: 常规 batch=30, 长文本 batch=10
+    notes: "高质量翻译和修复，批次能力良好"
+
+  gpt-4.1:
+    batch: unfit
+    # Phase 2 Gate 验证: JSON 格式不稳定，不适合批次
+    notes: "单条调用质量高，批次场景不推荐"
+
+  gpt-4.1-mini:
+    batch: ok
+    # Phase 2 Gate 验证: 常规 batch=50, 长文本 batch=1 (性能骤降)
+    notes: "常规批次可用，长文本场景避免使用"
+
+  gpt-4.1-nano:
+    batch: ok
+    notes: "仅用于 ping 测试"
+
+  text-embedding-3-small:
+    batch: ok
+    # Embedding 模型天然支持批次
+    notes: "Phase 3 验证: 推荐 Embedding 模型"
+
+  _default:
+    batch: ok

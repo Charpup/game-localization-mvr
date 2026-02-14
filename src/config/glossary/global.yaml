@@ -1,0 +1,31 @@
+# Global glossary entries
+# These apply across all language pairs and projects
+
+meta:
+  scope: "global"
+  language_pair: "*"
+  version: 1
+  description: "Global terms that are universal across all projects"
+
+entries:
+  # UI Common Terms
+  - term_zh: "确定"
+    term_ru: "OK"
+    status: "approved"
+    tags: ["ui", "button"]
+    confidence: 1.0
+    evidence:
+      - type: "manual"
+        note: "Standard UI button text"
+
+  - term_zh: "取消"
+    term_ru: "Отмена"
+    status: "approved"
+    tags: ["ui", "button"]
+    confidence: 1.0
+
+  - term_zh: "返回"
+    term_ru: "Назад"
+    status: "approved"
+    tags: ["ui", "navigation"]
+    confidence: 1.0

@@ -1,0 +1,116 @@
+---
+# Placeholder Schema v2.0
+# 定义需要冻结的占位符和标签的匹配规则
+
+version: 2
+
+# Token 格式定义
+token_format:
+  placeholder: "⟦PH_{n}⟧"
+  tag: "⟦TAG_{n}⟧"
+  description: "占位符使用 PH 前缀，标签使用 TAG 前缀，{n} 为递增序号"
+
+# 占位符和标签匹配模式（按优先级从高到低排序）
+# 优先级高的模式会先匹配，避免被低优先级模式误匹配
+patterns:
+  # Curly braces placeholders: {0}, {name}, {value:0.2f}
+  - name: brace_placeholder
+    type: placeholder
+    regex: "\\{[^{}]+\\}"
+    description: "花括号占位符，如 {0}, {playerName}, {value:0.2f}"
+    examples:
+      - "{0}"
+      - "{playerName}"
+      - "{value:0.2f}"
+      - "{level}"
+
+  # printf-style placeholders: %s %d %.2f %1$d
+  - name: printf_placeholder
+    type: placeholder
+    regex: "%(?:\\d+\\$)?[\\-\\+0# ]*(?:\\d+)?(?:\\.\\d+)?[a-zA-Z]"
+    description: "printf 风格占位符"
+    examples:
+      - "%s"
+      - "%d"
+      - "%.2f"
+      - "%1$d"
+      - "%+5d"
+
+  # Unity/NGUI rich text tags: <color=...>, </color>, <b>, </b>, <i>, </i>, <size=...>
+  #- name: angle_tag
+  #  type: tag
+  #  regex: "</?\\w+(?:\\s*=?\\s*[^>]*)?>"
+  #  description: "Unity 富文本标签和 HTML 风格标签"
+  #  examples:
+  #    - "<color=#FF00FF>"
+  #    - "</color>"
+  #    - "<b>"
+  #    - "</b>"
+  #    - "<i>"
+  #    - "</i>"
+  #    - "<size=14>"
+  #    - "</size>"
+
+  # Square bracket placeholders: [NAME], [0], [PLAYER_NAME]
+  # NOTE: Only matches technical placeholders (ALL CAPS or pure numbers)
+  # Does NOT match translatable text like [沉默], [攻击], [name]
+  - name: square_placeholder
+    type: placeholder
+    regex: "\\[(?:[A-Z][A-Z0-9_]*|\\d+)\\]"
+    description: "方括号技术占位符（仅全大写或纯数字）"
+    examples:
+      - "[NAME]"
+      - "[0]"
+      - "[PLAYER_NAME]"
+      - "[VALUE]"
+      - "[ITEM_1]"
+    non_examples:
+      - "[沉默]"
+      - "[攻击]"
+      - "[name]"
+      - "[Name]"
+
+  # Escape sequences: \n \t \r
+  #- name: escapes
+  #  type: placeholder
+  #  regex: "\\\\[ntr]"
+  #  description: "转义序列"
+  #  examples:
+  #    - "\\n"
+  #    - "\\t"
+  #    - "\\r"
+
+# 用于检测"标签平衡"的配对规则
+# QA 脚本会检查开放标签和闭合标签是否成对出现
+paired_tags:
+  - open: "<color"
+    close: "</color>"
+    description: "Unity 颜色标签"
+
+  - open: "<b>"
+    close: "</b>"
+    description: "粗体标签"
+
+  - open: "<i>"
+    close: "</i>"
+    description: "斜体标签"
+
+  - open: "<size"
+    close: "</size>"
+    description: "Unity 大小标签"
+
+# 验证规则
+validation:
+  preserve_all: true # 所有源文本中的 token 必须在翻译中保留
+  allow_reorder: true # token 可以在翻译中重新排序以适应目标语言语法
+  case_sensitive: true # token 名称区分大小写
+  check_tag_balance: true # 检查配对标签是否平衡
+
+# 使用说明
+usage:
+  normalize: "normalize_guard.py 使用此 schema 冻结占位符"
+  qa: "qa_hard.py 使用此 schema 验证 token 完整性和标签平衡"
+  notes:
+    - "patterns 按优先级排序，先匹配的优先"
+    - "regex 使用 Python re 模块语法"
+    - "type 只能是 'placeholder' 或 'tag'"

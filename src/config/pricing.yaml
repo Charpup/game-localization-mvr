@@ -1,0 +1,1536 @@
+# Pricing configuration for LLM cost calculation
+# Source: apiyi API platform pricing (2026-01)
+# Update this file when pricing changes
+
+version: 2
+currency: USD
+
+# ============================================
+# Platform billing formula (API平台计费规则)
+# ============================================
+#
+# 费用计算公式:
+#   cost = conversion_rate × group_rate × model_rate ×
+#          (prompt_tokens + completion_tokens × completion_ratio) / 500000
+#
+# 其中:
+#   conversion_rate = (new_recharge_rate / old_recharge_rate) × (new_group_rate / old_group_rate)
+#   group_rate = 用户分组倍率 (默认 1.00)
+#   model_rate = 模型提示倍率 (prompt_mult)
+#   completion_ratio = 补全倍率 (completion_mult)
+#
+# ============================================
+
+billing:
+  # Platform conversion parameters
+  recharge_rate:
+    old: 1.0 # 原充值倍率
+    new: 1.0 # 新充值倍率
+  group_rate:
+    old: 1.0 # 原分组倍率
+    new: 1.0 # 新分组倍率
+
+  # User group multiplier (用户分组倍率)
+  user_group_multiplier: 1.00
+
+  # Base divisor for token calculation
+  token_divisor: 500000
+
+  # Formula mode: "multiplier" (倍率模式) or "per_1m" (每百万token模式)
+  mode: multiplier
+
+# ============================================
+# Model pricing (模型定价)
+# ============================================
+#
+# Each model has:
+#   prompt_mult: 提示倍率 (model_rate)
+#   completion_mult: 补全倍率 (completion_ratio)
+#   input_per_1M: (optional) 直接定价 $ per 1M tokens
+#   output_per_1M: (optional) 直接定价 $ per 1M tokens
+#
+# 如果使用 multiplier 模式, 需要 prompt_mult 和 completion_mult
+# 如果使用 per_1m 模式, 需要 input_per_1M 和 output_per_1M
+#
+# ============================================
+
+models:
+  # === GPT-4o Mini - Primary translation model ===
+  gpt-4o-mini:
+    prompt_mult: 0.075
+    completion_mult: 4.0
+    input_per_1M: 0.15
+    output_per_1M: 0.60
+  gpt-4o-mini-2024-07-18:
+    prompt_mult: 0.075
+    completion_mult: 4.0
+    input_per_1M: 0.15
+    output_per_1M: 0.60
+
+  # === GPT-4o ===
+  gpt-4o:
+    prompt_mult: 1.25
+    completion_mult: 4.0
+    input_per_1M: 2.50
+    output_per_1M: 10.00
+  gpt-4o-2024-08-06:
+    prompt_mult: 1.25
+    completion_mult: 4.0
+    input_per_1M: 2.50
+    output_per_1M: 10.00
+  gpt-4o-2024-11-20:
+    prompt_mult: 1.25
+    completion_mult: 4.0
+    input_per_1M: 2.50
+    output_per_1M: 10.00
+
+  # === GPT-4.1 ===
+  gpt-4.1:
+    prompt_mult: 1.0
+    completion_mult: 4.0
+    input_per_1M: 2.00
+    output_per_1M: 8.00
+  gpt-4.1-mini:
+    prompt_mult: 0.2
+    completion_mult: 4.0
+    input_per_1M: 0.40
+    output_per_1M: 1.60
+  gpt-4.1-nano:
+    prompt_mult: 0.05
+    completion_mult: 4.0
+    input_per_1M: 0.10
+    output_per_1M: 0.40
+
+  # === GPT-3.5 Turbo ===
+  gpt-3.5-turbo:
+    prompt_mult: 0.25
+    completion_mult: 3.0
+    input_per_1M: 0.50
+    output_per_1M: 1.50
+  gpt-3.5-turbo-0125:
+    prompt_mult: 0.25
+    completion_mult: 3.0
+    input_per_1M: 0.50
+    output_per_1M: 1.50
+
+  # === Claude 3.5 Sonnet ===
+  claude-3-5-sonnet-20241022:
+    prompt_mult: 1.5
+    completion_mult: 5.0
+    input_per_1M: 3.00
+    output_per_1M: 15.00
+  claude-3-5-sonnet-latest:
+    prompt_mult: 1.5
+    completion_mult: 5.0
+    input_per_1M: 3.00
+    output_per_1M: 15.00
+
+  # === Claude 3.5 Haiku ===
+  claude-3-5-haiku-20241022:
+    prompt_mult: 0.4
+    completion_mult: 5.0
+    input_per_1M: 0.80
+    output_per_1M: 4.00
+  claude-3-5-haiku-latest:
+    prompt_mult: 0.4
+    completion_mult: 5.0
+    input_per_1M: 0.80
+    output_per_1M: 4.00
+
+  # === Claude 3.7 Sonnet ===
+  claude-3-7-sonnet-20250219:
+    prompt_mult: 1.5
+    completion_mult: 5.0
+    input_per_1M: 3.00
+    output_per_1M: 15.00
+  claude-3-7-sonnet-latest:
+    prompt_mult: 1.5
+    completion_mult: 5.0
+    input_per_1M: 3.00
+    output_per_1M: 15.00
+
+  # === Claude Sonnet 4 ===
+  claude-sonnet-4-20250514:
+    prompt_mult: 1.5
+    completion_mult: 5.0
+    input_per_1M: 3.00
+    output_per_1M: 15.00
+  claude-sonnet-4-5-20250929:
+    prompt_mult: 1.5
+    completion_mult: 5.0
+    input_per_1M: 3.00
+    output_per_1M: 15.00
+
+  # === DeepSeek ===
+  deepseek-chat:
+    prompt_mult: 0.125
+    completion_mult: 4.0
+    input_per_1M: 0.25
+    output_per_1M: 1.00
+  deepseek-v3:
+    prompt_mult: 0.125
+    completion_mult: 4.0
+    input_per_1M: 0.25
+    output_per_1M: 1.00
+  deepseek-r1:
+    prompt_mult: 0.25
+    completion_mult: 4.0
+    input_per_1M: 0.50
+    output_per_1M: 2.00
+  deepseek-reasoner:
+    prompt_mult: 0.25
+    completion_mult: 4.0
+    input_per_1M: 0.50
+    output_per_1M: 2.00
+
+  # === Gemini 2.5 Flash ===
+  gemini-2.5-flash:
+    prompt_mult: 0.15
+    completion_mult: 8.0
+    input_per_1M: 0.30
+    output_per_1M: 2.40
+  gemini-2.5-flash-lite:
+    prompt_mult: 0.05
+    completion_mult: 4.0
+    input_per_1M: 0.10
+    output_per_1M: 0.40
+
+  # === Gemini 2.5 Pro ===
+  gemini-2.5-pro:
+    prompt_mult: 0.625
+    completion_mult: 8.0
+    input_per_1M: 1.25
+    output_per_1M: 10.00
+  gemini-2.5-pro-exp:
+    prompt_mult: 0.625
+    completion_mult: 8.0
+    input_per_1M: 1.25
+    output_per_1M: 10.00
+
+  # === Gemini 2.0 Flash ===
+  gemini-2.0-flash:
+    prompt_mult: 0.05
+    completion_mult: 4.0
+    input_per_1M: 0.10
+    output_per_1M: 0.40
+  gemini-2.0-flash-001:
+    prompt_mult: 0.05
+    completion_mult: 4.0
+    input_per_1M: 0.10
+    output_per_1M: 0.40
+
+  # === Qwen ===
+  qwen-turbo:
+    prompt_mult: 0.1
+    completion_mult: 3.0
+    input_per_1M: 0.20
+    output_per_1M: 0.60
+  qwen-turbo-latest:
+    prompt_mult: 0.1
+    completion_mult: 3.0
+    input_per_1M: 0.20
+    output_per_1M: 0.60
+  qwen-plus:
+    prompt_mult: 0.2
+    completion_mult: 3.0
+    input_per_1M: 0.40
+    output_per_1M: 1.20
+  qwen-plus-latest:
+    prompt_mult: 0.2
+    completion_mult: 3.0
+    input_per_1M: 0.40
+    output_per_1M: 1.20
+  qwen-max:
+    prompt_mult: 0.8
+    completion_mult: 4.0
+    input_per_1M: 1.60
+    output_per_1M: 6.40
+  qwen-max-latest:
+    prompt_mult: 0.8
+    completion_mult: 4.0
+    input_per_1M: 1.60
+    output_per_1M: 6.40
+
+  # === GLM ===
+  glm-4.5:
+    prompt_mult: 0.25
+    completion_mult: 4.0
+    input_per_1M: 0.50
+    output_per_1M: 2.00
+  glm-4.5-flash:
+    prompt_mult: 0.005
+    completion_mult: 4.0
+    input_per_1M: 0.01
+    output_per_1M: 0.04
+  glm-4.6:
+    prompt_mult: 0.25
+    completion_mult: 4.0
+    input_per_1M: 0.50
+    output_per_1M: 2.00
+
+  # === Doubao (Bytedance) ===
+  doubao-seed-1-6-flash-250615:
+    prompt_mult: 0.015
+    completion_mult: 10.0
+    input_per_1M: 0.03
+    output_per_1M: 0.30
+  doubao-seed-1-6-flash-250828:
+    prompt_mult: 0.015
+    completion_mult: 10.0
+    input_per_1M: 0.03
+    output_per_1M: 0.30
+
+  # === O1 / O3 / O4 ===
+  o1-mini:
+    prompt_mult: 0.55
+    completion_mult: 4.0
+    input_per_1M: 1.10
+    output_per_1M: 4.40
+  o3-mini:
+    prompt_mult: 0.55
+    completion_mult: 4.0
+    input_per_1M: 1.10
+    output_per_1M: 4.40
+  o4-mini:
+    prompt_mult: 0.55
+    completion_mult: 4.0
+    input_per_1M: 1.10
+    output_per_1M: 4.40
+
+  # === Grok ===
+  grok-3:
+    prompt_mult: 1.5
+    completion_mult: 5.0
+    input_per_1M: 3.00
+    output_per_1M: 15.00
+  grok-4:
+    prompt_mult: 1.5
+    completion_mult: 5.0
+    input_per_1M: 3.00
+    output_per_1M: 15.00
+
+  # === Moonshot (Kimi) ===
+  moonshot-v1-8k:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.00
+    output_per_1M: 2.00
+  moonshot-v1-32k:
+    prompt_mult: 2.0
+    completion_mult: 1.0
+    input_per_1M: 4.00
+    output_per_1M: 4.00
+  # === GPT-5.2 (Future/placeholder) ===
+  gpt-5.2:
+    prompt_mult: 1.5
+    completion_mult: 4.0
+    input_per_1M: 3.00
+    output_per_1M: 12.00
+
+  # === Claude 4.5 Haiku ===
+  claude-haiku-4-5-20251001:
+    prompt_mult: 0.2
+    completion_mult: 4.0
+    input_per_1M: 0.40
+    output_per_1M: 1.60
+  claude-haiku-4-5-20251001-thinking:
+    prompt_mult: 0.6
+    completion_mult: 5.0
+    input_per_1M: 1.20
+    output_per_1M: 6.00
+
+  # === DeepSeek V3.2 Exp ===
+  DeepSeek-V3.2-Exp-thinking:
+    prompt_mult: 0.3
+    completion_mult: 4.0
+    input_per_1M: 0.60
+    output_per_1M: 2.40
+
+  kimi-k2-0905:
+    prompt_mult: 0.3
+    completion_mult: 4.0
+    input_per_1M: 0.60
+    output_per_1M: 2.40
+
+  # Optional: Additional surcharges
+
+  # === New Scraped Models ===
+  o3-mini-2025-01-31-medium:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.1
+    output_per_1M: 4.4
+  o3-mini-medium:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.1
+    output_per_1M: 4.4
+  o4-mini-2025-04-16:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.1
+    output_per_1M: 4.4
+  qwen3-coder:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.0
+    output_per_1M: 20.0
+  gemini-2.0-flash-lite-preview-02-05:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.1
+    output_per_1M: 0.2
+  gemini-2.5-pro-preview-06-05:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  gpt-3.5-turbo-16k-0613:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 3.0
+    output_per_1M: 3.9
+  gpt-5-pro:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 15.0
+    output_per_1M: 120.0
+  gpt-image-1.5-2025-12-16:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 5.0
+    output_per_1M: 32.0
+  gemini-3-flash-preview-nothinking:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.5
+    output_per_1M: 3.0
+  gpt-5.1-codex-medium:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  grok-4-1-fast-reasoning-latest:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 0.5
+  o3-mini-2025-01-31-low:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.1
+    output_per_1M: 4.4
+  qwen3-vl-30b-a3b-thinking:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 1.2
+  text-embedding-3-small:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  o1-2024-12-17:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 15.0
+    output_per_1M: 60.0
+  o3-mini-low:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.1
+    output_per_1M: 4.4
+  qwen3-coder-plus-2025-07-22:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.0
+    output_per_1M: 20.0
+  qwen2.5-32b-instruct:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.8572
+    output_per_1M: 2.8572
+  gemini-2.5-flash-preview-09-2025-nothinking:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.3
+    output_per_1M: 2.4
+  glm-4.5-air:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 1.0
+  grok-2-image-1212:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 20.0
+    output_per_1M: 20.0
+  grok-3-deepsearch:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 4.0
+    output_per_1M: 20.0
+  grok-4-deepsearch:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 4.0
+    output_per_1M: 20.0
+  omni-moderation-2024-09-26:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 0.2
+  claude-3-7-sonnet-20250219-thinking:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 3.0
+    output_per_1M: 15.0
+  deepseek-v3-0324:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.25
+    output_per_1M: 1.0
+  gemini-2.5-pro-preview-05-06:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  o1:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 15.0
+    output_per_1M: 60.0
+  qwen-vl-plus:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.8572
+    output_per_1M: 2.8572
+  gemini-2.5-pro-deepsearch:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  gpt-5.2-medium:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.75
+    output_per_1M: 14.0
+  grok-4-fast-reasoning:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 0.5
+  qwen3-30b-a3b-thinking-2507:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 2.4
+  claude-3-sonnet-20240229:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 3.0
+    output_per_1M: 15.0
+  gpt-5-mini-2025-08-07:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.25
+    output_per_1M: 2.0
+  kimi-k2-0711-preview:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.8
+    output_per_1M: 3.2
+  claude-opus-4-1-20250805:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 15.0
+    output_per_1M: 75.0
+  glm-4.6v:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.28
+    output_per_1M: 0.84
+  gpt-4o-mini-audio-preview:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.0
+    output_per_1M: 8.0
+  moonshot-v1-32k-vision-preview:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 4.0
+    output_per_1M: 4.0
+  qwen3-vl-235b-a22b-instruct:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.3
+    output_per_1M: 3.0
+  gpt-4o-transcribe:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 8.0
+    output_per_1M: 16.0
+  gpt-image-1.5:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 5.0
+    output_per_1M: 32.0
+  grok-4-1-thinking-1108b:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 3.0
+    output_per_1M: 15.0
+  qwen2.5-vl-7b-instruct:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.14
+    output_per_1M: 0.7
+  chatgpt-4o-latest:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 5.0
+    output_per_1M: 15.0
+  gemini-2.5-flash-preview-04-17:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.3
+    output_per_1M: 2.4
+  gpt-5.1-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 6.25
+  qwen3-235b-a22b:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.0
+    output_per_1M: 10.0
+  tts-1:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 30.0
+    output_per_1M: 30.0
+  doubao-seed-1-6-250615:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.1
+    output_per_1M: 1.0
+  gpt-5-minimal:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 1.6
+  gpt-image-1:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 5.0
+    output_per_1M: 40.0
+  deepseek-r1-distill-qwen-32b:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.5
+    output_per_1M: 6.0
+  glm-4.5v:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.5
+    output_per_1M: 1.5
+  qvq-max-2025-05-15:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.0
+    output_per_1M: 4.0
+  qvq-max-latest:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.2
+    output_per_1M: 4.8
+  qwen-mt-plus:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.0
+    output_per_1M: 8.0
+  gemini-2.5-flash-thinking:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.3
+    output_per_1M: 2.4
+  gpt-5.1-codex-max-low:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 3.75
+  grok-4-fast-non-reasoning-latest:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 0.5
+  llama-3-1-405b-instruct:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.0
+    output_per_1M: 2.0
+  qwen2-vl-7b-instruct:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.8572
+    output_per_1M: 2.8572
+  qwen3-max-2025-09-23:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.2
+    output_per_1M: 6.0
+  qwen3-next-80b-a3b-instruct:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.15
+    output_per_1M: 1.2
+  deepseek-r1-250528:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.57
+    output_per_1M: 2.28
+  gemini-2.5-flash-nothinking:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.3
+    output_per_1M: 2.4
+  glm-4.7:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.6
+    output_per_1M: 2.196
+  grok-3-mini-latest:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.3
+    output_per_1M: 1.8
+  grok-code-fast-1-0825:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 0.3
+  moonshot-v1-128k:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 10.0
+    output_per_1M: 10.0
+  gemini-2.5-pro-nothinking:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  gpt-5-codex-high:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  grok-2-image-latest:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 20.0
+    output_per_1M: 20.0
+  grok-4-fast-reasoning-latest:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 0.5
+  o3:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 3.0
+    output_per_1M: 12.0
+  gemini-3-pro-preview:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.0
+    output_per_1M: 12.0
+  gpt-5.1-codex-max:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  o1-preview-2024-09-12:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 15.0
+    output_per_1M: 60.0
+  qwen2.5-72b-instruct:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.8572
+    output_per_1M: 2.8572
+  qwen3-30b-a3b-instruct-2507:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 0.8
+  qwq-plus-2025-03-05:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.8
+    output_per_1M: 2.4
+  sora-2-pro:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 300.0
+    output_per_1M: 300.0
+  gemini-embedding-exp:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.1
+    output_per_1M: 0.3
+  gpt-5-codex:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  claude-3-5-sonnet-20240620:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 3.0
+    output_per_1M: 15.0
+  doubao-seed-1-6-thinking-250615:
+    prompt_mult: 0.05
+    completion_mult: 10.0
+    input_per_1M: 0.1
+    output_per_1M: 1.0
+  gpt-4-32k:
+    prompt_mult: 30.0
+    completion_mult: 2.0
+    input_per_1M: 60.0
+    output_per_1M: 120.0
+  gpt-5-codex-medium:
+    prompt_mult: 0.3
+    completion_mult: 8.0
+    input_per_1M: 0.6
+    output_per_1M: 4.8
+  gemini-2.5-flash-lite-nothinking:
+    prompt_mult: 0.05
+    completion_mult: 4.0
+    input_per_1M: 0.1
+    output_per_1M: 0.4
+  gpt-4o-audio-preview:
+    prompt_mult: 1.25
+    completion_mult: 4.0
+    input_per_1M: 2.5
+    output_per_1M: 10.0
+  qwq-plus-latest:
+    prompt_mult: 0.4
+    completion_mult: 3.0
+    input_per_1M: 0.8
+    output_per_1M: 2.4
+  gpt-5.2-codex-medium:
+    prompt_mult: 0.875
+    completion_mult: 8.0
+    input_per_1M: 1.75
+    output_per_1M: 14.0
+  qwen-mt-turbo:
+    prompt_mult: 0.1
+    completion_mult: 2.5
+    input_per_1M: 0.2
+    output_per_1M: 0.5
+  qwen3-max-preview:
+    prompt_mult: 0.6
+    completion_mult: 5.0
+    input_per_1M: 1.2
+    output_per_1M: 6.0
+  deepseek-v3-20250324:
+    prompt_mult: 0.125
+    completion_mult: 4.0
+    input_per_1M: 0.25
+    output_per_1M: 1.0
+  gpt-5.1-chat:
+    prompt_mult: 0.625
+    completion_mult: 8.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  qvq-plus:
+    prompt_mult: 0.14
+    completion_mult: 2.5
+    input_per_1M: 0.28
+    output_per_1M: 0.7
+  deepseek-v3.2:
+    prompt_mult: 0.14
+    completion_mult: 1.5
+    input_per_1M: 0.28
+    output_per_1M: 0.42
+  qwen-vl-max-latest:
+    prompt_mult: 0.1
+    completion_mult: 4.0
+    input_per_1M: 0.2
+    output_per_1M: 0.8
+  qwen-vl-ocr:
+    prompt_mult: 0.36
+    completion_mult: 1.0
+    input_per_1M: 0.72
+    output_per_1M: 0.72
+  claude-opus-4-1-20250805-thinking:
+    prompt_mult: 7.5
+    completion_mult: 5.0
+    input_per_1M: 15.0
+    output_per_1M: 75.0
+  gpt-image-1-mini:
+    prompt_mult: 1.0
+    completion_mult: 4.0
+    input_per_1M: 2.0
+    output_per_1M: 8.0
+  minimax-m2:
+    prompt_mult: 0.15
+    completion_mult: 4.0
+    input_per_1M: 0.3
+    output_per_1M: 1.2
+  gemini-2.0-flash-lite:
+    prompt_mult: 0.05
+    completion_mult: 4.0
+    input_per_1M: 0.1
+    output_per_1M: 0.4
+  gpt-4.1-nano-2025-04-14:
+    prompt_mult: 0.05
+    completion_mult: 4.0
+    input_per_1M: 0.1
+    output_per_1M: 0.4
+  gpt-5.1-codex-mini-high:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.0
+    output_per_1M: 2.0
+  gpt-4o-mini-tts:
+    prompt_mult: 0.6
+    completion_mult: 15.0
+    input_per_1M: 1.2
+    output_per_1M: 18.0
+  gpt-5.2-codex:
+    prompt_mult: 0.875
+    completion_mult: 8.0
+    input_per_1M: 1.75
+    output_per_1M: 14.0
+  moonshot-v1-8k-vision-preview:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 2.0
+    output_per_1M: 2.0
+  qwen3-coder-flash:
+    prompt_mult: 0.25
+    completion_mult: 10.0
+    input_per_1M: 0.5
+    output_per_1M: 5.0
+  qwen3-max:
+    prompt_mult: 0.6
+    completion_mult: 5.0
+    input_per_1M: 1.2
+    output_per_1M: 6.0
+  qwen3-vl-plus:
+    prompt_mult: 0.15
+    completion_mult: 8.0
+    input_per_1M: 0.3
+    output_per_1M: 2.4
+  text-embedding-3-large:
+    prompt_mult: 0.065
+    completion_mult: 1.0
+    input_per_1M: 0.13
+    output_per_1M: 0.13
+  claude-sonnet-4-20250514-thinking:
+    prompt_mult: 1.5
+    completion_mult: 5.0
+    input_per_1M: 3.0
+    output_per_1M: 15.0
+  gpt-5-low:
+    prompt_mult: 0.15
+    completion_mult: 8.0
+    input_per_1M: 0.3
+    output_per_1M: 2.4
+  gpt-5.1-chat-latest:
+    prompt_mult: 0.625
+    completion_mult: 8.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  kimi-k2-250711:
+    prompt_mult: 0.4
+    completion_mult: 4.0
+    input_per_1M: 0.8
+    output_per_1M: 3.2
+  llama-3-3-70b-instruct:
+    prompt_mult: 0.05
+    completion_mult: 3.0
+    input_per_1M: 0.1
+    output_per_1M: 0.3
+  gpt-5.1:
+    prompt_mult: 0.625
+    completion_mult: 8.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  gpt-5.1-minimal:
+    prompt_mult: 0.625
+    completion_mult: 5.0
+    input_per_1M: 1.25
+    output_per_1M: 6.25
+  gemini-2.5-flash-preview-05-20-thinking:
+    prompt_mult: 0.15
+    completion_mult: 8.0
+    input_per_1M: 0.3
+    output_per_1M: 2.4
+  gemini-3-flash-preview-thinking:
+    prompt_mult: 0.25
+    completion_mult: 6.0
+    input_per_1M: 0.5
+    output_per_1M: 3.0
+  deepseek-v3.2-fast:
+    prompt_mult: 0.6
+    completion_mult: 3.0
+    input_per_1M: 1.2
+    output_per_1M: 3.6
+  doubao-seed-1-6-thinking-250715:
+    prompt_mult: 0.05
+    completion_mult: 10.0
+    input_per_1M: 0.1
+    output_per_1M: 1.0
+  deepseek-v3.1:
+    prompt_mult: 0.25
+    completion_mult: 3.0
+    input_per_1M: 0.5
+    output_per_1M: 1.5
+  gpt-4o-mini-transcribe:
+    prompt_mult: 0.75
+    completion_mult: 4.0
+    input_per_1M: 1.5
+    output_per_1M: 6.0
+  gemini-2.5-flash-preview-04-17-nothinking:
+    prompt_mult: 0.15
+    completion_mult: 8.0
+    input_per_1M: 0.3
+    output_per_1M: 2.4
+  gemini-embedding-exp-03-07:
+    prompt_mult: 0.05
+    completion_mult: 3.0
+    input_per_1M: 0.1
+    output_per_1M: 0.3
+  gpt-5.1-2025-11-13:
+    prompt_mult: 0.625
+    completion_mult: 8.0
+    input_per_1M: 1.25
+    output_per_1M: 10.0
+  grok-4-fast:
+    prompt_mult: 0.1
+    completion_mult: 2.5
+    input_per_1M: 0.2
+    output_per_1M: 0.5
+  claude-haiku-4-5-20251001-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  claude-haiku-4-5-20251001-thinking-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.015
+    output_per_1M: 0.015
+  claude-sonnet-4-5-20250929-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.015
+    output_per_1M: 0.015
+  claude-sonnet-4-5-20250929-thinking-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  flux-2-flex:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.035
+    output_per_1M: 0.035
+  flux-2-max:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.07
+    output_per_1M: 0.07
+  flux-2-pro:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.035
+    output_per_1M: 0.035
+  flux-dev:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  flux-kontext-max:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.07
+    output_per_1M: 0.07
+  flux-kontext-pro:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.035
+    output_per_1M: 0.035
+  flux-pro:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.04
+    output_per_1M: 0.04
+  flux-pro-1.1:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.035
+    output_per_1M: 0.035
+  flux-pro-1.1-ultra:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.05
+    output_per_1M: 0.05
+  gemini-2.5-flash-image:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  gemini-2.5-flash-image-oss:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  gemini-2.5-flash-image-preview:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  gemini-2.5-flash-image-preview-oss:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  gemini-3-pro-image-preview:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.05
+    output_per_1M: 0.05
+  gemini-3-pro-image-preview-1k:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.05
+    output_per_1M: 0.05
+  gemini-3-pro-image-preview-2k:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.05
+    output_per_1M: 0.05
+  gemini-3-pro-image-preview-4k:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.05
+    output_per_1M: 0.05
+  gemini-3-pro-image-preview-oss:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.05
+    output_per_1M: 0.05
+  gpt-4o-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  gpt-4o-image:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  gpt-4o-image-vip:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  gpt-5-codex-low:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.015
+    output_per_1M: 0.015
+  gpt-5-codex-mini:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  gpt-5-codex-mini-high:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  gpt-5-codex-mini-medium:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.015
+    output_per_1M: 0.015
+  gpt-5-high:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.025
+    output_per_1M: 0.025
+  gpt-5-medium:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  gpt-5.1-codex:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  gpt-5.1-codex-low:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  gpt-5.1-codex-max-high:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.025
+    output_per_1M: 0.025
+  gpt-5.1-codex-max-medium:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.015
+    output_per_1M: 0.015
+  gpt-5.1-codex-max-xhigh:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.025
+    output_per_1M: 0.025
+  gpt-5.1-codex-mini-medium:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.015
+    output_per_1M: 0.015
+  gpt-5.1-high:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.025
+    output_per_1M: 0.025
+  gpt-5.1-low:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  gpt-5.1-medium:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.015
+    output_per_1M: 0.015
+  gpt-5.2-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.1
+    output_per_1M: 0.1
+  gpt-5.2-codex-high:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.1
+    output_per_1M: 0.1
+  gpt-5.2-codex-low:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  qwen3-omni-flash:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  tts-1-hd-1106:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gpt-4.1-mini-2025-04-14:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  kimi-k2-128k:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  qwen3-coder-480b-a35b-instruct:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gpt-5:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  grok-4-auto:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gemini-2.0-flash-lite-001:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  qwen-long:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  qwen-max-longcontext:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  sora-2:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  deepseek-v3.1-terminus:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gemini-2.5-computer-use-preview-10-2025:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gpt-5-pro-2025-10-06:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gpt-5.2-low:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  grok-4-0709:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  doubao-seed-1-8-251215:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  o1-preview:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  text-moderation-stable:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gemini-2.5-flash-preview-09-2025:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gpt-4.1-2025-04-14:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  o3-mini-2025-01-31:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gpt-3.5-turbo-1106:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.0
+    output_per_1M: 0.0
+  gpt-image-1.5-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  grok-2-image:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.07
+    output_per_1M: 0.07
+  grok-4-1-thinking-1129-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.1
+    output_per_1M: 0.1
+  grok-4-all:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  grok-4-auto-deepsearch:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.02
+    output_per_1M: 0.02
+  nano-banana:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.025
+    output_per_1M: 0.025
+  nano-banana-oss:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.025
+    output_per_1M: 0.025
+  nano-banana-pro:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.05
+    output_per_1M: 0.05
+  qwen-image:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.025
+    output_per_1M: 0.025
+  qwen-image-edit-2509:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.03
+    output_per_1M: 0.03
+  seedream-4-0-250828:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.035
+    output_per_1M: 0.035
+  seedream-4-5-251128:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.045
+    output_per_1M: 0.045
+  sora-2-character:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  sora-2-remix:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 0.12
+  sora-character:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  sora-image:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  sora_image:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.01
+    output_per_1M: 0.01
+  sora_video2:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 0.12
+  sora_video2-15s:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 0.12
+  sora_video2-15s-openaicdn:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 0.12
+  sora_video2-landscape:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 0.12
+  sora_video2-landscape-15s:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 0.12
+  sora_video2-landscape-15s-openaicdn:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 0.12
+  sora_video2-landscape-openaicdn:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 0.12
+  sora_video2-openaicdn:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.12
+    output_per_1M: 0.12
+  veo-2.0-generate-001:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.5
+    output_per_1M: 0.5
+  veo-3.0-fast-generate-001:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 0.2
+  veo-3.0-generate-001:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.6
+    output_per_1M: 0.6
+  veo-3.1:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.25
+    output_per_1M: 0.25
+  veo-3.1-fast:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.15
+    output_per_1M: 0.15
+  veo-3.1-fast-fl:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.15
+    output_per_1M: 0.15
+  veo-3.1-fast-generate-preview:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.2
+    output_per_1M: 0.2
+  veo-3.1-fl:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.25
+    output_per_1M: 0.25
+  veo-3.1-landscape:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.25
+    output_per_1M: 0.25
+  veo-3.1-landscape-fast:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.15
+    output_per_1M: 0.15
+  veo-3.1-landscape-fast-fl:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.15
+    output_per_1M: 0.15
+  veo-3.1-landscape-fl:
+    prompt_mult: 1.0
+    completion_mult: 1.0
+    input_per_1M: 0.25
+    output_per_1M: 0.25
+
+surcharges:
+  per_request_usd: 0.0
+  percent_markup: 0.0

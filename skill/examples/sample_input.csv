@@ -1,0 +1,6 @@
+string_id,source_zh,context
+1,Welcome to the game!,UI/MainMenu
+2,Press <color=#ff0000>START</color> to begin,UI/Button
+3,Your score: % d points,UI/ScoreDisplay
+4,Loading...,UI/LoadingScreen
+5,Game Over,UI/EndScreen

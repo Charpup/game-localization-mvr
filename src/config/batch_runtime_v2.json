@@ -1,0 +1,76 @@
+{
+    "version": "2.0",
+    "description": "Batch runtime configuration - Phase 2/3 Gate validated",
+    "models": {
+        "claude-haiku-4-5-20251001": {
+            "status": "QUALIFIED",
+            "max_batch_size": 25,
+            "max_batch_size_long_text": 10,
+            "timeout_normal": 180,
+            "timeout_long_text": 300,
+            "cooldown_required": 0,
+            "notes": "Downgrade to 25: Found rows > 700 chars, 50-batch risks overflow"
+        },
+        "claude-sonnet-4-5-20250929": {
+            "status": "QUALIFIED",
+            "max_batch_size": 30,
+            "max_batch_size_long_text": 10,
+            "timeout_normal": 180,
+            "timeout_long_text": 300,
+            "cooldown_required": 0,
+            "notes": "Phase 2 Gate: 高质量翻译"
+        },
+        "gpt-4.1": {
+            "status": "QUALIFIED_WITH_LIMITS",
+            "max_batch_size": 5,
+            "max_batch_size_long_text": 1,
+            "timeout_normal": 180,
+            "timeout_long_text": 300,
+            "cooldown_required": 5,
+            "notes": "Phase 2 Gate: JSON 稳定性一般，需冷却"
+        },
+        "gpt-4.1-mini": {
+            "status": "QUALIFIED_WITH_LIMITS",
+            "max_batch_size": 10,
+            "max_batch_size_long_text": 1,
+            "timeout_normal": 120,
+            "timeout_long_text": 180,
+            "cooldown_required": 0,
+            "notes": "Phase 2 Gate: 长文本场景性能骤降"
+        },
+        "gpt-4.1-nano": {
+            "status": "QUALIFIED",
+            "max_batch_size": 100,
+            "max_batch_size_long_text": 50,
+            "timeout_normal": 60,
+            "timeout_long_text": 120,
+            "cooldown_required": 0,
+            "notes": "仅用于 ping 测试"
+        },
+        "text-embedding-3-small": {
+            "status": "QUALIFIED",
+            "max_batch_size": 100,
+            "max_batch_size_long_text": 100,
+            "timeout_normal": 60,
+            "timeout_long_text": 120,
+            "cooldown_required": 0,
+            "notes": "Phase 3: Embedding 模型，用于 RAG + 语义评分"
+        },
+        "text-embedding-ada-002": {
+            "status": "QUALIFIED",
+            "max_batch_size": 100,
+            "max_batch_size_long_text": 100,
+            "timeout_normal": 60,
+            "timeout_long_text": 120,
+            "cooldown_required": 0,
+            "notes": "Embedding 备选模型，成本较高"
+        }
+    },
+    "defaults": {
+        "max_batch_size": 10,
+        "max_batch_size_long_text": 5,
+        "timeout_normal": 180,
+        "timeout_long_text": 300,
+        "cooldown_required": 5
+    }
+}
