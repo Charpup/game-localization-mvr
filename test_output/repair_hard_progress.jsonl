@@ -1,9 +1,0 @@
-{"timestamp": "2026-01-26T14:41:02.651850", "step": "repair_hard", "event": "step_start", "total_items": 30, "max_rounds": 3, "batch_size": 10}
-{"timestamp": "2026-01-26T14:41:02.668961", "step": "repair_hard", "event": "batch_start", "batch_num": 1, "total_batches": 3, "batch_size": 10}
-{"timestamp": "2026-01-26T14:41:08.910751", "step": "repair_hard", "event": "batch_complete", "batch_num": 1, "total_batches": 3, "success_count": 10, "failed_count": 0, "latency_ms": 6236, "processed_items": 10, "model": "claude-haiku-4-5-20251001", "round": 1}
-{"timestamp": "2026-01-26T14:41:08.927134", "step": "repair_hard", "event": "batch_start", "batch_num": 2, "total_batches": 3, "batch_size": 10}
-{"timestamp": "2026-01-26T14:41:15.730505", "step": "repair_hard", "event": "batch_complete", "batch_num": 2, "total_batches": 3, "success_count": 10, "failed_count": 0, "latency_ms": 6791, "processed_items": 20, "model": "claude-haiku-4-5-20251001", "round": 1}
-{"timestamp": "2026-01-26T14:41:15.742728", "step": "repair_hard", "event": "batch_start", "batch_num": 3, "total_batches": 3, "batch_size": 10}
-{"timestamp": "2026-01-26T14:41:22.625940", "step": "repair_hard", "event": "batch_complete", "batch_num": 3, "total_batches": 3, "success_count": 10, "failed_count": 0, "latency_ms": 6873, "processed_items": 30, "model": "claude-haiku-4-5-20251001", "round": 1}
-{"timestamp": "2026-01-26T14:41:22.637262", "step": "repair_hard", "event": "round_complete", "round": 1, "remaining_count": 0}
-{"timestamp": "2026-01-26T14:41:22.641856", "step": "repair_hard", "event": "step_complete", "success_count": 30, "failed_count": 0, "elapsed_seconds": 19.993804, "by_round": {"1": 30, "2": 0, "3": 0}}
