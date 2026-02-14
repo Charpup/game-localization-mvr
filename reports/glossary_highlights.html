@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Glossary Match Highlights</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .text-block { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .match-exact { background-color: #90EE90; padding: 2px 4px; }
+        .match-fuzzy { background-color: #FFD700; padding: 2px 4px; }
+        .match-context { background-color: #87CEEB; padding: 2px 4px; }
+        .match-partial { background-color: #FFB6C1; padding: 2px 4px; }
+        .confidence-high { border-bottom: 3px solid #228B22; }
+        .confidence-medium { border-bottom: 3px solid #FFA500; }
+        .confidence-low { border-bottom: 3px solid #DC143C; }
+        .legend { margin: 20px 0; padding: 10px; background: #f5f5f5; }
+        .legend-item { display: inline-block; margin-right: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Glossary Match Review</h1>
+    <div class="legend">
+        <h3>Legend:</h3>
+        <div class="legend-item"><span class="match-exact">Exact Match</span></div>
+        <div class="legend-item"><span class="match-fuzzy">Fuzzy Match</span></div>
+        <div class="legend-item"><span class="match-context">Context Validated</span></div>
+        <div class="legend-item"><span class="match-partial">Partial Match</span></div>
+        <br><br>
+        <div class="legend-item"><span class="confidence-high">Auto-Approved (≥95%)</span></div>
+        <div class="legend-item"><span class="confidence-medium">Suggested (90-95%)</span></div>
+        <div class="legend-item"><span class="confidence-low">Needs Review (&lt;90%)</span></div>
+    </div>
+    <div class="text-block">
+        <h3>Text 1</h3>
+        <p><span class="match-exact confidence-high" title="忍者 → Ниндзя (confidence: 1.00)">忍者</span>的<span class="match-exact confidence-high" title="攻击 → Атака (confidence: 1.00)">攻击</span>力很高，<span class="match-exact confidence-high" title="暴击 → Критический удар (confidence: 1.00)">暴击</span><span class="match-exact confidence-high" title="伤害 → Урон (confidence: 1.00)">伤害</span>也很强。</p>
+    </div>
+    <div class="text-block">
+        <h3>Text 2</h3>
+        <p>点击<span class="match-exact confidence-high" title="确定 → OK (confidence: 1.00)">确定</span>按钮开始游戏。</p>
+    </div>
+    <div class="text-block">
+        <h3>Text 3</h3>
+        <p><span class="match-exact confidence-high" title="PlayStation → PlayStation (confidence: 1.00)">PlayStation</span>s="match-fuzzy confidence-high" title="PlayStation → PlayStation (confidence: 0.95)">layStation</span>游戏机很受欢迎。</p>
+    </div>
+</body>
+</html>

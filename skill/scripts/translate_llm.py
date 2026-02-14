@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-translate_llm.py (v6.0 - Unified Batch Mode)
+translate_llm.py (v7.0 - Optimized Batch Mode with High Throughput)
 Purpose:
-  Translate tokenized Chinese strings using the unified batch infrastructure.
+  Translate tokenized Chinese strings using the optimized batch infrastructure.
   - Supports --model argument
   - Dynamically switches to content_type="long_text" if is_long_text is present
+  - Uses batch_optimizer for dynamic sizing and parallel processing
   - Preserves token consistency validation
 """
 
@@ -31,9 +32,17 @@ try:
 except ImportError:
     yaml = None
 
-# Integrated runtime adapter
+# Import optimized batch processor
 try:
-    from runtime_adapter import LLMClient, LLMError, batch_llm_call, log_llm_progress
+    from batch_optimizer import optimized_batch_call, BatchConfig, BatchProcessor
+except ImportError:
+    print("WARNING: batch_optimizer.py not found. Falling back to runtime_adapter.")
+    from runtime_adapter import batch_llm_call as optimized_batch_call
+    BatchConfig = None
+    BatchProcessor = None
+
+try:
+    from runtime_adapter import LLMClient, LLMError, log_llm_progress
 except ImportError:
     print("ERROR: scripts/runtime_adapter.py not found.")
     sys.exit(1)
@@ -167,10 +176,12 @@ def main():
     parser.add_argument("--style", default="workflow/style_guide.md")
     parser.add_argument("--glossary", default="data/glossary.yaml")
     parser.add_argument("--checkpoint", default="data/translate_checkpoint.json")
-    parser.add_argument("--batch_size", type=int, default=10) # Used to force specific batch size if needed
+    parser.add_argument("--batch_size", type=int, default=None, help="Override batch size (default: auto)")
+    parser.add_argument("--workers", type=int, default=None, help="Override worker count (default: from config)")
+    parser.add_argument("--use-optimized", action="store_true", default=True, help="Use optimized batch processing")
     args = parser.parse_args()
 
-    print(f"🚀 Translate LLM v6.0 (Unified Batch Mode)")
+    print(f"🚀 Translate LLM v7.0 (Optimized Batch Mode)")
     
     # Load resources
     style_guide = load_text(args.style)
@@ -215,14 +226,27 @@ def main():
         src = r.get("tokenized_zh") or r.get("source_zh") or ""
         batch_inputs.append({
             "id": r.get("string_id"),
-            "source_text": src
+            "source_text": src,
+            "max_length_target": r.get("max_length_target") or r.get("max_len_target"),
+            "string_id": r.get("string_id")  # For prompt builder
         })
 
-    # Execute
+    # Execute with optimized batch processing
     try:
         system_prompt_builder = build_system_prompt_factory(style_guide, glossary_summary)
         
-        results = batch_llm_call(
+        # Check if we should use optimized processing
+        config = None
+        if args.use_optimized and BatchConfig is not None:
+            config = BatchConfig.from_yaml()
+            if args.workers:
+                config.max_workers = args.workers
+            if args.batch_size:
+                config.dynamic_sizing = False  # Disable dynamic sizing if explicit size given
+            print(f"   [Optimizer] Dynamic sizing: {config.dynamic_sizing}, Workers: {config.max_workers}")
+        
+        # Use optimized batch processing
+        results = optimized_batch_call(
             step="translate",
             rows=batch_inputs,
             model=args.model,
@@ -230,7 +254,8 @@ def main():
             user_prompt_template=build_user_prompt,
             content_type=content_type,
             retry=2,
-            allow_fallback=True
+            config=config,
+            pre_computed_glossary=glossary_summary if glossary else None
         )
         
         # Merge results back to original rows
@@ -239,6 +264,8 @@ def main():
         # Validation and Final output prep
         final_rows = []
         new_done = set()
+        failed_validations = []
+        
         for r in pending_rows:
             sid = str(r.get("string_id"))
             ru = res_map.get(sid, "")
@@ -250,6 +277,7 @@ def main():
                 final_rows.append(r)
                 new_done.add(sid)
             else:
+                failed_validations.append({"id": sid, "error": err, "translation": ru})
                 print(f"⚠️  Validation failed for {sid}: {err}")
         
         # Write Output
@@ -263,10 +291,28 @@ def main():
         done_ids.update(new_done)
         save_checkpoint(args.checkpoint, done_ids)
         
-        print(f"✅ Translated {len(new_done)} / {len(pending_rows)} rows.")
+        # Summary
+        print(f"\n{'='*60}")
+        print(f"✅ Translation Complete")
+        print(f"   Translated: {len(new_done)} / {len(pending_rows)} rows")
+        print(f"   Validation failures: {len(failed_validations)}")
+        print(f"{'='*60}")
+        
+        # Save validation failures if any
+        if failed_validations:
+            fail_path = "reports/translate_validation_failures.json"
+            Path(fail_path).parent.mkdir(parents=True, exist_ok=True)
+            with open(fail_path, "w", encoding="utf-8") as f:
+                json.dump({
+                    "timestamp": datetime.now().isoformat(),
+                    "failures": failed_validations
+                }, f, indent=2, ensure_ascii=False)
+            print(f"⚠️  Validation failures saved to: {fail_path}")
         
     except Exception as e:
         print(f"❌ Translation failed: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 
 if __name__ == "__main__":

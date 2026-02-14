@@ -1,0 +1,325 @@
+{
+  "timestamp": "2026-02-14T18:09:51Z",
+  "configuration": {
+    "dataset_sizes": [
+      100,
+      500,
+      2000
+    ],
+    "runs_per_scenario": 3,
+    "api_latency_ms": {
+      "gpt-3.5-turbo": 150,
+      "kimi-k2.5": 250,
+      "gpt-4": 400
+    },
+    "pricing": {
+      "gpt-3.5-turbo": 0.0015,
+      "kimi-k2.5": 0.012,
+      "gpt-4": 0.03
+    }
+  },
+  "results": [
+    {
+      "scenario_name": "v1.1.0 Baseline",
+      "dataset_size": 100,
+      "cache_enabled": false,
+      "routing_enabled": false,
+      "async_enabled": false,
+      "total_time_seconds": 24.982666666666667,
+      "texts_per_second": 4.003222782667422,
+      "total_cost_usd": 0.004296000000000001,
+      "cost_per_1k_texts": 0.04296000000000001,
+      "peak_memory_mb": 50.0,
+      "api_calls": 100,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.0,
+      "routing_decisions": {},
+      "avg_complexity_score": 0.0
+    },
+    {
+      "scenario_name": "Cache Only",
+      "dataset_size": 100,
+      "cache_enabled": true,
+      "routing_enabled": false,
+      "async_enabled": false,
+      "total_time_seconds": 2.8073333333333244,
+      "texts_per_second": 35.640446080768264,
+      "total_cost_usd": 0.000624,
+      "cost_per_1k_texts": 0.00624,
+      "peak_memory_mb": 75.0,
+      "api_calls": 11,
+      "cache_hits": 89,
+      "cache_misses": 11,
+      "cache_hit_rate": 0.89,
+      "routing_decisions": {},
+      "avg_complexity_score": 0.0
+    },
+    {
+      "scenario_name": "Routing Only",
+      "dataset_size": 100,
+      "cache_enabled": false,
+      "routing_enabled": true,
+      "async_enabled": false,
+      "total_time_seconds": 18.736000000000004,
+      "texts_per_second": 5.33948930386125,
+      "total_cost_usd": 0.003623999999999999,
+      "cost_per_1k_texts": 0.036239999999999994,
+      "peak_memory_mb": 60.0,
+      "api_calls": 100,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.0,
+      "routing_decisions": {
+        "gpt-3.5-turbo": 75,
+        "kimi-k2.5": 18,
+        "gpt-4": 7
+      },
+      "avg_complexity_score": 0.19497540322580645
+    },
+    {
+      "scenario_name": "Full v1.2.0",
+      "dataset_size": 100,
+      "cache_enabled": true,
+      "routing_enabled": true,
+      "async_enabled": true,
+      "total_time_seconds": 1.238,
+      "texts_per_second": 80.85844117216494,
+      "total_cost_usd": 0.0005729999999999999,
+      "cost_per_1k_texts": 0.005729999999999999,
+      "peak_memory_mb": 100.0,
+      "api_calls": 11,
+      "cache_hits": 89,
+      "cache_misses": 11,
+      "cache_hit_rate": 0.89,
+      "routing_decisions": {
+        "gpt-3.5-turbo": 7,
+        "kimi-k2.5": 3,
+        "gpt-4": 1
+      },
+      "avg_complexity_score": 0.2583101173020528
+    },
+    {
+      "scenario_name": "v1.1.0 Baseline",
+      "dataset_size": 500,
+      "cache_enabled": false,
+      "routing_enabled": false,
+      "async_enabled": false,
+      "total_time_seconds": 125.50400000000002,
+      "texts_per_second": 3.9839601768368644,
+      "total_cost_usd": 0.02272799999999994,
+      "cost_per_1k_texts": 0.04545599999999988,
+      "peak_memory_mb": 50.0,
+      "api_calls": 500,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.0,
+      "routing_decisions": {},
+      "avg_complexity_score": 0.0
+    },
+    {
+      "scenario_name": "Cache Only",
+      "dataset_size": 500,
+      "cache_enabled": true,
+      "routing_enabled": false,
+      "async_enabled": false,
+      "total_time_seconds": 3.359666666666613,
+      "texts_per_second": 148.9778435428816,
+      "total_cost_usd": 0.000624,
+      "cost_per_1k_texts": 0.001248,
+      "peak_memory_mb": 75.0,
+      "api_calls": 11,
+      "cache_hits": 489,
+      "cache_misses": 11,
+      "cache_hit_rate": 0.978,
+      "routing_decisions": {},
+      "avg_complexity_score": 0.0
+    },
+    {
+      "scenario_name": "Routing Only",
+      "dataset_size": 500,
+      "cache_enabled": false,
+      "routing_enabled": true,
+      "async_enabled": false,
+      "total_time_seconds": 95.37799999999997,
+      "texts_per_second": 5.242324145046177,
+      "total_cost_usd": 0.020033999999999996,
+      "cost_per_1k_texts": 0.04006799999999999,
+      "peak_memory_mb": 60.0,
+      "api_calls": 500,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.0,
+      "routing_decisions": {
+        "gpt-3.5-turbo": 359,
+        "kimi-k2.5": 103,
+        "gpt-4": 38
+      },
+      "avg_complexity_score": 0.2167284677419355
+    },
+    {
+      "scenario_name": "Full v1.2.0",
+      "dataset_size": 500,
+      "cache_enabled": true,
+      "routing_enabled": true,
+      "async_enabled": true,
+      "total_time_seconds": 1.3383333333333334,
+      "texts_per_second": 374.1893712071078,
+      "total_cost_usd": 0.0005729999999999999,
+      "cost_per_1k_texts": 0.0011459999999999999,
+      "peak_memory_mb": 100.0,
+      "api_calls": 11,
+      "cache_hits": 489,
+      "cache_misses": 11,
+      "cache_hit_rate": 0.978,
+      "routing_decisions": {
+        "gpt-3.5-turbo": 7,
+        "kimi-k2.5": 3,
+        "gpt-4": 1
+      },
+      "avg_complexity_score": 0.2583101173020528
+    },
+    {
+      "scenario_name": "v1.1.0 Baseline",
+      "dataset_size": 2000,
+      "cache_enabled": false,
+      "routing_enabled": false,
+      "async_enabled": false,
+      "total_time_seconds": 501.73733333333365,
+      "texts_per_second": 3.986158861130344,
+      "total_cost_usd": 0.09717600000000118,
+      "cost_per_1k_texts": 0.04858800000000059,
+      "peak_memory_mb": 50.0,
+      "api_calls": 2000,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.0,
+      "routing_decisions": {},
+      "avg_complexity_score": 0.0
+    },
+    {
+      "scenario_name": "Cache Only",
+      "dataset_size": 2000,
+      "cache_enabled": true,
+      "routing_enabled": false,
+      "async_enabled": false,
+      "total_time_seconds": 4.738666666666775,
+      "texts_per_second": 422.0727814315601,
+      "total_cost_usd": 0.000624,
+      "cost_per_1k_texts": 0.000312,
+      "peak_memory_mb": 75.0,
+      "api_calls": 11,
+      "cache_hits": 1989,
+      "cache_misses": 11,
+      "cache_hit_rate": 0.9945,
+      "routing_decisions": {},
+      "avg_complexity_score": 0.0
+    },
+    {
+      "scenario_name": "Routing Only",
+      "dataset_size": 2000,
+      "cache_enabled": false,
+      "routing_enabled": true,
+      "async_enabled": false,
+      "total_time_seconds": 384.8389999999997,
+      "texts_per_second": 5.196982813952463,
+      "total_cost_usd": 0.08463000000000037,
+      "cost_per_1k_texts": 0.042315000000000186,
+      "peak_memory_mb": 60.0,
+      "api_calls": 2000,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.0,
+      "routing_decisions": {
+        "gpt-3.5-turbo": 1392,
+        "kimi-k2.5": 453,
+        "gpt-4": 155
+      },
+      "avg_complexity_score": 0.22941038306451614
+    },
+    {
+      "scenario_name": "Full v1.2.0",
+      "dataset_size": 2000,
+      "cache_enabled": true,
+      "routing_enabled": true,
+      "async_enabled": true,
+      "total_time_seconds": 1.3073333333333335,
+      "texts_per_second": 1535.951282938549,
+      "total_cost_usd": 0.0005729999999999999,
+      "cost_per_1k_texts": 0.00028649999999999997,
+      "peak_memory_mb": 100.0,
+      "api_calls": 11,
+      "cache_hits": 1989,
+      "cache_misses": 11,
+      "cache_hit_rate": 0.9945,
+      "routing_decisions": {
+        "gpt-3.5-turbo": 7,
+        "kimi-k2.5": 3,
+        "gpt-4": 1
+      },
+      "avg_complexity_score": 0.2583101173020528
+    }
+  ],
+  "improvements": {
+    "100": {
+      "Cache Only": {
+        "speedup": 8.9,
+        "throughput_pct": 790.3,
+        "cost_reduction_pct": 85.5,
+        "api_reduction_pct": 89.0
+      },
+      "Routing Only": {
+        "speedup": 1.33,
+        "throughput_pct": 33.4,
+        "cost_reduction_pct": 15.6,
+        "api_reduction_pct": 0.0
+      },
+      "Full v1.2.0": {
+        "speedup": 20.18,
+        "throughput_pct": 1919.8,
+        "cost_reduction_pct": 86.7,
+        "api_reduction_pct": 89.0
+      }
+    },
+    "500": {
+      "Cache Only": {
+        "speedup": 37.36,
+        "throughput_pct": 3639.4,
+        "cost_reduction_pct": 97.3,
+        "api_reduction_pct": 97.8
+      },
+      "Routing Only": {
+        "speedup": 1.32,
+        "throughput_pct": 31.6,
+        "cost_reduction_pct": 11.9,
+        "api_reduction_pct": 0.0
+      },
+      "Full v1.2.0": {
+        "speedup": 93.78,
+        "throughput_pct": 9292.4,
+        "cost_reduction_pct": 97.5,
+        "api_reduction_pct": 97.8
+      }
+    },
+    "2000": {
+      "Cache Only": {
+        "speedup": 105.88,
+        "throughput_pct": 10488.5,
+        "cost_reduction_pct": 99.4,
+        "api_reduction_pct": 99.5
+      },
+      "Routing Only": {
+        "speedup": 1.3,
+        "throughput_pct": 30.4,
+        "cost_reduction_pct": 12.9,
+        "api_reduction_pct": 0.0
+      },
+      "Full v1.2.0": {
+        "speedup": 383.79,
+        "throughput_pct": 38432.1,
+        "cost_reduction_pct": 99.4,
+        "api_reduction_pct": 99.5
+      }
+    }
+  }
+}

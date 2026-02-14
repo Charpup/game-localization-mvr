@@ -1,0 +1,118 @@
+{
+  "timestamp": "2026-02-14T17:47:02Z",
+  "summary": {
+    "avg_throughput_improvement_pct": 48.0,
+    "avg_time_reduction_pct": 31.2,
+    "target_achieved": false
+  },
+  "results": [
+    {
+      "description": "Small texts",
+      "row_count": 100,
+      "length_range": "10-50",
+      "standard": {
+        "mode": "standard",
+        "total_rows": 100,
+        "batch_count": 4,
+        "elapsed_seconds": 0.8004918098449707,
+        "tokens_per_sec": 1691.4601540548251,
+        "texts_per_sec": 124.92320192428546,
+        "total_tokens": 1354
+      },
+      "optimized": {
+        "mode": "optimized",
+        "total_rows": 100,
+        "batch_count": 10,
+        "elapsed_seconds": 0.5375547409057617,
+        "tokens_per_sec": 2096.483246027554,
+        "texts_per_sec": 186.02335812134461,
+        "total_tokens": 1127
+      },
+      "improvement": {
+        "throughput_pct": 48.9,
+        "time_reduction_pct": 32.8
+      }
+    },
+    {
+      "description": "Medium texts",
+      "row_count": 100,
+      "length_range": "50-200",
+      "standard": {
+        "mode": "standard",
+        "total_rows": 100,
+        "batch_count": 4,
+        "elapsed_seconds": 0.8005316257476807,
+        "tokens_per_sec": 7842.288546859685,
+        "texts_per_sec": 124.91698864064487,
+        "total_tokens": 6278
+      },
+      "optimized": {
+        "mode": "optimized",
+        "total_rows": 100,
+        "batch_count": 10,
+        "elapsed_seconds": 0.5406060218811035,
+        "tokens_per_sec": 6641.338319917586,
+        "texts_per_sec": 185.04704151344626,
+        "total_tokens": 3589
+      },
+      "improvement": {
+        "throughput_pct": 48.1,
+        "time_reduction_pct": 32.5
+      }
+    },
+    {
+      "description": "Large texts",
+      "row_count": 100,
+      "length_range": "100-500",
+      "standard": {
+        "mode": "standard",
+        "total_rows": 100,
+        "batch_count": 4,
+        "elapsed_seconds": 0.8005111217498779,
+        "tokens_per_sec": 17176.52588004421,
+        "texts_per_sec": 124.92018821850334,
+        "total_tokens": 13750
+      },
+      "optimized": {
+        "mode": "optimized",
+        "total_rows": 100,
+        "batch_count": 10,
+        "elapsed_seconds": 0.6644899845123291,
+        "tokens_per_sec": 11026.854921519203,
+        "texts_per_sec": 150.5372685531632,
+        "total_tokens": 7325
+      },
+      "improvement": {
+        "throughput_pct": 20.5,
+        "time_reduction_pct": 17.0
+      }
+    },
+    {
+      "description": "High volume",
+      "row_count": 200,
+      "length_range": "10-100",
+      "standard": {
+        "mode": "standard",
+        "total_rows": 200,
+        "batch_count": 8,
+        "elapsed_seconds": 1.6009857654571533,
+        "tokens_per_sec": 3257.9927395610525,
+        "texts_per_sec": 124.92303449237166,
+        "total_tokens": 5216
+      },
+      "optimized": {
+        "mode": "optimized",
+        "total_rows": 200,
+        "batch_count": 20,
+        "elapsed_seconds": 0.9177863597869873,
+        "tokens_per_sec": 3823.214595631434,
+        "texts_per_sec": 217.97118561182634,
+        "total_tokens": 3508
+      },
+      "improvement": {
+        "throughput_pct": 74.5,
+        "time_reduction_pct": 42.7
+      }
+    }
+  ]
+}

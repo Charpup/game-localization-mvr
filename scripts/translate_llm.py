@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-translate_llm.py (v6.0 - Unified Batch Mode)
+translate_llm.py (v6.1 - Caching Enabled)
 Purpose:
   Translate tokenized Chinese strings using the unified batch infrastructure.
   - Supports --model argument
   - Dynamically switches to content_type="long_text" if is_long_text is present
   - Preserves token consistency validation
+  - Added response caching for cost reduction (v6.1)
+
+Cache Features:
+  - SQLite-based persistent cache
+  - Cache key: hash(source_text + glossary_hash + model_name)
+  - TTL support (configurable, default 7 days)
+  - Cache hit/miss statistics
+  - Size limits with LRU eviction
 """
 
 import argparse
@@ -37,6 +45,22 @@ try:
 except ImportError:
     print("ERROR: scripts/runtime_adapter.py not found.")
     sys.exit(1)
+
+# Cache manager integration
+try:
+    from cache_manager import CacheManager, load_cache_config
+    CACHE_AVAILABLE = True
+except ImportError:
+    CACHE_AVAILABLE = False
+    print("⚠️  Cache manager not available. Caching disabled.")
+
+# Model Router integration
+try:
+    from model_router import ModelRouter, ComplexityAnalyzer
+    ROUTER_AVAILABLE = True
+except ImportError:
+    ROUTER_AVAILABLE = False
+    print("⚠️  Model Router not available. Using default model selection.")
 
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 CJK_RE = re.compile(r"[\u4e00-\u9fff]")
@@ -157,6 +181,154 @@ def save_checkpoint(path: str, done_ids: set):
         json.dump({"done_ids": list(done_ids)}, f)
 
 # -----------------------------
+# Cache Integration Helpers
+# -----------------------------
+def process_with_cache(
+    pending_rows: List[Dict],
+    cache: Optional[CacheManager],
+    model: str,
+    glossary_hash: Optional[str],
+    system_prompt_builder,
+    content_type: str,
+    use_cache: bool = True
+) -> Tuple[List[Dict], List[Dict], Dict[str, str]]:
+    """
+    Process rows with cache lookup. Returns (cached_results, rows_to_translate, cache_map).
+    
+    Args:
+        pending_rows: All rows pending translation
+        cache: CacheManager instance or None
+        model: Model name for cache key
+        glossary_hash: Glossary hash for cache key
+        system_prompt_builder: Function to build system prompt
+        content_type: Content type for batch call
+        use_cache: Whether to use caching
+        
+    Returns:
+        Tuple of (cached_results, rows_for_llm, cache_result_map)
+    """
+    if not use_cache or cache is None:
+        return [], pending_rows, {}
+    
+    cached_results = []
+    rows_for_llm = []
+    cache_map = {}
+    
+    for row in pending_rows:
+        source_text = row.get("tokenized_zh") or row.get("source_zh") or ""
+        
+        # Check cache
+        hit, cached_translation = cache.get(source_text, glossary_hash, model)
+        
+        if hit and cached_translation:
+            # Validate cached result
+            ok, err = validate_translation(source_text, cached_translation)
+            if ok:
+                cached_results.append({
+                    **row,
+                    "target_text": cached_translation,
+                    "from_cache": True
+                })
+                cache_map[row.get("string_id")] = cached_translation
+                continue
+        
+        rows_for_llm.append(row)
+    
+    return cached_results, rows_for_llm, cache_map
+
+def store_results_in_cache(
+    results: List[Dict],
+    cache: Optional[CacheManager],
+    model: str,
+    glossary_hash: Optional[str]
+) -> int:
+    """
+    Store successful translations in cache.
+    
+    Returns:
+        Number of entries stored
+    """
+    if cache is None:
+        return 0
+    
+    stored = 0
+    for result in results:
+        source_text = result.get("tokenized_zh") or result.get("source_zh") or ""
+        translated_text = result.get("target_text", "")
+        
+        if source_text and translated_text:
+            if cache.set(source_text, translated_text, glossary_hash, model):
+                stored += 1
+    
+    return stored
+
+def print_cache_stats(cache: Optional[CacheManager]) -> None:
+    """Print cache statistics."""
+    if cache is None:
+        return
+    
+    stats = cache.get_stats()
+    size_info = cache.get_size()
+    
+    print("\n📊 Cache Statistics:")
+    print(f"   Hits: {stats.hits}")
+    print(f"   Misses: {stats.misses}")
+    print(f"   Hit Rate: {stats.hit_rate:.2%}")
+    if stats.hit_rate > 0:
+        print(f"   💰 Cost Savings: {stats.hit_rate:.1%} (cache hits = zero cost)")
+    print(f"   Cache Size: {size_info['total_mb']:.2f} MB / {size_info['max_mb']} MB")
+
+
+# -----------------------------
+# Model Router Integration Helpers
+# -----------------------------
+def get_model_router() -> Optional[ModelRouter]:
+    """Initialize and return ModelRouter if available."""
+    if not ROUTER_AVAILABLE:
+        return None
+    try:
+        return ModelRouter()
+    except Exception as e:
+        print(f"⚠️  Model Router initialization failed: {e}")
+        return None
+
+def select_model_with_routing(
+    router: Optional[ModelRouter],
+    texts: List[str],
+    default_model: str,
+    glossary_terms: Optional[List[str]] = None,
+    step: str = "translate",
+    force_model: Optional[str] = None
+) -> Tuple[str, float, List[Any]]:
+    """
+    Select model using intelligent routing.
+    
+    Returns:
+        Tuple of (selected_model, complexity_score, metrics_list)
+    """
+    if router is None or not router.enabled:
+        # No router available, use default
+        return default_model, 0.0, []
+    
+    if force_model:
+        # Forced model override
+        return force_model, 0.0, []
+    
+    # Use batch model selection
+    model, complexity, metrics = router.select_model_for_batch(
+        texts=texts,
+        step=step,
+        glossary_terms=glossary_terms,
+        force_model=None
+    )
+    
+    return model, complexity, metrics
+
+def get_glossary_terms(glossary: List[GlossaryEntry]) -> List[str]:
+    """Extract glossary term strings for complexity analysis."""
+    return [e.term_zh for e in glossary if e.term_zh]
+
+# -----------------------------
 # Main Process
 # -----------------------------
 def main():
@@ -167,14 +339,51 @@ def main():
     parser.add_argument("--style", default="workflow/style_guide.md")
     parser.add_argument("--glossary", default="data/glossary.yaml")
     parser.add_argument("--checkpoint", default="data/translate_checkpoint.json")
-    parser.add_argument("--batch_size", type=int, default=10) # Used to force specific batch size if needed
+    parser.add_argument("--batch_size", type=int, default=10)
+    parser.add_argument("--no-cache", action="store_true", help="Disable cache lookup")
+    parser.add_argument("--cache-clear", action="store_true", help="Clear cache before running")
+    parser.add_argument("--no-routing", action="store_true", help="Disable intelligent model routing")
+    parser.add_argument("--force-model", help="Force specific model (overrides routing)")
     args = parser.parse_args()
 
-    print(f"🚀 Translate LLM v6.0 (Unified Batch Mode)")
+    print(f"🚀 Translate LLM v6.2 (Model Router Enabled)")
+    
+    # Initialize model router
+    router = None
+    if not args.no_routing:
+        router = get_model_router()
+        if router and router.enabled:
+            print(f"🧠 Model Router enabled: default={router.default_model}")
+        elif ROUTER_AVAILABLE:
+            print("ℹ️  Model Router available but disabled in config")
+    else:
+        print("🚫 Model Routing disabled (--no-routing)")
+    
+    # Initialize cache manager
+    cache = None
+    cache_hits = 0
+    cache_misses = 0
+    
+    if CACHE_AVAILABLE and not args.no_cache:
+        try:
+            config = load_cache_config("config/pipeline.yaml")
+            cache = CacheManager(config)
+            
+            if args.cache_clear:
+                cleared = cache.clear()
+                print(f"🗑️  Cleared {cleared} cache entries")
+            
+            print(f"💾 Cache enabled: {config.location}")
+            print(f"   TTL: {config.ttl_days} days, Max Size: {config.max_size_mb} MB")
+        except Exception as e:
+            print(f"⚠️  Cache initialization failed: {e}")
+            cache = None
+    elif args.no_cache:
+        print("🚫 Cache disabled (--no-cache)")
     
     # Load resources
     style_guide = load_text(args.style)
-    glossary, _ = load_glossary(args.glossary)
+    glossary, glossary_hash = load_glossary(args.glossary)
     glossary_summary = build_glossary_summary(glossary)
     
     # Read CSV
@@ -187,6 +396,7 @@ def main():
     
     headers = list(all_rows[0].keys()) if all_rows else []
     if "target_text" not in headers: headers.append("target_text")
+    if "from_cache" not in headers: headers.append("from_cache")
     
     # Checkpoint
     done_ids = load_checkpoint(args.checkpoint)
@@ -194,12 +404,41 @@ def main():
     
     if not pending_rows:
         print("✅ No pending rows to process.")
+        if cache:
+            print_cache_stats(cache)
+        if router:
+            stats = router.get_routing_stats()
+            if stats["total_routings"] > 0:
+                print("\n🧠 Model Router Statistics:")
+                print(f"   Total routings: {stats['total_routings']}")
+                print(f"   Avg complexity: {stats['average_complexity']:.2f}")
+                print(f"   Model distribution: {stats['model_distribution']}")
         return
 
     print(f"   Total rows: {len(all_rows)}, Pending: {len(pending_rows)}")
     
+    # Model selection with intelligent routing
+    glossary_term_list = get_glossary_terms(glossary)
+    source_texts = [r.get("tokenized_zh") or r.get("source_zh") or "" for r in pending_rows]
+    
+    selected_model, complexity_score, complexity_metrics = select_model_with_routing(
+        router=router,
+        texts=source_texts,
+        default_model=args.model,
+        glossary_terms=glossary_term_list,
+        step="translate",
+        force_model=args.force_model
+    )
+    
+    # Check if routing selected a different model
+    if selected_model != args.model and not args.force_model:
+        print(f"🎯 Model Router selected: {selected_model} (was: {args.model})")
+        if complexity_score > 0:
+            print(f"   Batch complexity: {complexity_score:.2f}")
+    else:
+        print(f"   Using model: {selected_model}")
+    
     # Detect long text status for ANY row in the pending set
-    # Check for is_long_text == 1 or is_long_text == "1"
     has_long_text = any(
         str(r.get("is_long_text", "0")) == "1" or r.get("is_long_text") == 1
         for r in pending_rows
@@ -209,65 +448,131 @@ def main():
     if has_long_text:
         print("   [Tagger Hint] Long text detected. Using content_type='long_text' for lower batch density.")
 
-    # Prepare for batch_llm_call
-    batch_inputs = []
-    for r in pending_rows:
-        src = r.get("tokenized_zh") or r.get("source_zh") or ""
-        batch_inputs.append({
-            "id": r.get("string_id"),
-            "source_text": src
-        })
+    # Process with cache (using selected_model for cache key)
+    cached_results, rows_for_llm, cache_map = process_with_cache(
+        pending_rows=pending_rows,
+        cache=cache,
+        model=selected_model,
+        glossary_hash=glossary_hash,
+        system_prompt_builder=build_system_prompt_factory(style_guide, glossary_summary),
+        content_type=content_type,
+        use_cache=(cache is not None and not args.no_cache)
+    )
+    
+    cache_hits = len(cached_results)
+    
+    print(f"\n📋 Translation Plan:")
+    print(f"   Cache hits: {cache_hits} (zero cost)")
+    print(f"   LLM calls needed: {len(rows_for_llm)}")
+    
+    # Prepare results
+    all_final_rows = list(cached_results)  # Start with cached results
+    new_done = set()
+    
+    # Mark cached results as done
+    for r in cached_results:
+        new_done.add(str(r.get("string_id")))
+    
+    # Process rows that need LLM call
+    if rows_for_llm:
+        # Prepare for batch_llm_call
+        batch_inputs = []
+        for r in rows_for_llm:
+            src = r.get("tokenized_zh") or r.get("source_zh") or ""
+            batch_inputs.append({
+                "id": r.get("string_id"),
+                "source_text": src
+            })
 
-    # Execute
-    try:
-        system_prompt_builder = build_system_prompt_factory(style_guide, glossary_summary)
-        
-        results = batch_llm_call(
-            step="translate",
-            rows=batch_inputs,
-            model=args.model,
-            system_prompt=system_prompt_builder,
-            user_prompt_template=build_user_prompt,
-            content_type=content_type,
-            retry=2,
-            allow_fallback=True
-        )
-        
-        # Merge results back to original rows
-        res_map = {str(it.get("id")): it.get("target_ru", "") for it in results}
-        
-        # Validation and Final output prep
-        final_rows = []
-        new_done = set()
-        for r in pending_rows:
-            sid = str(r.get("string_id"))
-            ru = res_map.get(sid, "")
+        try:
+            system_prompt_builder = build_system_prompt_factory(style_guide, glossary_summary)
             
-            # Validation
-            ok, err = validate_translation(r.get("tokenized_zh") or r.get("source_zh") or "", ru)
-            if ok:
-                r["target_text"] = ru
-                final_rows.append(r)
-                new_done.add(sid)
-            else:
-                print(f"⚠️  Validation failed for {sid}: {err}")
-        
-        # Write Output
+            results = batch_llm_call(
+                step="translate",
+                rows=batch_inputs,
+                model=selected_model,
+                system_prompt=system_prompt_builder,
+                user_prompt_template=build_user_prompt,
+                content_type=content_type,
+                retry=2,
+                allow_fallback=True
+            )
+            
+            # Merge results back to original rows
+            res_map = {str(it.get("id")): it.get("target_ru", "") for it in results}
+            
+            # Process LLM results
+            llm_results = []
+            for r in rows_for_llm:
+                sid = str(r.get("string_id"))
+                ru = res_map.get(sid, "")
+                
+                # Validation
+                ok, err = validate_translation(r.get("tokenized_zh") or r.get("source_zh") or "", ru)
+                if ok:
+                    row_copy = dict(r)
+                    row_copy["target_text"] = ru
+                    row_copy["from_cache"] = False
+                    llm_results.append(row_copy)
+                    new_done.add(sid)
+                else:
+                    print(f"⚠️  Validation failed for {sid}: {err}")
+            
+            # Store successful translations in cache
+            if cache and not args.no_cache:
+                stored = store_results_in_cache(llm_results, cache, selected_model, glossary_hash)
+                print(f"💾 Stored {stored} translations in cache")
+            
+            all_final_rows.extend(llm_results)
+            
+        except Exception as e:
+            print(f"❌ Translation failed: {e}")
+            # Still write cached results if we have them
+            if not all_final_rows:
+                sys.exit(1)
+    
+    # Write Output
+    if all_final_rows:
         write_mode = "a" if Path(args.output).exists() else "w"
         with open(args.output, write_mode, encoding="utf-8-sig", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=headers)
             if write_mode == "w": writer.writeheader()
-            writer.writerows(final_rows)
-            
+            writer.writerows(all_final_rows)
+        
         # Update checkpoint
         done_ids.update(new_done)
         save_checkpoint(args.checkpoint, done_ids)
         
-        print(f"✅ Translated {len(new_done)} / {len(pending_rows)} rows.")
-        
-    except Exception as e:
-        print(f"❌ Translation failed: {e}")
-        sys.exit(1)
+        print(f"\n✅ Processed {len(new_done)} / {len(pending_rows)} rows:")
+        print(f"   From cache: {cache_hits}")
+        print(f"   From LLM: {len(new_done) - cache_hits}")
+    
+    # Print final cache stats
+    if cache:
+        print_cache_stats(cache)
+        cache.close()
+    
+    # Print Model Router stats
+    if router and not args.no_routing:
+        print("\n🧠 Model Router Statistics:")
+        stats = router.get_routing_stats()
+        if stats["total_routings"] > 0:
+            print(f"   Total routings: {stats['total_routings']}")
+            print(f"   Average complexity: {stats['average_complexity']:.4f}")
+            print(f"   Model distribution:")
+            for model, info in stats["model_distribution"].items():
+                print(f"      {model}: {info['count']} ({info['percentage']}%)")
+            
+            # Cost comparison
+            comparison = router.get_cost_comparison(baseline_model="kimi-k2.5")
+            if comparison.get("savings_percent", 0) > 0:
+                print(f"\n   💰 Cost Savings vs kimi-k2.5 baseline:")
+                print(f"      Savings: ${comparison['savings_usd']:.6f} ({comparison['savings_percent']}%)")
+            
+            # Save routing history
+            router.save_routing_history("reports/model_router_history.json")
+        else:
+            print("   No routing decisions made (all from cache)")
 
 if __name__ == "__main__":
     main()

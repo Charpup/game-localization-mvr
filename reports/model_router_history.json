@@ -1,0 +1,48 @@
+{
+  "routing_history": [
+    {
+      "timestamp": "2026-02-15T01:51:30.291263",
+      "text_hash": "573cb0d34bd1cdc7",
+      "text_preview": "战士",
+      "step": "translate",
+      "selected_model": "gpt-4.1-nano",
+      "complexity_metrics": {
+        "text_length": 2,
+        "char_count": 2,
+        "word_count": 1,
+        "cjk_count": 2,
+        "placeholder_count": 0,
+        "placeholder_density": 0.0,
+        "special_char_count": 0,
+        "special_char_density": 0.0,
+        "glossary_term_count": 0,
+        "glossary_term_density": 0.0,
+        "sentence_count": 1,
+        "avg_word_length": 2.0,
+        "complexity_score": 0.02
+      },
+      "complexity_score": 0.02,
+      "fallback_used": false,
+      "fallback_reason": null,
+      "estimated_cost": 0.0
+    }
+  ],
+  "statistics": {
+    "total_routings": 1,
+    "total_estimated_cost": 0.0,
+    "cost_tracking": {},
+    "model_distribution": {
+      "gpt-4.1-nano": {
+        "count": 1,
+        "percentage": 100.0
+      }
+    },
+    "complexity_distribution": {
+      "low": 1,
+      "medium": 0,
+      "high": 0
+    },
+    "average_complexity": 0.02
+  },
+  "saved_at": "2026-02-15T01:51:30.296523"
+}

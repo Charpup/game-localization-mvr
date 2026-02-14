@@ -1,0 +1,81 @@
+{
+  "report_period": "weekly",
+  "generated_at": "2026-02-15T01:59:03.376118",
+  "period_start": "2026-02-08T01:59:03.354729",
+  "feedback_summary": {
+    "total": 4125,
+    "accepted": 4125,
+    "rejected": 0,
+    "corrected": 0,
+    "acceptance_rate": 1.0
+  },
+  "learning_progress": {
+    "total_terms_tracked": 1005,
+    "new_terms_discovered": 0,
+    "auto_approve_eligible": 2,
+    "auto_approve_rate_improvement": 0
+  },
+  "top_improved_terms": [
+    {
+      "term_zh": "技能",
+      "term_ru": "Навык",
+      "confidence": 1.0,
+      "accuracy": 1.0
+    },
+    {
+      "term_zh": "暴击",
+      "term_ru": "Критический удар",
+      "confidence": 0.897,
+      "accuracy": 1.0
+    },
+    {
+      "term_zh": "攻击",
+      "term_ru": "Атака",
+      "confidence": 0.705,
+      "accuracy": 1.0
+    },
+    {
+      "term_zh": "护盾",
+      "term_ru": "Щит",
+      "confidence": 0.705,
+      "accuracy": 1.0
+    },
+    {
+      "term_zh": "生命",
+      "term_ru": "Здоровье",
+      "confidence": 0.705,
+      "accuracy": 1.0
+    },
+    {
+      "term_zh": "术语0",
+      "term_ru": "Терм0",
+      "confidence": 0.672,
+      "accuracy": 1.0
+    },
+    {
+      "term_zh": "术语1",
+      "term_ru": "Терм1",
+      "confidence": 0.672,
+      "accuracy": 1.0
+    },
+    {
+      "term_zh": "术语2",
+      "term_ru": "Терм2",
+      "confidence": 0.672,
+      "accuracy": 1.0
+    },
+    {
+      "term_zh": "术语3",
+      "term_ru": "Терм3",
+      "confidence": 0.672,
+      "accuracy": 1.0
+    },
+    {
+      "term_zh": "术语4",
+      "term_ru": "Терм4",
+      "confidence": 0.672,
+      "accuracy": 1.0
+    }
+  ],
+  "suggested_terms": []
+}

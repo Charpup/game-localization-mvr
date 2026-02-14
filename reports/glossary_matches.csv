@@ -1,0 +1,8 @@
+source_term,target_term,found_text,confidence,match_type,auto_approved,requires_review,case_preserved,context_before,context_after,position,timestamp
+忍者,Ниндзя,忍者,1.0,exact,True,False,True,,,0,2026-02-15T01:54:26.853046
+攻击,Атака,攻击,1.0,exact,True,False,True,,,3,2026-02-15T01:54:26.853065
+暴击,Критический удар,暴击,1.0,exact,True,False,True,,,9,2026-02-15T01:54:26.853076
+伤害,Урон,伤害,1.0,exact,True,False,True,,,11,2026-02-15T01:54:26.853087
+确定,OK,确定,1.0,exact,True,False,True,,,2,2026-02-15T01:54:26.853097
+PlayStation,PlayStation,PlayStation,1.0,exact,True,False,True,,,0,2026-02-15T01:54:26.853106
+PlayStation,PlayStation,layStation,0.9548,fuzzy,True,False,True,,,1,2026-02-15T01:54:26.853117

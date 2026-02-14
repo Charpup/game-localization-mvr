@@ -24,7 +24,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import List, Dict, Set, Tuple
+from typing import List, Dict, Set, Tuple, Optional
 from datetime import datetime
 from collections import Counter
 
@@ -40,17 +40,34 @@ except ImportError:
     print("❌ Error: PyYAML is required. Install with: pip install pyyaml")
     sys.exit(1)
 
+# Import glossary corrector if available
+try:
+    from glossary_corrector import GlossaryCorrector, CorrectionSuggestion
+    GLOSSARY_CORRECTOR_AVAILABLE = True
+except ImportError:
+    GLOSSARY_CORRECTOR_AVAILABLE = False
+
 
 class QAHardValidator:
-    """硬性规则校验器 v2.0"""
+    """硬性规则校验器 v2.1 - with Glossary Correction integration"""
     
     def __init__(self, translated_csv: str, placeholder_map: str,
-                 schema_yaml: str, forbidden_txt: str, report_json: str):
+                 schema_yaml: str, forbidden_txt: str, report_json: str,
+                 suggest_corrections: bool = False,
+                 glossary_path: Optional[str] = None,
+                 glossary_config: Optional[str] = None):
         self.translated_csv = Path(translated_csv)
         self.placeholder_map_path = Path(placeholder_map)
         self.schema_yaml = Path(schema_yaml)
         self.forbidden_txt = Path(forbidden_txt)
         self.report_json = Path(report_json)
+        
+        # Glossary correction settings
+        self.suggest_corrections = suggest_corrections
+        self.glossary_path = glossary_path
+        self.glossary_config = glossary_config
+        self.glossary_corrector: Optional[GlossaryCorrector] = None
+        self.correction_suggestions: List[CorrectionSuggestion] = []
         
         # 数据
         self.placeholder_map: Dict[str, str] = {}
@@ -64,7 +81,8 @@ class QAHardValidator:
             'token_mismatch': 0,
             'tag_unbalanced': 0,
             'forbidden_hit': 0,
-            'new_placeholder_found': 0
+            'new_placeholder_found': 0,
+            'glossary_violation': 0
         }
         self.total_rows = 0
         
@@ -84,6 +102,45 @@ class QAHardValidator:
             return False
         except Exception as e:
             print(f"❌ Error loading placeholder map: {str(e)}")
+            return False
+    
+    def init_glossary_corrector(self) -> bool:
+        """Initialize glossary corrector if enabled"""
+        if not self.suggest_corrections:
+            return False
+        
+        if not GLOSSARY_CORRECTOR_AVAILABLE:
+            print("⚠️  Warning: GlossaryCorrector not available, skipping correction suggestions")
+            return False
+        
+        try:
+            self.glossary_corrector = GlossaryCorrector(self.glossary_config)
+            
+            if self.glossary_path:
+                success = self.glossary_corrector.load_glossary(self.glossary_path)
+                if success:
+                    print(f"✅ Glossary corrector initialized with {self.glossary_path}")
+                    return True
+            
+            # Try default glossary paths
+            default_paths = [
+                "glossary/compiled.yaml",
+                "glossary/global.yaml",
+                "../glossary/compiled.yaml",
+                "../glossary/global.yaml"
+            ]
+            
+            for path in default_paths:
+                if Path(path).exists():
+                    if self.glossary_corrector.load_glossary(path):
+                        print(f"✅ Glossary corrector initialized with {path}")
+                        return True
+            
+            print("⚠️  Warning: No glossary file found, corrector will use built-in patterns only")
+            return True
+            
+        except Exception as e:
+            print(f"⚠️  Warning: Failed to initialize glossary corrector: {e}")
             return False
     
     def load_schema(self) -> bool:
@@ -327,6 +384,34 @@ class QAHardValidator:
             except Exception:
                 pass
     
+    def check_glossary_violations(self, string_id: str, target_text: str,
+                                  row_num: int) -> None:
+        """检查术语表违规并提供修正建议"""
+        if not self.glossary_corrector or not target_text:
+            return
+        
+        try:
+            suggestions = self.glossary_corrector.detect_violations(target_text, string_id)
+            
+            for suggestion in suggestions:
+                # Add to correction suggestions list
+                self.correction_suggestions.append(suggestion)
+                
+                # Also add as an error for the report
+                self.errors.append({
+                    'row': row_num,
+                    'string_id': string_id,
+                    'type': 'glossary_violation',
+                    'detail': f"glossary violation: '{suggestion.original}' → '{suggestion.suggested}' ({suggestion.rule})",
+                    'target': target_text,
+                    'suggestion': suggestion.to_dict()
+                })
+                self.error_counts['glossary_violation'] += 1
+                
+        except Exception as e:
+            # Don't let glossary checking break the main validation
+            pass
+    
     def validate_csv(self) -> bool:
         """验证 CSV 文件"""
         try:
@@ -372,6 +457,7 @@ class QAHardValidator:
                     self.check_forbidden_patterns(string_id, target_text, idx)
                     self.check_new_placeholders(string_id, target_text, idx)
                     self.check_length_overflow(string_id, target_text, row, idx)
+                    self.check_glossary_violations(string_id, target_text, idx)
                 
                 return True
 
@@ -421,13 +507,21 @@ class QAHardValidator:
             'error_counts': self.error_counts,
             'errors': self.errors[:2000],  # 限制到 2000 条
             'metadata': {
-                'version': '2.0',
+                'version': '2.1',
                 'generated_at': datetime.now().isoformat(),
                 'input_file': str(self.translated_csv),
                 'total_errors': len(self.errors),
-                'errors_truncated': len(self.errors) > 2000
+                'errors_truncated': len(self.errors) > 2000,
+                'glossary_corrections_enabled': self.suggest_corrections,
+                'correction_suggestions_count': len(self.correction_suggestions)
             }
         }
+        
+        # Add correction suggestions if available
+        if self.correction_suggestions:
+            report['correction_suggestions'] = [
+                s.to_dict() for s in self.correction_suggestions[:2000]
+            ]
         
         # 创建输出目录
         self.report_json.parent.mkdir(parents=True, exist_ok=True)
@@ -454,6 +548,11 @@ class QAHardValidator:
         if self.error_counts['new_placeholder_found'] > 0:
             print(f"   ❌ New placeholders found: {self.error_counts['new_placeholder_found']}")
         
+        if self.error_counts['glossary_violation'] > 0:
+            print(f"   ❌ Glossary violations: {self.error_counts['glossary_violation']}")
+            if self.correction_suggestions:
+                print(f"      💡 Correction suggestions available: {len(self.correction_suggestions)}")
+        
         print()
         
         if len(self.errors) > 0:
@@ -471,12 +570,14 @@ class QAHardValidator:
     
     def run(self) -> bool:
         """运行 QA 验证"""
-        print(f"🚀 Starting QA Hard validation v2.0...")
+        print(f"🚀 Starting QA Hard validation v2.1...")
         print(f"   Input CSV: {self.translated_csv}")
         print(f"   Placeholder map: {self.placeholder_map_path}")
         print(f"   Schema: {self.schema_yaml}")
         print(f"   Forbidden patterns: {self.forbidden_txt}")
         print(f"   Output report: {self.report_json}")
+        if self.suggest_corrections:
+            print(f"   ✅ Glossary correction suggestions enabled")
         print()
         
         # 加载资源
@@ -485,6 +586,7 @@ class QAHardValidator:
         
         self.load_schema()
         self.load_forbidden_patterns()
+        self.init_glossary_corrector()
         
         print()
         
@@ -516,6 +618,12 @@ def main():
                     help="Forbidden patterns TXT (default: workflow/forbidden_patterns.txt)")
     ap.add_argument("report_json", nargs="?", default="data/qa_hard_report.json",
                     help="Output report JSON (default: data/qa_hard_report.json)")
+    ap.add_argument("--suggest-corrections", action="store_true",
+                    help="Enable glossary correction suggestions")
+    ap.add_argument("--glossary-path", default=None,
+                    help="Path to glossary YAML file")
+    ap.add_argument("--glossary-config", default="config/glossary.yaml",
+                    help="Path to glossary config YAML (default: config/glossary.yaml)")
     
     args = ap.parse_args()
     
@@ -524,7 +632,10 @@ def main():
         placeholder_map=args.placeholder_map,
         schema_yaml=args.schema_yaml,
         forbidden_txt=args.forbidden_txt,
-        report_json=args.report_json
+        report_json=args.report_json,
+        suggest_corrections=args.suggest_corrections,
+        glossary_path=args.glossary_path,
+        glossary_config=args.glossary_config
     )
     
     success = validator.run()

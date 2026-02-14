@@ -1,5 +1,5 @@
 {
-  "step": "translate",
+  "step": "test",
   "total_batches": 1,
   "failed_batches": [
     {
@@ -9,5 +9,5 @@
       "error": "JSON parse error: Expecting value: line 1 column 1 (char 0)"
     }
   ],
-  "timestamp": "2026-02-15T01:28:02.131998"
+  "timestamp": "2026-02-15T01:27:58.067812"
 }

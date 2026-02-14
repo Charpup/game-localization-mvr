@@ -1,0 +1,8063 @@
+{
+  "generated_at": "2026-02-15T01:59:03.341984",
+  "total_terms": 1005,
+  "confidence_distribution": {
+    "high": 2,
+    "medium": 1003,
+    "low": 0
+  },
+  "confidence_stats": {
+    "mean": 0.6725983054158957,
+    "median": 0.67195,
+    "min": 0.67195,
+    "max": 0.9999775090188759
+  },
+  "accuracy_stats": {
+    "mean": 1.0,
+    "median": 1.0
+  },
+  "auto_approve_eligible": 2,
+  "auto_approve_rate": 0.001990049751243781,
+  "term_details": [
+    {
+      "term_zh": "技能",
+      "term_ru": "Навык",
+      "confidence": 1.0,
+      "accuracy": 1.0,
+      "total_uses": 95,
+      "auto_approve_eligible": true
+    },
+    {
+      "term_zh": "暴击",
+      "term_ru": "Критический удар",
+      "confidence": 0.897,
+      "accuracy": 1.0,
+      "total_uses": 15,
+      "auto_approve_eligible": true
+    },
+    {
+      "term_zh": "攻击",
+      "term_ru": "Атака",
+      "confidence": 0.705,
+      "accuracy": 1.0,
+      "total_uses": 5,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "护盾",
+      "term_ru": "Щит",
+      "confidence": 0.705,
+      "accuracy": 1.0,
+      "total_uses": 5,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "生命",
+      "term_ru": "Здоровье",
+      "confidence": 0.705,
+      "accuracy": 1.0,
+      "total_uses": 5,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语0",
+      "term_ru": "Терм0",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语1",
+      "term_ru": "Терм1",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语2",
+      "term_ru": "Терм2",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语3",
+      "term_ru": "Терм3",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语4",
+      "term_ru": "Терм4",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语5",
+      "term_ru": "Терм5",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语6",
+      "term_ru": "Терм6",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语7",
+      "term_ru": "Терм7",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语8",
+      "term_ru": "Терм8",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语9",
+      "term_ru": "Терм9",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语10",
+      "term_ru": "Терм10",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语11",
+      "term_ru": "Терм11",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语12",
+      "term_ru": "Терм12",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语13",
+      "term_ru": "Терм13",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语14",
+      "term_ru": "Терм14",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语15",
+      "term_ru": "Терм15",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语16",
+      "term_ru": "Терм16",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语17",
+      "term_ru": "Терм17",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语18",
+      "term_ru": "Терм18",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语19",
+      "term_ru": "Терм19",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语20",
+      "term_ru": "Терм20",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语21",
+      "term_ru": "Терм21",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语22",
+      "term_ru": "Терм22",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语23",
+      "term_ru": "Терм23",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语24",
+      "term_ru": "Терм24",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语25",
+      "term_ru": "Терм25",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语26",
+      "term_ru": "Терм26",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语27",
+      "term_ru": "Терм27",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语28",
+      "term_ru": "Терм28",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语29",
+      "term_ru": "Терм29",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语30",
+      "term_ru": "Терм30",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语31",
+      "term_ru": "Терм31",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语32",
+      "term_ru": "Терм32",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语33",
+      "term_ru": "Терм33",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语34",
+      "term_ru": "Терм34",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语35",
+      "term_ru": "Терм35",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语36",
+      "term_ru": "Терм36",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语37",
+      "term_ru": "Терм37",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语38",
+      "term_ru": "Терм38",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语39",
+      "term_ru": "Терм39",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语40",
+      "term_ru": "Терм40",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语41",
+      "term_ru": "Терм41",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语42",
+      "term_ru": "Терм42",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语43",
+      "term_ru": "Терм43",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语44",
+      "term_ru": "Терм44",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语45",
+      "term_ru": "Терм45",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语46",
+      "term_ru": "Терм46",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语47",
+      "term_ru": "Терм47",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语48",
+      "term_ru": "Терм48",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语49",
+      "term_ru": "Терм49",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语50",
+      "term_ru": "Терм50",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语51",
+      "term_ru": "Терм51",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语52",
+      "term_ru": "Терм52",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语53",
+      "term_ru": "Терм53",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语54",
+      "term_ru": "Терм54",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语55",
+      "term_ru": "Терм55",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语56",
+      "term_ru": "Терм56",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语57",
+      "term_ru": "Терм57",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语58",
+      "term_ru": "Терм58",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语59",
+      "term_ru": "Терм59",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语60",
+      "term_ru": "Терм60",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语61",
+      "term_ru": "Терм61",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语62",
+      "term_ru": "Терм62",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语63",
+      "term_ru": "Терм63",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语64",
+      "term_ru": "Терм64",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语65",
+      "term_ru": "Терм65",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语66",
+      "term_ru": "Терм66",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语67",
+      "term_ru": "Терм67",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语68",
+      "term_ru": "Терм68",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语69",
+      "term_ru": "Терм69",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语70",
+      "term_ru": "Терм70",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语71",
+      "term_ru": "Терм71",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语72",
+      "term_ru": "Терм72",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语73",
+      "term_ru": "Терм73",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语74",
+      "term_ru": "Терм74",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语75",
+      "term_ru": "Терм75",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语76",
+      "term_ru": "Терм76",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语77",
+      "term_ru": "Терм77",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语78",
+      "term_ru": "Терм78",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语79",
+      "term_ru": "Терм79",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语80",
+      "term_ru": "Терм80",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语81",
+      "term_ru": "Терм81",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语82",
+      "term_ru": "Терм82",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语83",
+      "term_ru": "Терм83",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语84",
+      "term_ru": "Терм84",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语85",
+      "term_ru": "Терм85",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语86",
+      "term_ru": "Терм86",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语87",
+      "term_ru": "Терм87",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语88",
+      "term_ru": "Терм88",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语89",
+      "term_ru": "Терм89",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语90",
+      "term_ru": "Терм90",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语91",
+      "term_ru": "Терм91",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语92",
+      "term_ru": "Терм92",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语93",
+      "term_ru": "Терм93",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语94",
+      "term_ru": "Терм94",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语95",
+      "term_ru": "Терм95",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语96",
+      "term_ru": "Терм96",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语97",
+      "term_ru": "Терм97",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语98",
+      "term_ru": "Терм98",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语99",
+      "term_ru": "Терм99",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语100",
+      "term_ru": "Терм100",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语101",
+      "term_ru": "Терм101",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语102",
+      "term_ru": "Терм102",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语103",
+      "term_ru": "Терм103",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语104",
+      "term_ru": "Терм104",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语105",
+      "term_ru": "Терм105",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语106",
+      "term_ru": "Терм106",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语107",
+      "term_ru": "Терм107",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语108",
+      "term_ru": "Терм108",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语109",
+      "term_ru": "Терм109",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语110",
+      "term_ru": "Терм110",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语111",
+      "term_ru": "Терм111",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语112",
+      "term_ru": "Терм112",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语113",
+      "term_ru": "Терм113",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语114",
+      "term_ru": "Терм114",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语115",
+      "term_ru": "Терм115",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语116",
+      "term_ru": "Терм116",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语117",
+      "term_ru": "Терм117",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语118",
+      "term_ru": "Терм118",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语119",
+      "term_ru": "Терм119",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语120",
+      "term_ru": "Терм120",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语121",
+      "term_ru": "Терм121",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语122",
+      "term_ru": "Терм122",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语123",
+      "term_ru": "Терм123",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语124",
+      "term_ru": "Терм124",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语125",
+      "term_ru": "Терм125",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语126",
+      "term_ru": "Терм126",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语127",
+      "term_ru": "Терм127",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语128",
+      "term_ru": "Терм128",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语129",
+      "term_ru": "Терм129",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语130",
+      "term_ru": "Терм130",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语131",
+      "term_ru": "Терм131",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语132",
+      "term_ru": "Терм132",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语133",
+      "term_ru": "Терм133",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语134",
+      "term_ru": "Терм134",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语135",
+      "term_ru": "Терм135",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语136",
+      "term_ru": "Терм136",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语137",
+      "term_ru": "Терм137",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语138",
+      "term_ru": "Терм138",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语139",
+      "term_ru": "Терм139",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语140",
+      "term_ru": "Терм140",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语141",
+      "term_ru": "Терм141",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语142",
+      "term_ru": "Терм142",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语143",
+      "term_ru": "Терм143",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语144",
+      "term_ru": "Терм144",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语145",
+      "term_ru": "Терм145",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语146",
+      "term_ru": "Терм146",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语147",
+      "term_ru": "Терм147",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语148",
+      "term_ru": "Терм148",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语149",
+      "term_ru": "Терм149",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语150",
+      "term_ru": "Терм150",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语151",
+      "term_ru": "Терм151",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语152",
+      "term_ru": "Терм152",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语153",
+      "term_ru": "Терм153",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语154",
+      "term_ru": "Терм154",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语155",
+      "term_ru": "Терм155",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语156",
+      "term_ru": "Терм156",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语157",
+      "term_ru": "Терм157",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语158",
+      "term_ru": "Терм158",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语159",
+      "term_ru": "Терм159",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语160",
+      "term_ru": "Терм160",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语161",
+      "term_ru": "Терм161",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语162",
+      "term_ru": "Терм162",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语163",
+      "term_ru": "Терм163",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语164",
+      "term_ru": "Терм164",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语165",
+      "term_ru": "Терм165",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语166",
+      "term_ru": "Терм166",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语167",
+      "term_ru": "Терм167",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语168",
+      "term_ru": "Терм168",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语169",
+      "term_ru": "Терм169",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语170",
+      "term_ru": "Терм170",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语171",
+      "term_ru": "Терм171",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语172",
+      "term_ru": "Терм172",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语173",
+      "term_ru": "Терм173",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语174",
+      "term_ru": "Терм174",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语175",
+      "term_ru": "Терм175",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语176",
+      "term_ru": "Терм176",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语177",
+      "term_ru": "Терм177",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语178",
+      "term_ru": "Терм178",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语179",
+      "term_ru": "Терм179",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语180",
+      "term_ru": "Терм180",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语181",
+      "term_ru": "Терм181",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语182",
+      "term_ru": "Терм182",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语183",
+      "term_ru": "Терм183",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语184",
+      "term_ru": "Терм184",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语185",
+      "term_ru": "Терм185",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语186",
+      "term_ru": "Терм186",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语187",
+      "term_ru": "Терм187",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语188",
+      "term_ru": "Терм188",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语189",
+      "term_ru": "Терм189",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语190",
+      "term_ru": "Терм190",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语191",
+      "term_ru": "Терм191",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语192",
+      "term_ru": "Терм192",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语193",
+      "term_ru": "Терм193",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语194",
+      "term_ru": "Терм194",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语195",
+      "term_ru": "Терм195",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语196",
+      "term_ru": "Терм196",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语197",
+      "term_ru": "Терм197",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语198",
+      "term_ru": "Терм198",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语199",
+      "term_ru": "Терм199",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语200",
+      "term_ru": "Терм200",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语201",
+      "term_ru": "Терм201",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语202",
+      "term_ru": "Терм202",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语203",
+      "term_ru": "Терм203",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语204",
+      "term_ru": "Терм204",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语205",
+      "term_ru": "Терм205",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语206",
+      "term_ru": "Терм206",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语207",
+      "term_ru": "Терм207",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语208",
+      "term_ru": "Терм208",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语209",
+      "term_ru": "Терм209",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语210",
+      "term_ru": "Терм210",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语211",
+      "term_ru": "Терм211",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语212",
+      "term_ru": "Терм212",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语213",
+      "term_ru": "Терм213",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语214",
+      "term_ru": "Терм214",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语215",
+      "term_ru": "Терм215",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语216",
+      "term_ru": "Терм216",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语217",
+      "term_ru": "Терм217",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语218",
+      "term_ru": "Терм218",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语219",
+      "term_ru": "Терм219",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语220",
+      "term_ru": "Терм220",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语221",
+      "term_ru": "Терм221",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语222",
+      "term_ru": "Терм222",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语223",
+      "term_ru": "Терм223",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语224",
+      "term_ru": "Терм224",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语225",
+      "term_ru": "Терм225",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语226",
+      "term_ru": "Терм226",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语227",
+      "term_ru": "Терм227",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语228",
+      "term_ru": "Терм228",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语229",
+      "term_ru": "Терм229",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语230",
+      "term_ru": "Терм230",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语231",
+      "term_ru": "Терм231",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语232",
+      "term_ru": "Терм232",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语233",
+      "term_ru": "Терм233",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语234",
+      "term_ru": "Терм234",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语235",
+      "term_ru": "Терм235",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语236",
+      "term_ru": "Терм236",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语237",
+      "term_ru": "Терм237",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语238",
+      "term_ru": "Терм238",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语239",
+      "term_ru": "Терм239",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语240",
+      "term_ru": "Терм240",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语241",
+      "term_ru": "Терм241",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语242",
+      "term_ru": "Терм242",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语243",
+      "term_ru": "Терм243",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语244",
+      "term_ru": "Терм244",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语245",
+      "term_ru": "Терм245",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语246",
+      "term_ru": "Терм246",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语247",
+      "term_ru": "Терм247",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语248",
+      "term_ru": "Терм248",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语249",
+      "term_ru": "Терм249",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语250",
+      "term_ru": "Терм250",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语251",
+      "term_ru": "Терм251",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语252",
+      "term_ru": "Терм252",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语253",
+      "term_ru": "Терм253",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语254",
+      "term_ru": "Терм254",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语255",
+      "term_ru": "Терм255",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语256",
+      "term_ru": "Терм256",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语257",
+      "term_ru": "Терм257",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语258",
+      "term_ru": "Терм258",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语259",
+      "term_ru": "Терм259",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语260",
+      "term_ru": "Терм260",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语261",
+      "term_ru": "Терм261",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语262",
+      "term_ru": "Терм262",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语263",
+      "term_ru": "Терм263",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语264",
+      "term_ru": "Терм264",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语265",
+      "term_ru": "Терм265",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语266",
+      "term_ru": "Терм266",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语267",
+      "term_ru": "Терм267",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语268",
+      "term_ru": "Терм268",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语269",
+      "term_ru": "Терм269",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语270",
+      "term_ru": "Терм270",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语271",
+      "term_ru": "Терм271",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语272",
+      "term_ru": "Терм272",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语273",
+      "term_ru": "Терм273",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语274",
+      "term_ru": "Терм274",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语275",
+      "term_ru": "Терм275",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语276",
+      "term_ru": "Терм276",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语277",
+      "term_ru": "Терм277",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语278",
+      "term_ru": "Терм278",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语279",
+      "term_ru": "Терм279",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语280",
+      "term_ru": "Терм280",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语281",
+      "term_ru": "Терм281",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语282",
+      "term_ru": "Терм282",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语283",
+      "term_ru": "Терм283",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语284",
+      "term_ru": "Терм284",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语285",
+      "term_ru": "Терм285",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语286",
+      "term_ru": "Терм286",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语287",
+      "term_ru": "Терм287",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语288",
+      "term_ru": "Терм288",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语289",
+      "term_ru": "Терм289",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语290",
+      "term_ru": "Терм290",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语291",
+      "term_ru": "Терм291",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语292",
+      "term_ru": "Терм292",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语293",
+      "term_ru": "Терм293",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语294",
+      "term_ru": "Терм294",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语295",
+      "term_ru": "Терм295",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语296",
+      "term_ru": "Терм296",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语297",
+      "term_ru": "Терм297",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语298",
+      "term_ru": "Терм298",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语299",
+      "term_ru": "Терм299",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语300",
+      "term_ru": "Терм300",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语301",
+      "term_ru": "Терм301",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语302",
+      "term_ru": "Терм302",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语303",
+      "term_ru": "Терм303",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语304",
+      "term_ru": "Терм304",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语305",
+      "term_ru": "Терм305",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语306",
+      "term_ru": "Терм306",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语307",
+      "term_ru": "Терм307",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语308",
+      "term_ru": "Терм308",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语309",
+      "term_ru": "Терм309",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语310",
+      "term_ru": "Терм310",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语311",
+      "term_ru": "Терм311",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语312",
+      "term_ru": "Терм312",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语313",
+      "term_ru": "Терм313",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语314",
+      "term_ru": "Терм314",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语315",
+      "term_ru": "Терм315",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语316",
+      "term_ru": "Терм316",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语317",
+      "term_ru": "Терм317",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语318",
+      "term_ru": "Терм318",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语319",
+      "term_ru": "Терм319",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语320",
+      "term_ru": "Терм320",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语321",
+      "term_ru": "Терм321",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语322",
+      "term_ru": "Терм322",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语323",
+      "term_ru": "Терм323",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语324",
+      "term_ru": "Терм324",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语325",
+      "term_ru": "Терм325",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语326",
+      "term_ru": "Терм326",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语327",
+      "term_ru": "Терм327",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语328",
+      "term_ru": "Терм328",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语329",
+      "term_ru": "Терм329",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语330",
+      "term_ru": "Терм330",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语331",
+      "term_ru": "Терм331",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语332",
+      "term_ru": "Терм332",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语333",
+      "term_ru": "Терм333",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语334",
+      "term_ru": "Терм334",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语335",
+      "term_ru": "Терм335",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语336",
+      "term_ru": "Терм336",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语337",
+      "term_ru": "Терм337",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语338",
+      "term_ru": "Терм338",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语339",
+      "term_ru": "Терм339",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语340",
+      "term_ru": "Терм340",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语341",
+      "term_ru": "Терм341",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语342",
+      "term_ru": "Терм342",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语343",
+      "term_ru": "Терм343",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语344",
+      "term_ru": "Терм344",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语345",
+      "term_ru": "Терм345",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语346",
+      "term_ru": "Терм346",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语347",
+      "term_ru": "Терм347",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语348",
+      "term_ru": "Терм348",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语349",
+      "term_ru": "Терм349",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语350",
+      "term_ru": "Терм350",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语351",
+      "term_ru": "Терм351",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语352",
+      "term_ru": "Терм352",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语353",
+      "term_ru": "Терм353",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语354",
+      "term_ru": "Терм354",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语355",
+      "term_ru": "Терм355",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语356",
+      "term_ru": "Терм356",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语357",
+      "term_ru": "Терм357",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语358",
+      "term_ru": "Терм358",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语359",
+      "term_ru": "Терм359",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语360",
+      "term_ru": "Терм360",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语361",
+      "term_ru": "Терм361",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语362",
+      "term_ru": "Терм362",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语363",
+      "term_ru": "Терм363",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语364",
+      "term_ru": "Терм364",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语365",
+      "term_ru": "Терм365",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语366",
+      "term_ru": "Терм366",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语367",
+      "term_ru": "Терм367",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语368",
+      "term_ru": "Терм368",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语369",
+      "term_ru": "Терм369",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语370",
+      "term_ru": "Терм370",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语371",
+      "term_ru": "Терм371",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语372",
+      "term_ru": "Терм372",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语373",
+      "term_ru": "Терм373",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语374",
+      "term_ru": "Терм374",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语375",
+      "term_ru": "Терм375",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语376",
+      "term_ru": "Терм376",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语377",
+      "term_ru": "Терм377",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语378",
+      "term_ru": "Терм378",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语379",
+      "term_ru": "Терм379",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语380",
+      "term_ru": "Терм380",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语381",
+      "term_ru": "Терм381",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语382",
+      "term_ru": "Терм382",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语383",
+      "term_ru": "Терм383",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语384",
+      "term_ru": "Терм384",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语385",
+      "term_ru": "Терм385",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语386",
+      "term_ru": "Терм386",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语387",
+      "term_ru": "Терм387",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语388",
+      "term_ru": "Терм388",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语389",
+      "term_ru": "Терм389",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语390",
+      "term_ru": "Терм390",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语391",
+      "term_ru": "Терм391",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语392",
+      "term_ru": "Терм392",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语393",
+      "term_ru": "Терм393",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语394",
+      "term_ru": "Терм394",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语395",
+      "term_ru": "Терм395",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语396",
+      "term_ru": "Терм396",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语397",
+      "term_ru": "Терм397",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语398",
+      "term_ru": "Терм398",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语399",
+      "term_ru": "Терм399",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语400",
+      "term_ru": "Терм400",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语401",
+      "term_ru": "Терм401",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语402",
+      "term_ru": "Терм402",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语403",
+      "term_ru": "Терм403",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语404",
+      "term_ru": "Терм404",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语405",
+      "term_ru": "Терм405",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语406",
+      "term_ru": "Терм406",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语407",
+      "term_ru": "Терм407",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语408",
+      "term_ru": "Терм408",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语409",
+      "term_ru": "Терм409",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语410",
+      "term_ru": "Терм410",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语411",
+      "term_ru": "Терм411",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语412",
+      "term_ru": "Терм412",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语413",
+      "term_ru": "Терм413",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语414",
+      "term_ru": "Терм414",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语415",
+      "term_ru": "Терм415",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语416",
+      "term_ru": "Терм416",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语417",
+      "term_ru": "Терм417",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语418",
+      "term_ru": "Терм418",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语419",
+      "term_ru": "Терм419",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语420",
+      "term_ru": "Терм420",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语421",
+      "term_ru": "Терм421",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语422",
+      "term_ru": "Терм422",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语423",
+      "term_ru": "Терм423",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语424",
+      "term_ru": "Терм424",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语425",
+      "term_ru": "Терм425",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语426",
+      "term_ru": "Терм426",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语427",
+      "term_ru": "Терм427",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语428",
+      "term_ru": "Терм428",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语429",
+      "term_ru": "Терм429",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语430",
+      "term_ru": "Терм430",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语431",
+      "term_ru": "Терм431",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语432",
+      "term_ru": "Терм432",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语433",
+      "term_ru": "Терм433",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语434",
+      "term_ru": "Терм434",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语435",
+      "term_ru": "Терм435",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语436",
+      "term_ru": "Терм436",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语437",
+      "term_ru": "Терм437",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语438",
+      "term_ru": "Терм438",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语439",
+      "term_ru": "Терм439",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语440",
+      "term_ru": "Терм440",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语441",
+      "term_ru": "Терм441",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语442",
+      "term_ru": "Терм442",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语443",
+      "term_ru": "Терм443",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语444",
+      "term_ru": "Терм444",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语445",
+      "term_ru": "Терм445",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语446",
+      "term_ru": "Терм446",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语447",
+      "term_ru": "Терм447",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语448",
+      "term_ru": "Терм448",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语449",
+      "term_ru": "Терм449",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语450",
+      "term_ru": "Терм450",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语451",
+      "term_ru": "Терм451",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语452",
+      "term_ru": "Терм452",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语453",
+      "term_ru": "Терм453",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语454",
+      "term_ru": "Терм454",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语455",
+      "term_ru": "Терм455",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语456",
+      "term_ru": "Терм456",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语457",
+      "term_ru": "Терм457",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语458",
+      "term_ru": "Терм458",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语459",
+      "term_ru": "Терм459",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语460",
+      "term_ru": "Терм460",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语461",
+      "term_ru": "Терм461",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语462",
+      "term_ru": "Терм462",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语463",
+      "term_ru": "Терм463",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语464",
+      "term_ru": "Терм464",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语465",
+      "term_ru": "Терм465",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语466",
+      "term_ru": "Терм466",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语467",
+      "term_ru": "Терм467",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语468",
+      "term_ru": "Терм468",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语469",
+      "term_ru": "Терм469",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语470",
+      "term_ru": "Терм470",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语471",
+      "term_ru": "Терм471",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语472",
+      "term_ru": "Терм472",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语473",
+      "term_ru": "Терм473",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语474",
+      "term_ru": "Терм474",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语475",
+      "term_ru": "Терм475",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语476",
+      "term_ru": "Терм476",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语477",
+      "term_ru": "Терм477",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语478",
+      "term_ru": "Терм478",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语479",
+      "term_ru": "Терм479",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语480",
+      "term_ru": "Терм480",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语481",
+      "term_ru": "Терм481",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语482",
+      "term_ru": "Терм482",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语483",
+      "term_ru": "Терм483",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语484",
+      "term_ru": "Терм484",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语485",
+      "term_ru": "Терм485",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语486",
+      "term_ru": "Терм486",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语487",
+      "term_ru": "Терм487",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语488",
+      "term_ru": "Терм488",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语489",
+      "term_ru": "Терм489",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语490",
+      "term_ru": "Терм490",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语491",
+      "term_ru": "Терм491",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语492",
+      "term_ru": "Терм492",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语493",
+      "term_ru": "Терм493",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语494",
+      "term_ru": "Терм494",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语495",
+      "term_ru": "Терм495",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语496",
+      "term_ru": "Терм496",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语497",
+      "term_ru": "Терм497",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语498",
+      "term_ru": "Терм498",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语499",
+      "term_ru": "Терм499",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语500",
+      "term_ru": "Терм500",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语501",
+      "term_ru": "Терм501",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语502",
+      "term_ru": "Терм502",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语503",
+      "term_ru": "Терм503",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语504",
+      "term_ru": "Терм504",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语505",
+      "term_ru": "Терм505",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语506",
+      "term_ru": "Терм506",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语507",
+      "term_ru": "Терм507",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语508",
+      "term_ru": "Терм508",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语509",
+      "term_ru": "Терм509",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语510",
+      "term_ru": "Терм510",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语511",
+      "term_ru": "Терм511",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语512",
+      "term_ru": "Терм512",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语513",
+      "term_ru": "Терм513",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语514",
+      "term_ru": "Терм514",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语515",
+      "term_ru": "Терм515",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语516",
+      "term_ru": "Терм516",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语517",
+      "term_ru": "Терм517",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语518",
+      "term_ru": "Терм518",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语519",
+      "term_ru": "Терм519",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语520",
+      "term_ru": "Терм520",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语521",
+      "term_ru": "Терм521",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语522",
+      "term_ru": "Терм522",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语523",
+      "term_ru": "Терм523",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语524",
+      "term_ru": "Терм524",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语525",
+      "term_ru": "Терм525",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语526",
+      "term_ru": "Терм526",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语527",
+      "term_ru": "Терм527",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语528",
+      "term_ru": "Терм528",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语529",
+      "term_ru": "Терм529",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语530",
+      "term_ru": "Терм530",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语531",
+      "term_ru": "Терм531",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语532",
+      "term_ru": "Терм532",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语533",
+      "term_ru": "Терм533",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语534",
+      "term_ru": "Терм534",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语535",
+      "term_ru": "Терм535",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语536",
+      "term_ru": "Терм536",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语537",
+      "term_ru": "Терм537",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语538",
+      "term_ru": "Терм538",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语539",
+      "term_ru": "Терм539",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语540",
+      "term_ru": "Терм540",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语541",
+      "term_ru": "Терм541",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语542",
+      "term_ru": "Терм542",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语543",
+      "term_ru": "Терм543",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语544",
+      "term_ru": "Терм544",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语545",
+      "term_ru": "Терм545",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语546",
+      "term_ru": "Терм546",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语547",
+      "term_ru": "Терм547",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语548",
+      "term_ru": "Терм548",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语549",
+      "term_ru": "Терм549",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语550",
+      "term_ru": "Терм550",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语551",
+      "term_ru": "Терм551",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语552",
+      "term_ru": "Терм552",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语553",
+      "term_ru": "Терм553",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语554",
+      "term_ru": "Терм554",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语555",
+      "term_ru": "Терм555",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语556",
+      "term_ru": "Терм556",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语557",
+      "term_ru": "Терм557",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语558",
+      "term_ru": "Терм558",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语559",
+      "term_ru": "Терм559",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语560",
+      "term_ru": "Терм560",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语561",
+      "term_ru": "Терм561",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语562",
+      "term_ru": "Терм562",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语563",
+      "term_ru": "Терм563",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语564",
+      "term_ru": "Терм564",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语565",
+      "term_ru": "Терм565",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语566",
+      "term_ru": "Терм566",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语567",
+      "term_ru": "Терм567",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语568",
+      "term_ru": "Терм568",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语569",
+      "term_ru": "Терм569",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语570",
+      "term_ru": "Терм570",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语571",
+      "term_ru": "Терм571",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语572",
+      "term_ru": "Терм572",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语573",
+      "term_ru": "Терм573",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语574",
+      "term_ru": "Терм574",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语575",
+      "term_ru": "Терм575",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语576",
+      "term_ru": "Терм576",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语577",
+      "term_ru": "Терм577",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语578",
+      "term_ru": "Терм578",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语579",
+      "term_ru": "Терм579",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语580",
+      "term_ru": "Терм580",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语581",
+      "term_ru": "Терм581",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语582",
+      "term_ru": "Терм582",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语583",
+      "term_ru": "Терм583",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语584",
+      "term_ru": "Терм584",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语585",
+      "term_ru": "Терм585",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语586",
+      "term_ru": "Терм586",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语587",
+      "term_ru": "Терм587",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语588",
+      "term_ru": "Терм588",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语589",
+      "term_ru": "Терм589",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语590",
+      "term_ru": "Терм590",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语591",
+      "term_ru": "Терм591",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语592",
+      "term_ru": "Терм592",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语593",
+      "term_ru": "Терм593",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语594",
+      "term_ru": "Терм594",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语595",
+      "term_ru": "Терм595",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语596",
+      "term_ru": "Терм596",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语597",
+      "term_ru": "Терм597",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语598",
+      "term_ru": "Терм598",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语599",
+      "term_ru": "Терм599",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语600",
+      "term_ru": "Терм600",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语601",
+      "term_ru": "Терм601",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语602",
+      "term_ru": "Терм602",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语603",
+      "term_ru": "Терм603",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语604",
+      "term_ru": "Терм604",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语605",
+      "term_ru": "Терм605",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语606",
+      "term_ru": "Терм606",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语607",
+      "term_ru": "Терм607",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语608",
+      "term_ru": "Терм608",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语609",
+      "term_ru": "Терм609",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语610",
+      "term_ru": "Терм610",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语611",
+      "term_ru": "Терм611",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语612",
+      "term_ru": "Терм612",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语613",
+      "term_ru": "Терм613",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语614",
+      "term_ru": "Терм614",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语615",
+      "term_ru": "Терм615",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语616",
+      "term_ru": "Терм616",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语617",
+      "term_ru": "Терм617",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语618",
+      "term_ru": "Терм618",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语619",
+      "term_ru": "Терм619",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语620",
+      "term_ru": "Терм620",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语621",
+      "term_ru": "Терм621",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语622",
+      "term_ru": "Терм622",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语623",
+      "term_ru": "Терм623",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语624",
+      "term_ru": "Терм624",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语625",
+      "term_ru": "Терм625",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语626",
+      "term_ru": "Терм626",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语627",
+      "term_ru": "Терм627",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语628",
+      "term_ru": "Терм628",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语629",
+      "term_ru": "Терм629",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语630",
+      "term_ru": "Терм630",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语631",
+      "term_ru": "Терм631",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语632",
+      "term_ru": "Терм632",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语633",
+      "term_ru": "Терм633",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语634",
+      "term_ru": "Терм634",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语635",
+      "term_ru": "Терм635",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语636",
+      "term_ru": "Терм636",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语637",
+      "term_ru": "Терм637",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语638",
+      "term_ru": "Терм638",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语639",
+      "term_ru": "Терм639",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语640",
+      "term_ru": "Терм640",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语641",
+      "term_ru": "Терм641",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语642",
+      "term_ru": "Терм642",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语643",
+      "term_ru": "Терм643",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语644",
+      "term_ru": "Терм644",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语645",
+      "term_ru": "Терм645",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语646",
+      "term_ru": "Терм646",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语647",
+      "term_ru": "Терм647",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语648",
+      "term_ru": "Терм648",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语649",
+      "term_ru": "Терм649",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语650",
+      "term_ru": "Терм650",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语651",
+      "term_ru": "Терм651",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语652",
+      "term_ru": "Терм652",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语653",
+      "term_ru": "Терм653",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语654",
+      "term_ru": "Терм654",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语655",
+      "term_ru": "Терм655",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语656",
+      "term_ru": "Терм656",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语657",
+      "term_ru": "Терм657",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语658",
+      "term_ru": "Терм658",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语659",
+      "term_ru": "Терм659",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语660",
+      "term_ru": "Терм660",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语661",
+      "term_ru": "Терм661",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语662",
+      "term_ru": "Терм662",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语663",
+      "term_ru": "Терм663",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语664",
+      "term_ru": "Терм664",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语665",
+      "term_ru": "Терм665",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语666",
+      "term_ru": "Терм666",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语667",
+      "term_ru": "Терм667",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语668",
+      "term_ru": "Терм668",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语669",
+      "term_ru": "Терм669",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语670",
+      "term_ru": "Терм670",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语671",
+      "term_ru": "Терм671",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语672",
+      "term_ru": "Терм672",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语673",
+      "term_ru": "Терм673",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语674",
+      "term_ru": "Терм674",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语675",
+      "term_ru": "Терм675",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语676",
+      "term_ru": "Терм676",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语677",
+      "term_ru": "Терм677",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语678",
+      "term_ru": "Терм678",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语679",
+      "term_ru": "Терм679",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语680",
+      "term_ru": "Терм680",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语681",
+      "term_ru": "Терм681",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语682",
+      "term_ru": "Терм682",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语683",
+      "term_ru": "Терм683",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语684",
+      "term_ru": "Терм684",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语685",
+      "term_ru": "Терм685",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语686",
+      "term_ru": "Терм686",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语687",
+      "term_ru": "Терм687",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语688",
+      "term_ru": "Терм688",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语689",
+      "term_ru": "Терм689",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语690",
+      "term_ru": "Терм690",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语691",
+      "term_ru": "Терм691",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语692",
+      "term_ru": "Терм692",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语693",
+      "term_ru": "Терм693",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语694",
+      "term_ru": "Терм694",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语695",
+      "term_ru": "Терм695",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语696",
+      "term_ru": "Терм696",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语697",
+      "term_ru": "Терм697",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语698",
+      "term_ru": "Терм698",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语699",
+      "term_ru": "Терм699",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语700",
+      "term_ru": "Терм700",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语701",
+      "term_ru": "Терм701",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语702",
+      "term_ru": "Терм702",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语703",
+      "term_ru": "Терм703",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语704",
+      "term_ru": "Терм704",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语705",
+      "term_ru": "Терм705",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语706",
+      "term_ru": "Терм706",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语707",
+      "term_ru": "Терм707",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语708",
+      "term_ru": "Терм708",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语709",
+      "term_ru": "Терм709",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语710",
+      "term_ru": "Терм710",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语711",
+      "term_ru": "Терм711",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语712",
+      "term_ru": "Терм712",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语713",
+      "term_ru": "Терм713",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语714",
+      "term_ru": "Терм714",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语715",
+      "term_ru": "Терм715",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语716",
+      "term_ru": "Терм716",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语717",
+      "term_ru": "Терм717",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语718",
+      "term_ru": "Терм718",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语719",
+      "term_ru": "Терм719",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语720",
+      "term_ru": "Терм720",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语721",
+      "term_ru": "Терм721",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语722",
+      "term_ru": "Терм722",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语723",
+      "term_ru": "Терм723",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语724",
+      "term_ru": "Терм724",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语725",
+      "term_ru": "Терм725",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语726",
+      "term_ru": "Терм726",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语727",
+      "term_ru": "Терм727",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语728",
+      "term_ru": "Терм728",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语729",
+      "term_ru": "Терм729",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语730",
+      "term_ru": "Терм730",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语731",
+      "term_ru": "Терм731",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语732",
+      "term_ru": "Терм732",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语733",
+      "term_ru": "Терм733",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语734",
+      "term_ru": "Терм734",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语735",
+      "term_ru": "Терм735",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语736",
+      "term_ru": "Терм736",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语737",
+      "term_ru": "Терм737",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语738",
+      "term_ru": "Терм738",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语739",
+      "term_ru": "Терм739",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语740",
+      "term_ru": "Терм740",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语741",
+      "term_ru": "Терм741",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语742",
+      "term_ru": "Терм742",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语743",
+      "term_ru": "Терм743",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语744",
+      "term_ru": "Терм744",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语745",
+      "term_ru": "Терм745",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语746",
+      "term_ru": "Терм746",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语747",
+      "term_ru": "Терм747",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语748",
+      "term_ru": "Терм748",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语749",
+      "term_ru": "Терм749",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语750",
+      "term_ru": "Терм750",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语751",
+      "term_ru": "Терм751",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语752",
+      "term_ru": "Терм752",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语753",
+      "term_ru": "Терм753",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语754",
+      "term_ru": "Терм754",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语755",
+      "term_ru": "Терм755",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语756",
+      "term_ru": "Терм756",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语757",
+      "term_ru": "Терм757",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语758",
+      "term_ru": "Терм758",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语759",
+      "term_ru": "Терм759",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语760",
+      "term_ru": "Терм760",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语761",
+      "term_ru": "Терм761",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语762",
+      "term_ru": "Терм762",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语763",
+      "term_ru": "Терм763",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语764",
+      "term_ru": "Терм764",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语765",
+      "term_ru": "Терм765",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语766",
+      "term_ru": "Терм766",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语767",
+      "term_ru": "Терм767",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语768",
+      "term_ru": "Терм768",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语769",
+      "term_ru": "Терм769",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语770",
+      "term_ru": "Терм770",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语771",
+      "term_ru": "Терм771",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语772",
+      "term_ru": "Терм772",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语773",
+      "term_ru": "Терм773",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语774",
+      "term_ru": "Терм774",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语775",
+      "term_ru": "Терм775",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语776",
+      "term_ru": "Терм776",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语777",
+      "term_ru": "Терм777",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语778",
+      "term_ru": "Терм778",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语779",
+      "term_ru": "Терм779",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语780",
+      "term_ru": "Терм780",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语781",
+      "term_ru": "Терм781",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语782",
+      "term_ru": "Терм782",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语783",
+      "term_ru": "Терм783",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语784",
+      "term_ru": "Терм784",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语785",
+      "term_ru": "Терм785",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语786",
+      "term_ru": "Терм786",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语787",
+      "term_ru": "Терм787",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语788",
+      "term_ru": "Терм788",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语789",
+      "term_ru": "Терм789",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语790",
+      "term_ru": "Терм790",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语791",
+      "term_ru": "Терм791",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语792",
+      "term_ru": "Терм792",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语793",
+      "term_ru": "Терм793",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语794",
+      "term_ru": "Терм794",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语795",
+      "term_ru": "Терм795",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语796",
+      "term_ru": "Терм796",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语797",
+      "term_ru": "Терм797",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语798",
+      "term_ru": "Терм798",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语799",
+      "term_ru": "Терм799",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语800",
+      "term_ru": "Терм800",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语801",
+      "term_ru": "Терм801",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语802",
+      "term_ru": "Терм802",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语803",
+      "term_ru": "Терм803",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语804",
+      "term_ru": "Терм804",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语805",
+      "term_ru": "Терм805",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语806",
+      "term_ru": "Терм806",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语807",
+      "term_ru": "Терм807",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语808",
+      "term_ru": "Терм808",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语809",
+      "term_ru": "Терм809",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语810",
+      "term_ru": "Терм810",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语811",
+      "term_ru": "Терм811",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语812",
+      "term_ru": "Терм812",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语813",
+      "term_ru": "Терм813",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语814",
+      "term_ru": "Терм814",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语815",
+      "term_ru": "Терм815",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语816",
+      "term_ru": "Терм816",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语817",
+      "term_ru": "Терм817",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语818",
+      "term_ru": "Терм818",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语819",
+      "term_ru": "Терм819",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语820",
+      "term_ru": "Терм820",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语821",
+      "term_ru": "Терм821",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语822",
+      "term_ru": "Терм822",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语823",
+      "term_ru": "Терм823",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语824",
+      "term_ru": "Терм824",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语825",
+      "term_ru": "Терм825",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语826",
+      "term_ru": "Терм826",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语827",
+      "term_ru": "Терм827",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语828",
+      "term_ru": "Терм828",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语829",
+      "term_ru": "Терм829",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语830",
+      "term_ru": "Терм830",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语831",
+      "term_ru": "Терм831",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语832",
+      "term_ru": "Терм832",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语833",
+      "term_ru": "Терм833",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语834",
+      "term_ru": "Терм834",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语835",
+      "term_ru": "Терм835",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语836",
+      "term_ru": "Терм836",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语837",
+      "term_ru": "Терм837",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语838",
+      "term_ru": "Терм838",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语839",
+      "term_ru": "Терм839",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语840",
+      "term_ru": "Терм840",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语841",
+      "term_ru": "Терм841",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语842",
+      "term_ru": "Терм842",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语843",
+      "term_ru": "Терм843",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语844",
+      "term_ru": "Терм844",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语845",
+      "term_ru": "Терм845",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语846",
+      "term_ru": "Терм846",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语847",
+      "term_ru": "Терм847",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语848",
+      "term_ru": "Терм848",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语849",
+      "term_ru": "Терм849",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语850",
+      "term_ru": "Терм850",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语851",
+      "term_ru": "Терм851",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语852",
+      "term_ru": "Терм852",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语853",
+      "term_ru": "Терм853",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语854",
+      "term_ru": "Терм854",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语855",
+      "term_ru": "Терм855",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语856",
+      "term_ru": "Терм856",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语857",
+      "term_ru": "Терм857",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语858",
+      "term_ru": "Терм858",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语859",
+      "term_ru": "Терм859",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语860",
+      "term_ru": "Терм860",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语861",
+      "term_ru": "Терм861",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语862",
+      "term_ru": "Терм862",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语863",
+      "term_ru": "Терм863",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语864",
+      "term_ru": "Терм864",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语865",
+      "term_ru": "Терм865",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语866",
+      "term_ru": "Терм866",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语867",
+      "term_ru": "Терм867",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语868",
+      "term_ru": "Терм868",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语869",
+      "term_ru": "Терм869",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语870",
+      "term_ru": "Терм870",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语871",
+      "term_ru": "Терм871",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语872",
+      "term_ru": "Терм872",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语873",
+      "term_ru": "Терм873",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语874",
+      "term_ru": "Терм874",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语875",
+      "term_ru": "Терм875",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语876",
+      "term_ru": "Терм876",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语877",
+      "term_ru": "Терм877",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语878",
+      "term_ru": "Терм878",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语879",
+      "term_ru": "Терм879",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语880",
+      "term_ru": "Терм880",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语881",
+      "term_ru": "Терм881",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语882",
+      "term_ru": "Терм882",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语883",
+      "term_ru": "Терм883",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语884",
+      "term_ru": "Терм884",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语885",
+      "term_ru": "Терм885",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语886",
+      "term_ru": "Терм886",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语887",
+      "term_ru": "Терм887",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语888",
+      "term_ru": "Терм888",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语889",
+      "term_ru": "Терм889",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语890",
+      "term_ru": "Терм890",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语891",
+      "term_ru": "Терм891",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语892",
+      "term_ru": "Терм892",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语893",
+      "term_ru": "Терм893",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语894",
+      "term_ru": "Терм894",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语895",
+      "term_ru": "Терм895",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语896",
+      "term_ru": "Терм896",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语897",
+      "term_ru": "Терм897",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语898",
+      "term_ru": "Терм898",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语899",
+      "term_ru": "Терм899",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语900",
+      "term_ru": "Терм900",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语901",
+      "term_ru": "Терм901",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语902",
+      "term_ru": "Терм902",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语903",
+      "term_ru": "Терм903",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语904",
+      "term_ru": "Терм904",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语905",
+      "term_ru": "Терм905",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语906",
+      "term_ru": "Терм906",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语907",
+      "term_ru": "Терм907",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语908",
+      "term_ru": "Терм908",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语909",
+      "term_ru": "Терм909",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语910",
+      "term_ru": "Терм910",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语911",
+      "term_ru": "Терм911",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语912",
+      "term_ru": "Терм912",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语913",
+      "term_ru": "Терм913",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语914",
+      "term_ru": "Терм914",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语915",
+      "term_ru": "Терм915",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语916",
+      "term_ru": "Терм916",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语917",
+      "term_ru": "Терм917",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语918",
+      "term_ru": "Терм918",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语919",
+      "term_ru": "Терм919",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语920",
+      "term_ru": "Терм920",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语921",
+      "term_ru": "Терм921",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语922",
+      "term_ru": "Терм922",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语923",
+      "term_ru": "Терм923",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语924",
+      "term_ru": "Терм924",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语925",
+      "term_ru": "Терм925",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语926",
+      "term_ru": "Терм926",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语927",
+      "term_ru": "Терм927",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语928",
+      "term_ru": "Терм928",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语929",
+      "term_ru": "Терм929",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语930",
+      "term_ru": "Терм930",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语931",
+      "term_ru": "Терм931",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语932",
+      "term_ru": "Терм932",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语933",
+      "term_ru": "Терм933",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语934",
+      "term_ru": "Терм934",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语935",
+      "term_ru": "Терм935",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语936",
+      "term_ru": "Терм936",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语937",
+      "term_ru": "Терм937",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语938",
+      "term_ru": "Терм938",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语939",
+      "term_ru": "Терм939",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语940",
+      "term_ru": "Терм940",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语941",
+      "term_ru": "Терм941",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语942",
+      "term_ru": "Терм942",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语943",
+      "term_ru": "Терм943",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语944",
+      "term_ru": "Терм944",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语945",
+      "term_ru": "Терм945",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语946",
+      "term_ru": "Терм946",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语947",
+      "term_ru": "Терм947",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语948",
+      "term_ru": "Терм948",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语949",
+      "term_ru": "Терм949",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语950",
+      "term_ru": "Терм950",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语951",
+      "term_ru": "Терм951",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语952",
+      "term_ru": "Терм952",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语953",
+      "term_ru": "Терм953",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语954",
+      "term_ru": "Терм954",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语955",
+      "term_ru": "Терм955",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语956",
+      "term_ru": "Терм956",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语957",
+      "term_ru": "Терм957",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语958",
+      "term_ru": "Терм958",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语959",
+      "term_ru": "Терм959",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语960",
+      "term_ru": "Терм960",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语961",
+      "term_ru": "Терм961",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语962",
+      "term_ru": "Терм962",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语963",
+      "term_ru": "Терм963",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语964",
+      "term_ru": "Терм964",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语965",
+      "term_ru": "Терм965",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语966",
+      "term_ru": "Терм966",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语967",
+      "term_ru": "Терм967",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语968",
+      "term_ru": "Терм968",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语969",
+      "term_ru": "Терм969",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语970",
+      "term_ru": "Терм970",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语971",
+      "term_ru": "Терм971",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语972",
+      "term_ru": "Терм972",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语973",
+      "term_ru": "Терм973",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语974",
+      "term_ru": "Терм974",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语975",
+      "term_ru": "Терм975",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语976",
+      "term_ru": "Терм976",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语977",
+      "term_ru": "Терм977",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语978",
+      "term_ru": "Терм978",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语979",
+      "term_ru": "Терм979",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语980",
+      "term_ru": "Терм980",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语981",
+      "term_ru": "Терм981",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语982",
+      "term_ru": "Терм982",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语983",
+      "term_ru": "Терм983",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语984",
+      "term_ru": "Терм984",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语985",
+      "term_ru": "Терм985",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语986",
+      "term_ru": "Терм986",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语987",
+      "term_ru": "Терм987",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语988",
+      "term_ru": "Терм988",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语989",
+      "term_ru": "Терм989",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语990",
+      "term_ru": "Терм990",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语991",
+      "term_ru": "Терм991",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语992",
+      "term_ru": "Терм992",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语993",
+      "term_ru": "Терм993",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语994",
+      "term_ru": "Терм994",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语995",
+      "term_ru": "Терм995",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语996",
+      "term_ru": "Терм996",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语997",
+      "term_ru": "Терм997",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语998",
+      "term_ru": "Терм998",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    },
+    {
+      "term_zh": "术语999",
+      "term_ru": "Терм999",
+      "confidence": 0.672,
+      "accuracy": 1.0,
+      "total_uses": 4,
+      "auto_approve_eligible": false
+    }
+  ]
+}
