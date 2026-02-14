@@ -34,6 +34,42 @@ reports/*.jsonl
 # Backups
 *.bak
 *.bak.*
+# Environment
+.env
+.env.*
+!.env.example
+.env.ps1
+
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+.dockerignore
+
+# Data & Cache (Local only)
+data/
+cache/
+logs/
+
+# Logs
+reports/*.jsonl
+*.log
+
+# Backups
+*.bak
+*.bak.*
 
 # 敏感信息
 .env
@@ -41,3 +77,18 @@ reports/*.jsonl
 api_key.txt
 **/api_key*.txt
 **/credentials*.json
+
+# Runtime checkpoints and progress files
+repair_*_checkpoint.json
+repair_*_progress.jsonl
+repair_*_stats.json
+repair_*_heartbeat.txt
+repair_*_DONE
+
+# Temporary notes
+deprecation_header.md
+new_v*.md
+
+# Root-level skill packages (keep only in skill/ directory)
+/*.skill
+/*.skill.sha256

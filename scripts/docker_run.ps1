@@ -4,7 +4,7 @@
 # 示例: .\docker_run.ps1 python scripts/translate_llm.py --input data/input.csv --output data/output.csv
 
 param(
-    [Parameter(Mandatory=$true, Position=0, ValueFromRemainingArguments=$true)]
+    [Parameter(Mandatory = $true, Position = 0, ValueFromRemainingArguments = $true)]
     [string[]]$Command
 )
 
@@ -29,7 +29,8 @@ $dockerArgs = @(
     "-v", "${PWD}:/workspace",
     "-w", "/workspace",
     "-e", "LLM_API_KEY=$env:LLM_API_KEY",
-    "-e", "LLM_BASE_URL=$env:LLM_BASE_URL"
+    "-e", "LLM_BASE_URL=$env:LLM_BASE_URL",
+    "-e", "LLM_API_KEY_FILE="
 )
 
 # 添加可选的环境变量
@@ -38,7 +39,7 @@ if ($env:LLM_TRACE_PATH) {
 }
 
 # 添加镜像名和命令
-$dockerArgs += "loc-mvr"
+$dockerArgs += "gate_v2"
 $dockerArgs += $Command
 
 # 显示执行的命令

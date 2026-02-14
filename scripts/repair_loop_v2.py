@@ -193,12 +193,12 @@ class BatchRepairLoop:
                     result = client.chat(
                         system=prompt["system"],
                         user=prompt["user"],
-                        model=model,  # 显式传递 model，确保与 Terminal log 一致
                         temperature=temperature,
                         metadata={
                             "step": f"repair_{self.qa_type}",
                             "round": round_num,
-                            "batch_num": batch_num
+                            "batch_num": batch_num,
+                            "model_override": model
                         },
                         timeout=self.config.get("timeout_per_batch_s", 120)
                     )

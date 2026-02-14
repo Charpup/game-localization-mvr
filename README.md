@@ -9,14 +9,14 @@
 
 **Download the pre-packaged Skill** (Recommended for first-time users):
 
-[![Download Skill](https://img.shields.io/badge/Download-Skill_v1.1.0-blue?style=for-the-badge)](https://github.com/Charpup/game-localization-mvr/releases/download/v1.1.0-patch1/loc-mvr-v1.1.0-patch1.skill)
+[![Download Skill](https://img.shields.io/badge/Download-Skill_v1.1.0--stable-blue?style=for-the-badge)](https://github.com/Charpup/game-localization-mvr/releases/download/v1.1.0-stable/loc-mvr-v1.1.0-stable.skill)
 
 ```bash
 # 1. Download and extract
-unzip loc-mvr-v1.1.0-patch1.skill
+unzip loc-mvr-v1.1.0-stable.skill
 
 # 2. Verify checksum
-sha256sum -c loc-mvr-v1.1.0-patch1.skill.sha256
+sha256sum -c loc-mvr-v1.1.0-stable.skill.sha256
 
 # 3. Follow Quick Start in SKILL.md
 cd skill/
@@ -36,12 +36,20 @@ pip install -r requirements.txt
 - **70%+ Cost Reduction**: $1.5/1k rows vs traditional $6-10/1k
 - **Hour-level Delivery**: From weeks to hours
 - **Quality Control**: Glossary + Style Guide + Dual QA
+- **Production Proven**: 30k+ rows validated at 99.87% accuracy
+- **Robust Error Handling**: Long text isolation, tag protection, placeholder freezing
 
 ## 📊 Production Proven
 
 - ✅ **30k+ rows validated**: $48.44 cost, 99.87% accuracy
 - ✅ **Multi-model support**: GPT-4o, Claude Sonnet, Haiku
-- ✅ **Dockerized**: Consistent environment
+- ✅ **Dockerized**: Consistent environment (Rule 12 compliance)
+- ✅ **Recent Improvements (v1.1.0)**:
+  - Placeholder regex extension (% H pattern)
+  - Long text isolation (>500 chars)
+  - Tag protection during jieba segmentation
+  - Unified trace path for 100% metrics coverage
+  - Enhanced progress reporting with time deltas
 
 ## 🚀 Quick Start
 
@@ -51,11 +59,12 @@ git clone https://github.com/Charpup/game-localization-mvr.git
 cd game-localization-mvr
 cp .env.example .env  # Configure your API keys
 
-# Build Docker
-docker build -t loc-mvr .
+# Build Docker (required for LLM calls per Rule 12)
+docker build -f Dockerfile.gate -t gate_v2 .
 
 # Run Pipeline (see README_zh.md for details)
-python scripts/normalize_guard.py data/examples/sample_input.csv ...
+# Example: Full pipeline with Docker
+.\scripts\docker_run.ps1 python -u -m scripts.translate_llm --input data/tokenized.csv --output data/translated.csv
 ```
 
 ## 🔍 监控与调试
@@ -118,7 +127,11 @@ A: 检查 `metrics_report.md` 定位高成本阶段。
 
 **Q: 标签被分词破坏?**
 
-A: 已修复。`<color=#ff0000>` 等标签在 jieba 分词前会被保护。
+A: 已修复 (v1.1.0)。`<color=#ff0000>` 等标签在 jieba 分词前会被保护。
+
+**Q: 如何查看开发路线图?**
+
+A: 参见 [ROADMAP.md](ROADMAP.md) 了解短期/中期/长期计划，包括 ZH→EN 翻译支持。
 
 ## 📚 Documentation
 
