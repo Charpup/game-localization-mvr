@@ -1,0 +1,161 @@
+# Model Routing Configuration (v1.0 - Phase 3.2)
+#
+# Intelligent model routing for cost/quality optimization.
+# Routes requests to different models based on content complexity analysis.
+
+model_routing:
+  enabled: true
+  default_model: "kimi-k2.5"
+  complexity_threshold: 0.7
+  
+  # Complexity analysis weights
+  # These determine how much each factor contributes to complexity score
+  complexity_weights:
+    length: 0.20           # Text length contribution
+    placeholder_density: 0.25  # Placeholder density contribution
+    special_char_density: 0.15 # Special character density contribution
+    glossary_density: 0.25     # Glossary term density contribution
+    historical_failure: 0.15   # Historical QA failure rate contribution
+  
+  # Length thresholds for complexity scoring
+  length_thresholds:
+    short: 50      # chars - simple text
+    medium: 150    # chars - moderate complexity
+    long: 300      # chars - high complexity
+    very_long: 500 # chars - very high complexity
+  
+  # Available models with routing parameters
+  models:
+    # Budget models - for simple text
+    - name: "gpt-3.5-turbo"
+      cost_per_1k: 0.0015
+      max_complexity: 0.5
+      batch_capable: true
+      quality_tier: "medium"
+      fallback_to: null
+      description: "Cheap model for simple translations"
+    
+    - name: "gpt-4.1-nano"
+      cost_per_1k: 0.001
+      max_complexity: 0.4
+      batch_capable: true
+      quality_tier: "low"
+      fallback_to: "gpt-4.1-mini"
+      description: "Ultra-cheap for very simple text"
+    
+    # Mid-tier models - balanced cost/quality
+    - name: "gpt-4.1-mini"
+      cost_per_1k: 0.004
+      max_complexity: 0.6
+      batch_capable: true
+      quality_tier: "medium"
+      fallback_to: "gpt-4.1"
+      description: "Balanced model for moderate complexity"
+    
+    - name: "claude-haiku-4-5-20251001"
+      cost_per_1k: 0.008
+      max_complexity: 0.7
+      batch_capable: true
+      quality_tier: "medium"
+      fallback_to: "claude-sonnet-4-5-20250929"
+      description: "Fast model for normal complexity"
+    
+    # Premium models - for complex text
+    - name: "kimi-k2.5"
+      cost_per_1k: 0.012
+      max_complexity: 1.0
+      batch_capable: true
+      quality_tier: "high"
+      fallback_to: null
+      description: "Primary high-quality model"
+    
+    - name: "gpt-4"
+      cost_per_1k: 0.03
+      max_complexity: 1.0
+      batch_capable: true
+      quality_tier: "high"
+      fallback_to: "kimi-k2.5"
+      description: "Premium model for complex text"
+    
+    - name: "claude-sonnet-4-5-20250929"
+      cost_per_1k: 0.024
+      max_complexity: 1.0
+      batch_capable: true
+      quality_tier: "high"
+      fallback_to: null
+      description: "High-quality for complex translations"
+    
+    - name: "gpt-4.1"
+      cost_per_1k: 0.02
+      max_complexity: 1.0
+      batch_capable: false  # Not suitable for batch
+      quality_tier: "high"
+      fallback_to: "claude-sonnet-4-5-20250929"
+      description: "Premium single-call model"
+  
+  # Step-specific routing overrides
+  # These can override the default routing for specific steps
+  step_overrides:
+    translate:
+      # Use cheaper models for simple translations
+      use_cheaper_for_simple: true
+      simple_threshold: 0.3
+    
+    soft_qa:
+      # QA always needs medium+ quality
+      min_quality_tier: "medium"
+    
+    repair_hard:
+      # Repairs need high quality
+      min_quality_tier: "high"
+    
+    repair_soft_major:
+      # Major repairs need high quality
+      min_quality_tier: "high"
+    
+    glossary_translate:
+      # Glossary can use cheaper models
+      use_cheaper_for_simple: true
+      simple_threshold: 0.4
+  
+  # Historical tracking configuration
+  history:
+    enabled: true
+    # Path to store historical failure patterns
+    history_path: "data/model_router_history.json"
+    # Weight of historical failures in complexity (0-1)
+    failure_weight: 0.15
+    # Maximum age of historical data to consider (days)
+    max_history_age_days: 30
+  
+  # Cost tracking and reporting
+  cost_tracking:
+    enabled: true
+    # Trace file path
+    trace_path: "data/model_router_trace.jsonl"
+    # Report interval (number of routings)
+    report_interval: 100
+  
+  # Fallback configuration
+  fallback:
+    # Enable automatic fallback on errors
+    enabled: true
+    # Maximum number of fallback attempts
+    max_attempts: 2
+    # Trigger fallback on these error types
+    trigger_on:
+      - timeout
+      - network
+      - upstream
+      - parse
+
+# Integration settings
+integration:
+  # Whether to patch batch_llm_call automatically
+  patch_batch_llm_call: true
+  
+  # Whether to use routing in translate_llm.py
+  use_in_translate_llm: true
+  
+  # Log routing decisions
+  log_decisions: true

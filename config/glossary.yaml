@@ -1,0 +1,80 @@
+# Glossary Learning System Configuration
+# This file configures the continuous learning system for glossary improvement
+
+glossary_learning:
+  # Master switch - enable/disable learning system
+  enabled: true
+  
+  # Minimum number of feedback entries before auto-approval is considered
+  min_feedback_count: 5
+  
+  # Rate at which confidence is updated (0.0-1.0)
+  # Higher values = faster adaptation to new feedback
+  confidence_update_rate: 0.1
+  
+  # Automatically suggest new terms from project data
+  auto_suggest_new_terms: true
+  
+  # Minimum confidence threshold for term discovery
+  # Terms with confidence below this will not be suggested
+  term_discovery_threshold: 0.8
+  
+  # Path to store learning data
+  learning_data_path: "learning_data/"
+  
+  # Similarity threshold for variant detection (0.0-1.0)
+  # Higher values require more similarity to consider terms as variants
+  variant_similarity_threshold: 0.7
+  
+  # TF-IDF configuration for term discovery
+  tfidf:
+    # Minimum term length to consider
+    min_term_length: 2
+    # Maximum term length to consider
+    max_term_length: 4
+    # Minimum document frequency for a term to be considered
+    min_document_frequency: 3
+    # Number of top candidates to return
+    top_candidates_limit: 50
+  
+  # Pattern mining configuration
+  pattern_mining:
+    # Minimum occurrences for a pattern to be considered valid
+    min_occurrences: 3
+    # Enable bracket pattern extraction
+    extract_brackets: true
+    # Enable proper noun pattern extraction
+    extract_proper_nouns: true
+  
+  # Bayesian confidence calibration settings
+  bayesian_calibration:
+    # Prior confidence for new terms (0.0-1.0)
+    prior_confidence: 0.5
+    # Weight of historical data vs new feedback
+    historical_weight: 0.7
+    # Minimum samples required for reliable confidence estimate
+    min_samples_for_reliable_estimate: 10
+  
+  # Weekly report configuration
+  reporting:
+    # Generate weekly reports automatically
+    auto_generate: true
+    # Day of week to generate reports (0=Monday, 6=Sunday)
+    report_day: 0
+    # Target improvement rate (% per week)
+    target_improvement_rate: 5.0
+    # Alert threshold - warn if improvement falls below this
+    alert_threshold: 3.0
+  
+  # Integration settings
+  integration:
+    # Update glossary confidence scores automatically
+    auto_update_glossary: false
+    # Path to glossary file to update
+    glossary_path: "glossary/compiled.yaml"
+    # Output path for updated glossary
+    output_glossary_path: "glossary/compiled_learned.yaml"
+    # Export suggestions automatically
+    auto_export_suggestions: true
+    # Export confidence reports automatically
+    auto_export_reports: true
