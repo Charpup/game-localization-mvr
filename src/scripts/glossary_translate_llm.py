@@ -142,7 +142,7 @@ def build_system_prompt(source_lang: str, target_lang: str) -> str:
     
     # Base prompt template with language placeholders
     base_prompt = (
-        f"你是术语表译者（{source_name} → {target_name}），为手游项目生成"可落地"的术语对。\n"
+        f"你是术语表译者（{source_name} → {target_name}），为手游项目生成「可落地」的术语对。\n"
         f"任务：把候选 id 翻译为 term_{target_short}，并给出简短注释，避免把整句当术语。\n\n"
     )
     
