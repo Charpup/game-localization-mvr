@@ -12,6 +12,7 @@ Contains:
 - EMPTY GATE V2 SHORT-CIRCUIT
 """
 
+import argparse
 import json
 import re
 import time
@@ -20,6 +21,7 @@ import threading
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 
 try:
@@ -48,10 +50,41 @@ except ImportError:
         except:
             return None
 
+def load_system_prompt(source_lang: str, target_lang: str) -> str:
+    """Load system prompt for language pair from config.
+    
+    Args:
+        source_lang: Source language code (e.g., "zh-CN")
+        target_lang: Target language code (e.g., "ru-RU")
+    
+    Returns:
+        System prompt text for the translation task
+    """
+    target_code = target_lang.split('-')[0].lower()
+    prompt_file = Path(__file__).parent.parent / 'config' / 'prompts' / target_code / 'batch_translate_system.txt'
+    
+    if prompt_file.exists():
+        return prompt_file.read_text(encoding='utf-8')
+    
+    # Fallback to Russian for backwards compatibility
+    return (
+        f"You are a professional game localization translator ({source_lang} → {target_lang}).\n\n"
+        "Rules:\n"
+        "- Translate game text naturally for the target language\n"
+        "- Maintain game terminology consistency\n"
+        "- Use idiomatic expressions where appropriate\n"
+        "- Preserve HTML/tags unchanged\n"
+        "- Handle placeholders like {{name}}, [color], etc.\n\n"
+        "Output format:\n"
+        "- Translated text only\n"
+        "- No explanations\n"
+        "- Preserve formatting"
+    )
+
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 CJK_RE = re.compile(r"[\u4e00-\u9fff]")
 
-# JSON Schema for Batch Output
+# JSON Schema for Batch Output (deprecated - use get_batch_output_schema instead)
 BATCH_OUTPUT_SCHEMA = {
     "type": "array",
     "minItems": 1,
@@ -65,6 +98,46 @@ BATCH_OUTPUT_SCHEMA = {
         "additionalProperties": False
     }
 }
+
+
+def get_batch_output_schema(target_lang: str = "ru-RU") -> Dict[str, Any]:
+    """Generate batch output schema for target language.
+    
+    Args:
+        target_lang: Target language code (e.g., "ru-RU")
+    
+    Returns:
+        JSON schema dict for validating batch output
+    """
+    target_code = target_lang.split('-')[0].lower()
+    target_field = f"target_{target_code}"
+    
+    return {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+            "type": "object",
+            "required": ["string_id", target_field],
+            "properties": {
+                "string_id": {"type": "string", "minLength": 1},
+                target_field: {"type": "string"}
+            },
+            "additionalProperties": False
+        }
+    }
+
+
+def get_target_field_name(target_lang: str = "ru-RU") -> str:
+    """Get the target field name for a given language.
+    
+    Args:
+        target_lang: Target language code (e.g., "ru-RU")
+    
+    Returns:
+        Target field name (e.g., "target_ru")
+    """
+    target_code = target_lang.split('-')[0].lower()
+    return f"target_{target_code}"
 
 # Token estimation
 EXPECTED_TOKENS_PER_ROW = 40
@@ -113,20 +186,31 @@ class InflightTracker:
 # Validation & Logic
 # -----------------------------
 
-def validate_batch_schema(data: Any) -> Tuple[bool, str]:
-    """Validate parsed JSON against batch output schema."""
+def validate_batch_schema(data: Any, target_lang: str = "ru-RU") -> Tuple[bool, str]:
+    """Validate parsed JSON against batch output schema.
+    
+    Args:
+        data: Parsed JSON data to validate
+        target_lang: Target language code (e.g., "ru-RU")
+    
+    Returns:
+        Tuple of (is_valid, error_message)
+    """
+    target_field = get_target_field_name(target_lang)
+    schema = get_batch_output_schema(target_lang)
+    
     if jsonschema is None:
         if not isinstance(data, list):
             return False, "not_array"
         for item in data:
             if not isinstance(item, dict):
                 return False, "item_not_object"
-            if "string_id" not in item or "target_ru" not in item:
+            if "string_id" not in item or target_field not in item:
                 return False, "missing_required_fields"
         return True, "ok"
     
     try:
-        jsonschema.validate(instance=data, schema=BATCH_OUTPUT_SCHEMA)
+        jsonschema.validate(instance=data, schema=schema)
         return True, "ok"
     except jsonschema.ValidationError as e:
         return False, f"schema_error: {str(e.message)[:100]}"
@@ -159,37 +243,79 @@ def build_glossary_constraints(glossary: List[GlossaryEntry], source_zh: str) ->
             approved[e.term_zh] = e.term_ru
     return approved
 
-def build_system_prompt(style_guide: str, glossary_summary: str) -> str:
-    return (
-        '你是严谨的手游本地化译者（zh-CN → ru-RU）。\n\n'
-        '【Output Contract v6 - 强制要求】\n'
-        '1. Output MUST be valid JSON (Array of Objects).\n'
-        '2. Top-level structure MUST be an Array `[...]`, NOT an Object `{"key": [...]}`.\n'
-        '3. Each object MUST contain keys: "string_id", "target_ru".\n'
-        '4. Every input "string_id" MUST appear in the output. Do not skip items.\n'
-        '5. If translation fails, return empty string "" for "target_ru".\n'
-        '6. Do NOT wrap the array in markdown blocks or keys.\n\n'
-        '【Translation Rules】\n'
-        '- 术语表中 term_zh → term_ru 必须严格使用。\n'
-        '- 占位符 ⟦PH_xx⟧ / ⟦TAG_xx⟧ 必须原样保留。\n'
-        '- 禁止中文括号【】，用 «» 或 "X: …" 替代。\n'
-        '- 空字符串源文输出空字符串。\n\n'
-        '【Example Output】\n'
-        '[{"string_id": "1", "target_ru": "Текст ⟦PH_0⟧"}, {"string_id": "2", "target_ru": ""}]\n\n'
-        f'术语表摘要：\n{glossary_summary[:1500]}\n\n'
-        f'style_guide：\n{style_guide[:1000]}\n'
-    )
+def build_system_prompt(
+    style_guide: str, 
+    glossary_summary: str, 
+    source_lang: str = "zh-CN", 
+    target_lang: str = "ru-RU"
+) -> str:
+    """Build system prompt for translation.
+    
+    Args:
+        style_guide: Style guide text
+        glossary_summary: Glossary summary text
+        source_lang: Source language code (e.g., "zh-CN")
+        target_lang: Target language code (e.g., "ru-RU")
+    
+    Returns:
+        Complete system prompt for the LLM
+    """
+    target_code = target_lang.split('-')[0].lower()
+    target_field = f"target_{target_code}"
+    
+    # Load base prompt from config or use fallback
+    base_prompt = load_system_prompt(source_lang, target_lang)
+    
+    # Build output contract section
+    output_contract = f'''【Output Contract v6 - 强制要求】
+1. Output MUST be valid JSON (Array of Objects).
+2. Top-level structure MUST be an Array `[...]`, NOT an Object `{{"key": [...]}}`.
+3. Each object MUST contain keys: "string_id", "{target_field}".
+4. Every input "string_id" MUST appear in the output. Do not skip items.
+5. If translation fails, return empty string "" for "{target_field}".
+6. Do NOT wrap the array in markdown blocks or keys.
 
-STRUCTURE_REPAIR_PROMPT = """Fix the JSON STRUCTURE ONLY.
+【Translation Rules】
+- 术语表中 term_zh → term_{target_code} 必须严格使用。
+- 占位符 ⟦PH_xx⟧ / ⟦TAG_xx⟧ 必须原样保留。
+- 禁止中文括号【】，用 «» 或 "X: …" 替代。
+- 空字符串源文输出空字符串。
+
+【Example Output】
+[{{"string_id": "1", "{target_field}": "Translated text ⟦PH_0⟧"}}, {{"string_id": "2", "{target_field}": ""}}]
+
+术语表摘要：
+{glossary_summary[:1500]}
+
+style_guide：
+{style_guide[:1000]}
+'''
+    
+    return base_prompt + "\n\n" + output_contract
+
+STRUCTURE_REPAIR_PROMPT_TEMPLATE = """Fix the JSON STRUCTURE ONLY.
 
 Requirements:
 - Preserve all text content exactly.
 - Output MUST be a JSON ARRAY of objects.
-- Each object MUST contain: string_id, target_ru.
+- Each object MUST contain: string_id, {target_field}.
 - Do NOT translate or rewrite content.
 - Do NOT add or remove items.
 
 Return ONLY valid JSON."""
+
+
+def get_structure_repair_prompt(target_lang: str = "ru-RU") -> str:
+    """Get structure repair prompt for target language.
+    
+    Args:
+        target_lang: Target language code (e.g., "ru-RU")
+    
+    Returns:
+        Structure repair prompt with correct target field
+    """
+    target_field = get_target_field_name(target_lang)
+    return STRUCTURE_REPAIR_PROMPT_TEMPLATE.format(target_field=target_field)
 
 def build_batch_input(rows: List[Dict[str, str]], glossary: List[GlossaryEntry]) -> List[Dict[str, Any]]:
     batch_items = []
@@ -214,11 +340,28 @@ def process_batch_worker(
     glossary_summary: str,
     max_retries: int,
     inflight_tracker: InflightTracker,
-    disable_short_circuit: bool = False  # Feature Flag
+    disable_short_circuit: bool = False,  # Feature Flag
+    source_lang: str = "zh-CN",
+    target_lang: str = "ru-RU"
 ) -> BatchResult:
     """
     Worker: creates own LLMClient, returns BatchResult.
     IMPLEMENTS EMPTY GATE V2 SHORT-CIRCUIT (Optional).
+    
+    Args:
+        batch: List of rows to translate
+        batch_idx: Index of the batch
+        glossary: Glossary entries for translation
+        style_guide: Style guide text
+        glossary_summary: Glossary summary text
+        max_retries: Maximum number of retries
+        inflight_tracker: Inflight request tracker
+        disable_short_circuit: Whether to disable empty gate short-circuit
+        source_lang: Source language code (default: zh-CN)
+        target_lang: Target language code (default: ru-RU)
+    
+    Returns:
+        BatchResult with translation results
     """
     planned_size = len(batch)
     result = BatchResult(batch_idx=batch_idx, planned_batch_size=planned_size)
@@ -293,9 +436,12 @@ def process_batch_worker(
             })
         return result
     
-    system_prompt = build_system_prompt(style_guide, glossary_summary)
+    system_prompt = build_system_prompt(style_guide, glossary_summary, source_lang, target_lang)
     batch_input = build_batch_input(current_batch, glossary)
     user_prompt = json.dumps(batch_input, ensure_ascii=False)
+    
+    target_field = get_target_field_name(target_lang)
+    structure_repair_prompt = get_structure_repair_prompt(target_lang)
     
     inflight_count = inflight_tracker.acquire()
     result.inflight_at_submit = inflight_count

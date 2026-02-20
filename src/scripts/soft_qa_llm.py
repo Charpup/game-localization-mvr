@@ -44,7 +44,10 @@ try:
 except Exception:
     yaml = None
 
-from runtime_adapter import LLMClient, LLMError, BatchConfig, get_batch_config, batch_llm_call, log_llm_progress
+try:
+    from scripts.runtime_adapter import LLMClient, LLMError, BatchConfig, get_batch_config, batch_llm_call, log_llm_progress
+except ImportError:
+    from runtime_adapter import LLMClient, LLMError, BatchConfig, get_batch_config, batch_llm_call, log_llm_progress
 
 # v2.1: RAG and Semantic Scoring integration
 try:
@@ -74,6 +77,23 @@ def load_yaml(p: str) -> dict:
         raise RuntimeError("PyYAML required: pip install pyyaml")
     with open(p, "r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
+
+
+def load_qa_config(target_lang: str) -> dict:
+    """Load QA rules from config based on target language.
+    
+    Args:
+        target_lang: Target language code (e.g., 'ru-RU', 'en-US')
+    
+    Returns:
+        Dict with QA rules for the language
+    """
+    lang_code = target_lang.split('-')[0]
+    config_file = Path(__file__).parent.parent / 'config' / 'qa_rules' / f"{lang_code}.yaml"
+    if config_file.exists():
+        with open(config_file, 'r', encoding='utf-8') as f:
+            return yaml.safe_load(f) or {}
+    return {}
 
 
 def read_csv(p: str) -> List[Dict[str, str]]:
@@ -106,22 +126,101 @@ def token_counts(s: str) -> Dict[str, int]:
     return d
 
 
-# Import glossary logic from translate_llm
-from translate_llm import load_glossary, build_glossary_constraints, GlossaryEntry
+# Import glossary logic from translate_llm (lazy import to avoid sys.exit on import errors)
+_load_glossary = None
+_build_glossary_constraints = None
+_GlossaryEntry = None
+
+def _import_translate_llm():
+    """Lazy import translate_llm to avoid blocking pytest on ImportError."""
+    global _load_glossary, _build_glossary_constraints, _GlossaryEntry
+    if _load_glossary is None:
+        try:
+            from scripts.translate_llm import load_glossary, build_glossary_constraints, GlossaryEntry
+        except ImportError:
+            from translate_llm import load_glossary, build_glossary_constraints, GlossaryEntry
+        _load_glossary = load_glossary
+        _build_glossary_constraints = build_glossary_constraints
+        _GlossaryEntry = GlossaryEntry
+    return _load_glossary, _build_glossary_constraints, _GlossaryEntry
 
 
-def build_system_batch(style: str, glossary_summary: str) -> str:
-    """Build system prompt for batch soft QA."""
+def load_glossary(path: str):
+    """Load glossary from YAML file (wrapper with lazy import)."""
+    load_fn, _, _ = _import_translate_llm()
+    return load_fn(path)
+
+
+def build_glossary_constraints(glossary: list, source_zh: str) -> dict:
+    """Build glossary constraints (wrapper with lazy import)."""
+    _, build_fn, _ = _import_translate_llm()
+    return build_fn(glossary, source_zh)
+
+
+class GlossaryEntry:
+    """Proxy for translate_llm.GlossaryEntry with lazy import."""
+    
+    def __init__(self, term_zh: str, term_ru: str, status: str, notes: str = ""):
+        self.term_zh = term_zh
+        self.term_ru = term_ru
+        self.status = status
+        self.notes = notes
+    
+    @classmethod
+    def _get_real_class(cls):
+        _, _, entry_class = _import_translate_llm()
+        return entry_class
+
+
+def build_system_batch(style: str, glossary_summary: str, source_lang: str = "zh-CN", target_lang: str = "ru-RU") -> str:
+    """Build system prompt for batch soft QA with dynamic language support.
+    
+    Args:
+        style: Style guide content
+        glossary_summary: Compact glossary summary
+        source_lang: Source language code (default: zh-CN)
+        target_lang: Target language code (default: ru-RU)
+    
+    Returns:
+        System prompt string for the language pair
+    """
+    # Load QA config for target language
+    qa_config = load_qa_config(target_lang)
+    lang_code = target_lang.split('-')[0]
+    
+    # Load language-specific system prompt if available
+    prompt_file = Path(__file__).parent.parent / 'config' / 'prompts' / lang_code / 'soft_qa_system.txt'
+    if prompt_file.exists():
+        base_prompt = prompt_file.read_text(encoding='utf-8')
+    else:
+        # Fallback to Russian (legacy behavior)
+        base_prompt = f"你是手游本地化软质检（{source_lang} → {target_lang}）。\n\n"
+    
+    # Build grammar checks section for EN
+    grammar_section = ""
+    if lang_code == "en":
+        grammar_rules = qa_config.get("grammar_checks", [])
+        if grammar_rules:
+            grammar_section = "\n英语语法检查:\n"
+            for rule in grammar_rules:
+                grammar_section += f"- {rule}\n"
+    
+    # Build dimension checks
+    dimensions = qa_config.get("dimensions", [
+        "terminology",
+        "tone", 
+        "brevity",
+        "ambiguity"
+    ])
+    
+    dim_text = "\n".join([f"- {d}" for d in dimensions])
+    
     return (
-        "你是手游本地化软质检（zh-CN → ru-RU）。\n\n"
-        "任务：分析翻译质量，仅列出有问题的项。\n\n"
-        "检查维度（只报问题，不要夸）：\n"
-        "- 术语一致性（glossary）\n"
-        "- 语气：官方为主，二次元口语为辅（避免过度口语或过度书面）\n"
-        "- UI 简洁性（冗长/重复/不自然）\n"
-        "- 歧义/误译/信息缺失\n"
-        "- 标点与符号：禁止【】；占位符必须完整\n\n"
-        "输出格式（硬性，仅输出 JSON）：\n"
+        f"{base_prompt}\n"
+        f"任务：分析翻译质量，仅列出有问题的项。\n\n"
+        f"检查维度（只报问题，不要夸）：\n{dim_text}\n"
+        f"{grammar_section}"
+        "\n输出格式（硬性，仅输出 JSON）：\n"
         "{\n"
         '  "items": [\n'
         "    {\n"
@@ -130,7 +229,7 @@ def build_system_batch(style: str, glossary_summary: str) -> str:
         '      "issue_type": "terminology|tone|brevity|ambiguity|mistranslation|format|punctuation",\n'
         '      "problem": "<一句话描述问题>",\n'
         '      "suggestion": "<一句话给出修复方向>",\n'
-        '      "preferred_fix_ru": "<可选：建议的修复后俄文>"\n'
+        '      "preferred_fix": "<可选：建议的修复后译文>"\n'
         "    }\n"
         "  ]\n"
         "}\n"
@@ -143,48 +242,79 @@ def build_system_batch(style: str, glossary_summary: str) -> str:
     )
 
 
-def build_user_prompt(items: List[Dict]) -> str:
-    """Build user prompt for soft QA from batch items."""
-    # items comes from batch_llm_call where:
-    # id = string_id
-    # source_text = "SRC: {source_zh} | TGT: {target_ru}"
-    # But for soft QA, we might want a cleaner format
+def build_user_prompt(items: List[Dict], source_lang: str = "zh-CN", target_lang: str = "ru-RU") -> str:
+    """Build user prompt for soft QA from batch items.
+    
+    Args:
+        items: List of batch items with id and source_text
+        source_lang: Source language code (for labeling)
+        target_lang: Target language code (for labeling)
+    """
+    src_label = source_lang.split('-')[0].upper()
+    tgt_label = target_lang.split('-')[0].upper()
+    
     candidates = []
     for it in items:
-        # Re-split source_text to get zh and ru
+        # Re-split source_text to get source and target
         parts = it.get("source_text", "").split(" | TGT: ")
-        src_zh = parts[0].replace("SRC: ", "") if len(parts) > 0 else ""
-        tgt_ru = parts[1] if len(parts) > 1 else ""
+        src_text = parts[0].replace("SRC: ", "") if len(parts) > 0 else ""
+        tgt_text = parts[1] if len(parts) > 1 else ""
         
         candidates.append({
             "string_id": it["id"],
-            "source_zh": src_zh,
-            "target_ru": tgt_ru
+            f"source_{src_label.lower()}": src_text,
+            f"target_{tgt_label.lower()}": tgt_text
         })
     
     return json.dumps(candidates, ensure_ascii=False, indent=2)
 
 
-def build_glossary_summary(entries: List[GlossaryEntry], max_entries: int = 50) -> str:
+def build_glossary_summary(entries, max_entries: int = 50) -> str:
     """Build compact glossary summary."""
-    approved = [e for e in entries if e.status.lower() == "approved"][:max_entries]
+    # Handle both GlossaryEntry objects from lazy import and plain dicts
+    approved = []
+    for e in entries:
+        if hasattr(e, 'status'):
+            status = e.status.lower() if e.status else ""
+            term_zh = e.term_zh
+            term_ru = e.term_ru
+        else:
+            status = (e.get("status") or "").lower()
+            term_zh = e.get("term_zh", "")
+            term_ru = e.get("term_ru", "")
+        if status == "approved":
+            approved.append((term_zh, term_ru))
+    
+    approved = approved[:max_entries]
     if not approved:
         return "(无)"
-    lines = [f"- {e.term_zh} → {e.term_ru}" for e in approved]
+    lines = [f"- {zh} → {ru}" for zh, ru in approved]
     return "\n".join(lines)
 
 
-def process_batch_results(batch_items: List[Dict]) -> List[dict]:
-    """Normalize batch output items into task dicts."""
+def process_batch_results(batch_items: List[Dict], target_lang: str = "ru-RU") -> List[dict]:
+    """Normalize batch output items into task dicts.
+    
+    Args:
+        batch_items: Raw batch results from LLM
+        target_lang: Target language code
+    
+    Returns:
+        List of normalized task dicts
+    """
     valid_tasks = []
+    tgt_code = target_lang.split('-')[0]
+    
     for t in batch_items:
-        # Note: items will only contain items with issues due to system prompt
+        # Support both old preferred_fix_ru and new preferred_fix
+        suggested_fix = t.get("preferred_fix") or t.get(f"preferred_fix_{tgt_code}") or ""
+        
         valid_tasks.append({
             "string_id": t.get("id", ""),
             "type": t.get("issue_type", "issue"),
             "severity": t.get("severity", "minor"),
             "note": f"{t.get('problem', '')} | Suggestion: {t.get('suggestion', '')}",
-            "suggested_fix": t.get("preferred_fix_ru", ""),
+            "suggested_fix": suggested_fix,
         })
     return valid_tasks
 
@@ -286,12 +416,13 @@ def main():
         print("DRY-RUN MODE - Validation Summary")
         print("=" * 60)
         
-        config = BatchConfig(max_items=args.batch_size, max_tokens=args.max_batch_tokens)
-        config.text_fields = ["source_zh", "tokenized_zh", "target_text"]
-        batches = split_into_batches(rows_with_target, config)
+        # Calculate estimated batches using batch config
+        config_inst = get_batch_config()
+        b_size = config_inst.get_batch_size(args.model, "normal")
+        total_batches = (len(rows_with_target) + b_size - 1) // b_size if b_size > 0 else 1
         
-        print(f"[OK] Would create {len(batches)} batches")
-        print(f"[OK] Average batch size: {len(rows_with_target) / max(1, len(batches)):.1f}")
+        print(f"[OK] Would create ~{total_batches} batches (size: ~{b_size})")
+        print(f"[OK] Average batch size: {len(rows_with_target) / max(1, total_batches):.1f}")
         print()
         print("[OK] Dry-run validation PASSED")
         print("=" * 60)

@@ -1,9 +1,0 @@
-# RU-specific punctuation rules
-replace:
-  "«": "\""
-  "»": "\""
-  "【": "«"
-  "】": "»"
-spacing:
-  # Ensure space after comma/period if missing (simplified rule)
-  after: [",", ".", "!", "?", ":", ";"]
