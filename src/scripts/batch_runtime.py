@@ -479,11 +479,11 @@ def process_batch_worker(
                     try:
                         obj = json.loads(llm_result.text.strip())
                         if isinstance(obj, dict):
-                            if "string_id" in obj and "target_ru" in obj: parsed = [obj]
+                            if "string_id" in obj and target_field in obj: parsed = [obj]
                             elif "results" in obj and isinstance(obj["results"], list): parsed = obj["results"]
                             elif "translations" in obj and isinstance(obj["translations"], list): parsed = obj["translations"]
                             elif "items" in obj and isinstance(obj["items"], list): parsed = obj["items"]
-                            else: parsed = [{"string_id": str(k), "target_ru": str(v)} for k, v in obj.items()]
+                            else: parsed = [{"string_id": str(k), target_field: str(v)} for k, v in obj.items()]
                     except: pass
                 
                 if parsed is None:
@@ -493,21 +493,21 @@ def process_batch_worker(
                     backoff_sleep(attempt)
                     continue
                 
-                valid, schema_error = validate_batch_schema(parsed)
+                valid, schema_error = validate_batch_schema(parsed, target_lang)
                 
                 if not valid:
                     if not result.structure_repair_attempted:
                         result.structure_repair_attempted = True
                         try:
                             repair_result = llm.chat(
-                                system=STRUCTURE_REPAIR_PROMPT,
+                                system=structure_repair_prompt,
                                 user=f"Fix this JSON:\n{llm_result.text[:4000]}",
                                 temperature=0.0,
                                 max_tokens=max_tokens,
                                 metadata={"step": "translate", "batch_idx": batch_idx, "repair_attempt": True}
                             )
                             repaired = parse_json_array(repair_result.text)
-                            if repaired and validate_batch_schema(repaired)[0]:
+                            if repaired and validate_batch_schema(repaired, target_lang)[0]:
                                 parsed = repaired
                                 valid = True
                         except: pass
@@ -522,7 +522,7 @@ def process_batch_worker(
                 matched_ids = set()
                 for item in parsed:
                     sid = str(item.get("string_id", ""))
-                    target_ru = item.get("target_ru", "")
+                    target_text = item.get(target_field, "")
                     
                     if sid not in id_to_row:
                         continue
@@ -532,11 +532,11 @@ def process_batch_worker(
                     
                     # Logic note: if original was empty, it should have been caught by short-circuit.
                     # But if we are here, it's non-empty.
-                    ok, _ = validate_translation(source_zh, target_ru)
+                    ok, _ = validate_translation(source_zh, target_text)
                     
                     if ok:
                         out_row = dict(original)
-                        out_row["target_text"] = target_ru
+                        out_row["target_text"] = target_text
                         result.success_rows.append(out_row)
                         matched_ids.add(sid)
                 
@@ -591,3 +591,108 @@ def process_batch_worker(
         result.latency_ms = int((time.time() - start_time) * 1000)
     
     return result
+
+
+# -----------------------------
+# CLI Interface
+# -----------------------------
+
+def main():
+    """CLI entry point for batch runtime."""
+    ap = argparse.ArgumentParser(
+        description="Batch translation runtime for game localization",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  %(prog)s --source-lang zh-CN --target-lang ru-RU
+  %(prog)s --target-lang en-US --max-retries 3
+        """
+    )
+    ap.add_argument(
+        "--source-lang",
+        default="zh-CN",
+        help="Source language code (default: zh-CN)"
+    )
+    ap.add_argument(
+        "--target-lang",
+        default="ru-RU",
+        help="Target language code (default: ru-RU)"
+    )
+    ap.add_argument(
+        "--style-guide",
+        default="",
+        help="Path to style guide file"
+    )
+    ap.add_argument(
+        "--glossary-summary",
+        default="",
+        help="Path to glossary summary file"
+    )
+    ap.add_argument(
+        "--max-retries",
+        type=int,
+        default=2,
+        help="Maximum number of retries (default: 2)"
+    )
+    ap.add_argument(
+        "--disable-short-circuit",
+        action="store_true",
+        help="Disable empty gate short-circuit optimization"
+    )
+    ap.add_argument(
+        "--validate-prompt",
+        action="store_true",
+        help="Validate prompt loading and exit"
+    )
+    
+    args = ap.parse_args()
+    
+    if args.validate_prompt:
+        # Validate prompt loading
+        prompt = load_system_prompt(args.source_lang, args.target_lang)
+        print(f"Loaded system prompt for {args.source_lang} → {args.target_lang}")
+        print(f"Prompt length: {len(prompt)} characters")
+        print(f"Target field: {get_target_field_name(args.target_lang)}")
+        print("\n--- Prompt Preview (first 500 chars) ---")
+        print(prompt[:500] + "..." if len(prompt) > 500 else prompt)
+        return 0
+    
+    # Load style guide and glossary summary if provided
+    style_guide = ""
+    glossary_summary = ""
+    
+    if args.style_guide:
+        style_guide_path = Path(args.style_guide)
+        if style_guide_path.exists():
+            style_guide = style_guide_path.read_text(encoding='utf-8')
+        else:
+            print(f"Warning: Style guide not found: {args.style_guide}")
+    
+    if args.glossary_summary:
+        glossary_path = Path(args.glossary_summary)
+        if glossary_path.exists():
+            glossary_summary = glossary_path.read_text(encoding='utf-8')
+        else:
+            print(f"Warning: Glossary summary not found: {args.glossary_summary}")
+    
+    # Build and display system prompt
+    system_prompt = build_system_prompt(
+        style_guide, 
+        glossary_summary, 
+        args.source_lang, 
+        args.target_lang
+    )
+    
+    print(f"Batch Runtime Configuration:")
+    print(f"  Source language: {args.source_lang}")
+    print(f"  Target language: {args.target_lang}")
+    print(f"  Target field: {get_target_field_name(args.target_lang)}")
+    print(f"  Max retries: {args.max_retries}")
+    print(f"  Short-circuit: {'disabled' if args.disable_short_circuit else 'enabled'}")
+    print(f"  System prompt length: {len(system_prompt)} characters")
+    
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

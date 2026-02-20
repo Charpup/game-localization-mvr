@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-soft_qa_llm.py (v2.0 - Batch Mode)
+soft_qa_llm.py (v2.2 - Multi-language Support)
 LLM-based soft quality review for translations.
 
 Purpose:
@@ -10,10 +10,12 @@ Purpose:
   评审维度：style_officialness, anime_tone, terminology_consistency, ui_brevity, ambiguity
 
   BATCH processing: multiple items per LLM call to reduce prompt token waste.
+  MULTI-LANGUAGE: Support for any language pair via --source-lang and --target-lang.
 
 Usage:
   python scripts/soft_qa_llm.py \\
     data/translated.csv workflow/style_guide.md data/glossary.yaml workflow/soft_qa_rubric.yaml \\
+    --source-lang zh-CN --target-lang en-US \\
     --batch_size 15 --out_report data/qa_soft_report.json --out_tasks data/repair_tasks.jsonl
 
 Environment:
@@ -326,6 +328,8 @@ def main():
     ap.add_argument("style_guide_md", nargs="?", default="workflow/style_guide.md", help="Style guide file")
     ap.add_argument("glossary_yaml", nargs="?", default="data/glossary.yaml", help="Glossary file")
     ap.add_argument("rubric_yaml", nargs="?", default="workflow/soft_qa_rubric.yaml", help="Soft QA rubric config (legacy, ignored)")
+    ap.add_argument("--source-lang", default="zh-CN", help="Source language code (default: zh-CN)")
+    ap.add_argument("--target-lang", default="ru-RU", help="Target language code (default: ru-RU)")
     ap.add_argument("--batch_size", type=int, default=15, help="Items per batch")
     ap.add_argument("--model", default="claude-haiku-4-5-20251001", help="Model override")
     ap.add_argument("--max_batch_tokens", type=int, default=4000, help="Max tokens per batch")
@@ -348,7 +352,7 @@ def main():
         ap.print_help()
         return 1
 
-    print(f"🔍 Soft QA v2.1 (Batch Mode + RAG/Semantic)")
+    print(f"🔍 Soft QA v2.1 (Batch Mode + RAG/Semantic) - {args.source_lang} → {args.target_lang}")
     
     # Feature flags
     use_rag = args.enable_rag and HAS_RAG
@@ -362,6 +366,11 @@ def main():
     # Load resources
     rows = read_csv(input_path)
     style = load_text(args.style_guide_md)
+
+    # Load QA config for target language
+    qa_config = load_qa_config(args.target_lang)
+    if qa_config:
+        print(f"   Loaded QA config for {args.target_lang}")
 
     glossary_path = args.glossary_yaml
     glossary_entries = []
@@ -399,10 +408,12 @@ def main():
     semantic_scores = {}
     if use_semantic and rows_with_target:
         print("   Running semantic pre-scoring...")
+        src_code = args.source_lang.split('-')[0]
+        tgt_code = args.target_lang.split('-')[0]
         pairs = [{
             "id": r.get("string_id", ""),
-            "source_zh": r.get("source_zh") or r.get("tokenized_zh") or "",
-            "target_ru": r.get("target_text", "")
+            f"source_{src_code}": r.get("source_zh") or r.get("tokenized_zh") or r.get(f"source_{src_code}", ""),
+            f"target_{tgt_code}": r.get("target_text", "")
         } for r in rows_with_target]
         scores = semantic_scorer.score_batch(pairs)
         semantic_scores = {s["id"]: s for s in scores}
@@ -481,8 +492,8 @@ def main():
             step="soft_qa",
             rows=batch_rows,
             model=args.model,
-            system_prompt=build_system_batch(style, glossary_summary),
-            user_prompt_template=build_user_prompt,
+            system_prompt=build_system_batch(style, glossary_summary, args.source_lang, args.target_lang),
+            user_prompt_template=lambda items: build_user_prompt(items, args.source_lang, args.target_lang),
             content_type="normal",
             retry=1,
             allow_fallback=True,
@@ -491,7 +502,7 @@ def main():
         )
         
         print("   Batch results received, processing tasks...")
-        tasks = process_batch_results(batch_results)
+        tasks = process_batch_results(batch_results, args.target_lang)
         
         if tasks:
             append_jsonl(args.out_tasks, tasks)
@@ -523,8 +534,12 @@ def main():
             pass
 
     report = {
-        "version": "2.1",
+        "version": "2.2",
         "mode": "batch",
+        "language_pair": {
+            "source": args.source_lang,
+            "target": args.target_lang
+        },
         "has_findings": (major + minor) > 0,
         "summary": {
             "major": major,
