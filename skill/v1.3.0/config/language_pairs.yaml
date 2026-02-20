@@ -1,0 +1,19 @@
+language_pairs:
+  zh-cn_ru-ru:
+    name: "Chinese (Simplified) → Russian"
+    source: "zh-CN"
+    target: "ru-RU"
+    default_model: "kimi-k2.5"
+    
+  zh-cn_en-us:
+    name: "Chinese (Simplified) → English (US)"
+    source: "zh-CN"
+    target: "en-US"
+    default_model: "kimi-k2.5"
+    
+  # Extensible for future pairs
+  zh-cn_ja-jp:
+    name: "Chinese (Simplified) → Japanese"
+    source: "zh-CN"
+    target: "ja-JP"
+    default_model: "kimi-k2.5"

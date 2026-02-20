@@ -1,0 +1,3 @@
+# Loc-MVR v1.3.0 Dependencies
+# Python 3.11+ required
+# See pyproject.toml or setup.py for full dependencies

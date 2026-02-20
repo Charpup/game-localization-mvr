@@ -1,6 +1,6 @@
-# TriadDev: ZH ➡️ EN Development - Phase 1 Active
+# TriadDev: ZH ➡️ EN Development - Phases 3 & 4 Active
 
-**Status**: 🚀 Phase 1 - Multi-Language Framework (In Progress)
+**Status**: 🚀 Phase 3 Testing + Phase 4 Release (In Progress)
 **Time**: 2026-02-20
 **Mode**: Full Speed Auto-Pilot
 
@@ -8,47 +8,39 @@
 
 ## Active Subagents (5 Parallel)
 
-| ID | Task | Status | Focus |
-|----|------|--------|-------|
-| sp-1.1 | Language config system | 🔄 Running | Config files |
-| sp-1.2 | batch_runtime.py refactor | 🔄 Running | Core translation |
-| sp-1.3 | glossary_translate_llm.py | 🔄 Running | Glossary support |
-| sp-1.4 | EN QA rules creation | 🔄 Running | QA config |
-| sp-1.5 | soft_qa_llm.py refactor | 🔄 Running | QA system |
+| ID | Task | Phase | Focus |
+|----|------|-------|-------|
+| sp-3.1 | EN unit tests | 3 | Test coverage |
+| sp-3.2 | Validation pipeline | 3 | QA checks |
+| sp-4.1 | Skill packaging | 4 | v1.3.0 skill |
+| sp-4.2 | GitHub release | 4 | Tag + Release |
+| sp-4.3 | Documentation | 4 | README update |
 
 ---
 
-## Deliverables Expected
+## Expected Deliverables
 
-### Configuration
-- ✅ src/config/language_pairs.yaml
-- ✅ src/config/prompts/en/*.txt
-- ✅ src/config/prompts/ru/*.txt
-- ✅ src/config/qa_rules/en.yaml
+### Phase 3: Testing
+- ✅ tests/unit/test_multi_language.py
+- ✅ scripts/validate_v130.py
+- ✅ scripts/benchmark_v130.py
 
-### Core Scripts Updated
-- 🔄 batch_runtime.py
-- 🔄 glossary_translate_llm.py
-- 🔄 soft_qa_llm.py
-
----
-
-## Key Design Decisions
-
-1. **Configuration-Based Approach**: Language pairs defined in YAML
-2. **Prompt Templates**: Language-specific prompts in separate files
-3. **Dynamic Loading**: Scripts load appropriate config at runtime
-4. **Backwards Compatible**: Russian remains default
+### Phase 4: Release
+- ✅ skill/v1.3.0/SKILL.md
+- ✅ skill/v1.3.0/loc-mvr-v1.3.0.skill
+- ✅ RELEASE_NOTES_v130.md
+- ✅ README.md updated
+- ✅ GitHub tag v1.3.0
 
 ---
 
 ## Monitoring
 
 *Auto-pilot monitoring enabled*
-- Progress tracked in progress.md
-- Findings documented in findings.md
-- Blockers will trigger escalation
+- Real-time progress tracking
+- Auto-commit on completion
+- Blocker escalation if needed
 
 ---
 
-**Next Update**: Upon subagent completion or blocker detection
+**Status**: 🚀 **Phases 3 & 4 in Progress**

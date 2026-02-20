@@ -1,0 +1,2475 @@
+meta:
+  generated_at: '2026-01-24T18:51:07.221649'
+  step: glossary_translate
+  total_translated: 493
+  source_proposals: data/p3_term_candidates.yaml
+  style_guide: workflow/style_guide.md
+  batch_size: 20
+entries:
+- term_zh: 忍者
+  term_ru: Ниндзя
+  confidence: 0.95
+  reason: Основной класс персонажей; музыкальный термин из Naruto-вселенной | noun
+  context: null
+- term_zh: 商店
+  term_ru: Магазин
+  confidence: 0.95
+  reason: Игровой интерфейс для покупки предметов | noun
+  context: null
+- term_zh: 积分
+  term_ru: Очки
+  confidence: 0.9
+  reason: Игровая валюта или система рейтинга | noun
+  context: null
+- term_zh: 获得
+  term_ru: Получить
+  confidence: 0.95
+  reason: Действие получения награды/предмета | verb
+  context: null
+- term_zh: 伤害
+  term_ru: Урон
+  confidence: 0.95
+  reason: Боевая механика; может быть переменной формы | noun
+  context: null
+- term_zh: 战斗
+  term_ru: Боевой
+  confidence: 0.95
+  reason: Боевая система; используется как существительное и прилагательное | noun|adj
+  context: null
+- term_zh: 等级
+  term_ru: Уровень
+  confidence: 0.95
+  reason: Система прогрессии персонажа | noun
+  context: null
+- term_zh: 组织
+  term_ru: Организация
+  confidence: 0.9
+  reason: Гильдия или фракция в игре | noun
+  context: null
+- term_zh: 兑换
+  term_ru: Обменять
+  confidence: 0.95
+  reason: Действие обмена валюты на предметы | verb
+  context: null
+- term_zh: 道具
+  term_ru: Предмет
+  confidence: 0.95
+  reason: Игровой инвентарь; может быть множественное число | noun
+  context: null
+- term_zh: 用于
+  term_ru: Использовать для
+  confidence: 0.9
+  reason: Предлог действия; часто в описаниях | verb
+  context: null
+- term_zh: 攻击
+  term_ru: Атака
+  confidence: 0.95
+  reason: Боевое действие; может быть существительным и глаголом | noun|verb
+  context: null
+- term_zh: 增幅
+  term_ru: Усиление
+  confidence: 0.9
+  reason: Бонус или баф к характеристикам | noun
+  context: null
+- term_zh: 玩家
+  term_ru: Игрок
+  confidence: 0.95
+  reason: Основной субъект игры | noun
+  context: null
+- term_zh: 称号
+  term_ru: Титул
+  confidence: 0.9
+  reason: Достижение или звание персонажа | noun
+  context: null
+- term_zh: 什么
+  term_ru: Что
+  confidence: 0.5
+  reason: Вопросительное слово; обычно не переводится как отдельный термин | phrase
+  context: null
+- term_zh: 尾兽
+  term_ru: Хвостатый зверь
+  confidence: 0.85
+  reason: Специфичный термин Naruto; мощные существа с хвостами | noun
+  context: null
+- term_zh: 我会
+  term_ru: Я смогу
+  confidence: 0.3
+  reason: Грамматическая конструкция; редко используется как отдельный термин | phrase
+  context: null
+- term_zh: 所有
+  term_ru: Все
+  confidence: 0.9
+  reason: Квантификатор; часто в описаниях эффектов | adj
+  context: null
+- term_zh: 活动
+  term_ru: Событие
+  confidence: 0.95
+  reason: Временное игровое событие или активность | noun
+  context: null
+- term_zh: 造成
+  term_ru: Наносить
+  confidence: 0.9
+  reason: Действие нанесения урона; может быть переменной формы | verb
+  context: null
+- term_zh: 不会
+  term_ru: Не будет
+  confidence: 0.3
+  reason: Отрицание; редко как отдельный термин | phrase
+  context: null
+- term_zh: 我方
+  term_ru: Наша сторона
+  confidence: 0.85
+  reason: Обозначение союзных юнитов в боевой системе | noun
+  context: null
+- term_zh: 单位
+  term_ru: Юнит
+  confidence: 0.95
+  reason: Боевая единица; персонаж или враг | noun
+  context: null
+- term_zh: 神佑
+  term_ru: Божественное благословение
+  confidence: 0.7
+  reason: Возможно название скилла или баффа; требует контекста | noun
+  context: null
+- term_zh: 王座
+  term_ru: Трон
+  confidence: 0.8
+  reason: Возможно название режима или локации | noun
+  context: null
+- term_zh: 10%
+  term_ru: 10%
+  confidence: 1.0
+  reason: Числовое значение; не требует перевода | phrase
+  context: null
+- term_zh: 降低
+  term_ru: Снизить
+  confidence: 0.95
+  reason: Действие уменьшения характеристики; может быть переменной формы | verb
+  context: null
+- term_zh: 资源
+  term_ru: Ресурс
+  confidence: 0.95
+  reason: Игровая валюта или материалы; может быть множественное число | noun
+  context: null
+- term_zh: 生命
+  term_ru: Здоровье
+  confidence: 0.95
+  reason: Основная характеристика персонажа (HP) | noun
+  context: null
+- term_zh: 速度
+  term_ru: Скорость
+  confidence: 0.95
+  reason: Характеристика боевой системы; влияет на очередность ходов | noun
+  context: null
+- term_zh: 中心
+  term_ru: Центр
+  confidence: 0.85
+  reason: Позиция на поле боя или название локации | noun
+  context: null
+- term_zh: 千本
+  term_ru: Сенбон
+  confidence: 0.9
+  reason: Оружие из Naruto (тонкие иглы); музыкальный термин | noun
+  context: null
+- term_zh: 解锁
+  term_ru: Разблокировать
+  confidence: 0.95
+  reason: Действие открытия контента; может быть переменной формы | verb
+  context: null
+- term_zh: 现在
+  term_ru: Сейчас
+  confidence: 0.4
+  reason: Временной указатель; редко как отдельный термин | adv
+  context: null
+- term_zh: 木叶
+  term_ru: Лист
+  confidence: 0.9
+  reason: Название деревни из Naruto (Конохагакуре); может быть полное имя | name
+  context: null
+- term_zh: 忍界
+  term_ru: Мир ниндзя
+  confidence: 0.85
+  reason: Вселенная Naruto; специфичный термин | noun
+  context: null
+- term_zh: 游乐
+  term_ru: Развлечение
+  confidence: 0.75
+  reason: Возможно название режима или активности | noun
+  context: null
+- term_zh: 挑战
+  term_ru: Вызов
+  confidence: 0.95
+  reason: Боевой режим или задача | noun
+  context: null
+- term_zh: 额外
+  term_ru: Дополнительный
+  confidence: 0.95
+  reason: Модификатор для бонусов и эффектов | adj
+  context: null
+- term_zh: 竞技场
+  term_ru: Арена
+  confidence: 0.95
+  reason: Боевой режим PvP; стандартный термин | noun
+  context: null
+- term_zh: 礼包
+  term_ru: Подарочный набор
+  confidence: 0.9
+  reason: Пакет с наградами; может быть сокращено до «Подарок» | noun
+  context: null
+- term_zh: 就是
+  term_ru: Это
+  confidence: 0.2
+  reason: Грамматическая конструкция; редко как отдельный термин | phrase
+  context: null
+- term_zh: 绝对
+  term_ru: Абсолютный
+  confidence: 0.85
+  reason: Модификатор для эффектов; может быть переменной формы | adj
+  context: null
+- term_zh: 任务
+  term_ru: Задание
+  confidence: 0.95
+  reason: Система квестов; может быть множественное число | noun
+  context: null
+- term_zh: 敌人
+  term_ru: Враг
+  confidence: 0.95
+  reason: Противник в боевой системе; может быть множественное число | noun
+  context: null
+- term_zh: 提高
+  term_ru: Повысить
+  confidence: 0.95
+  reason: Действие увеличения характеристики; может быть переменной формы | verb
+  context: null
+- term_zh: 每次
+  term_ru: Каждый раз
+  confidence: 0.85
+  reason: Частотный модификатор в описаниях эффектов | phrase
+  context: null
+- term_zh: 挑战赛
+  term_ru: Чемпионат
+  confidence: 0.9
+  reason: Турнирный режим; может быть «Турнир» | noun
+  context: null
+- term_zh: 探宝
+  term_ru: Поиск сокровищ
+  confidence: 0.8
+  reason: Режим сбора ресурсов или приключения | noun
+  context: null
+- term_zh: 玩法
+  term_ru: Геймплей
+  confidence: 0.95
+  reason: Игровой механизм, способ игры | noun
+  context: null
+- term_zh: 奖励
+  term_ru: Награда
+  confidence: 0.98
+  reason: Вознаграждение за выполнение задач | noun
+  context: null
+- term_zh: 对手
+  term_ru: Противник
+  confidence: 0.98
+  reason: Враг в бою | noun
+  context: null
+- term_zh: 傀儡
+  term_ru: Кукла
+  confidence: 0.92
+  reason: Управляемый персонаж (из Naruto); может быть врагом | noun
+  context: null
+- term_zh: 追加
+  term_ru: Добавить
+  confidence: 0.9
+  reason: Добавление, увеличение количества | verb
+  context: null
+- term_zh: 获取
+  term_ru: Получить
+  confidence: 0.98
+  reason: Приобретение предмета или ресурса | verb
+  context: null
+- term_zh: 经验
+  term_ru: Опыт
+  confidence: 0.98
+  reason: Очки опыта для повышения уровня | noun
+  context: null
+- term_zh: 属性
+  term_ru: Атрибут
+  confidence: 0.95
+  reason: Характеристика персонажа (сила, ловкость и т.д.) | noun
+  context: null
+- term_zh: 参与
+  term_ru: Участвовать
+  confidence: 0.95
+  reason: Принятие участия в событии/бою | verb
+  context: null
+- term_zh: 大战
+  term_ru: Великая битва
+  confidence: 0.9
+  reason: Крупное сражение, эпический бой | noun
+  context: null
+- term_zh: 结束
+  term_ru: Завершить
+  confidence: 0.98
+  reason: Окончание события/боя | verb
+  context: null
+- term_zh: 时间
+  term_ru: Время
+  confidence: 0.98
+  reason: Временной период, длительность | noun
+  context: null
+- term_zh: 只有
+  term_ru: Только
+  confidence: 0.95
+  reason: Ограничение, исключительность | phrase
+  context: null
+- term_zh: 呵呵
+  term_ru: Хе-хе
+  confidence: 0.85
+  reason: Смех персонажа, звукоподражание | phrase
+  context: null
+- term_zh: 恢复
+  term_ru: Восстановить
+  confidence: 0.98
+  reason: Восстановление здоровья или ресурсов | verb
+  context: null
+- term_zh: 每隔
+  term_ru: Каждый
+  confidence: 0.9
+  reason: Периодичность, интервал | phrase
+  context: null
+- term_zh: 秘境
+  term_ru: Тайная земля
+  confidence: 0.88
+  reason: Скрытая локация, секретный уровень | noun
+  context: null
+- term_zh: 物理
+  term_ru: Физический
+  confidence: 0.98
+  reason: Тип урона/атаки (физический урон) | adj
+  context: null
+- term_zh: 法术
+  term_ru: Магия
+  confidence: 0.95
+  reason: Магический урон, заклинание | noun
+  context: null
+- term_zh: 活跃
+  term_ru: Активность
+  confidence: 0.92
+  reason: Показатель активности, очки активности | noun
+  context: null
+- term_zh: 体力
+  term_ru: Выносливость
+  confidence: 0.95
+  reason: Энергия для боёв, ресурс действий | noun
+  context: null
+- term_zh: 货币
+  term_ru: Валюта
+  confidence: 0.98
+  reason: Игровая валюта, деньги | noun
+  context: null
+- term_zh: 通过
+  term_ru: Пройти
+  confidence: 0.98
+  reason: Завершение уровня/миссии успешно | verb
+  context: null
+- term_zh: 商城
+  term_ru: Магазин
+  confidence: 0.98
+  reason: Игровой магазин для покупок | noun
+  context: null
+- term_zh: 副本
+  term_ru: Подземелье
+  confidence: 0.95
+  reason: Миссия, уровень с врагами | noun
+  context: null
+- term_zh: 好好
+  term_ru: Хорошо
+  confidence: 0.8
+  reason: Усиление, подчёркивание (диалог) | phrase
+  context: null
+- term_zh: 那么
+  term_ru: Тогда
+  confidence: 0.9
+  reason: Связка в диалоге | phrase
+  context: null
+- term_zh: 为了
+  term_ru: Для того чтобы
+  confidence: 0.95
+  reason: Цель, причина действия | phrase
+  context: null
+- term_zh: 世界
+  term_ru: Мир
+  confidence: 0.98
+  reason: Игровой мир, вселенная | noun
+  context: null
+- term_zh: 自身
+  term_ru: Сам
+  confidence: 0.95
+  reason: Собственный персонаж, себя | phrase
+  context: null
+- term_zh: 真实
+  term_ru: Истинный
+  confidence: 0.95
+  reason: Подлинный, реальный | adj
+  context: null
+- term_zh: 战功
+  term_ru: Боевые заслуги
+  confidence: 0.9
+  reason: Очки боевых достижений, награда за бои | noun
+  context: null
+- term_zh: 每日
+  term_ru: Ежедневно
+  confidence: 0.98
+  reason: Ежедневное событие/задача | phrase
+  context: null
+- term_zh: 试炼
+  term_ru: Испытание
+  confidence: 0.95
+  reason: Сложный уровень, челлендж | noun
+  context: null
+- term_zh: 力量
+  term_ru: Сила
+  confidence: 0.98
+  reason: Атрибут персонажа, мощь | noun
+  context: null
+- term_zh: 一下
+  term_ru: Один раз
+  confidence: 0.9
+  reason: Однократное действие | phrase
+  context: null
+- term_zh: 手下留情
+  term_ru: Пощади
+  confidence: 0.85
+  reason: Просьба о милосердии, диалог | phrase
+  context: null
+- term_zh: 应该
+  term_ru: Должен
+  confidence: 0.95
+  reason: Обязательство, необходимость | verb
+  context: null
+- term_zh: 开始
+  term_ru: Начать
+  confidence: 0.98
+  reason: Начало события/боя | verb
+  context: null
+- term_zh: 我要
+  term_ru: Я хочу
+  confidence: 0.9
+  reason: Выражение намерения, диалог | phrase
+  context: null
+- term_zh: 意志
+  term_ru: Воля
+  confidence: 0.92
+  reason: Атрибут персонажа, духовная сила | noun
+  context: null
+- term_zh: 忍道
+  term_ru: Путь ниндзя
+  confidence: 0.9
+  reason: Философия ниндзя (из Naruto), система ценностей | noun
+  context: null
+- term_zh: 神树
+  term_ru: Божественное дерево
+  confidence: 0.88
+  reason: Мистическое дерево (из Naruto), локация/враг | noun
+  context: null
+- term_zh: 进入
+  term_ru: Войти
+  confidence: 0.98
+  reason: Вход в уровень/локацию | verb
+  context: null
+- term_zh: 一波次
+  term_ru: Волна
+  confidence: 0.88
+  reason: Этап боя, раунд врагов | noun
+  context: null
+- term_zh: 御前
+  term_ru: Перед вами
+  confidence: 0.8
+  reason: Почтительное обращение, диалог | phrase
+  context: null
+- term_zh: 讨伐
+  term_ru: Разгромить
+  confidence: 0.92
+  reason: Победить врага, завершить миссию | verb
+  context: null
+- term_zh: 集结
+  term_ru: Собраться
+  confidence: 0.9
+  reason: Сбор команды, формирование отряда | verb
+  context: null
+- term_zh: 提升
+  term_ru: Повысить
+  confidence: 0.98
+  reason: Улучшение, повышение уровня/характеристик | verb
+  context: null
+- term_zh: 对决
+  term_ru: Поединок
+  confidence: 0.95
+  reason: Дуэль, один на один бой | noun
+  context: null
+- term_zh: 本服
+  term_ru: Текущий сервер
+  confidence: 0.95
+  reason: Игровой сервер, на котором находится игрок | noun
+  context: null
+- term_zh: 阶段
+  term_ru: Этап
+  confidence: 0.95
+  reason: Стадия прогрессии или боевого процесса | noun
+  context: null
+- term_zh: 频道
+  term_ru: Канал
+  confidence: 0.95
+  reason: Чат-канал или игровой канал | noun
+  context: null
+- term_zh: 小看
+  term_ru: Недооценивать
+  confidence: 0.9
+  reason: Презирать, относиться пренебрежительно | verb
+  context: null
+- term_zh: 放马过来
+  term_ru: Приходи в атаку
+  confidence: 0.85
+  reason: Боевой вызов, приглашение к бою | phrase
+  context: null
+- term_zh: 认真
+  term_ru: Серьёзно
+  confidence: 0.9
+  reason: Боевой настрой, серьёзное отношение | adj
+  context: null
+- term_zh: 一场
+  term_ru: Раунд
+  confidence: 0.9
+  reason: Один бой, одна партия | noun
+  context: null
+- term_zh: 忍具
+  term_ru: Ниндзя-инструмент
+  confidence: 0.95
+  reason: Оружие ниндзя (сюрикены, куная и т.д.) | noun
+  context: null
+- term_zh: 的话
+  term_ru: если
+  confidence: 0.85
+  reason: Условный союз, часто опускается в переводе | phrase
+  context: null
+- term_zh: 不管
+  term_ru: Неважно
+  confidence: 0.85
+  reason: Игнорировать, не обращать внимания | verb
+  context: null
+- term_zh: 告诉
+  term_ru: Сказать
+  confidence: 0.95
+  reason: Информировать, рассказать | verb
+  context: null
+- term_zh: 守护
+  term_ru: Защищать
+  confidence: 0.95
+  reason: Охранять, оберегать (часто в контексте долга) | verb
+  context: null
+- term_zh: 火影
+  term_ru: Хокаге
+  confidence: 0.98
+  reason: Титул лидера деревни (звукозапись из Naruto) | name
+  context: null
+- term_zh: 恐怖
+  term_ru: Ужас
+  confidence: 0.9
+  reason: Страх, ужасающая сила | noun
+  context: null
+- term_zh: 保护
+  term_ru: Охранять
+  confidence: 0.95
+  reason: Защищать, оберегать | verb
+  context: null
+- term_zh: 不能
+  term_ru: Не могу
+  confidence: 0.95
+  reason: Невозможно, не в состоянии | verb
+  context: null
+- term_zh: 一定
+  term_ru: Обязательно
+  confidence: 0.95
+  reason: Непременно, точно | adv
+  context: null
+- term_zh: 燃烧
+  term_ru: Горение
+  confidence: 0.85
+  reason: Боевой дух, энергия (метафора) | noun
+  context: null
+- term_zh: 最强
+  term_ru: Сильнейший
+  confidence: 0.95
+  reason: Самый мощный, наивысший уровень | adj
+  context: null
+- term_zh: 一起
+  term_ru: Вместе
+  confidence: 0.95
+  reason: Совместно, одновременно | adv
+  context: null
+- term_zh: 胜利
+  term_ru: Победа
+  confidence: 0.95
+  reason: Успех в бою | noun
+  context: null
+- term_zh: 一番
+  term_ru: Раунд
+  confidence: 0.9
+  reason: Один поединок, одна схватка | noun
+  context: null
+- term_zh: 连弹
+  term_ru: Цепная атака
+  confidence: 0.85
+  reason: Комбо-атака, серия выстрелов | noun
+  context: null
+- term_zh: 正向
+  term_ru: Положительный
+  confidence: 0.85
+  reason: Прямой, позитивный эффект | adj
+  context: null
+- term_zh: 光箭
+  term_ru: Световая стрела
+  confidence: 0.9
+  reason: Боевой навык, энергетическая атака | noun
+  context: null
+- term_zh: 回复
+  term_ru: Восстановление
+  confidence: 0.95
+  reason: Исцеление, восстановление здоровья | noun
+  context: null
+- term_zh: 巅峰
+  term_ru: Пик
+  confidence: 0.95
+  reason: Максимальная мощь, вершина силы | noun
+  context: null
+- term_zh: 招募
+  term_ru: Набор
+  confidence: 0.95
+  reason: Система призыва персонажей (гача) | noun
+  context: null
+- term_zh: 高级
+  term_ru: Продвинутый
+  confidence: 0.95
+  reason: Высокий уровень, премиум-класс | adj
+  context: null
+- term_zh: 皮肤
+  term_ru: Скин
+  confidence: 0.95
+  reason: Альтернативный внешний вид персонажа | noun
+  context: null
+- term_zh: 达到
+  term_ru: Достичь
+  confidence: 0.95
+  reason: Достигнуть, дойти до | verb
+  context: null
+- term_zh: 升级
+  term_ru: Повышение уровня
+  confidence: 0.95
+  reason: Увеличение уровня персонажа или предмета | noun
+  context: null
+- term_zh: 领取
+  term_ru: Получить
+  confidence: 0.95
+  reason: Забрать награду, принять подарок | verb
+  context: null
+- term_zh: 消耗
+  term_ru: Расход
+  confidence: 0.95
+  reason: Затраты ресурсов, потребление | noun
+  context: null
+- term_zh: 宝石
+  term_ru: Самоцвет
+  confidence: 0.95
+  reason: Премиум-валюта игры | noun
+  context: null
+- term_zh: 终结
+  term_ru: Завершение
+  confidence: 0.9
+  reason: Конец, финал боя | noun
+  context: null
+- term_zh: 之谷
+  term_ru: Долина
+  confidence: 0.8
+  reason: Локация, возможно название места из сюжета | noun
+  context: null
+- term_zh: 战报
+  term_ru: Боевой отчёт
+  confidence: 0.95
+  reason: Результаты боя, статистика | noun
+  context: null
+- term_zh: 锻造
+  term_ru: Ковка
+  confidence: 0.95
+  reason: Крафт, создание предметов | noun
+  context: null
+- term_zh: 开服
+  term_ru: Открытие сервера
+  confidence: 0.95
+  reason: Запуск нового сервера игры | noun
+  context: null
+- term_zh: 接下来
+  term_ru: Далее
+  confidence: 0.95
+  reason: Следующий, что будет дальше | adv
+  context: null
+- term_zh: 时候
+  term_ru: Время
+  confidence: 0.95
+  reason: Момент, период времени | noun
+  context: null
+- term_zh: 哼哼
+  term_ru: Хм-хм
+  confidence: 0.85
+  reason: Звукоподражание, выражение презрения или смеха | phrase
+  context: null
+- term_zh: 就让
+  term_ru: Позволь мне
+  confidence: 0.85
+  reason: Предложение, приглашение к действию | phrase
+  context: null
+- term_zh: 不是
+  term_ru: Не является
+  confidence: 0.95
+  reason: Отрицание, противоречие | verb
+  context: null
+- term_zh: 最好
+  term_ru: Лучший
+  confidence: 0.95
+  reason: Наилучший, оптимальный | adj
+  context: null
+- term_zh: 办法
+  term_ru: Способ
+  confidence: 0.95
+  reason: Метод, решение | noun
+  context: null
+- term_zh: 未来
+  term_ru: Будущее
+  confidence: 0.95
+  reason: Грядущее, предстоящее | noun
+  context: null
+- term_zh: 知道
+  term_ru: Знать
+  confidence: 0.95
+  reason: Осведомлён, понимать | verb
+  context: null
+- term_zh: 成为
+  term_ru: Стать
+  confidence: 0.95
+  reason: Превратиться, достичь статуса | verb
+  context: null
+- term_zh: 这种
+  term_ru: такой тип
+  confidence: 0.7
+  reason: демонстративное прилагательное, может быть переменным в контексте | phrase
+  context: null
+- term_zh: 面前
+  term_ru: перед
+  confidence: 0.9
+  reason: пространственное положение, неизменяемо | noun
+  context: null
+- term_zh: 道路
+  term_ru: путь
+  confidence: 0.85
+  reason: буквальное значение; в контексте Naruto может быть философским | noun
+  context: null
+- term_zh: 村子
+  term_ru: деревня
+  confidence: 0.95
+  reason: в Naruto часто относится к скрытым деревням ниндзя | noun
+  context: null
+- term_zh: 重要
+  term_ru: важный
+  confidence: 0.9
+  reason: прилагательное, согласуется с существительным | adj
+  context: null
+- term_zh: 我来
+  term_ru: я приду
+  confidence: 0.65
+  reason: глагольная фраза, может быть переменной | phrase
+  context: null
+- term_zh: 起来
+  term_ru: встать
+  confidence: 0.75
+  reason: глагол действия, может быть аспектуальным суффиксом в китайском | verb
+  context: null
+- term_zh: 东西
+  term_ru: предмет
+  confidence: 0.85
+  reason: общее слово для объектов/вещей | noun
+  context: null
+- term_zh: 前进
+  term_ru: продвигаться вперёд
+  confidence: 0.9
+  reason: глагол движения | verb
+  context: null
+- term_zh: 拿出
+  term_ru: извлечь
+  confidence: 0.85
+  reason: глагол действия, совершенный вид | verb
+  context: null
+- term_zh: 死亡
+  term_ru: смерть
+  confidence: 0.95
+  reason: существительное, неизменяемо | noun
+  context: null
+- term_zh: 真是
+  term_ru: действительно
+  confidence: 0.8
+  reason: наречие усиления, неизменяемо | adv
+  context: null
+- term_zh: 人能
+  term_ru: человек может
+  confidence: 0.6
+  reason: фраза с модальным глаголом, контекстно-зависима | phrase
+  context: null
+- term_zh: 光明
+  term_ru: свет
+  confidence: 0.85
+  reason: в Naruto часто философское значение | noun
+  context: null
+- term_zh: 绝望
+  term_ru: отчаяние
+  confidence: 0.9
+  reason: существительное, неизменяемо | noun
+  context: null
+- term_zh: 这场
+  term_ru: этот раунд
+  confidence: 0.7
+  reason: демонстративное + счётное слово, может быть переменным | phrase
+  context: null
+- term_zh: 变成
+  term_ru: превратиться
+  confidence: 0.9
+  reason: глагол трансформации | verb
+  context: null
+- term_zh: 防御
+  term_ru: защита
+  confidence: 0.9
+  reason: игровой термин, может быть глаголом в контексте | noun
+  context: null
+- term_zh: 完美
+  term_ru: совершенный
+  confidence: 0.9
+  reason: прилагательное, согласуется с существительным | adj
+  context: null
+- term_zh: 看看
+  term_ru: посмотреть
+  confidence: 0.85
+  reason: глагол действия, редупликация для смягчения | verb
+  context: null
+- term_zh: 仙人
+  term_ru: мудрец
+  confidence: 0.8
+  reason: 'в Naruto: существо с магическими способностями, может быть «бессмертный»
+    | noun'
+  context: null
+- term_zh: 痛楚
+  term_ru: боль
+  confidence: 0.9
+  reason: существительное, неизменяемо | noun
+  context: null
+- term_zh: 六道
+  term_ru: Шесть Путей
+  confidence: 0.85
+  reason: буддийский термин, в Naruto - система Паина; может быть музыкальным термином
+    | name
+  context: null
+- term_zh: 强化
+  term_ru: усиление
+  confidence: 0.9
+  reason: игровой термин, может быть глаголом | noun
+  context: null
+- term_zh: 再生
+  term_ru: регенерация
+  confidence: 0.9
+  reason: игровой термин, способность восстановления | noun
+  context: null
+- term_zh: 散射
+  term_ru: рассеивание
+  confidence: 0.8
+  reason: игровой термин, может быть глаголом | noun
+  context: null
+- term_zh: 结界
+  term_ru: барьер
+  confidence: 0.9
+  reason: японский термин, магический барьер; может быть «граница» | noun
+  context: null
+- term_zh: 天诛
+  term_ru: Небесное наказание
+  confidence: 0.75
+  reason: название техники/способности, может быть музыкальным термином | name
+  context: null
+- term_zh: 命中
+  term_ru: попадание
+  confidence: 0.9
+  reason: игровой термин, может быть глаголом | noun
+  context: null
+- term_zh: 必杀技
+  term_ru: финальный удар
+  confidence: 0.85
+  reason: игровой термин, буквально «обязательно смертельная техника» | noun
+  context: null
+- term_zh: 充能
+  term_ru: зарядка
+  confidence: 0.9
+  reason: игровой термин, может быть глаголом | noun
+  context: null
+- term_zh: 道光
+  term_ru: луч света
+  confidence: 0.7
+  reason: может быть названием способности или эффекта | noun
+  context: null
+- term_zh: 侧向
+  term_ru: боковой
+  confidence: 0.85
+  reason: прилагательное направления, согласуется с существительным | adj
+  context: null
+- term_zh: 左右
+  term_ru: влево-вправо
+  confidence: 0.8
+  reason: пространственное выражение, может быть наречием | phrase
+  context: null
+- term_zh: 两侧
+  term_ru: обе стороны
+  confidence: 0.9
+  reason: пространственное выражение, неизменяемо | noun
+  context: null
+- term_zh: 新增
+  term_ru: новое добавление
+  confidence: 0.85
+  reason: игровой термин, может быть глаголом | noun
+  context: null
+- term_zh: 发射装置
+  term_ru: пусковое устройство
+  confidence: 0.85
+  reason: техническое оборудование, может быть «установка» | noun
+  context: null
+- term_zh: 一名
+  term_ru: один
+  confidence: 0.75
+  reason: счётное слово + числительное, может быть переменным | phrase
+  context: null
+- term_zh: 前方
+  term_ru: впереди
+  confidence: 0.95
+  reason: пространственное положение, неизменяемо | noun
+  context: null
+- term_zh: 区域
+  term_ru: область
+  confidence: 0.9
+  reason: игровой термин, неизменяемо | noun
+  context: null
+- term_zh: 布置
+  term_ru: расстановка
+  confidence: 0.85
+  reason: может быть глаголом в контексте | noun
+  context: null
+- term_zh: 领域
+  term_ru: владение
+  confidence: 0.85
+  reason: 'в Naruto: техника создания личного пространства; может быть «сфера» | noun'
+  context: null
+- term_zh: 圆形
+  term_ru: круглый
+  confidence: 0.95
+  reason: прилагательное формы, согласуется с существительным | adj
+  context: null
+- term_zh: 半径
+  term_ru: радиус
+  confidence: 0.95
+  reason: математический/игровой термин, неизменяемо | noun
+  context: null
+- term_zh: '0.5'
+  term_ru: 0,5
+  confidence: 0.95
+  reason: числовое значение, в русском используется запятая как разделитель | phrase
+  context: null
+- term_zh: 暗部灯
+  term_ru: фонарь АНБУ
+  confidence: 0.7
+  reason: АНБУ - специальное подразделение в Naruto; может быть «лампа» | name
+  context: null
+- term_zh: 跨服
+  term_ru: кросс-сервер
+  confidence: 0.9
+  reason: игровой термин, может быть существительным | adj
+  context: null
+- term_zh: 精英
+  term_ru: элита
+  confidence: 0.9
+  reason: игровой термин, может быть прилагательным | noun
+  context: null
+- term_zh: 召唤
+  term_ru: призыв
+  confidence: 0.9
+  reason: игровой термин, может быть глаголом | noun
+  context: null
+- term_zh: 碎片
+  term_ru: осколок
+  confidence: 0.95
+  reason: игровой термин для фрагментов персонажей/предметов, неизменяемо | noun
+  context: null
+- term_zh: 忍玉
+  term_ru: Ниндзя-камень
+  confidence: 0.95
+  reason: Игровая валюта; может быть сокращено до «Камень» | noun
+  context: null
+- term_zh: 愿力
+  term_ru: Сила воли
+  confidence: 0.85
+  reason: Ресурс/характеристика персонажа | noun
+  context: null
+- term_zh: 加成
+  term_ru: Бонус
+  confidence: 0.9
+  reason: Игровой термин; может быть «Усиление» | noun
+  context: null
+- term_zh: 象征
+  term_ru: Символ
+  confidence: 0.9
+  reason: Общий термин | noun
+  context: null
+- term_zh: 好友
+  term_ru: Друг
+  confidence: 0.95
+  reason: Социальная система | noun
+  context: null
+- term_zh: 追讨
+  term_ru: Взыскание
+  confidence: 0.75
+  reason: Игровое действие; может быть «Требование» | noun
+  context: null
+- term_zh: 叛忍
+  term_ru: Ренегат-ниндзя
+  confidence: 0.9
+  reason: Персонаж/враг; может быть сокращено до «Ренегат» | noun
+  context: null
+- term_zh: 可用
+  term_ru: Доступно
+  confidence: 0.95
+  reason: Статус элемента/функции | adj
+  context: null
+- term_zh: 竞猜
+  term_ru: Угадай
+  confidence: 0.8
+  reason: Игровой режим/мини-игра | noun
+  context: null
+- term_zh: 进度
+  term_ru: Прогресс
+  confidence: 0.95
+  reason: Общий термин | noun
+  context: null
+- term_zh: 天梯
+  term_ru: Рейтинг
+  confidence: 0.9
+  reason: Система рангов/лестница | noun
+  context: null
+- term_zh: 启动
+  term_ru: Запустить
+  confidence: 0.95
+  reason: Действие активации | verb
+  context: null
+- term_zh: 通关
+  term_ru: Пройти уровень
+  confidence: 0.95
+  reason: Завершить миссию/этап | verb
+  context: null
+- term_zh: 妙木迷境
+  term_ru: Лабиринт Конохи
+  confidence: 0.85
+  reason: Название локации; может быть «Лабиринт Листовой деревни» | name
+  context: null
+- term_zh: 快点
+  term_ru: Быстрее
+  confidence: 0.5
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 才行
+  term_ru: Нужно
+  confidence: 0.4
+  reason: Вспомогательное слово; контекстно-зависимо | phrase
+  context: null
+- term_zh: 看起来
+  term_ru: Похоже
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 很弱
+  term_ru: Очень слаб
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 见识一下
+  term_ru: Посмотрим
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 有点
+  term_ru: Немного
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 模样
+  term_ru: Вид
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | noun
+  context: null
+- term_zh: 信念
+  term_ru: Убеждение
+  confidence: 0.85
+  reason: Философский термин; может быть «Вера» | noun
+  context: null
+- term_zh: 正是
+  term_ru: Именно
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 身体
+  term_ru: Тело
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | noun
+  context: null
+- term_zh: 不要
+  term_ru: Не надо
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 不用
+  term_ru: Не нужно
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 以为
+  term_ru: Думал
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 最棒
+  term_ru: Лучший
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 这样
+  term_ru: Так
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 变强
+  term_ru: Стать сильнее
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | verb
+  context: null
+- term_zh: 静静地
+  term_ru: Тихо
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 沉睡
+  term_ru: Глубокий сон
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | noun
+  context: null
+- term_zh: 融化
+  term_ru: Растаять
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | verb
+  context: null
+- term_zh: 一样
+  term_ru: Одинаково
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 杀意
+  term_ru: Убийственный дух
+  confidence: 0.8
+  reason: Боевой термин; может быть «Боевой дух» | noun
+  context: null
+- term_zh: 恐惧
+  term_ru: Страх
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | noun
+  context: null
+- term_zh: 夹缝
+  term_ru: Щель
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | noun
+  context: null
+- term_zh: 相信
+  term_ru: Верить
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | verb
+  context: null
+- term_zh: 早就
+  term_ru: Давно
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 家伙
+  term_ru: Парень
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | noun
+  context: null
+- term_zh: 坚持
+  term_ru: Настойчивость
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | noun
+  context: null
+- term_zh: 胆子
+  term_ru: Смелость
+  confidence: 0.4
+  reason: Диалоговая фраза; не переводить как отдельный термин | noun
+  context: null
+- term_zh: 很大
+  term_ru: Очень большой
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 任何人
+  term_ru: Кто угодно
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 鸣人
+  term_ru: Наруто
+  confidence: 0.99
+  reason: Имя персонажа; официальная транслитерация | name
+  context: null
+- term_zh: 获胜
+  term_ru: Победить
+  confidence: 0.95
+  reason: Игровой термин | verb
+  context: null
+- term_zh: 这么
+  term_ru: Так
+  confidence: 0.3
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 打倒
+  term_ru: Повалить
+  confidence: 0.85
+  reason: Боевой термин; может быть «Разбить» | verb
+  context: null
+- term_zh: 我们
+  term_ru: Мы
+  confidence: 0.2
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 以及
+  term_ru: И также
+  confidence: 0.2
+  reason: Диалоговая фраза; не переводить как отдельный термин | phrase
+  context: null
+- term_zh: 方式
+  term_ru: способ
+  confidence: 0.95
+  reason: 通用术语，可用于技能/战斗方式 | noun
+  context: null
+- term_zh: 很快
+  term_ru: быстро
+  confidence: 0.9
+  reason: 副词，描述速度 | adv
+  context: null
+- term_zh: 希望
+  term_ru: надежда
+  confidence: 0.9
+  reason: 名词形式，游戏中常见主题词 | noun
+  context: null
+- term_zh: 毁灭
+  term_ru: разрушение
+  confidence: 0.95
+  reason: 技能/效果名称常用 | noun
+  context: null
+- term_zh: 个人
+  term_ru: личный
+  confidence: 0.9
+  reason: 形容词，如«личный рейтинг» | adj
+  context: null
+- term_zh: 热血
+  term_ru: пыл
+  confidence: 0.85
+  reason: 忍者题材常见，表示热情/战斗精神 | noun
+  context: null
+- term_zh: 无限
+  term_ru: бесконечный
+  confidence: 0.95
+  reason: 技能/属性修饰词 | adj
+  context: null
+- term_zh: 麻烦
+  term_ru: беда
+  confidence: 0.85
+  reason: 可作名词或形容词，游戏中多为状态描述 | noun
+  context: null
+- term_zh: 差不多
+  term_ru: примерно
+  confidence: 0.9
+  reason: 副词，表示近似 | adv
+  context: null
+- term_zh: 仪式
+  term_ru: ритуал
+  confidence: 0.95
+  reason: 忍者题材中的仪式/秘法 | noun
+  context: null
+- term_zh: 尽情
+  term_ru: вволю
+  confidence: 0.85
+  reason: 副词，表示尽兴/充分 | adv
+  context: null
+- term_zh: 大闹
+  term_ru: буйство
+  confidence: 0.8
+  reason: 名词，表示大规模破坏/混乱 | noun
+  context: null
+- term_zh: 真正
+  term_ru: истинный
+  confidence: 0.95
+  reason: 形容词，修饰技能/力量等 | adj
+  context: null
+- term_zh: 没用
+  term_ru: бесполезный
+  confidence: 0.9
+  reason: 形容词，表示无效/无用 | adj
+  context: null
+- term_zh: 克拉
+  term_ru: Крала
+  confidence: 0.7
+  reason: 音译专有名词，可能为角色/物品名 | name
+  context: null
+- term_zh: 秘术
+  term_ru: тайное искусство
+  confidence: 0.95
+  reason: 忍者题材常用，指秘密技能 | noun
+  context: null
+- term_zh: 两生
+  term_ru: двойственность
+  confidence: 0.7
+  reason: 可能为技能名或属性，表示二元性 | noun
+  context: null
+- term_zh: 之术
+  term_ru: искусство
+  confidence: 0.9
+  reason: 忍者术语后缀，单独作术语时译为«искусство» | noun
+  context: null
+- term_zh: 创造
+  term_ru: создание
+  confidence: 0.95
+  reason: 技能/效果名称 | noun
+  context: null
+- term_zh: 增加
+  term_ru: увеличение
+  confidence: 0.95
+  reason: 游戏系统术语，表示属性提升 | noun
+  context: null
+- term_zh: 50%
+  term_ru: 50%
+  confidence: 1.0
+  reason: 数值保持原样，不翻译 | phrase
+  context: null
+- term_zh: 15%
+  term_ru: 15%
+  confidence: 1.0
+  reason: 数值保持原样，不翻译 | phrase
+  context: null
+- term_zh: 25%
+  term_ru: 25%
+  confidence: 1.0
+  reason: 数值保持原样，不翻译 | phrase
+  context: null
+- term_zh: 免伤
+  term_ru: поглощение урона
+  confidence: 0.95
+  reason: 游戏系统术语，表示伤害减免 | noun
+  context: null
+- term_zh: 之力
+  term_ru: сила
+  confidence: 0.9
+  reason: 忍者术语后缀，单独作术语时译为«сила» | noun
+  context: null
+- term_zh: 少年
+  term_ru: юноша
+  confidence: 0.9
+  reason: 可作角色称呼或属性 | noun
+  context: null
+- term_zh: 铜币
+  term_ru: медные монеты
+  confidence: 0.95
+  reason: 游戏货币，可缩写为«медь» | noun
+  context: null
+- term_zh: 活跃度
+  term_ru: активность
+  confidence: 0.95
+  reason: 游戏系统术语，玩家参与度指标 | noun
+  context: null
+- term_zh: 点赞数
+  term_ru: количество лайков
+  confidence: 0.95
+  reason: 社交系统术语 | noun
+  context: null
+- term_zh: 声望
+  term_ru: репутация
+  confidence: 0.95
+  reason: 游戏系统术语，玩家声誉值 | noun
+  context: null
+- term_zh: 贡献
+  term_ru: вклад
+  confidence: 0.95
+  reason: 公会/团队系统术语 | noun
+  context: null
+- term_zh: 幸运
+  term_ru: удача
+  confidence: 0.95
+  reason: 属性或抽卡系统相关 | noun
+  context: null
+- term_zh: 筹码
+  term_ru: фишки
+  confidence: 0.9
+  reason: 游戏货币或赌博系统术语 | noun
+  context: null
+- term_zh: 密令
+  term_ru: секретный код
+  confidence: 0.9
+  reason: 兑换码或特殊指令 | noun
+  context: null
+- term_zh: 晶石
+  term_ru: кристаллы
+  confidence: 0.95
+  reason: 游戏高级货币，常见于手游 | noun
+  context: null
+- term_zh: 通行证
+  term_ru: пропуск
+  confidence: 0.95
+  reason: 游戏系统术语，如«боевой пропуск» | noun
+  context: null
+- term_zh: 官阶
+  term_ru: ранг
+  confidence: 0.9
+  reason: 玩家等级或官职系统 | noun
+  context: null
+- term_zh: 天命
+  term_ru: судьба
+  confidence: 0.9
+  reason: 忍者题材常见主题词 | noun
+  context: null
+- term_zh: 战役
+  term_ru: кампания
+  confidence: 0.95
+  reason: 游戏关卡/任务系统 | noun
+  context: null
+- term_zh: 珍贵
+  term_ru: ценный
+  confidence: 0.95
+  reason: 物品品质描述 | adj
+  context: null
+- term_zh: 基础
+  term_ru: базовый
+  confidence: 0.95
+  reason: 属性/等级修饰词 | adj
+  context: null
+- term_zh: 积累
+  term_ru: накопление
+  confidence: 0.95
+  reason: 系统术语，表示资源/经验积累 | noun
+  context: null
+- term_zh: 展示
+  term_ru: показ
+  confidence: 0.9
+  reason: UI/社交系统术语 | noun
+  context: null
+- term_zh: 被点
+  term_ru: получить лайк
+  confidence: 0.85
+  reason: 社交系统，被赞的状态 | verb
+  context: null
+- term_zh: 赞数
+  term_ru: количество лайков
+  confidence: 0.95
+  reason: 社交系统术语，同«点赞数» | noun
+  context: null
+- term_zh: 荣耀
+  term_ru: слава
+  confidence: 0.95
+  reason: 游戏主题词或排行榜系统 | noun
+  context: null
+- term_zh: 遣散
+  term_ru: распуск
+  confidence: 0.85
+  reason: 角色/队伍解散操作 | noun
+  context: null
+- term_zh: 决战
+  term_ru: решающий бой
+  confidence: 0.95
+  reason: 关键战斗或PvP系统 | noun
+  context: null
+- term_zh: 珍宝
+  term_ru: сокровище
+  confidence: 0.95
+  reason: 稀有物品或装备 | noun
+  context: null
+- term_zh: 限时
+  term_ru: ограниченное время
+  confidence: 0.95
+  reason: 活动/商品时间限制标签 | adj
+  context: null
+- term_zh: 排位
+  term_ru: Рейтинг
+  confidence: 0.95
+  reason: Рейтинговая система, игровой режим | noun
+  context: null
+- term_zh: 累积
+  term_ru: Накопление
+  confidence: 0.9
+  reason: Накопление ресурсов, опыта или прогресса | noun
+  context: null
+- term_zh: 不同
+  term_ru: Различие
+  confidence: 0.85
+  reason: Отличие, разница между элементами | noun
+  context: null
+- term_zh: 增益
+  term_ru: Бонус
+  confidence: 0.95
+  reason: Положительный эффект, усиление характеристик | noun
+  context: null
+- term_zh: 期间
+  term_ru: Период
+  confidence: 0.9
+  reason: Временной промежуток, длительность события | noun
+  context: null
+- term_zh: 有效
+  term_ru: Активный
+  confidence: 0.9
+  reason: Действующий, в силе; может быть «действителен» | adj
+  context: null
+- term_zh: 圣地
+  term_ru: Святилище
+  confidence: 0.85
+  reason: Священное место, локация в игре | noun
+  context: null
+- term_zh: 悬赏
+  term_ru: Награда
+  confidence: 0.9
+  reason: Система заданий с вознаграждением, квесты | noun
+  context: null
+- term_zh: 系统
+  term_ru: Система
+  confidence: 0.95
+  reason: Игровая система, механика | noun
+  context: null
+- term_zh: 剧情
+  term_ru: Сюжет
+  confidence: 0.95
+  reason: История, кампания, сценарий | noun
+  context: null
+- term_zh: 大厅
+  term_ru: Холл
+  confidence: 0.9
+  reason: Главное меню, лобби, центральная локация | noun
+  context: null
+- term_zh: 福利
+  term_ru: Бонусы
+  confidence: 0.95
+  reason: Подарки, льготы для игроков | noun
+  context: null
+- term_zh: 养成
+  term_ru: Развитие
+  confidence: 0.9
+  reason: Прокачка персонажа, система улучшения | noun
+  context: null
+- term_zh: 培养
+  term_ru: Тренировка
+  confidence: 0.9
+  reason: Обучение, развитие персонажа | noun
+  context: null
+- term_zh: 限购
+  term_ru: Ограничение покупки
+  confidence: 0.85
+  reason: Лимит на приобретение товара | noun
+  context: null
+- term_zh: 特惠
+  term_ru: Спецпредложение
+  confidence: 0.9
+  reason: Специальная скидка, акция | noun
+  context: null
+- term_zh: 周末
+  term_ru: Выходные
+  confidence: 0.95
+  reason: Выходные дни, временной период | noun
+  context: null
+- term_zh: 祈愿
+  term_ru: Молитва
+  confidence: 0.85
+  reason: Система призыва персонажей (гача-механика) | noun
+  context: null
+- term_zh: 升星
+  term_ru: Повышение звёзд
+  confidence: 0.9
+  reason: Улучшение рейтинга персонажа, звёздность | noun
+  context: null
+- term_zh: 扭蛋
+  term_ru: Гача
+  confidence: 0.95
+  reason: Система случайного призыва, лутбокс | noun
+  context: null
+- term_zh: 之家
+  term_ru: Дом
+  confidence: 0.8
+  reason: Часть названия локации или гильдии | noun
+  context: null
+- term_zh: 元气
+  term_ru: Энергия
+  confidence: 0.9
+  reason: Ресурс для боёв, мана или выносливость | noun
+  context: null
+- term_zh: 神器
+  term_ru: Артефакт
+  confidence: 0.95
+  reason: Легендарное оружие или предмет | noun
+  context: null
+- term_zh: 无聊
+  term_ru: Скучно
+  confidence: 0.85
+  reason: Диалоговая реплика, эмоция персонажа | adj
+  context: null
+- term_zh: 竟敢
+  term_ru: Как ты смеешь
+  confidence: 0.8
+  reason: Диалоговая фраза, выражение возмущения | verb
+  context: null
+- term_zh: 享受
+  term_ru: Наслаждаться
+  confidence: 0.85
+  reason: Диалоговая реплика | verb
+  context: null
+- term_zh: 少女
+  term_ru: Девушка
+  confidence: 0.9
+  reason: Персонаж, диалоговый контекст | noun
+  context: null
+- term_zh: 玩笑
+  term_ru: Шутка
+  confidence: 0.9
+  reason: Диалоговая реплика | noun
+  context: null
+- term_zh: 真的
+  term_ru: Правда
+  confidence: 0.85
+  reason: Диалоговая частица, подтверждение | adj
+  context: null
+- term_zh: 战场
+  term_ru: Поле боя
+  confidence: 0.95
+  reason: Арена, локация для боёв | noun
+  context: null
+- term_zh: 时机
+  term_ru: Момент
+  confidence: 0.9
+  reason: Подходящее время, диалоговый контекст | noun
+  context: null
+- term_zh: 怎么
+  term_ru: Как
+  confidence: 0.85
+  reason: Диалоговая частица, вопрос | phrase
+  context: null
+- term_zh: 这里
+  term_ru: Здесь
+  confidence: 0.9
+  reason: Диалоговая реплика, указание места | phrase
+  context: null
+- term_zh: 丧命
+  term_ru: Погибнуть
+  confidence: 0.9
+  reason: Диалоговая реплика, боевой контекст | verb
+  context: null
+- term_zh: 回来
+  term_ru: Вернуться
+  confidence: 0.9
+  reason: Диалоговая реплика | verb
+  context: null
+- term_zh: 找上门
+  term_ru: Прийти с претензией
+  confidence: 0.8
+  reason: Диалоговая фраза, конфликт | verb
+  context: null
+- term_zh: 必须
+  term_ru: Должен
+  confidence: 0.9
+  reason: Диалоговая реплика, обязательство | verb
+  context: null
+- term_zh: 加入
+  term_ru: Присоединиться
+  confidence: 0.9
+  reason: Диалоговая реплика, приглашение | verb
+  context: null
+- term_zh: 羡慕
+  term_ru: Завидовать
+  confidence: 0.9
+  reason: Диалоговая реплика, эмоция | verb
+  context: null
+- term_zh: 目标
+  term_ru: Цель
+  confidence: 0.95
+  reason: Задача, миссия, диалоговый контекст | noun
+  context: null
+- term_zh: 大错特错
+  term_ru: Совершенно неправильно
+  confidence: 0.85
+  reason: Диалоговая фраза, возражение | phrase
+  context: null
+- term_zh: 正因如此
+  term_ru: Именно поэтому
+  confidence: 0.9
+  reason: Диалоговая фраза, логический переход | phrase
+  context: null
+- term_zh: 以前
+  term_ru: Раньше
+  confidence: 0.9
+  reason: Диалоговая реплика, временной контекст | phrase
+  context: null
+- term_zh: 时代
+  term_ru: Эпоха
+  confidence: 0.9
+  reason: Диалоговый контекст, историческая ссылка | noun
+  context: null
+- term_zh: 年轻
+  term_ru: Молодой
+  confidence: 0.9
+  reason: Диалоговая реплика, описание персонажа | adj
+  context: null
+- term_zh: 看得出
+  term_ru: Видно
+  confidence: 0.85
+  reason: Диалоговая фраза, наблюдение | verb
+  context: null
+- term_zh: 胜负
+  term_ru: Победа или поражение
+  confidence: 0.9
+  reason: Боевой контекст, исход боя | noun
+  context: null
+- term_zh: 看见
+  term_ru: Видеть
+  confidence: 0.9
+  reason: Диалоговая реплика | verb
+  context: null
+- term_zh: 向来都是
+  term_ru: Всегда было так
+  confidence: 0.85
+  reason: Диалоговая фраза, констатация факта | phrase
+  context: null
+- term_zh: 有话直说
+  term_ru: Говори прямо
+  confidence: 0.9
+  reason: Диалоговая фраза, приглашение к откровенности | phrase
+  context: null
+- term_zh: 既然
+  term_ru: раз уж
+  confidence: 0.85
+  reason: Условный союз, выражает причину/предпосылку | phrase
+  context: null
+- term_zh: 热血沸腾
+  term_ru: кипящая кровь
+  confidence: 0.9
+  reason: 'Идиома: горячее, боевое настроение; характерно для боевых сцен | phrase'
+  context: null
+- term_zh: 竟然
+  term_ru: оказывается
+  confidence: 0.88
+  reason: Выражает неожиданность, удивление | adv
+  context: null
+- term_zh: 觉得
+  term_ru: чувствовать
+  confidence: 0.9
+  reason: Субъективное восприятие, мнение | verb
+  context: null
+- term_zh: 日向
+  term_ru: Хьюга
+  confidence: 0.95
+  reason: Клан из Naruto; звучит как «Хьюга» в официальных переводах | name
+  context: null
+- term_zh: 一族
+  term_ru: клан
+  confidence: 0.95
+  reason: Семейный клан, род; в контексте ниндзя-фракций | noun
+  context: null
+- term_zh: 什么样
+  term_ru: какой
+  confidence: 0.85
+  reason: Вопросительное слово о качестве/типе | phrase
+  context: null
+- term_zh: 逃避
+  term_ru: избегать
+  confidence: 0.9
+  reason: Уход от ответственности, бегство | verb
+  context: null
+- term_zh: 老师
+  term_ru: учитель
+  confidence: 0.95
+  reason: Наставник, сенсей; может быть обращением | noun
+  context: null
+- term_zh: 放弃
+  term_ru: сдаваться
+  confidence: 0.92
+  reason: Отказ от попыток, капитуляция | verb
+  context: null
+- term_zh: 不错
+  term_ru: неплохо
+  confidence: 0.88
+  reason: Положительная оценка, одобрение | adj
+  context: null
+- term_zh: 反抗
+  term_ru: сопротивляться
+  confidence: 0.92
+  reason: Активное противодействие, восстание | verb
+  context: null
+- term_zh: 只能
+  term_ru: только
+  confidence: 0.85
+  reason: Единственный вариант, вынужденность | adv
+  context: null
+- term_zh: 这个
+  term_ru: этот
+  confidence: 0.9
+  reason: Указательное местоимение; часто опускается в переводе | phrase
+  context: null
+- term_zh: 想要
+  term_ru: хотеть
+  confidence: 0.95
+  reason: Желание, стремление | verb
+  context: null
+- term_zh: 拉面
+  term_ru: рамэн
+  confidence: 0.95
+  reason: ' | noun'
+  context: null
+- term_zh: 性命
+  term_ru: жизнь
+  confidence: 0.92
+  reason: Жизнь, существование; в боевом контексте | noun
+  context: null
+- term_zh: 柱间
+  term_ru: Хасирама
+  confidence: 0.95
+  reason: Имя персонажа (Senju Hashirama); звучит как «Хасирама» | name
+  context: null
+- term_zh: 统治者
+  term_ru: правитель
+  confidence: 0.92
+  reason: Лидер, властитель; в контексте деревень/кланов | noun
+  context: null
+- term_zh: 捷径
+  term_ru: ярлык
+  confidence: 0.88
+  reason: Короткий путь, обман; часто в контексте «нет ярлыков» | noun
+  context: null
+- term_zh: 丰满
+  term_ru: полный
+  confidence: 0.8
+  reason: Полнота, округлость; может быть описанием внешности | adj
+  context: null
+- term_zh: 自由
+  term_ru: свобода
+  confidence: 0.95
+  reason: Ключевая тема в Naruto; часто в диалогах | noun
+  context: null
+- term_zh: 妨碍
+  term_ru: мешать
+  confidence: 0.9
+  reason: Препятствие, помеха | verb
+  context: null
+- term_zh: 害怕
+  term_ru: бояться
+  confidence: 0.95
+  reason: Страх, опасение | verb
+  context: null
+- term_zh: 动手
+  term_ru: начать бой
+  confidence: 0.9
+  reason: Начать атаку, вступить в боевое действие | verb
+  context: null
+- term_zh: 阻挠
+  term_ru: препятствовать
+  confidence: 0.9
+  reason: Активное противодействие, блокировка | verb
+  context: null
+- term_zh: 忍术
+  term_ru: ниндзюцу
+  confidence: 0.98
+  reason: Техника ниндзя; звучит как «ниндзюцу» в официальных переводах | noun
+  context: null
+- term_zh: 一切
+  term_ru: всё
+  confidence: 0.95
+  reason: Всё, всё сущее; часто в философских диалогах | noun
+  context: null
+- term_zh: 哎呀
+  term_ru: ой
+  confidence: 0.85
+  reason: Восклицание удивления, испуга | phrase
+  context: null
+- term_zh: 稍作
+  term_ru: немного
+  confidence: 0.82
+  reason: Небольшое количество, короткое время | adv
+  context: null
+- term_zh: 留步
+  term_ru: стоп
+  confidence: 0.88
+  reason: Просьба остановиться, не уходить | phrase
+  context: null
+- term_zh: 时刻
+  term_ru: момент
+  confidence: 0.92
+  reason: Время, миг; часто в контексте решающих моментов | noun
+  context: null
+- term_zh: 还是
+  term_ru: всё же
+  confidence: 0.88
+  reason: Несмотря на всё, в конце концов | adv
+  context: null
+- term_zh: 当个
+  term_ru: быть
+  confidence: 0.82
+  reason: Стать кем-то, исполнять роль | verb
+  context: null
+- term_zh: 毫无保留
+  term_ru: без сомнений
+  confidence: 0.85
+  reason: Полностью, без колебаний; идиома | phrase
+  context: null
+- term_zh: 决心
+  term_ru: решимость
+  confidence: 0.92
+  reason: Твёрдое намерение, воля | noun
+  context: null
+- term_zh: 进攻
+  term_ru: атака
+  confidence: 0.95
+  reason: Наступление, боевое действие | noun
+  context: null
+- term_zh: 发誓
+  term_ru: клясться
+  confidence: 0.92
+  reason: Дать клятву, обещание | verb
+  context: null
+- term_zh: 竭尽所能
+  term_ru: изо всех сил
+  confidence: 0.9
+  reason: Максимальное усилие; идиома | phrase
+  context: null
+- term_zh: 看来
+  term_ru: похоже
+  confidence: 0.9
+  reason: Кажется, по-видимому | adv
+  context: null
+- term_zh: 觉悟
+  term_ru: просветление
+  confidence: 0.92
+  reason: Осознание, духовное пробуждение; ключевой термин | noun
+  context: null
+- term_zh: 普通
+  term_ru: обычный
+  confidence: 0.95
+  reason: Обыкновенный, рядовой | adj
+  context: null
+- term_zh: 尝到
+  term_ru: испытать
+  confidence: 0.88
+  reason: Вкусить, пережить опыт | verb
+  context: null
+- term_zh: 命运
+  term_ru: судьба
+  confidence: 0.95
+  reason: Судьба, предназначение; философская тема | noun
+  context: null
+- term_zh: 亲自
+  term_ru: лично
+  confidence: 0.95
+  reason: Собственноручно, самому | adv
+  context: null
+- term_zh: 世上
+  term_ru: в мире
+  confidence: 0.9
+  reason: На свете, в этом мире | phrase
+  context: null
+- term_zh: 意义
+  term_ru: смысл
+  confidence: 0.95
+  reason: Значение, смысл; часто в философских диалогах | noun
+  context: null
+- term_zh: 伙伴
+  term_ru: товарищ
+  confidence: 0.95
+  reason: Друг, спутник; ключевой термин в Naruto | noun
+  context: null
+- term_zh: 虽然
+  term_ru: хотя
+  confidence: 0.95
+  reason: Уступительный союз | conj
+  context: null
+- term_zh: 事物
+  term_ru: вещь
+  confidence: 0.92
+  reason: Предмет, явление; нейтральный термин | noun
+  context: null
+- term_zh: 修行
+  term_ru: Тренировка
+  confidence: 0.95
+  reason: Боевая подготовка, практика; основной игровой процесс | noun
+  context: null
+- term_zh: 成果
+  term_ru: Результат
+  confidence: 0.9
+  reason: Итог тренировки или достижения | noun
+  context: null
+- term_zh: 注定
+  term_ru: Судьба
+  confidence: 0.85
+  reason: Предопределённость; может быть прилагательным в контексте | noun
+  context: null
+- term_zh: 漩涡
+  term_ru: Водоворот
+  confidence: 0.9
+  reason: Буквально; в Naruto часто связано с кланом Узумаки | noun
+  context: null
+- term_zh: 品尝
+  term_ru: Испытать
+  confidence: 0.85
+  reason: Опробовать, ощутить (боль, поражение и т.д.) | verb
+  context: null
+- term_zh: 收藏
+  term_ru: Коллекция
+  confidence: 0.9
+  reason: Собрание персонажей/предметов в игре | noun
+  context: null
+- term_zh: 不容
+  term_ru: Недопустимо
+  confidence: 0.8
+  reason: Не позволяется, невозможно допустить | adj
+  context: null
+- term_zh: 阻碍
+  term_ru: Препятствие
+  confidence: 0.9
+  reason: Помеха, барьер; может быть глаголом | noun
+  context: null
+- term_zh: 跃跃欲试
+  term_ru: Готов к бою
+  confidence: 0.8
+  reason: Состояние боевой готовности, нетерпение | phrase
+  context: null
+- term_zh: 实力
+  term_ru: Мощь
+  confidence: 0.95
+  reason: Боевая сила, уровень мастерства | noun
+  context: null
+- term_zh: 跳舞
+  term_ru: Танец
+  confidence: 0.75
+  reason: Буквально; может быть боевым приёмом в контексте | noun
+  context: null
+- term_zh: 需要
+  term_ru: Требуется
+  confidence: 0.95
+  reason: Нужно, необходимо | verb
+  context: null
+- term_zh: 十尾
+  term_ru: Десятихвостый
+  confidence: 0.9
+  reason: Легендарный зверь; может быть «Джуби» (транслитерация) | name
+  context: null
+- term_zh: 体内
+  term_ru: Внутри
+  confidence: 0.95
+  reason: Внутри тела; часто в контексте печатей и энергии | phrase
+  context: null
+- term_zh: 根茎
+  term_ru: Корневище
+  confidence: 0.8
+  reason: Ботанический термин; может быть частью названия растения | noun
+  context: null
+- term_zh: 花苞
+  term_ru: Бутон
+  confidence: 0.85
+  reason: Цветочный бутон; возможно, часть названия техники | noun
+  context: null
+- term_zh: 纵横
+  term_ru: Во всех направлениях
+  confidence: 0.8
+  reason: Свободно передвигаться, господствовать | phrase
+  context: null
+- term_zh: 能量
+  term_ru: Энергия
+  confidence: 0.95
+  reason: Чакра или боевая энергия | noun
+  context: null
+- term_zh: 立即
+  term_ru: Немедленно
+  confidence: 0.95
+  reason: Сразу же, тотчас | adv
+  context: null
+- term_zh: 移动
+  term_ru: Движение
+  confidence: 0.95
+  reason: Перемещение персонажа; может быть глаголом | noun
+  context: null
+- term_zh: 受疗
+  term_ru: Исцеление
+  confidence: 0.9
+  reason: Получение лечения; игровой механизм восстановления | noun
+  context: null
+- term_zh: 闪避
+  term_ru: Уклонение
+  confidence: 0.95
+  reason: Избежание урона; игровой параметр | noun
+  context: null
+- term_zh: 抗暴
+  term_ru: Сопротивление крит. урону
+  confidence: 0.9
+  reason: Защита от критических ударов; игровой параметр | noun
+  context: null
+- term_zh: 暴击
+  term_ru: Критический удар
+  confidence: 0.95
+  reason: Усиленный удар; игровой параметр | noun
+  context: null
+- term_zh: 暴伤
+  term_ru: Урон крит. удара
+  confidence: 0.95
+  reason: Величина критического урона; игровой параметр | noun
+  context: null
+- term_zh: 抗性
+  term_ru: Сопротивление
+  confidence: 0.95
+  reason: Защита от эффектов; игровой параметр | noun
+  context: null
+- term_zh: 20%
+  term_ru: 20%
+  confidence: 1.0
+  reason: Процентное значение; не переводится | phrase
+  context: null
+- term_zh: 30%
+  term_ru: 30%
+  confidence: 1.0
+  reason: Процентное значение; не переводится | phrase
+  context: null
+- term_zh: 35%
+  term_ru: 35%
+  confidence: 1.0
+  reason: Процентное значение; не переводится | phrase
+  context: null
+- term_zh: 40%
+  term_ru: 40%
+  confidence: 1.0
+  reason: Процентное значение; не переводится | phrase
+  context: null
+- term_zh: vip4
+  term_ru: VIP 4
+  confidence: 1.0
+  reason: Уровень VIP; не переводится | system
+  context: null
+- term_zh: vip10
+  term_ru: VIP 10
+  confidence: 1.0
+  reason: Уровень VIP; не переводится | system
+  context: null
+- term_zh: 摩伊
+  term_ru: Мои
+  confidence: 0.75
+  reason: Персонаж; транслитерация китайского имени | name
+  context: null
+- term_zh: 草野
+  term_ru: Кусано
+  confidence: 0.7
+  reason: Персонаж или локация; транслитерация | name
+  context: null
+- term_zh: 之证
+  term_ru: Свидетельство
+  confidence: 0.8
+  reason: Доказательство, знак; часто в названиях предметов | noun
+  context: null
+- term_zh: 默认
+  term_ru: По умолчанию
+  confidence: 0.95
+  reason: Стандартный выбор, предустановка | phrase
+  context: null
+- term_zh: 猿飞
+  term_ru: Сарутоби
+  confidence: 0.95
+  reason: Фамилия персонажа (Хирузен Сарутоби); официальная транслитерация | name
+  context: null
+- term_zh: 佐助
+  term_ru: Саске
+  confidence: 0.98
+  reason: Персонаж Саске Учиха; официальная транслитерация | name
+  context: null
+- term_zh: 威望
+  term_ru: Авторитет
+  confidence: 0.9
+  reason: Репутация, престиж; игровая валюта или параметр | noun
+  context: null
+- term_zh: 名望
+  term_ru: Слава
+  confidence: 0.9
+  reason: Известность, репутация; игровой ресурс | noun
+  context: null
+- term_zh: 魂石
+  term_ru: Камень Души
+  confidence: 0.9
+  reason: Игровой предмет для улучшения персонажей | noun
+  context: null
+- term_zh: 联赛
+  term_ru: Лига
+  confidence: 0.95
+  reason: Турнир, соревнование между игроками | noun
+  context: null
+- term_zh: 灵珠
+  term_ru: Духовная Жемчужина
+  confidence: 0.85
+  reason: Игровой предмет; может быть сокращено до «Жемчужина» | noun
+  context: null
+- term_zh: 争夺
+  term_ru: Борьба за
+  confidence: 0.9
+  reason: Соревнование, конкуренция | verb
+  context: null
+- term_zh: 势力
+  term_ru: Фракция
+  confidence: 0.9
+  reason: Группировка, организация; может быть «Сила» | noun
+  context: null
+- term_zh: 荣誉
+  term_ru: Честь
+  confidence: 0.95
+  reason: Слава, достоинство; игровой ресурс | noun
+  context: null
+- term_zh: 联军
+  term_ru: Союзная армия
+  confidence: 0.85
+  reason: Объединённые силы; может быть «Альянс» | noun
+  context: null
+- term_zh: 大量
+  term_ru: Большое количество
+  confidence: 0.95
+  reason: Много, в большом объёме | phrase
+  context: null
+- term_zh: 购买
+  term_ru: Покупка
+  confidence: 0.95
+  reason: Приобретение; может быть глаголом | noun
+  context: null
+- term_zh: 稀有
+  term_ru: Редкий
+  confidence: 0.95
+  reason: Редкость; уровень редкости предмета/персонажа | adj
+  context: null
+- term_zh: 充值
+  term_ru: Пополнение
+  confidence: 0.95
+  reason: 游戏充值系统，指玩家充钱 | noun
+  context: null
+- term_zh: 完成
+  term_ru: Завершить
+  confidence: 0.95
+  reason: 任务/关卡完成 | verb
+  context: null
+- term_zh: 排名
+  term_ru: Рейтинг
+  confidence: 0.95
+  reason: 竞技排行榜 | noun
+  context: null
+- term_zh: 计算
+  term_ru: Расчёт
+  confidence: 0.9
+  reason: 系统计算结果 | noun
+  context: null
+- term_zh: 淘汰赛
+  term_ru: Турнир выбывания
+  confidence: 0.9
+  reason: 竞技模式，单败淘汰制 | noun
+  context: null
+- term_zh: 进行
+  term_ru: Проводить
+  confidence: 0.9
+  reason: 进行中/正在进行 | verb
+  context: null
+- term_zh: 特权
+  term_ru: Привилегия
+  confidence: 0.95
+  reason: VIP或付费玩家的特殊权益 | noun
+  context: null
+- term_zh: 伴随
+  term_ru: Сопровождать
+  confidence: 0.85
+  reason: 随之而来/伴随效果 | verb
+  context: null
+- term_zh: 矿脉
+  term_ru: Месторождение
+  confidence: 0.9
+  reason: 资源点，可采集 | noun
+  context: null
+- term_zh: 物品
+  term_ru: Предмет
+  confidence: 0.95
+  reason: 通用物品术语 | noun
+  context: null
+- term_zh: 永久
+  term_ru: Постоянный
+  confidence: 0.95
+  reason: 永久拥有/不过期 | adj
+  context: null
+- term_zh: 纪念
+  term_ru: Памятный
+  confidence: 0.9
+  reason: 纪念版/限定版物品 | adj
+  context: null
+- term_zh: 灵兽
+  term_ru: Дух-зверь
+  confidence: 0.92
+  reason: 忍者世界中的神兽伙伴 | noun
+  context: null
+- term_zh: 暂无
+  term_ru: Нет данных
+  confidence: 0.95
+  reason: 界面提示文本 | phrase
+  context: null
+- term_zh: 弓箭
+  term_ru: Лук и стрелы
+  confidence: 0.95
+  reason: 武器类型 | noun
+  context: null
+- term_zh: 竞射
+  term_ru: Стрелковый турнир
+  confidence: 0.88
+  reason: 竞技模式，弓箭对战 | noun
+  context: null
+- term_zh: 地区
+  term_ru: Регион
+  confidence: 0.95
+  reason: 游戏地图区域 | noun
+  context: null
+- term_zh: 私聊
+  term_ru: Личное сообщение
+  confidence: 0.95
+  reason: 玩家间私密聊天 | noun
+  context: null
+- term_zh: 日常
+  term_ru: Ежедневно
+  confidence: 0.95
+  reason: 日常任务/每日活动 | adj
+  context: null
+- term_zh: 兽魂
+  term_ru: Душа зверя
+  confidence: 0.92
+  reason: 灵兽进阶材料 | noun
+  context: null
+- term_zh: 秘传
+  term_ru: Тайное учение
+  confidence: 0.9
+  reason: 高级技能/秘籍 | noun
+  context: null
+- term_zh: 时装
+  term_ru: Костюм
+  confidence: 0.95
+  reason: 角色皮肤/外观装扮 | noun
+  context: null
+- term_zh: 争霸
+  term_ru: Борьба за власть
+  confidence: 0.9
+  reason: 竞技模式/争夺霸主 | noun
+  context: null
+- term_zh: 成长
+  term_ru: Развитие
+  confidence: 0.95
+  reason: 角色升级/成长系统 | noun
+  context: null
+- term_zh: 基金
+  term_ru: Фонд
+  confidence: 0.9
+  reason: 充值返利/基金计划 | noun
+  context: null
+- term_zh: 首充
+  term_ru: Первое пополнение
+  confidence: 0.95
+  reason: 首次充值奖励 | noun
+  context: null
+- term_zh: 装备
+  term_ru: Снаряжение
+  confidence: 0.95
+  reason: 角色装备系统 | noun
+  context: null
+- term_zh: 重生
+  term_ru: Возрождение
+  confidence: 0.92
+  reason: 角色复活/重新开始 | noun
+  context: null
+- term_zh: 援军
+  term_ru: Подкрепление
+  confidence: 0.9
+  reason: 战斗中的援助单位 | noun
+  context: null
+- term_zh: 绝版
+  term_ru: Снято с производства
+  confidence: 0.92
+  reason: 限定版/不再发售 | adj
+  context: null
+- term_zh: 七日
+  term_ru: 7 дней
+  confidence: 0.95
+  reason: 七日登录/七日活动 | noun
+  context: null
+- term_zh: 赏金
+  term_ru: Награда
+  confidence: 0.95
+  reason: 任务奖励/赏金任务 | noun
+  context: null
+- term_zh: 契机
+  term_ru: Возможность
+  confidence: 0.88
+  reason: 触发条件/机遇 | noun
+  context: null
+- term_zh: 预告
+  term_ru: Анонс
+  confidence: 0.95
+  reason: 新内容预告 | noun
+  context: null
+- term_zh: 超值
+  term_ru: Выгодное предложение
+  confidence: 0.9
+  reason: 划算的/超值套餐 | adj
+  context: null
+- term_zh: 心愿
+  term_ru: Желание
+  confidence: 0.9
+  reason: 心愿单/许愿系统 | noun
+  context: null
+- term_zh: 森林
+  term_ru: Лес
+  confidence: 0.95
+  reason: 地图场景名称 | noun
+  context: null
+- term_zh: 樱花
+  term_ru: Сакура
+  confidence: 0.95
+  reason: 日本元素/场景装饰 | noun
+  context: null
+- term_zh: 九尾
+  term_ru: Девятихвостая
+  confidence: 0.95
+  reason: 忍者世界中的九尾狐，专有名词 | name
+  context: null
+- term_zh: 甲壳
+  term_ru: Панцирь
+  confidence: 0.9
+  reason: 防御属性/甲壳类生物 | noun
+  context: null
+- term_zh: 体肤
+  term_ru: Кожа
+  confidence: 0.88
+  reason: 角色外观/皮肤 | noun
+  context: null
+- term_zh: 生息
+  term_ru: Обитание
+  confidence: 0.85
+  reason: 生物栖息地/出现地点 | noun
+  context: null
+- term_zh: 风来
+  term_ru: Ветер приходит
+  confidence: 0.75
+  reason: 可能是技能名或事件名，保留原意 | phrase
+  context: null

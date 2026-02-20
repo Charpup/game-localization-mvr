@@ -1,0 +1,76 @@
+---
+# Punctuation Mapping v1.0
+# 定义源语言标点符号到目标语言的映射规则
+# 用于 rehydrate_export.py 后处理阶段
+
+version: 1
+
+# 默认目标语言（可在脚本中覆盖）
+default_target: ru-RU
+
+# 中文标点 → 俄语/西里尔字母语言
+mappings:
+  ru-RU:
+    # 方头括号 → 法式引号
+    - source: "【"
+      target: "«"
+      description: "左方头括号"
+    - source: "】"
+      target: "»"
+      description: "右方头括号"
+    
+    # 直角引号 → 法式引号
+    - source: "「"
+      target: "«"
+      description: "左直角引号"
+    - source: "」"
+      target: "»"
+      description: "右直角引号"
+    
+    # 书名号 → 法式引号
+    - source: "《"
+      target: "«"
+      description: "左书名号"
+    - source: "》"
+      target: "»"
+      description: "右书名号"
+    
+    # 中文标点 → 西文标点
+    - source: "，"
+      target: ","
+      description: "中文逗号"
+    - source: "。"
+      target: "."
+      description: "中文句号"
+    - source: "！"
+      target: "!"
+      description: "中文感叹号"
+    - source: "？"
+      target: "?"
+      description: "中文问号"
+    - source: "："
+      target: ":"
+      description: "中文冒号"
+    - source: "；"
+      target: ";"
+      description: "中文分号"
+    - source: "（"
+      target: "("
+      description: "中文左括号"
+    - source: "）"
+      target: ")"
+      description: "中文右括号"
+    - source: "——"
+      target: "—"
+      description: "中文破折号"
+    - source: "……"
+      target: "..."
+      description: "中文省略号"
+
+# 使用说明
+usage:
+  script: "rehydrate_export.py 在 rehydration 后应用此映射"
+  notes:
+    - "映射按定义顺序应用"
+    - "先处理多字符映射（如——），再处理单字符"
+    - "可根据目标语言选择不同的映射集"

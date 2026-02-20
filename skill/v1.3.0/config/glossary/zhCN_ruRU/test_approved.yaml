@@ -1,0 +1,2831 @@
+entries:
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Получать
+  term_zh: 获得
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ниндзя
+  term_zh: 忍者
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Урон
+  term_zh: 伤害
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Разблокировать
+  term_zh: 解锁
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Атака
+  term_zh: 攻击
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Навык
+  term_zh: 技能
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Награда
+  term_zh: 奖励
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Повышение
+  term_zh: 提升
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Жизнь
+  term_zh: 生命
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Игрок
+  term_zh: 玩家
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Атрибут
+  term_zh: 属性
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Бой
+  term_zh: 战斗
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Описание
+  term_zh: 描述
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Раунд
+  term_zh: 回合
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Коноха
+  term_zh: 木叶
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Вызов
+  term_zh: 挑战
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: уровень
+  term_zh: 等级
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: организация
+  term_zh: 组织
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: событие
+  term_zh: 活动
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: повышать
+  term_zh: 提高
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: элемент
+  term_zh: 元素
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: очки
+  term_zh: 积分
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: количество попыток
+  term_zh: 次数
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: эффект
+  term_zh: 效果
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: цель
+  term_zh: 目标
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: расход
+  term_zh: 消耗
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Наруто
+  term_zh: 鸣人
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: дополнительно
+  term_zh: 额外
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: снижать
+  term_zh: 降低
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: вероятность
+  term_zh: 概率
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: лимит
+  term_zh: 上限
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: бонус
+  term_zh: 加成
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: магазин
+  term_zh: 商店
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: получить
+  term_zh: 领取
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 10%
+  term_zh: 10%
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: достигать
+  term_zh: 达到
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: завершение
+  term_zh: 结束
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: способ
+  term_zh: 方式
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: ежедневный
+  term_zh: 每日
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Хокаге
+  term_zh: 火影
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: продолжительность
+  term_zh: 持续
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ниндзя-мир
+  term_zh: 忍界
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: лечение
+  term_zh: 治疗
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: экипировка
+  term_zh: 装备
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: задание
+  term_zh: 任务
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: недостаток
+  term_zh: 不足
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: начало
+  term_zh: 开始
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: активация
+  term_zh: 开启
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: стать
+  term_zh: 成为
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Какаси
+  term_zh: 卡卡
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Саске
+  term_zh: 佐助
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: расчет
+  term_zh: 计算
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: накопление
+  term_zh: 叠加
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: набор
+  term_zh: 招募
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Продвинутый
+  term_zh: 高级
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Наносить
+  term_zh: 造成
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Критический удар
+  term_zh: 暴击
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Использовать
+  term_zh: 使用
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Великая война
+  term_zh: 大战
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Предмет
+  term_zh: 道具
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Покупать
+  term_zh: 购买
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: n4
+  term_zh: n4
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Невозможно
+  term_zh: 无法
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Подсчёт
+  term_zh: 结算
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Незаменимый
+  term_zh: 不可
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Шесть путей
+  term_zh: 六道
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Восстановление
+  term_zh: 恢复
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Клан Учиха
+  term_zh: 宇智波
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Все
+  term_zh: 所有
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Рейтинг
+  term_zh: 排名
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Юнит
+  term_zh: 单位
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Обмен
+  term_zh: 兑换
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ороchimaru
+  term_zh: 大蛇丸
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: этап
+  term_zh: 阶段
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: персонаж
+  term_zh: 角色
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: ресурсы
+  term_zh: 资源
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: сброс
+  term_zh: 重置
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: в соответствии с
+  term_zh: 根据
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: испытание
+  term_zh: 试炼
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: титул
+  term_zh: 称号
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: нажмите
+  term_zh: 点击
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: соответствующий
+  term_zh: 对应
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: мир
+  term_zh: 世界
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: ниндзя-инструменты
+  term_zh: 忍具
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 20% снижения физического урона
+  term_zh: 20%
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: члены
+  term_zh: 成员
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: кровь
+  term_zh: 血脉
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: девятихвостый
+  term_zh: 九尾
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: участвовать
+  term_zh: 参与
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: нужно
+  term_zh: 需要
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: завершить
+  term_zh: 完成
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 50% увеличение скорости атаки
+  term_zh: 50%
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: противник
+  term_zh: 敌方
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: воскрешение
+  term_zh: 复活
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: статус
+  term_zh: 状态
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: супер
+  term_zh: 超级
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 30%
+  term_zh: 30%
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: рассеивание
+  term_zh: 驱散
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: начальный уровень
+  term_zh: 初级
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: фракция
+  term_zh: 阵营
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: не будет
+  term_zh: 不会
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: нельзя
+  term_zh: 不能
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: обладать
+  term_zh: 拥有
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: ниндзя-техника
+  term_zh: 忍术
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: время
+  term_zh: 时间
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: средний уровень
+  term_zh: 中级
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: повышение уровня
+  term_zh: 升级
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: качество
+  term_zh: 质量
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: выбор
+  term_zh: 选择
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: успех
+  term_zh: 成功
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: секретная техника
+  term_zh: 秘术
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: контроль
+  term_zh: 控制
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: текущий
+  term_zh: 当前
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: каждый раз
+  term_zh: 每次
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: истинный
+  term_zh: 真实
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: использовать
+  term_zh: 释放
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: определённый
+  term_zh: 一定
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: пройти уровень
+  term_zh: 通关
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: ради
+  term_zh: 为了
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: наша сторона
+  term_zh: 我方
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: талант
+  term_zh: 天赋
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: система
+  term_zh: 系统
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: другие
+  term_zh: 其他
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: выдача
+  term_zh: 发放
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: автоматически
+  term_zh: 自动
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: ультимативный
+  term_zh: 究极
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: золото
+  term_zh: 金币
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: случайный
+  term_zh: 随机
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: состав команды
+  term_zh: 阵容
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: противник
+  term_zh: 对手
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: финал
+  term_zh: 最终
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: получение
+  term_zh: 获取
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: рейтинг
+  term_zh: 排行
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: групповой
+  term_zh: 群体
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: дзинчурики
+  term_zh: 人柱力
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: условие
+  term_zh: 条件
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: ниже
+  term_zh: 低于
+- confidence: 0.99
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: скорость
+  term_zh: 速度
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: базовый
+  term_zh: 基础
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: воля
+  term_zh: 意志
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ооцуцуки
+  term_zh: 大筒
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: E46B1A
+  term_zh: E46B1A
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: отшельник
+  term_zh: 仙人
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: активация
+  term_zh: 启动
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Кура
+  term_zh: 克拉
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Скрытая Песчаная Деревня
+  term_zh: 隐村
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: таблица лидеров
+  term_zh: 排行榜
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: усиление
+  term_zh: 强化
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Боевая мощь
+  term_zh: 战力
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Команда
+  term_zh: 队伍
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Геймплей
+  term_zh: 玩法
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Пакет подарков
+  term_zh: 礼包
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Дополнение
+  term_zh: 附加
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Тип
+  term_zh: 类型
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Дзирайя
+  term_zh: 自来
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сила
+  term_zh: 力量
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Различный
+  term_zh: 不同
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 40%
+  term_zh: 40%
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Защита
+  term_zh: 防御
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: В качестве
+  term_zh: 作为
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Правила
+  term_zh: 规则
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Один из
+  term_zh: 之一
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Тоби
+  term_zh: 带土
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Четвёртая
+  term_zh: 第四次
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Последний
+  term_zh: 最后
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: а также
+  term_zh: 以及
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: используется для
+  term_zh: 用于
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: играть
+  term_zh: 游玩
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 5%
+  term_zh: 5%
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: здоровье
+  term_zh: 血量
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: игра
+  term_zh: 游戏
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: смерть
+  term_zh: 死亡
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: специализируется
+  term_zh: 擅长
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: в течение
+  term_zh: 期间
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: рудник
+  term_zh: 矿脉
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: увеличение
+  term_zh: 增加
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: щит
+  term_zh: 护盾
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: поражение
+  term_zh: 失败
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: запечатывание
+  term_zh: 封印
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: активация
+  term_zh: 触发
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: клан
+  term_zh: 一族
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 15%
+  term_zh: 15%
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: тайник
+  term_zh: 秘境
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: призыв
+  term_zh: 召唤
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: одновременно
+  term_zh: 同时
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Друг
+  term_zh: 好友
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Вместе
+  term_zh: 一起
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Защищать
+  term_zh: 保护
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Опыт
+  term_zh: 经验
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Количество
+  term_zh: 数量
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Повышение звёзд
+  term_zh: 升星
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Максимум
+  term_zh: 最高
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Клан Сендзю
+  term_zh: 千手
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Входить
+  term_zh: 进入
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Один раз
+  term_zh: 一次
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Заклинание
+  term_zh: 法术
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Поиск сокровищ
+  term_zh: 探宝
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Трон
+  term_zh: 王座
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Пополнение
+  term_zh: 充值
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Драгоценные камни
+  term_zh: 宝石
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Чем выше
+  term_zh: 越高
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Товарищ
+  term_zh: 伙伴
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Минимум
+  term_zh: 最低
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Максимальный уровень
+  term_zh: 满级
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Розыгрыш
+  term_zh: 抽取
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Способность
+  term_zh: 能力
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Обучение
+  term_zh: 学习
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Физика
+  term_zh: 物理
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Пик
+  term_zh: 巅峰
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Перезарядка
+  term_zh: 冷却
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Атака
+  term_zh: 进攻
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сейчас
+  term_zh: 现在
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: В теле
+  term_zh: 体内
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Что
+  term_zh: 什么
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Победа
+  term_zh: 胜利
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Уровень
+  term_zh: 关卡
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Решающий бой
+  term_zh: 决战
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Матч
+  term_zh: 比赛
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Арена
+  term_zh: 竞技场
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Режим
+  term_zh: 模式
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ожог
+  term_zh: 灼烧
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Бесконечный
+  term_zh: 无限
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Присоединиться
+  term_zh: 加入
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Договор
+  term_zh: 契约
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Активность
+  term_zh: 活跃
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Поддержка
+  term_zh: 援军
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Опорный пункт
+  term_zh: 据点
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Бонус
+  term_zh: 增益
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: После
+  term_zh: 之后
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Усиление
+  term_zh: 增幅
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Стойкость
+  term_zh: 韧性
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Действие
+  term_zh: 行动
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Тренировка
+  term_zh: 修行
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Страна Огня
+  term_zh: 火之国
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Я буду
+  term_zh: 我会
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Магазин
+  term_zh: 商城
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сезон
+  term_zh: 赛季
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Противник
+  term_zh: 对方
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Синтез
+  term_zh: 合成
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Активный
+  term_zh: 主动
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Материалы
+  term_zh: 材料
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Эксклюзивный
+  term_zh: 专属
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 25%
+  term_zh: 25%
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Турнир
+  term_zh: 挑战赛
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Межсерверный
+  term_zh: 跨服
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Фишки
+  term_zh: 筹码
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Предоставлять
+  term_zh: 提供
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 3%
+  term_zh: 3%
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Убийство
+  term_zh: 击杀
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Не является
+  term_zh: 不是
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Молодой
+  term_zh: 少年
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Враг
+  term_zh: 敌人
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Битва
+  term_zh: 一场
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Цунаде
+  term_zh: 纲手
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Поле боя
+  term_zh: 战场
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Защищать
+  term_zh: 守护
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: a75f2f
+  term_zh: a75f2f
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Выйти
+  term_zh: 退出
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Обновление
+  term_zh: 刷新
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Возврат
+  term_zh: 返还
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сила
+  term_zh: 之力
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Уклонение
+  term_zh: 闪避
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Гаара
+  term_zh: 我爱罗
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Направиться
+  term_zh: 前往
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Мы
+  term_zh: 我们
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ранг
+  term_zh: 段位
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Утиха
+  term_zh: 宇智
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Саске
+  term_zh: 波佐助
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Призовой фонд
+  term_zh: 奖池
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Перековка
+  term_zh: 重铸
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Настройка
+  term_zh: 定制
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Звёздный уровень
+  term_zh: 星级
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Элитный
+  term_zh: 精英
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Поддержка
+  term_zh: 支援
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Комбинация
+  term_zh: 组合
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Попасть в
+  term_zh: 陷入
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Деревня
+  term_zh: 村子
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Помощь
+  term_zh: 帮助
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: один
+  term_zh: 一名
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: ученик
+  term_zh: 弟子
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: описание
+  term_zh: 说明
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: делится на
+  term_zh: 分为
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: решение
+  term_zh: 决定
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: проклятие
+  term_zh: 咒印
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: продолжить
+  term_zh: 继续
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: месть
+  term_zh: 复仇
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: победить
+  term_zh: 战胜
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: '#417f25'
+  term_zh: 417f25
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: снижение урона
+  term_zh: 免伤
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: влияние
+  term_zh: 影响
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: этот
+  term_zh: 这个
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: иллюзия
+  term_zh: 幻术
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: снова
+  term_zh: 再次
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: из-за
+  term_zh: 由于
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: преследование
+  term_zh: 追击
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: только
+  term_zh: 只能
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: капитан
+  term_zh: 队长
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: первый
+  term_zh: 第一
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: зона боевых действий
+  term_zh: 战区
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: дух-зверь
+  term_zh: 灵兽
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: лидер
+  term_zh: 首领
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: это
+  term_zh: 就是
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: сундук с сокровищами
+  term_zh: 宝箱
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: кэшбэк
+  term_zh: 返利
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: щедрый
+  term_zh: 丰厚
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: превышать
+  term_zh: 超过
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: удовлетворять
+  term_zh: 满足
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: рост
+  term_zh: 成长
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: любой
+  term_zh: 任意
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: победить
+  term_zh: 击败
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: сила
+  term_zh: 实力
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Шикамару
+  term_zh: 鹿丸
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: перерождение
+  term_zh: 转生
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: появляться
+  term_zh: 出现
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: постижение
+  term_zh: 领悟
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ооцуцуки Кагуя
+  term_zh: 木辉夜
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ошибка
+  term_zh: 错误
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Достигнут
+  term_zh: 已达
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Только
+  term_zh: 只有
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Активировать
+  term_zh: 激发
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Мощный
+  term_zh: 强力
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Расстановка
+  term_zh: 布阵
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Поединок
+  term_zh: 对决
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Седьмой
+  term_zh: 第七
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Свиток
+  term_zh: 卷轴
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Священное дерево
+  term_zh: 神树
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Восстановление
+  term_zh: 回复
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Почта
+  term_zh: 邮件
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Очистить
+  term_zh: 清除
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Этот раз
+  term_zh: 本次
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Первый раз
+  term_zh: 首次
+- confidence: 0.99
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Бесплатно
+  term_zh: 免费
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Они
+  term_zh: 他们
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сильный
+  term_zh: 强大
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Характер
+  term_zh: 性格
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сбор
+  term_zh: 集结
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Отправка
+  term_zh: 派遣
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Назначение
+  term_zh: 指定
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Подземелье
+  term_zh: 副本
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Преобразование
+  term_zh: 转换
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Слияние
+  term_zh: 融合
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Хатаке
+  term_zh: 旗木
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ограничение
+  term_zh: 限制
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 100%
+  term_zh: 100%
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Максимум
+  term_zh: 最大
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Максимально
+  term_zh: 最多
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сложность
+  term_zh: 难度
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Большое количество
+  term_zh: 大量
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Еженедельно
+  term_zh: 每周
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Скин
+  term_zh: 皮肤
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Жаба
+  term_zh: 蛤蟆
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Поддержка
+  term_zh: 辅助
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Итак
+  term_zh: 那么
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Боевой дух
+  term_zh: 热血
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Центр
+  term_zh: 中心
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: событие
+  term_zh: 事件
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: молитва
+  term_zh: 祈愿
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: продвижение
+  term_zh: 进阶
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: накопление
+  term_zh: 累计
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: функция
+  term_zh: 功能
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 1%
+  term_zh: 1%
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: погибший
+  term_zh: 阵亡
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: вступает в силу
+  term_zh: 生效
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: все
+  term_zh: 全体
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Анбу
+  term_zh: 暗部
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: клан Хьюга
+  term_zh: 日向
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: финал
+  term_zh: 终结
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Айро
+  term_zh: 爱罗
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: настройка
+  term_zh: 设置
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: воскрешение
+  term_zh: 秽土
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: третий
+  term_zh: 三代
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: медицинский
+  term_zh: 医疗
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: между
+  term_zh: 之间
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: сила атаки
+  term_zh: 攻击力
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Обычный
+  term_zh: 普通
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Абсолютно
+  term_zh: 绝对
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Кукла
+  term_zh: 傀儡
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Зал
+  term_zh: 殿堂
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Быстрый
+  term_zh: 快速
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Изначальный
+  term_zh: 原来
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 6%
+  term_zh: 6%
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Замена
+  term_zh: 更换
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Особый
+  term_zh: 特殊
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Предатель-ниндзя
+  term_zh: 叛忍
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Чунин
+  term_zh: 中忍
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Получить
+  term_zh: 得到
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Использовать
+  term_zh: 利用
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Одинаковый
+  term_zh: 相同
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Долина
+  term_zh: 之谷
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Наследовать
+  term_zh: 继承
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Выносливость
+  term_zh: 体力
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сила желания
+  term_zh: 愿力
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: История
+  term_zh: 历史
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Лестница
+  term_zh: 天梯
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Захват
+  term_zh: 占领
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Третий
+  term_zh: 第三
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Каждое
+  term_zh: 每个
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Приоритет
+  term_zh: 优先
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: За каждый
+  term_zh: 每有
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 12%
+  term_zh: 12%
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ставка
+  term_zh: 下注
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ниндзя-путь
+  term_zh: 忍道
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Подавление
+  term_zh: 压制
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Когда-то
+  term_zh: 曾经
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Всё
+  term_zh: 一切
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сотрудничество
+  term_zh: 配合
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Тренировка
+  term_zh: 修炼
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ветер
+  term_zh: 风影
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Четвертый
+  term_zh: 四代
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Задание
+  term_zh: 委托
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Тело
+  term_zh: 身体
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Магический урон
+  term_zh: 法攻
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Немного
+  term_zh: 一下
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Область
+  term_zh: 领域
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Развлечения
+  term_zh: 游乐
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Канал
+  term_zh: 频道
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Шура
+  term_zh: 修罗
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Интерфейс
+  term_zh: 界面
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Доход
+  term_zh: 收益
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Полученный урон
+  term_zh: 受伤害
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Соответствующий
+  term_zh: 相应
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Цанъянь
+  term_zh: 苍炎
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: n6
+  term_zh: n6
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Прорыв
+  term_zh: 突破
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Попадание
+  term_zh: 命中
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Важный
+  term_zh: 重要
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Передний ряд
+  term_zh: 前排
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Три ниндзя
+  term_zh: 三忍
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Постоянно
+  term_zh: 不断
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Техника
+  term_zh: 之术
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Поглощение
+  term_zh: 吸收
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Горение
+  term_zh: 燃烧
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Сэнбон
+  term_zh: 千本
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Пропуск
+  term_zh: 通行证
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Лучший
+  term_zh: 最佳
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Плей-офф
+  term_zh: 淘汰赛
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Этот сервер
+  term_zh: 本服
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Кузница
+  term_zh: 锻造
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Набор
+  term_zh: 套装
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Второй
+  term_zh: 第二
+- confidence: 0.98
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Монстр
+  term_zh: 怪物
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ядро
+  term_zh: 核心
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: 2%
+  term_zh: 2%
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Матчмейкинг
+  term_zh: 匹配
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Потери
+  term_zh: 损失
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Розовый
+  term_zh: 粉色
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Соответственно
+  term_zh: 分别
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Возрождение
+  term_zh: 重生
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Отряд
+  term_zh: 小队
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Очень
+  term_zh: 十分
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Самый сильный
+  term_zh: 最强
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: находиться в состоянии
+  term_zh: 处于
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Ирука
+  term_zh: 伊鲁卡
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Якуши
+  term_zh: 药师
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Пятый
+  term_zh: 第五代
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: удача
+  term_zh: 幸运
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: налёт
+  term_zh: 袭击
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: мочь
+  term_zh: 能够
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: старший брат
+  term_zh: 哥哥
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: занимать должность
+  term_zh: 担任
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: рафинирование
+  term_zh: 精炼
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: посмотреть
+  term_zh: 看看
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: хорошо
+  term_zh: 好好
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: наслаждаться
+  term_zh: 享受
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: я хочу
+  term_zh: 我要
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: влияние
+  term_zh: 势力
+- confidence: 0.9
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: преобразование
+  term_zh: 转化
+- confidence: 0.85
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: соревнование за власть
+  term_zh: 争霸
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Хината
+  term_zh: 雏田
+- confidence: 1.0
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: Раби
+  term_zh: 拉比
+- confidence: 0.95
+  status: approved
+  tags:
+  - auto_approved
+  term_ru: жертва
+  term_zh: 牺牲
+meta:
+  language_pair: zh-CN -> ru-RU
+  scope: test_batch
+  version: 1.0.0

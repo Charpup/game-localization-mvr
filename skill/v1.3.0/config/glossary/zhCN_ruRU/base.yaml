@@ -1,0 +1,46 @@
+# Base glossary for zh-CN -> ru-RU
+# Core game terminology shared across genres
+
+meta:
+  scope: "base"
+  language_pair: "zh-CN->ru-RU"
+  version: 1
+  description: "Base game localization terms for Chinese to Russian"
+
+entries:
+  # Game Common Terms
+  - term_zh: "玩家"
+    term_ru: "Игрок"
+    status: "approved"
+    tags: ["game", "common"]
+    confidence: 1.0
+
+  - term_zh: "角色"
+    term_ru: "Персонаж"
+    status: "approved"
+    tags: ["game", "common"]
+    confidence: 1.0
+
+  - term_zh: "技能"
+    term_ru: "Навык"
+    status: "approved"
+    tags: ["game", "combat"]
+    confidence: 1.0
+
+  - term_zh: "道具"
+    term_ru: "Предмет"
+    status: "approved"
+    tags: ["game", "item"]
+    confidence: 1.0
+
+  - term_zh: "金币"
+    term_ru: "Золото"
+    status: "approved"
+    tags: ["game", "currency"]
+    confidence: 1.0
+
+  - term_zh: "钻石"
+    term_ru: "Алмазы"
+    status: "approved"
+    tags: ["game", "currency"]
+    confidence: 1.0

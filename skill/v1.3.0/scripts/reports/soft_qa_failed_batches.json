@@ -1,0 +1,73 @@
+{
+  "step": "soft_qa",
+  "total_batches": 1217,
+  "failed_batches": [
+    {
+      "batch_num": 50,
+      "start_idx": 1225,
+      "end_idx": 1250,
+      "error": "JSON parse error: Expecting ',' delimiter: line 15 column 63 (char 466)"
+    },
+    {
+      "batch_num": 299,
+      "start_idx": 7450,
+      "end_idx": 7475,
+      "error": "ID mismatch: extra={'10111512'}"
+    },
+    {
+      "batch_num": 476,
+      "start_idx": 11875,
+      "end_idx": 11900,
+      "error": "ID mismatch: extra={'12532109'}"
+    },
+    {
+      "batch_num": 590,
+      "start_idx": 14725,
+      "end_idx": 14750,
+      "error": "ID mismatch: extra={'40502045'}"
+    },
+    {
+      "batch_num": 592,
+      "start_idx": 14775,
+      "end_idx": 14800,
+      "error": "JSON parse error: Expecting ',' delimiter: line 8 column 69 (char 271)"
+    },
+    {
+      "batch_num": 641,
+      "start_idx": 16000,
+      "end_idx": 16025,
+      "error": "JSON parse error: Expecting ',' delimiter: line 55 column 30 (char 2999)"
+    },
+    {
+      "batch_num": 806,
+      "start_idx": 20125,
+      "end_idx": 20150,
+      "error": "JSON parse error: Expecting ',' delimiter: line 80 column 88 (char 3455)"
+    },
+    {
+      "batch_num": 817,
+      "start_idx": 20400,
+      "end_idx": 20425,
+      "error": "JSON parse error: Expecting ',' delimiter: line 47 column 22 (char 1497)"
+    },
+    {
+      "batch_num": 830,
+      "start_idx": 20725,
+      "end_idx": 20750,
+      "error": "JSON parse error: Expecting ',' delimiter: line 78 column 46 (char 2700)"
+    },
+    {
+      "batch_num": 1038,
+      "start_idx": 25925,
+      "end_idx": 25950,
+      "error": "JSON parse error: Expecting ',' delimiter: line 17 column 42 (char 664)"
+    },
+    {
+      "batch_num": 1196,
+      "start_idx": 29875,
+      "end_idx": 29900,
+      "error": "ID mismatch: extra={'12600102'}"
+    }
+  ],
+  "timestamp": "2026-01-28T04:42:06.167831"
+}
