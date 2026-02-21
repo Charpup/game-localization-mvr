@@ -1,0 +1,64 @@
+translated_at: '2026-02-22'
+model: kimi-k2.5
+total: 15
+proposals:
+- term_zh: 忍者
+  term_en: Ninja
+  confidence: 0.99
+  pos: noun
+- term_zh: 火影
+  term_en: Hokage
+  confidence: 1.0
+  pos: noun
+- term_zh: 攻击
+  term_en: Attack
+  confidence: 0.98
+  pos: noun
+- term_zh: 属性
+  term_en: Attribute
+  confidence: 0.95
+  pos: noun
+- term_zh: 影
+  term_en: Kage
+  confidence: 0.97
+  pos: noun
+- term_zh: 防御
+  term_en: Defense
+  confidence: 0.98
+  pos: noun
+- term_zh: 技能
+  term_en: Skill
+  confidence: 0.96
+  pos: noun
+- term_zh: 中忍
+  term_en: Chunin
+  confidence: 0.98
+  pos: noun
+- term_zh: 晓组织
+  term_en: Akatsuki
+  confidence: 0.99
+  pos: noun
+- term_zh: 忍术
+  term_en: Ninjutsu
+  confidence: 1.0
+  pos: noun
+- term_zh: 升星
+  term_en: Star Up
+  confidence: 0.92
+  pos: verb
+- term_zh: 星级
+  term_en: Star Rating
+  confidence: 0.94
+  pos: noun
+- term_zh: 生命
+  term_en: HP
+  confidence: 0.93
+  pos: noun
+- term_zh: 暗部
+  term_en: ANBU
+  confidence: 1.0
+  pos: noun
+- term_zh: 查克拉
+  term_en: Chakra
+  confidence: 1.0
+  pos: noun
