@@ -1,0 +1,59 @@
+---
+# Soft QA Rubric v1.0
+# 定义软质量评审维度，用于生成可执行的 repair tasks
+# 注意：Soft QA 的价值不是"打分"，而是输出可执行的修复任务
+
+version: 1
+target: "ru-RU"
+
+# 评审维度
+dimensions:
+  - key: style_officialness
+    description: "系统文案是否足够官方、清晰、可操作"
+    severity: ["minor", "major"]
+    examples:
+      - "系统提示过于口语化"
+      - "指令不够明确"
+
+  - key: anime_tone
+    description: "二次元口语是否适度（只在合适场景出现）"
+    severity: ["minor", "major"]
+    examples:
+      - "正式系统提示中出现不当的卡通化语气"
+      - "角色对话中语气过于生硬"
+
+  - key: terminology_consistency
+    description: "术语是否遵守 glossary.yaml（approved 必用；banned 禁用；proposed 倾向）"
+    severity: ["minor", "major"]
+    examples:
+      - "未使用 approved 术语"
+      - "使用了 banned 术语的错误译法"
+
+  - key: ui_brevity
+    description: "按钮/短提示是否过长、是否可压缩"
+    severity: ["minor", "major"]
+    examples:
+      - "按钮文本超过 15 字符"
+      - "提示文本可精简"
+
+  - key: ambiguity
+    description: "是否存在歧义或语义偏移风险"
+    severity: ["minor", "major"]
+    examples:
+      - "译文可能产生多种理解"
+      - "原文含义未完全传达"
+
+# 输出配置
+outputs:
+  report_json: "data/qa_soft_report.json"
+  repair_tasks_jsonl: "data/repair_tasks.jsonl"
+
+# 使用说明
+usage:
+  script: "soft_qa_llm.py 使用此 rubric 进行 LLM 软质量评审"
+  workflow: |
+    1. 读取 translated.csv
+    2. 按 batch 调用 LLM 评审
+    3. 输出 qa_soft_report.json (汇总)
+    4. 输出 repair_tasks.jsonl (逐条任务)
+  note: "Soft QA 不阻断流程，但会驱动 repair loop 自动修复"

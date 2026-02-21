@@ -1,0 +1,16 @@
+terms:
+  - id: term_001
+    source: "生命值"
+    target: "HP"
+    domain: gameplay
+    status: approved
+  - id: term_002
+    source: "魔法值"
+    target: "MP"
+    domain: gameplay
+    status: approved
+  - id: term_003
+    source: "经验值"
+    target: "EXP"
+    domain: gameplay
+    status: approved

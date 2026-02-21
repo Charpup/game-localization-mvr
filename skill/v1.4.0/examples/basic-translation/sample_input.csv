@@ -1,0 +1,8 @@
+key,source,context
+welcome_title,欢迎来到游戏,ui
+start_button,开始游戏,ui
+settings_button,设置,ui
+quit_button,退出,ui
+hp_label,生命值,ui
+mp_label,魔法值,ui
+xp_label,经验值,ui

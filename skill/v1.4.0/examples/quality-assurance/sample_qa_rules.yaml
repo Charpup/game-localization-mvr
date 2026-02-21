@@ -1,0 +1,15 @@
+rules:
+  - id: placeholder_check
+    name: "Placeholder Consistency"
+    type: regex
+    severity: error
+    pattern: '\{[0-9]+\}'
+    check: preserve_count
+    message: "Placeholder count mismatch"
+    
+  - id: length_check
+    name: "Translation Length"
+    type: length
+    severity: warning
+    params:
+      max_ratio: 1.5

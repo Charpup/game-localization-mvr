@@ -1,0 +1,226 @@
+# loc-mVR Workflow Configuration Example
+# This file defines a complete localization workflow
+
+# =============================================================================
+# Workflow Metadata
+# =============================================================================
+
+name: "game_localization_standard"
+description: "Standard game localization workflow with translation and QA"
+version: "1.4.0"
+author: "loc-mVR Team"
+
+# =============================================================================
+# Pipeline Stages
+# =============================================================================
+
+stages:
+  # Stage 1: Pre-processing
+  - id: preprocess
+    name: "Pre-processing"
+    description: "Validate and prepare input data"
+    enabled: true
+    steps:
+      - name: validate_input
+        action: validate_csv
+        params:
+          check_encoding: true
+          check_duplicates: true
+      
+      - name: extract_context
+        action: extract_context
+        params:
+          include_game_context: true
+          include_ui_context: true
+
+  # Stage 2: Translation
+  - id: translate
+    name: "Translation"
+    description: "Main translation stage"
+    enabled: true
+    parallel: true
+    max_parallel: 4
+    steps:
+      - name: batch_translate
+        action: translate
+        provider: openai
+        model: gpt-4o
+        params:
+          temperature: 0.3
+          max_tokens: 2000
+          prompt_template: "game_translation_v2"
+        
+      - name: post_edit
+        action: post_edit
+        enabled: true
+        params:
+          check_consistency: true
+          check_terminology: true
+
+  # Stage 3: Quality Assurance
+  - id: qa
+    name: "Quality Assurance"
+    description: "Automated QA checks"
+    enabled: true
+    steps:
+      - name: automated_qa
+        action: run_qa_checks
+        checks:
+          - length_check
+          - placeholder_check
+          - profanity_check
+          - consistency_check
+        
+      - name: linguistic_qa
+        action: linguistic_review
+        enabled: true
+        model: gpt-4o
+        params:
+          review_aspects:
+            - fluency
+            - accuracy
+            - cultural_appropriateness
+
+  # Stage 4: Post-processing
+  - id: postprocess
+    name: "Post-processing"
+    description: "Format and export results"
+    enabled: true
+    steps:
+      - name: format_output
+        action: format
+        params:
+          format: csv
+          include_metadata: true
+          include_qa_scores: true
+      
+      - name: generate_report
+        action: generate_report
+        params:
+          report_type: full
+          include_statistics: true
+
+# =============================================================================
+# Language-specific Settings
+# =============================================================================
+
+language_settings:
+  # Japanese-specific settings
+  ja:
+    translation:
+      model: gpt-4o
+      temperature: 0.2
+      honorifics: formal
+    qa:
+      additional_checks:
+        - keigo_check
+        - kanji_level_check
+  
+  # Chinese (Simplified) settings
+  zh-cn:
+    translation:
+      model: gpt-4o
+      temperature: 0.3
+      variant: simplified
+    qa:
+      additional_checks:
+        - simplified_traditional_check
+  
+  # Korean settings
+  ko:
+    translation:
+      model: gpt-4o
+      temperature: 0.3
+      honorifics: formal
+    qa:
+      additional_checks:
+        - jondaemal_check
+
+# =============================================================================
+# Quality Thresholds
+# =============================================================================
+
+quality_thresholds:
+  minimum_score: 0.7
+  auto_accept_score: 0.9
+  
+  # Per-check thresholds
+  checks:
+    length_check: 0.8
+    placeholder_check: 1.0  # Must pass completely
+    profanity_check: 1.0    # Must pass completely
+    consistency_check: 0.75
+    fluency: 0.7
+    accuracy: 0.8
+
+# =============================================================================
+# Error Handling
+# =============================================================================
+
+error_handling:
+  # Action on translation failure: retry, skip, abort
+  on_translate_failure: retry
+  
+  # Action on QA failure: flag, auto_fix, abort
+  on_qa_failure: flag
+  
+  # Maximum retries per item
+  max_retries: 3
+  
+  # Retry delay in seconds
+  retry_delay: 2
+
+# =============================================================================
+# Output Configuration
+# =============================================================================
+
+output:
+  # Output format: csv, json, xlsx
+  format: csv
+  
+  # Output columns
+  columns:
+    - key
+    - source
+    - target
+    - translation
+    - confidence_score
+    - qa_score
+    - qa_flags
+    - status
+  
+  # Include raw API responses (for debugging)
+  include_raw: false
+  
+  # Generate additional files
+  additional_files:
+    - qa_report
+    - statistics
+    - error_log
+
+# =============================================================================
+# Notifications (Optional)
+# =============================================================================
+
+notifications:
+  enabled: false
+  
+  # Notify on completion
+  on_complete:
+    - webhook
+    - email
+  
+  # Notify on error
+  on_error:
+    - webhook
+    - email
+  
+  webhook_url: "https://your-webhook-url.com/locmvr"
+  
+  email:
+    smtp_server: "smtp.example.com"
+    smtp_port: 587
+    username: "your-email@example.com"
+    password: "your-password"
+    to_addresses:
+      - "team@example.com"

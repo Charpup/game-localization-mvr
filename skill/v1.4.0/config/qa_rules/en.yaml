@@ -1,0 +1,35 @@
+language: en-US
+
+# Grammar checks
+grammar_rules:
+  - name: "article_usage"
+    pattern: '\b(a|an|the)\s+'
+    description: "Check article usage"
+
+  - name: "capitalization"
+    pattern: '^[a-z]'
+    description: "Check sentence capitalization"
+    severity: "error"
+
+# Forbidden patterns for EN
+forbidden_patterns:
+  - pattern: '\b(damn|hell|shit)\b'
+    severity: "critical"
+    reason: "Profanity check"
+
+  - pattern: '[{\uff08]'
+    severity: "warning"
+    reason: "Use standard ASCII brackets []"
+
+# Length constraints
+length_rules:
+  max_expansion_ratio: 1.2  # EN typically shorter than RU
+  warning_ratio: 1.0
+
+# Placeholder preservation
+placeholder_rules:
+  patterns:
+    - '{{\w+}}'
+    - '\[\w+\]'
+    - '<\w+>'
+  must_preserve: true
