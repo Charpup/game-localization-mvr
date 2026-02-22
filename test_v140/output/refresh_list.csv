@@ -1,0 +1,479 @@
+id,source_zh,target_en,context,status,latency,hard_qa_errors,hard_qa_pass
+904,仙系,[SKIP: The read operation t],general,skipped,0.0,['Too long: 28 vs 2'],False
+921,自选精粹,[SKIP: The read operation t],general,skipped,0.0,['Too long: 28 vs 4'],False
+1024,仙法之道,[SKIP: The read operation t],general,skipped,0.0,['Too long: 28 vs 4'],False
+1062,营救忍者,[SKIP: The read operation t],general,skipped,0.0,['Too long: 28 vs 4'],False
+1118,营救忍者,[SKIP: The read operation t],general,skipped,0.0,['Too long: 28 vs 4'],False
+2041,你能撑到什么时候呢？,[SKIP: The read operation t],general,skipped,0.0,['Too long: 28 vs 10'],False
+2143,嗯~！忍具最棒了！我也是最棒的！,[SKIP: The read operation t],general,skipped,0.0,[],True
+2303,能当我的对手，你应该要觉得光荣,[SKIP: The read operation t],general,skipped,0.0,[],True
+2343,身为队长，得让人看到最有威严的一面才行呢,[SKIP: The read operation t],general,skipped,0.0,[],True
+2392,如果是你，应该可以找到答案,[SKIP: The read operation t],general,skipped,0.0,[],True
+2523,我爱你,[SKIP: The read operation t],general,skipped,0.0,['Too long: 28 vs 3'],False
+2653,可别以为我只是普通忍者哦？你会尝到苦头的,[SKIP: The read operation t],general,skipped,0.0,[],True
+1,忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。,"Ninja leveling up and star promotion can greatly increase Ninja Attribute growth, and level-up Attribute bonuses are increased.",skill,success,3.911765336990357,['Too long: 127 vs 29'],False
+2,忍者共分为13个星级，只有部分忍者可以突破到13星。,"Ninjas are divided into 13 Star levels, and only certain Ninjas can breakthrough to 13-Star.",skill,success,2.6957437992095947,['Too long: 92 vs 26'],False
+3,除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。,"In addition to the 4 basic Attributes of HP, Attack, Defense, and Speed, there are also 16 special Attributes.",general,success,2.778914451599121,['Too long: 110 vs 30'],False
+4,忍者初始质量从低到高为蓝、紫、橙，分别对应3-5星,"Ninja initial quality ranges from low to high: Blue, Purple, and Orange, corresponding to 3-5 stars respectively.",general,success,3.739424467086792,['Too long: 113 vs 25'],False
+5,升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能,"Star Ascension allows some Ninja skills to reach Level 3, and higher skill levels can be unlocked through Potential Awakening.",skill,success,7.995709657669067,['Too long: 126 vs 33'],False
+6,消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还,"When consuming Ninjas for synthesis, breakthrough, and other operations, resources previously used for their cultivation will be refunded.",skill,success,2.690962076187134,['Too long: 138 vs 31'],False
+7,技能分为主动和被动。[沉默]阻止主动技能释放,Skills are divided into Active and Passive. [Silence] prevents Active skill activation,skill,success,3.5400898456573486,"['Missing placeholder: [沉默]', 'Too long: 86 vs 22']",False
+8,忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体,"When a Ninja is promoted in star level, it consumes the original Ninja, so try to preserve your original Ninjas as much as possible in the early game.",skill,success,4.163749694824219,['Too long: 150 vs 27'],False
+9,忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力,"Ninja skill cooldowns are divided into 2 turns and 4 turns, with 4-turn cooldown skills being more powerful",skill,success,4.35085391998291,['Too long: 107 vs 28'],False
+10,阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害,"Formation counters will greatly increase Ninja combat power, specifically manifested as increased Accuracy and damage.",general,success,3.382291555404663,['Too long: 118 vs 27'],False
+11,开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3,"Auto-sweep activates when pursuing rogue ninjas, sweeping up to yesterday's highest cleared stage minus 3.",general,success,2.883252620697021,['Too long: 106 vs 29'],False
+12,每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择,"Each time you challenge Konoha's defense, you can select 1 buff. If no action is taken for a long time, the system will automatically select one.",quest,success,3.8787808418273926,['Too long: 145 vs 35'],False
+13,仙人试炼每2天重置1次，所累积的复活币道具不清空,The Sage Trial resets every 2 days. Accumulated revival tokens are not cleared.,reward,success,3.4458372592926025,['Too long: 79 vs 24'],False
+14,晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取,"Akatsuki·Subjugation Battle: In addition to cumulative damage rewards and ranking rewards, there is also a Lucky Draw prize.",reward,success,3.649404287338257,['Too long: 124 vs 26'],False
+15,精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一,Elite Summon points obtained through Elite Summon recruitment are one of the stable ways to exchange for your desired Ninja.,reward,success,2.9487078189849854,['Too long: 124 vs 31'],False
+16,高级招募每次十连必出5星忍者，并有概率出多位5星忍者,"Advanced Recruitment guarantees a 5-star Ninja every 10-draw, with a chance to obtain multiple 5-star Ninjas",general,success,3.0547196865081787,['Too long: 108 vs 26'],False
+17,VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者,"When VIP level reaches 3 or higher, you can consume points obtained from summoning to directly draw 5-star Ninjas",reward,success,2.866581439971924,['Too long: 113 vs 30'],False
+18,忍者背包格子上限可通过提升VIP等级或消耗金币提升,Ninja inventory slot limit can be increased by upgrading VIP level or spending Gold.,reward,success,2.848052740097046,['Too long: 84 vs 25'],False
+19,每一期的轮换活动都会有排名奖励，包含大量金币和高级探宝券,"Each rotation event features ranking rewards, including a large amount of Gold and Advanced Treasure Hunt Tickets.",reward,success,2.7372703552246094,['Too long: 114 vs 28'],False
+20,玩家可消耗金币进行改名，首次改名免费，之后仅需低额金币,"Players can spend Gold to change their name. The first name change is free, and subsequent changes only require a small amount of Gold.",reward,success,7.80778956413269,['Too long: 135 vs 27'],False
+21,可消耗组织贡献升级六道之力，六道之力可百分比提高忍者属性,"Consume Organization Contribution to upgrade Six Paths Power, which increases Ninja Attributes by a percentage.",skill,success,12.285664319992064,['Too long: 111 vs 28'],False
+22,布阵中同名忍者无法同时上阵，即使是好友支援的同名忍者,"Ninjas with the same name cannot be deployed simultaneously in formation, even if they are from friend support.",general,success,2.707789421081543,['Too long: 111 vs 26'],False
+23,忍者在误操作升星后，可在忍者重生中消耗一定道具全额退回资源,"If a Ninja is accidentally upgraded, you can consume certain items in Ninja Rebirth to get a full refund of resources.",skill,success,12.48132848739624,['Too long: 118 vs 29'],False
+24,忍者上阵后，可启动对应阵营的属性增幅，为忍者提高百分比属性,"After deploying Ninjas, corresponding faction Attribute boosts can be activated to increase percentage Attributes for Ninjas.",general,success,2.742896556854248,['Too long: 125 vs 29'],False
+25,在忍传中可获得强力忍道，装备后在战斗中持续为忍者提高属性,Obtain powerful Ninja Ways in the Ninja Chronicles; equip them to continuously increase Ninja Attributes during battle.,reward,success,2.655588150024414,['Too long: 119 vs 28'],False
+26,除竞技场PK外，每周两次的忍者对决竞猜是获得声望的稳定途径,"Apart from Arena PvP, the twice-weekly Ninja Showdown betting is a stable way to gain Reputation.",reward,success,2.756535053253174,['Too long: 97 vs 29'],False
+27,忍者小队的职业组合十分重要，最好能攻击、防御与治疗三者兼备,"The profession combination of the Ninja squad is very important; it's best to have Attack, defense, and healing all together.",general,success,2.669769525527954,['Too long: 125 vs 29'],False
+28,随着回合数的增加，会开启决战模式，逐渐提高全体忍者伤害,"As the number of rounds increases, Final Battle Mode will activate, gradually increasing all Ninja damage.",general,success,3.9855215549468994,['Too long: 106 vs 27'],False
+29,不需要的忍者最好不要分解，可以用作主力忍者的升星材料,"It's best not to decompose unwanted Ninjas, as they can be used as star-up materials for your main Ninjas.",skill,success,2.7226059436798096,['Too long: 106 vs 26'],False
+30,有时候非主流阵容代表的并不是不强，而是尚未被搭配与开发,"Sometimes non-meta lineups don't represent weakness, but rather untapped potential waiting to be paired and developed.",general,success,2.817729949951172,['Too long: 118 vs 27'],False
+40,天下大势，非久必欧！,"The world's grand trend—if not long-lasting, must turn to Europe!
+
+(Note: This appears to be a pun on the Chinese idiom ""天下大势，分久必合"" [the world divided for long must unite], with ""欧"" [Europe/Ou] replacing ""合"" [unite/he] as a gacha game joke about getting European/rare drops)",general,success,3.820837020874024,['Too long: 274 vs 10'],False
+41,如果幸福有颜色，那一定是金色,"If happiness had a color, it would definitely be golden.",general,success,2.8900091648101807,['Too long: 56 vs 14'],False
+42,运气爆棚，欧皇附体！,"Extreme luck, the RNG god descends!",general,success,3.7785279750823975,['Too long: 35 vs 10'],False
+43,感受一下天选之子欧皇的气息,"Feel the aura of the chosen one, the luckiest Ninja alive.",general,success,3.5981624126434326,['Too long: 58 vs 13'],False
+50,切勿相信任何第三方管道，谨防诈骗！,Do not trust any third-party channels. Beware of scams!,general,success,2.468656778335572,['Too long: 55 vs 17'],False
+51,请勿相信聊天中送兑换码信息，谨防诈骗。,"Do not trust redemption code giveaways in chat, beware of scams.",general,success,3.8336939811706543,['Too long: 64 vs 19'],False
+52,警惕聊天中发兑换码的诈骗模式！,Beware of the scam pattern where people send fake redemption codes in chat!,general,success,2.837414026260376,['Too long: 75 vs 15'],False
+53,切勿随意通过游戏外聊天申请，不给骗子可乘之机。,"Never accept friend requests through out-of-game chat channels casually, and don't give scammers any opportunity.",general,success,3.3972485065460205,['Too long: 113 vs 23'],False
+54,切记非官方人员加联系方式的都是诈骗行为！,Remember: anyone who is not official staff adding contact information is a scam!,general,success,3.204878330230713,['Too long: 80 vs 20'],False
+55,牢记天上不会掉馅饼，不要相信非官方人员！,Remember that pies don't fall from the sky—don't trust unofficial personnel!,general,success,3.5452589988708496,['Too long: 76 vs 20'],False
+70,护盾免伤,Shield Damage Reduction,general,success,2.365891456604004,['Too long: 23 vs 4'],False
+71,降攻降疗,Attack Reduction & Healing Reduction,general,success,2.542564868927002,['Too long: 36 vs 4'],False
+72,治疗重生,Healing Rebirth,general,success,2.3989927768707275,['Too long: 15 vs 4'],False
+73,削防真伤,Defense Reduction True Damage,general,success,3.3329694271087646,['Too long: 29 vs 4'],False
+74,群体增速,Group Speed Boost,general,success,2.5599613189697266,['Too long: 17 vs 4'],False
+75,前排控制,Front Row Control,general,success,2.509630918502808,['Too long: 17 vs 4'],False
+76,攻击噬取,Attack Drain,general,success,2.301875591278076,['Too long: 12 vs 4'],False
+77,残血收割,Low-HP Finisher,general,success,2.4967472553253174,['Too long: 15 vs 4'],False
+78,单体驱散,Single-target Dispel,general,success,3.692319869995117,['Too long: 20 vs 4'],False
+79,生命恢复,HP Recovery,general,success,2.31171989440918,['Too long: 11 vs 4'],False
+80,韧性提升,Tenacity Increase,general,success,2.335379123687744,['Too long: 17 vs 4'],False
+82,压制输出,Suppression Attack,general,success,3.3914451599121094,['Too long: 18 vs 4'],False
+83,单体控制,Single Target Control,general,success,2.4835712909698486,['Too long: 21 vs 4'],False
+84,群体增攻,Group Attack Buff,general,success,2.3704135417938232,['Too long: 17 vs 4'],False
+85,单体恢复,Single Target Recovery,general,success,3.034042835235596,['Too long: 22 vs 4'],False
+86,单体压制,Single-Target Suppression,general,success,3.270946979522705,['Too long: 25 vs 4'],False
+87,前排破防,Front Row Defense Break,general,success,2.3047690391540527,['Too long: 23 vs 4'],False
+88,反伤,Reflect Damage,general,success,2.8395724296569824,['Too long: 14 vs 2'],False
+89,普攻连击,Normal Attack Combo,general,success,2.7186193466186523,['Too long: 19 vs 4'],False
+90,技能连击,Skill Combo,skill,success,2.361767530441284,['Too long: 11 vs 4'],False
+91,抗破甲,Anti-Armor Penetration,general,success,2.3753304481506348,['Too long: 22 vs 3'],False
+92,吸血,Life Steal,general,success,3.0969533920288086,['Too long: 10 vs 2'],False
+93,抗吸血,Anti-Life Steal,general,success,3.327315092086792,['Too long: 15 vs 3'],False
+94,抗暴伤,Anti-Critical Damage,general,success,3.3276095390319824,['Too long: 20 vs 3'],False
+105,七尾·重明,Seven-Tails·Chomei,general,success,3.291959047317505,['Too long: 18 vs 5'],False
+107,旁白,Narrator,general,success,3.592991828918457,['Too long: 8 vs 2'],False
+108,二尾·又旅,Two-Tails·Matatabi,general,success,2.667482852935791,['Too long: 18 vs 5'],False
+109,暗部成员,ANBU Member,general,success,2.372082471847534,['Too long: 11 vs 4'],False
+110,“晓”成员,"""Akatsuki"" Member",general,success,3.549835205078125,['Too long: 17 vs 5'],False
+111,八尾·牛鬼,Eight-Tails: Gyūki,general,success,2.857511520385742,['Too long: 18 vs 5'],False
+112,三尾·几抚,Three-Tails: Isobu,general,success,3.9078991413116455,['Too long: 18 vs 5'],False
+114,十尾,Ten-Tails,general,success,3.1686758995056152,['Too long: 9 vs 2'],False
+115,外道魔像,Gedo Statue,general,success,4.435668230056763,['Too long: 11 vs 4'],False
+116,琳,Rin,general,success,2.515862226486206,['Too long: 3 vs 1'],False
+182,皮肤觉醒,Skin Awakening,general,success,2.374943494796753,['Too long: 14 vs 4'],False
+201,达兹纳师傅,Master Tazuna,general,success,3.977213144302368,['Too long: 13 vs 5'],False
+202,村民,Villager,general,success,3.273918390274048,['Too long: 8 vs 2'],False
+235,【超影】或以上,【Super Kage】or above,general,success,3.379410743713379,['Too long: 20 vs 7'],False
+239,攻击,Attack,general,success,3.1458756923675537,['Too long: 6 vs 2'],False
+240,反伤,Reflect Damage,general,success,3.7889833450317374,['Too long: 14 vs 2'],False
+242,真伤,True Damage,general,success,2.77090072631836,['Too long: 11 vs 2'],False
+243,暴击,Critical Hit,general,success,2.450244188308716,['Too long: 12 vs 2'],False
+244,闪避,Evasion,general,success,2.420739889144897,['Too long: 7 vs 2'],False
+247,攻击,Attack,general,success,2.848672389984131,['Too long: 6 vs 2'],False
+248,抗反伤,Anti-Reflect Damage,general,success,2.507467746734619,['Too long: 19 vs 3'],False
+249,抗格挡,Anti-Block,general,success,2.659351587295532,['Too long: 10 vs 3'],False
+250,抗真伤,Anti-True Damage,general,success,2.423091411590576,['Too long: 16 vs 3'],False
+251,抗暴,Anti-Crit,general,success,2.558901786804199,['Too long: 9 vs 2'],False
+252,命中,Accuracy,general,success,3.3452038764953613,['Too long: 8 vs 2'],False
+254,宇智波血脉,Uchiha Bloodline,general,success,3.776978731155396,['Too long: 16 vs 5'],False
+255,千手血脉,Senju Bloodline,general,success,2.660290479660034,['Too long: 15 vs 4'],False
+256,漩涡血脉,Uzumaki Bloodline,general,success,2.6478359699249268,['Too long: 17 vs 4'],False
+257,日向血脉,Hyuga Bloodline,general,success,3.25638198852539,['Too long: 15 vs 4'],False
+501,坠入梦境,Fall into Dreams,general,success,3.528287649154663,['Too long: 16 vs 4'],False
+502,隔世之梦,Dream of a Previous Life,general,success,2.958954095840454,['Too long: 24 vs 4'],False
+503,九尾暴走,Nine-Tails Rampage,general,success,4.503650426864624,['Too long: 18 vs 4'],False
+504,梦的开端,The Beginning of a Dream,general,success,3.9663360118865967,['Too long: 24 vs 4'],False
+506,死亡森林,Forest of Death,general,success,3.2232537269592285,['Too long: 15 vs 4'],False
+507,大蛇丸现身,Orochimaru Appears,general,success,2.48799729347229,['Too long: 18 vs 5'],False
+508,预选赛,Preliminary Round,general,success,2.424868583679199,['Too long: 17 vs 3'],False
+509,自来也训练,Jiraiya Training,general,success,2.400521755218506,['Too long: 16 vs 5'],False
+510,木叶村危机,Konoha Crisis,general,success,2.7508914470672607,['Too long: 13 vs 5'],False
+511,悬赏猎人,Bounty Hunter,general,success,2.80739688873291,['Too long: 13 vs 4'],False
+512,火影级战斗,Hokage-level Combat,general,success,2.614037275314331,['Too long: 19 vs 5'],False
+513,鼬的复返,Itachi's Return,general,success,3.675026178359986,['Too long: 15 vs 4'],False
+514,三忍决战,Sannin Showdown,general,success,9.498606204986572,['Too long: 15 vs 4'],False
+515,卡卡西面目,Kakashi's Face,general,success,2.522688388824463,['Too long: 14 vs 5'],False
+516,茶之国,Land of Tea,general,success,2.316422462463379,['Too long: 11 vs 3'],False
+517,裂缝,Fissure,general,success,2.4164879322052,['Too long: 7 vs 2'],False
+518,佐助出走,Sasuke's Defection,general,success,2.4030630588531494,['Too long: 18 vs 4'],False
+519,追寻佐助,Pursuit of Sasuke,general,success,2.5619940757751465,['Too long: 17 vs 4'],False
+520,持续作战,Sustained Combat,general,success,3.2849020957946777,['Too long: 16 vs 4'],False
+521,终结谷之战,Valley of the End Battle,general,success,2.3954365253448486,['Too long: 24 vs 5'],False
+522,寻找大蛇丸,Search for Orochimaru,general,success,2.372735977172852,['Too long: 21 vs 5'],False
+523,水木越狱,Mizuki's Prison Break,general,success,2.894320487976074,['Too long: 21 vs 4'],False
+524,归乡,Homecoming,general,success,2.4622981548309326,['Too long: 10 vs 2'],False
+525,砂隐危机,Hidden Sand Crisis,general,success,2.397735118865967,['Too long: 18 vs 4'],False
+526,木叶救援,Konoha Rescue,general,success,3.381047248840332,['Too long: 13 vs 4'],False
+527,相会,Reunion,general,success,3.0451107025146484,['Too long: 7 vs 2'],False
+528,我爱罗之死,Gaara's Death,general,success,2.3553974628448486,['Too long: 13 vs 5'],False
+529,夺回，复活,"Reclaim, Revive",general,success,12.681627750396729,['Too long: 15 vs 5'],False
+530,九尾解放,Nine-Tails Release,general,success,3.203387975692749,['Too long: 18 vs 4'],False
+531,寻找佐助,Search for Sasuke,general,success,2.647022724151612,['Too long: 17 vs 4'],False
+532,被夺的永眠,Stolen Eternal Slumber,general,success,4.280884027481079,['Too long: 22 vs 5'],False
+533,黄泉的幽魂,Netherworld Specter,general,success,4.317334413528442,['Too long: 19 vs 5'],False
+117,少年带土,Young Obito,general,success,2.556112289428711,['Too long: 11 vs 4'],False
+701,    第四次忍界大战，整个忍界破天荒地团结一心，组成忍界联军，为了阻止斑和带土的惊天阴谋而战。几经危难，漩涡鸣人终于站到了敌人的面前。然而，命运的齿轮并未因他和伙伴们的战斗而停歇。传说中的最强禁术——无限月读终于发动，整个忍界都受到影响，坠入了梦境之中。带土曾说，无限月读的世界没有纷争，也没有不幸，所有人都能得到完美的幸福。然而展现在鸣人面前的，却是一个混乱而崩坏的世界！虚假的梦境并不能带来真正的幸福，必须要让大家从无限月读的世界中清醒过来！,"The Fourth Great Ninja War saw the entire ninja world unite as never before, forming the Allied Shinobi Forces to combat Madara and Obito's earth-shattering conspiracy. After countless perils, Naruto Uzumaki finally stood before his enemies. Yet the gears of fate did not cease turning for him and his comrades. The legendary ultimate forbidden technique—the Infinite Tsukuyomi—was finally unleashed, affecting the entire ninja world and plunging all into dreams. Obito once said that in the Infinite Tsukuyomi's world, there would be no conflict, no misfortune, and everyone could obtain perfect happiness. But what unfolded before Naruto was a chaotic, crumbling world! False dreams cannot bring true happiness—everyone must be awakened from the Infinite Tsukuyomi's world!",story,success,5.35599684715271,['Too long: 775 vs 224'],False
+702,    斑和带土的无限月读刚刚完成，空间还处于十分不稳定的状态，或许趁此机会是有可能打破这个虚假的世界的。但是前来阻挠的敌军不断地发起进攻。曾经惺惺相惜的对手，一起战斗过的挚友，甚至是血浓于水的亲人，竟然都成为了空虚幻影的驱壳，不顾一切地阻止鸣人前进。但是对于一个深处在梦境之中的人来说，或许比起奋不顾身地想要对抗命运，还是放弃挣扎沉醉于梦乡更为“清醒”。,"Madara and Obito's Infinite Tsukuyomi has just been completed, and space remains in a highly unstable state—perhaps this opportunity could be used to break this false world. However, enemy forces arrive to obstruct and launch relentless Attacks. Once-respected rivals, comrades who fought side by side, even blood relatives, have all become empty shells of illusions, stopping at nothing to prevent Naruto from advancing. Yet for one trapped within a dream, perhaps giving up the struggle to indulge in slumber is more ""awake"" than desperately fighting against fate.",quest,success,4.462387800216675,['Too long: 566 vs 178'],False
+703,    随着在无限月读的世界中不断深入，鸣人终于在破碎的木叶村中找到了一切的始作俑者——宇智波带土。只需要对记忆完成最后的修正，陷入幻术的所有人都将忘记这是虚幻的世界，永远沉睡在这完美的梦境之中。而带土一直思念的琳，也可以在这个世界中存在，只需要这一个原因，就足以让带土不顾一切地完成这个空前绝后的术。现在阻挡在他面前的，就只剩下鸣人和他的几个伙伴。即便他们选择反抗，带土也愿意为他们赐予安宁的美梦，于是他在梦境中创造出了九喇嘛，要用它的力量对所有人的记忆进行最后的修正。这是鸣人的宿命之战，更是决定忍界命运之战。,"As Naruto delved deeper into the world of Infinite Tsukuyomi, he finally found the mastermind behind everything—Obito Uchiha—in the shattered Konoha Village. With just one final correction to their memories, everyone trapped in the genjutsu would forget this was an illusory world and slumber eternally in this perfect dream. And Rin, whom Obito had always longed for, could exist in this world as well. This reason alone was enough to drive Obito to complete this unprecedented jutsu at any cost. Now, only Naruto and his few companions stood in his way. Even if they chose to resist, Obito was willing to grant them peaceful dreams, so he created Kurama within the dreamscape to use its power for the final memory correction. This was Naruto's destined battle, and more importantly, a battle that would decide the fate of the Ninja World.",quest,success,5.913543701171875,['Too long: 840 vs 257'],False
+704,    这是一场惊天动地的战斗，鸣人和他的老朋友九喇嘛不得不展开殊死一战，然而最终鸣人失败了。带土的无限月读终于完成，所有人的记忆都被修正。而鸣人也忘记了一切，变回了那个几年前刚从忍者学校毕业的少年。再次与小樱佐助相遇，再次在卡卡西老师的带领之下组成了第七班，再次经历了波之国与再不斩和白惊险的一战。一切又如轮回一般再度重现，然而这不过是一场梦的开端……,"This was an earth-shattering battle. Naruto and his old friend Kurama were forced into a fight to the death, yet in the end, Naruto failed. Obito's Infinite Tsukuyomi was finally complete, and everyone's memories were rewritten. Naruto forgot everything as well, returning to the young man who had just graduated from the Ninja Academy years ago. Meeting Sakura and Sasuke once again, forming Team 7 once more under Teacher Kakashi's leadership, experiencing once more the perilous battle at the Land of Waves against Zabuza and Haku. Everything repeated itself like a cycle, yet this was merely the beginning of a dream...",quest,success,5.558438062667847,['Too long: 623 vs 177'],False
+705,    在第七班回到木叶村时，其他村子的忍者们都开始陆续聚集在此。中忍考试即将开始，卡卡西向火影推荐鸣人、佐助、樱三人参加中忍考试，三人对此自信满满。中忍考试正式开始。鸣人虽遇到自己最不擅长的笔试，但为了整个团队，鸣人在几乎是白卷的基础上也没有放弃第十题。最后，鸣人终于通过了考试。,"When Team 7 returned to Konoha, ninjas from other villages began gathering there one after another. The Chunin Exams were about to begin, and Kakashi recommended Naruto, Sasuke, and Sakura to the Hokage for participation. The three of them were full of confidence. The Chunin Exams officially commenced. Although Naruto encountered the written test he was least skilled at, for the sake of the entire team, he did not give up on the tenth question despite having nearly a blank paper. Finally, Naruto passed the exam.",general,success,6.5832061767578125,['Too long: 517 vs 141'],False
+706,    中忍考试第二项测试——死亡森林。这场考核虽名义上是一场生存能力测试，而实际上则是一场不择手段的卷轴争夺战，只有团队共同集齐了天与地卷轴才能顺利通过这场测试。但在考试期间，有一位神秘人变身为鸣人混入第七班，虽然被佐助识破，可三人却并不是神秘人的对手。,"Chunin Exam Stage Two — The Forest of Death. While nominally a survival test, this examination is in reality an anything-goes scroll battle, with teams only passing by collecting both Heaven and Earth scrolls together. However, during the exam, a mysterious figure transformed into Naruto to infiltrate Team 7. Though exposed by Sasuke, the three were no match for the mysterious opponent.",general,success,3.797790765762329,['Too long: 389 vs 128'],False
+707,    鸣人与佐助接连对抗神秘人，佐助使用写轮眼操风车三之大刀控制住神秘人，配合火遁龙火之术却只烧掉了神秘人的外皮。神秘人自称为大蛇丸，诱导佐助声称能带给佐助力量，最后在佐助脖子上留下了一个咒印。之后，三人历经阻碍、在伙伴帮助下与磨难后，终于凑齐了卷轴。,"Naruto and Sasuke confronted the mysterious man one after another. Sasuke used Sharingan Windmill Triple Blade to restrain the mysterious man, and coordinated with Fire Release: Dragon Fire Technique, but only burned away the mysterious man's outer skin. The mysterious man introduced himself as Orochimaru, lured Sasuke by claiming he could grant him power, and finally left a Cursed Seal on Sasuke's neck. Afterward, the three overcame obstacles, with the help of their companions and through hardships, finally collected all the scrolls.",general,success,50.99645709991455,['Too long: 540 vs 127'],False
+708,    抵达终点之塔后，伊鲁卡宣布三人顺利通过了第二场考试。由于通过考试的人数过多，火影在第三场测试前进行了一场预选赛。预选赛采取1V1的方式，胜者晋级。药师兜还未开始便选择弃权。佐助对阵赤胴铠中利用自己创造的体术招式击败了赤胴铠；樱对阵死对头井野，在中招心转之术时被鸣人唤醒，精疲力尽的两人使出最后一击，双方同时倒地导致平局。鸣人对阵牙和赤丸，即使被打得无还手之力也并不放弃，并使用反间计和多重影分身之术打败了赤丸和牙。,"After reaching the Tower of the End, Iruka announced that the three had successfully passed the second exam. Due to the excessive number of passers, the Hokage held a preliminary round before the third test. The preliminaries adopted a 1V1 format, with winners advancing. Yakushi Kabuto chose to forfeit before his match even began. Uchiha Sasuke faced Akadō Yoroi and defeated him using a self-created Taijutsu technique; Haruno Sakura faced her rival Yamanaka Ino, and when caught under the Mind Body Switch Technique, she was awakened by Naruto—the exhausted pair unleashed their final blows, both collapsing simultaneously resulting in a draw. Uzumaki Naruto faced Inuzuka Kiba and Akamaru, and even when beaten without any chance to counterattack, he refused to give up, using a ruse and the Multiple Shadow Clone Technique to defeat Akamaru and Kiba.",quest,success,6.484614133834839,['Too long: 856 vs 211'],False
+709,    为了备战后续的中忍考试，卡卡西为鸣人物色了一名实力强劲的大色狼惠比寿作为鸣人的老师。由于鸣人不满惠比寿，在自来也打晕因打扰自来也偷窥女浴室的惠比寿后，使用色诱之术让自来也带他修炼。自来也针对鸣人体内拥有强大查克拉的特质，为鸣人设定了专属的修炼方式并使用接近死亡的边缘方式激发鸣人而将其掌握通灵之术。鸣人召唤出蛤蟆老大文太并通过了文太的考验，文太给予鸣人极棒的评价。,"To prepare for the upcoming Chunin Exams, Kakashi found a powerful pervert named Ebisu to be Naruto's teacher. Dissatisfied with Ebisu, Naruto used the Sexy Jutsu on Jiraiya after Jiraiya knocked out Ebisu for interrupting his peeping at the women's bath, convincing Jiraiya to train him instead. Targeting Naruto's Attribute of possessing massive chakra, Jiraiya designed a specialized training regimen and pushed Naruto to the brink of death to awaken his potential, enabling him to master the Summoning Jutsu. Naruto summoned Gamabunta the Toad Boss and passed his trial, earning excellent praise from Gamabunta.",skill,success,6.1351423263549805,['Too long: 615 vs 186'],False
+710,    在佐助与来自风之国·砂隐村我爱罗的比赛战斗中，佐助使用自己新学会的忍术千鸟并把我爱罗的沙盾贯穿，而我爱罗因此受伤。此时，砂忍突然对木叶忍者发动了攻击，看台上的风影也顺势挟持了火影而大蛇丸手下的音忍也同时释放了四紫炎阵困住了火影。封印阵内，风影露出了真面目，竟然是叛逃木叶的大蛇丸。会场顿时大乱，而我爱罗在砂忍得掩护下撤退，佐助则一路追击我爱罗。,"During the match between Sasuke and Gaara of the Hidden Sand Village from the Land of Wind, Sasuke used his newly learned Ninjutsu Chidori to pierce through Gaara's sand shield, injuring him in the process. At this moment, the Sand Ninja suddenly launched an Attack against the Leaf Ninja. The Kage of Wind on the spectator stand took the opportunity to take the Hokage hostage, while the Sound Ninja under Orochimaru's command simultaneously released the Four Violet Flames Formation to trap the Hokage. Inside the sealing formation, the Kage of Wind revealed his true identity—he was actually Orochimaru, who had defected from the Leaf Village. The venue immediately fell into chaos. Gaara retreated under the cover of the Sand Ninja, while Sasuke pursued him all the way.",skill,success,66.97923994064331,['Too long: 774 vs 176'],False
+711,    卡卡西告知小樱，这将是波之国以来的A级任务。鸣人，鹿丸、樱和名为帕克的小狗前去追踪佐助并阻止佐助的行动，但他们背后却有音忍在其跟踪。虽然大家听从引路的帕克建议，设置了陷阱阻拦追兵，但是音忍并没有中计。其后，鹿丸以自身为诱饵引开音忍。而鸣人和樱及时赶到，将被大蛇丸咒印缠身的佐助脱离危机。在鸣人的意志下，通灵出蛤蟆老大文太，文太和鸣人合体变身后鸣人一记头槌将我爱罗击败。,"Kakashi informs Sakura that this will be an A-rank mission since the Land of Waves. Naruto, Shikamaru, Sakura, and a small dog named Pakkun set out to track down Sasuke and stop his actions, but Sound Ninja are following them from behind. Although everyone follows Pakkun's guidance and sets traps to block the pursuers, the Sound Ninja do not fall for it. Afterwards, Shikamaru uses himself as bait to lure the Sound Ninja away. Naruto and Sakura arrive in time to rescue Sasuke, who is afflicted by Orochimaru's Cursed Seal, from crisis. With Naruto's determination, he summons Gamabunta, the boss toad. After merging with Gamabunta, Naruto defeats Gaara with a single headbutt.",quest,success,8.565665006637573,['Too long: 680 vs 188'],False
+712,    另一边，结界中的火影和大蛇丸进入了激烈的战斗状态。双方不相上下，但在大蛇丸使用秽土转生召唤了一二代目火影后，他们只能被大蛇丸操纵并双双联手向三代目火影攻击。三代目火影随即召唤猿魔对抗，但已力不从心。但在大蛇丸向三代火影展示出利用不死转生而成功侵占肉身的女忍者面孔后，三代火影只能使用当年四代火影封印九尾的忍术“尸鬼封尽”。由于在封印过程被大蛇丸刺伤，最终只封印了大蛇丸的双手。,"Meanwhile, the Hokage and Orochimaru inside the barrier entered an intense battle. Both sides were evenly matched, but after Orochimaru used Impure World Reincarnation to summon the First and Second Hokage, they could only be manipulated by Orochimaru and jointly Attack the Third Hokage. The Third Hokage immediately summoned Enma to resist, but was already exhausted. However, after Orochimaru showed the Third Hokage the face of a female Ninja who had successfully taken over a body using Living Corpse Reincarnation, the Third Hokage had no choice but to use the same ninjutsu the Fourth Hokage used to seal the Nine-Tails—""Dead Demon Consuming Seal."" Due to being wounded by Orochimaru during the sealing process, he ultimately only sealed Orochimaru's hands.",skill,success,4.201450824737549,['Too long: 764 vs 192'],False
+713,    为了完成晓组织的最高命令寻找第四代火影的遗产——漩涡鸣人，宇智波鼬带着鬼鲛重返木叶忍者村。阿斯玛和红被安排跟踪监视鼬与鬼鲛的行动，却不料被发现，被打得节节败退。卡卡西及时出现却也因陷入宇智波鼬的万花筒写轮眼而精神涣散，直到迈特凯的相助，鼬和鬼鲛选择撤退继续寻找鸣人。另一边，自来也带着鸣人单独修炼，而佐助得知鼬已出现并在寻找鸣人。然而，鼬比佐助先行找到鸣人并打算强行带走。佐助开启千鸟向鼬发起攻击，鸣人极力释放九尾查克拉但却被鬼鲛的鲛肌吸收。自来也及时出现，并用岩宿蛤蟆食道困住了鼬，但鼬最后使用天照逃脱。,"To carry out the Akatsuki organization's highest order—seeking the legacy of the Fourth Hokage, Uzumaki Naruto—Uchiha Itachi returned to Konoha Ninja Village with Kisame. Asuma and Kurenai were assigned to track and monitor Itachi and Kisame's movements, but were unexpectedly discovered and beaten back repeatedly. Kakashi arrived in time but fell into a trance due to Itachi's Mangekyo Sharingan, until Might Guy's assistance forced Itachi and Kisame to retreat and continue their search for Naruto. Meanwhile, Jiraiya took Naruto for solo training, while Sasuke learned that Itachi had appeared and was searching for Naruto. However, Itachi found Naruto before Sasuke and attempted to take him by force. Sasuke activated Chidori to Attack Itachi, while Naruto desperately released Nine-Tails chakra but had it absorbed by Kisame's Samehada. Jiraiya",quest,success,5.9092090129852295,['Too long: 851 vs 257'],False
+714,    在自来也与鸣人被高层派去将被指派为第五代目火影纲手带回木叶村后，大蛇丸寻找到纲手并想与之交易，而后自来也和鸣人在居酒屋找到了纲手。纲手拒绝成为火影并对自来也下药孤身前见大蛇丸。因最后纲手拒绝大蛇丸而触发了两人恶战。兜代替大蛇丸出战，并利用纲手怕血的弱点封锁纲手的行动。静音与鸣人赶往现场，鸣人为制止兜而不惜受伤，纲手为帮鸣人挡剑克服了对血的恐惧。自来也、纲手、大蛇丸三人之战正式爆发。,"After Jiraiya and Naruto were dispatched by the higher-ups to bring Tsunade, who was appointed as the Fifth Hokage, back to Konoha Village, Orochimaru found Tsunade and sought to make a deal with her. Later, Jiraiya and Naruto located Tsunade at an izakaya. Tsunade refused to become Hokage and drugged Jiraiya before going alone to meet Orochimaru. When Tsunade ultimately rejected Orochimaru, it triggered a fierce battle between them. Kabuto fought in Orochimaru's place and exploited Tsunade's hemophobia to restrict her movements. Shizune and Naruto rushed to the scene, and Naruto sustained injuries to stop Kabuto. To protect Naruto from a sword strike, Tsunade overcame her fear of blood. The battle between Jiraiya, Tsunade, and Orochimaru officially erupted.",general,success,6.896122932434082,['Too long: 768 vs 196'],False
+715,    鸣人、佐助和樱为探索卡卡西面具下的素颜，决定请卡卡西吃拉面的时候等他揭开面罩，但被井野他们突然出现打断了三人的计划。他们无论集体跟踪还是单独跟踪卡卡西都以失败告终。曾被卡卡西因救助少女而用绳掉在树下的三个忍者想尽办法给卡卡西下药，但也都失败了。佐助建议邀请卡卡西吃日料，泡澡堂都无法揭露卡卡西的模样。最后鸣人、佐助和樱实在没有办法便偷走澡堂内的三个忍者服装，想要与之战斗，却被卡卡西一眼识破。三人直戳了当询问后 ，卡卡西揭开了面罩——面罩之下还是面罩。,"Naruto, Sasuke, and Sakura decided to treat Kakashi to ramen in hopes of catching him without his mask on, but their plan was interrupted when Ino and the others suddenly appeared. Whether tracking Kakashi as a group or individually, they all ended in failure. Three Ninjas who had once been tied to a tree by Kakashi while he rescued a young woman tried every method to drug him, but failed as well. Sasuke suggested inviting Kakashi for Japanese cuisine and visiting bath houses, yet none could reveal Kakashi's true face. Finally out of options, Naruto, Sasuke, and Sakura stole three Ninja outfits from the bath house to confront him in battle, only to be seen through by Kakashi at a glance. After asking him directly, Kakashi removed his mask—revealing another mask underneath.",general,success,4.791448831558228,['Too long: 783 vs 230'],False
+716,    据第五代火影所收的委托中，鸣人、佐助和樱三人被分配了B级任务——前往茶之国保护重要人士。三人需帮助山葵一家赢得四年一次轰大社的祭拜仪式中的赛跑比赛，让次郎长老大重获小镇主权。在得知保护对象为刚对三人挑衅并搭讪小樱的飞毛腿森乃伊驮天时，鸣人非常气愤。赛跑比赛开始，伊驮天并未按原有的路线走，他另辟蹊径但被和芥一家聘请的忍者埋伏下并不顺利。三人为此战斗，而绿青葵的出现彻底破坏了伊驮天的计划。鸣人鼓励伊驮天振作起来并背着他跑上了神社，绿青葵依旧出现伊驮天面前挑衅并破坏考试路径，三人努力抵抗下，鸣人在最后关头一记螺旋丸打破了雷电之剑。伊驮天不负众望跑向终点赢得了比赛。,"According to a request accepted by the Fifth Hokage, Naruto, Sasuke, and Sakura were assigned a B-rank mission—to travel to the Land of Tea and protect an important person. The three needed to help the Wasabi family win the relay race in the quadrennial Grand Shrine ceremony, allowing Elder Jirocho to regain control of the town. Upon learning that their protection target was the speedster Morino Idate, who had just provoked the three and hit on Sakura, Naruto was furious. When the race began, Idate did not follow the original route; he took a different path but was ambushed by Ninja hired by the Wagarashi family, making things difficult. The three fought for this reason, and the appearance of Midori Aoi completely ruined Idate's plan. Naruto encouraged Idate to pull himself together and carried him on his back up to the shrine. Midori Aoi still appeared before Idate to provoke him",quest,success,6.799172163009644,['Too long: 893 vs 286'],False
+717,    佐助因无法释怀在前屡次战斗中是鸣人释放力量解决了战斗，而自己却无法做到而心中愤恨提出与鸣人一战。鸣人应战，两人前往天台。在两人打的不相上下，而鸣人凝聚了螺旋丸，佐助开启飞鸟即将相互碰撞之时，卡卡西及时将两人抛开，争锋被迫停止。,"Sasuke, unable to let go of his resentment that Naruto had released his power to resolve battles multiple times in the past while he himself could not do the same, challenged Naruto to a fight. Naruto accepted, and the two headed to the rooftop. As they fought evenly matched, with Naruto forming a Rasengan and Sasuke activating Chidori about to clash, Kakashi intervened in time to separate them, forcing the confrontation to stop.",quest,success,4.299730777740479,['Too long: 433 vs 117'],False
+718,    佐助在看到鸣人用螺旋丸打出的巨大缺口后，佐助意识到鸣人已越来越强。佐助在陷入回忆中鼬言语的不断刺激下愈加憎恨自己力量不够，却被突然出现卡卡西绑在了树下，与佐助进行了谈话，他们有不同的不幸但是如今又有着相同的幸运。夜晚，音忍出现包围了佐助并控制了他，在咒印的影响和音忍言语的讽刺，佐助背上行囊前往大蛇丸之处离开木叶走上了决心复仇的路。,"After seeing the massive crater created by Naruto's Rasengan, Sasuke realized that Naruto was growing stronger and stronger. Driven by the constant torment of Itachi's words in his memories, Sasuke grew increasingly resentful of his own lack of power, only to be suddenly bound to a tree by Kakashi, who appeared out of nowhere and had a conversation with him—they had different misfortunes but now shared the same fortune. That night, the Sound Ninja appeared, surrounded Sasuke, and took control of him; under the influence of the Cursed Seal and the Sound Ninja's mocking words, Sasuke packed his bags and headed for Orochimaru's location, leaving Konoha to walk the path of determined vengeance.",quest,success,4.772125005722046,['Too long: 699 vs 170'],False
+719,    第五代火影纲手给鹿丸下达了第一个中忍任务——带回佐助。鹿丸召集鸣人、丁次、犬冢牙、宁次四人前往追回佐助。佐助为了使咒印的力量增强，吞下醒心丸，呈现假死状态。音忍们把佐助放进棺材，并下了封印，运往大蛇丸的处所。由于鸣人五人的意图提前被音忍察觉而被次郎坊的法术关在土壁的结界中。五人突破结界后，丁次留下对阵次郎坊。在追击到音忍过程中发现，鸣人和鹿丸被鬼同丸的忍术“蜘蛛束缚术”抓住。宁次与鬼同丸上演了拉锯战。,"Fifth Hokage Tsunade assigned Shikamaru his first Chunin mission—retrieve Sasuke. Shikamaru gathered Naruto, Choji, Kiba, and Neji to pursue Sasuke. To enhance the Cursed Seal's power, Sasuke swallowed the Mind Awakening Pill and entered a death-like state. The Sound Ninja placed Sasuke in a coffin, sealed it, and transported him to Orochimaru's location. Because the five were detected by the Sound Ninja in advance, they were trapped inside an earthen barrier by Jirobo's technique. After breaking through the barrier, Choji remained behind to face Jirobo. During the pursuit of the Sound Ninja, Naruto and Shikamaru were caught by Kidomaru's ""Spider Bind"" ninjutsu. Neji engaged in a back-and-forth battle with Kidomaru.",quest,success,6.867226123809815,['Too long: 725 vs 206'],False
+720,    大战结束后，五人设法夺回了佐助，却被左近和多由也紧随其后。牙、赤丸左近因陷阱跌入谷底，鹿丸被多由也困住，鸣人与君麻吕陷入苦战之中，李的帮助并未出现转机，牙则深受重伤带着赤丸逃走了，而佐助醒来即将离开。李把酒当药误拿后，醉拳对抗君麻吕、鸣人则前往追已跑掉的佐助。就在三人陷入危险之际时，木叶同盟国——砂之忍者出现了。三人以力挽狂澜之式解决了对手。,"After the great battle, the five managed to reclaim Sasuke, only to be pursued by Sakon and Tayuya. Kiba and Akamaru fell into a ravine due to Sakon's trap, Shikamaru was trapped by Tayuya, and Naruto found himself in a desperate struggle against Kimimaro—Lee's assistance brought no turning point, while Kiba fled with severe injuries carrying Akamaru, and Sasuke was about to awaken and leave. After Lee mistakenly took alcohol for medicine, he used Drunken Fist against Kimimaro while Naruto chased after the fleeing Sasuke. Just as the three found themselves in mortal danger, an ally of Konoha—the Sand Ninja appeared. The three turned the tide and defeated their opponents with overwhelming force.",quest,success,5.04095458984375,['Too long: 703 vs 176'],False
+721,    鸣人追逐佐助到终结之谷，两人相对。鸣人无法接受佐助的冷漠态度，冲向佐助。两人在终结谷展开生死之战。鸣人的螺旋丸与佐助的飞鸟终于相击，鸣人终于相信佐助是真的想杀死自己，鸣人封印的九尾被启动，两佐助启动了大蛇丸的咒印。两人激战许久，最后鸣人败，佐助离开。,"Naruto chased Sasuke to the Valley of the End, where the two faced each other. Unable to accept Sasuke's cold attitude, Naruto charged at him. The two engaged in a life-or-death battle at the Valley of the End. When Naruto's Rasengan clashed with Sasuke's Chidori, Naruto finally believed that Sasuke truly intended to kill him. Naruto's sealed Nine-Tails was activated, while Sasuke activated Orochimaru's Cursed Seal. After fighting fiercely for a long time, Naruto was ultimately defeated, and Sasuke departed.",general,success,4.242889165878296,['Too long: 513 vs 129'],False
+722,    自来也带领小樱和鸣人前往田园之国的音隐村带回佐助，由于自来也好色毛病犯了而意外得知大蛇丸的消息。鸣人和小樱路遇笹目被音忍袭击，两人得知笹目需去大蛇丸基地寻找堂哥风魔岚下落。但笹目却因被音忍诱骗而背叛了他们，在茶水动手脚，但三人早已看穿了计谋，并打退了音忍三人。笹目将自来也等人带到了大蛇丸的老巢，但他们因兵分三路，需各自克服接下来的陷阱。而在小樱、鸣人笹目陷入危机时，自来也及时出现，小樱和鸣人得救。,"Jiraiya leads Sakura and Naruto to the Hidden Sound Village in the Land of Rice Fields to retrieve Sasuke. Due to Jiraiya's perverted tendencies acting up, they unexpectedly learn information about Orochimaru. Naruto and Sakura encounter Sasame being attacked by Sound Ninja, and the two learn that Sasame needs to go to Orochimaru's base to search for her cousin Kazuma Arashi's whereabouts. However, Sasame betrays them after being deceived by the Sound Ninja, tampering with their tea, but the three had already seen through the scheme and repelled the three Sound Ninja. Sasame brings Jiraiya and the others to Orochimaru's lair, but because they split into three groups, each must overcome the traps ahead. And when Sakura, Naruto, and Sasame fall into crisis, Jiraiya appears in time to save Sakura and Naruto.",quest,success,5.504327058792114,['Too long: 816 vs 204'],False
+723,    当纲手意识到水木似乎与大蛇丸有关联、派阿斯玛和红到木叶重刑间审讯水木，却囚犯们受水木的教唆对他们发起攻击。待鸣人赶到现场，发现看守也已倒地。另一边静音带着豚豚找到水木踪迹，因被雷神风神兄弟打败，豚豚回到村里报知火影，鸣人无意知晓后与伊鲁卡前往支援。可水木对于伊鲁卡的苦口婆心并未动摇，鹿丸的及时赶到控制了风神雷神的人行动。伊鲁卡与水木作战后，水木的未婚妻椿出现了。因为椿的加入，伊鲁卡和鸣人发现了水木越狱的真正原因——水木想到得到大蛇丸的力量。,"When Tsunade realized that Mizuki seemed to have connections with Orochimaru, she sent Asuma and Kurenai to the Konoha Strict Correctional Facility to interrogate him, but the prisoners were incited by Mizuki to Attack them. When Naruto arrived at the scene, he found the guards had also fallen. Meanwhile, Shizune found Mizuki's trail with Tonton, but was defeated by the Raijin and Fujin brothers; Tonton returned to the village to inform the Hokage, and after unintentionally learning of this, Naruto went to provide support with Iruka. However, Mizuki remained unmoved by Iruka's earnest persuasion, until Shikamaru's timely arrival restrained the actions of Fujin and Raijin. After Iruka fought with Mizuki, Mizuki's fiancée Tsubaki appeared. Because of Tsubaki's involvement, Iruka and Naruto discovered the true reason for Miz",quest,success,5.846762657165527,['Too long: 833 vs 226'],False
+724,    木叶丸他们终于成为了可以执行任务的小组，而鸣人与自来也的修行终于结束回到了木叶村。为了测试鸣人的修行成果，火影特地安排了卡卡西来和鸣人小樱对决。这回的试炼还是从卡卡西身上抢夺铃铛，并使用了写轮眼，以前同样的方法都已不奏效。鸣人的进步极大，小樱怪力也变更强，鸣人想使用千年杀报复回卡卡西却失败了，最后鸣人和小樱顺利的摘到了卡卡西身上的铃铛。,"Konohamaru and his team have finally become a squad capable of taking on missions, while Naruto's training with Jiraiya has ended and he returns to the Hidden Leaf Village. To test the results of Naruto's training, the Hokage specially arranged for Kakashi to face off against Naruto and Sakura. This trial once again involves snatching the bell from Kakashi, who uses his Sharingan—none of their previous tactics work anymore. Naruto has improved tremendously, and Sakura's monstrous strength has grown even stronger. Naruto attempts to retaliate against Kakashi with the Thousand Years of Death but fails. In the end, Naruto and Sakura successfully snatch the bell from Kakashi.",quest,success,5.22693943977356,['Too long: 680 vs 173'],False
+725,    砂隐村遭到了晓的攻击，整个村子外围的士兵都被晓的两个成员杀光了。而砂隐村即将陷入空前的危机中。在空中降落的晓组织成员迪达拉被我爱罗发现，此时我爱罗已成为风影，却对善于爆破的迪达拉无从下手。于此同时，砂隐陷入了战争中，迪达拉的炸弹在村子中引爆，我爱罗用自己的沙子为整个村庄建立了一个屏障，但却被迪达拉炸弹炸伤。我爱罗落入了迪达拉手中。,"The Hidden Sand Village was attacked by the Akatsuki, and all the soldiers on the outer perimeter of the entire village were killed by two members of the Akatsuki. The Hidden Sand Village was about to fall into an unprecedented crisis. Deidara, an Akatsuki member descending from the sky, was discovered by Gaara, who had already become the Kazekage, yet found himself at a loss against the explosion-wielding Deidara. At the same time, the Hidden Sand fell into war as Deidara's bombs detonated throughout the village. Gaara used his sand to create a barrier for the entire village, but was injured by Deidara's bomb. Gaara fell into Deidara's hands.",general,success,5.099786281585693,['Too long: 651 vs 170'],False
+726,    得知砂隐的情况，火影派卡卡西组前往救援。鸣人得知我爱罗被晓组织所抓走，紧急前往的路上遇到手鞠，手鞠得知情况后三人渐渐发现背后的阴谋。勘九郎因与蝎对阵而身受毒蚀，小樱作为医疗忍者立刻投入治疗。我爱罗体内的一尾即将被晓组织彻底分离，而千代婆婆加入这场救援。,"Upon learning of Sunagakure's situation, the Hokage dispatched Team Kakashi to provide aid. Naruto, upon hearing that Gaara had been captured by the Akatsuki, rushed to the rescue and encountered Temari along the way. After learning of the circumstances, the three gradually uncovered the conspiracy behind it all. Kankuro had been poisoned during his confrontation with Sasori, and Sakura immediately began treatment as a medical ninja. The One-Tail within Gaara was on the verge of being completely extracted by the Akatsuki, while Granny Chiyo joined this rescue mission.",quest,success,4.140806674957275,['Too long: 574 vs 130'],False
+727,    在前往救援的路上，凯的队伍碰到了鬼鲛，而卡卡西小队碰到了鼬。鬼鲛已经开始向凯发起了攻击，鼬则随时都会向卡卡西他们出手，在千代婆婆的指导下，卡卡西队伍对付鼬有了一些胜算。然而，凯那边夺走了我鬼鲛的鲛肌，但是其他人却陷入了鬼鲛的水牢里。鸣人这边陷入了鼬的幻术之中，鸣人想起自来也的教导，陷入幻术需等待同伴唤醒。可最后卡卡西和凯小组才意识到，与其战斗的其实是替身。,"On the way to the rescue, Guy's team encountered Kisame, while Kakashi's squad ran into Itachi. Kisame had already begun his Attack on Guy, and Itachi was ready to strike against Kakashi and his team at any moment. Under Granny Chiyo's guidance, Kakashi's group gained some chance of victory against Itachi. However, on Guy's side, he managed to seize Samehada from Kisame, but the others became trapped in Kisame's Water Prison. Meanwhile, Naruto fell into Itachi's genjutsu. Recalling Jiraiya's teachings that one must wait for allies to break free from genjutsu, he held on. But in the end, both Kakashi and Guy's teams realized that they had actually been fighting Substitutes all along.",quest,success,7.8114495277404785,['Too long: 691 vs 183'],False
+728,    木叶的两组人马还是晚来了一步，晓组织已经顺利完成了一尾和人柱力之间的分离。我爱罗只剩下一副冰冷的躯壳，鸣人失理智的追逐带走我爱罗的迪克拉，而卡卡西跟随鸣人，凯、天天、宁次和小李要打败和自己一模一样的敌人，而小樱和千代婆婆留在基地里对付蝎，而蝎总算是被打败了，他在临死前将大蛇丸的所在地点告诉给了小樱。凯班成员仍陷入苦战之中。,"Konoha's two teams arrived a step too late—the Akatsuki had already successfully completed the separation between the One-Tail and its Jinchuriki. Gaara was left with nothing but a cold, empty shell. Naruto recklessly chased after Deidara, who had taken Gaara away, while Kakashi followed Naruto. Guy, Tenten, Neji, and Lee had to defeat enemies identical to themselves, while Sakura and Granny Chiyo remained at the base to deal with Sasori. Sasori was finally defeated, and with his dying breath, he told Sakura of Orochimaru's whereabouts. The members of Team Guy were still locked in a desperate battle.",quest,success,36.17570090293884,['Too long: 607 vs 166'],False
+729,    迪达拉自爆，鸣人与卡卡西夺回了我爱罗。由于我爱罗的死亡刺激了鸣人，他开启了九尾的力量，在身体外围形成了妖狐之衣，而愤怒使鸣人冲昏了头脑，他开始无差别进行攻击。而幸好自来也提前预料鸣人可能会暴走而将一张符咒交给了卡卡西，使用符咒后，鸣人恢复了原样。我爱罗在小樱的诊断下已经死了，可是千代婆婆对我爱罗使用了转生术，整个砂忍村的人们都来救我爱罗，我爱罗苏醒，千代婆婆却永远的离开了。,"Deidara self-destructed, and Naruto and Kakashi retrieved Gaara. Gaara's death enraged Naruto, triggering the power of the Nine-Tails and forming the Demon Fox Cloak around his body. Blinded by fury, Naruto began attacking indiscriminately. Fortunately, Jiraiya had anticipated this rampage and given Kakashi a sealing tag in advance; using it, Naruto returned to normal. Sakura's diagnosis confirmed Gaara was dead, but Lady Chiyo performed the Reanimation Jutsu on him. The entire Sand Ninja Village came to save Gaara—he awakened, while Lady Chiyo departed forever.",general,success,4.608436584472656,['Too long: 568 vs 192'],False
+730,    因卡卡西受伤，卡卡西班成员加入了一名木叶暗部特殊部队“根”的忍者佐井，由大和队长带队。大和队长通过装扮蝎与线人药师兜碰面，大蛇丸却现身。一场恶战即将开始。鸣人已控制不住自己的情绪，瞬间被妖狐之衣包裹，向大蛇丸发起进攻，而兜此时却完全不是鸣人的对手，被九尾力量吞噬的鸣人变得异常可怕，但大蛇丸却毫无优势，就在陷入苦战之时，鸣人被大蛇丸击败，鸣人丧失了意识。,"Due to Kakashi's injury, a Ninja named Sai from Konoha's ANBU special force ""Root"" joined Team Kakashi, led by Captain Yamato. Captain Yamato disguised himself as Sasori to meet with the informant Yakushi Kabuto, but Orochimaru appeared. A fierce battle was about to begin. Naruto could no longer control his emotions and was instantly enveloped by the Demon Fox Cloak, launching an Attack on Orochimaru. At this point, Kabuto was completely no match for Naruto. Naruto, consumed by the Nine-Tails' power, became exceptionally terrifying, yet Orochimaru held no advantage. Just as the battle reached a stalemate, Naruto was defeated by Orochimaru and lost consciousness.",quest,success,15.9106285572052,['Too long: 670 vs 181'],False
+731,    大和队长三人得知佐井的计划后，抓住了佐井。为了他们之间的羁绊鸣人不惜与大蛇丸作对也要找到佐助。他们一间间打开大蛇丸基地的房间，但此时大蛇丸出现了。大和队长在佐井的背包里找到了暗杀的名册，而佐助却在暗杀列表中。但在佐井发现了佐助后，却执意带他回木叶村，时隔三年，佐助、小樱、鸣人终于相见。,"After learning of Sai's plan, Captain Yamato and his team captured him. Determined by their bonds, Naruto was willing to oppose Orochimaru to find Sasuke. They opened the rooms in Orochimaru's base one by one, but Orochimaru appeared at that moment. Captain Yamato found an assassination roster in Sai's backpack, and Sasuke was on the target list. However, after discovering Sasuke, Sai insisted on bringing him back to Konoha Village. After three years, Sasuke, Sakura, and Naruto finally reunited.",general,success,4.675245761871338,['Too long: 500 vs 147'],False
+732,    鸣人被纲手分配的D级任务而不得不中断修炼。任务是由火之国附近的火之寺委托的，属于寺院的墓以及南真、西户、东宇和北音墓被盗墓贼盗取，大和他们需查明盗墓贼的身份。而在大和队长一行人分头寻找火之寺的领路人时，鸣人误打误撞发现了隐藏坟墓并偶遇了空。大和怀疑被偷走的墓会被拿去另有用途也许与团藏有关，此事对于地陆大师和阿斯玛而言，是曾为守护士十二忍的伙伴墓被盗。毫无戒备之心的鸣人和空陷入敌人的圈套，而眼睁睁看着棺木从眼前消失。,"Naruto was forced to interrupt his training due to a D-rank mission assigned by Tsunade. The mission was commissioned by the Fire Temple near the Land of Fire—graves belonging to the temple as well as those of Nanzen, Seito, To'u, and Hokuon had been robbed by grave robbers, and Yamato's team needed to identify the culprits. While Captain Yamato's group split up to find a guide from the Fire Temple, Naruto stumbled upon a hidden grave by accident and encountered Sora. Yamato suspected the stolen graves might be used for another purpose, possibly related to Danzo; for Master Chiriku and Asuma, this meant the desecration of their former comrades' graves from the Twelve Guardian Ninja. The unsuspecting Naruto and Sora fell into the enemy's trap, watching helplessly as the coffin vanished before their eyes.",quest,success,7.318378686904907,['Too long: 814 vs 213'],False
+733,    在暗部将团藏抓住并绑回木叶后，空在偷窥火影审讯时被暗部发现。而空从阿斯玛口中知道了父亲死亡的真相。随后，空袭击火影未遂而逃走时，木叶忍者村陷入了危机。入侵者利用土遁的最高境界创生之术将亡魂们苏醒，木叶忍者村开启第一戒备状态。在鸣人追寻空之时，阿斯玛则面对着死去的南真、西户、东宇和北音曾经的伙伴，而风户、风焰和风贺也坚守着自己的阵地。,"After the ANBU captured Danzo and brought him back to Konoha, Sora was discovered by the ANBU while spying on the Hokage's interrogation. Sora learned the truth about his father's death from Asuma. Subsequently, when Sora attempted to Attack the Hokage but failed and fled, Konohagakure fell into crisis. The invaders used the ultimate Earth Release technique of creation to resurrect the dead souls, and Konohagakure entered its first state of emergency. While Naruto pursued Sora, Asuma faced his former comrades—Nanshin, Seito, Toyu, and Hokuon—and Fudo, Kazama, and Fuuka held their ground.",general,success,9.226603031158447,['Too long: 594 vs 171'],False
+534,神树篇,Divine Tree Chapter,general,success,2.6372127532958984,['Too long: 19 vs 3'],False
+800,战区世界赛第一解锁,World Tournament Zone Rank 1 Unlocked,general,success,2.572362184524536,['Too long: 37 vs 9'],False
+801,战区世界赛4强解锁,World Championship Top 4 Unlocked,general,success,2.576355695724488,['Too long: 33 vs 9'],False
+802,战区世界赛16强解锁,World Championship Top 16 Unlocked,general,success,36.10966324806213,['Too long: 34 vs 10'],False
+803,战区世界赛32强解锁,World Championship Top 32 Unlocked,general,success,2.8358078002929688,['Too long: 34 vs 10'],False
+804,战区世界赛64强解锁,World Championship Top 64 Unlocked,general,success,4.125670671463013,['Too long: 34 vs 10'],False
+805,活动商店，条件展示预留,"Event Shop, Condition Display Reserved",general,success,5.93673038482666,['Too long: 38 vs 11'],False
+806,活动商店，条件展示预留,"Event Shop, Condition Display Reserved",general,success,2.495373249053955,['Too long: 38 vs 11'],False
+807,活动商店，条件展示预留,"Event Shop, Condition Display Reserved",general,success,2.3451173305511475,['Too long: 38 vs 11'],False
+808,活动商店，条件展示预留,"Event Shop, Condition Display Reserved",general,success,2.9697189331054688,['Too long: 38 vs 11'],False
+809,活动商店，条件展示预留,"Event Shop, Condition Display Reserved",general,success,2.480746030807495,['Too long: 38 vs 11'],False
+810,活动商店，条件展示预留,"Event Shop, Condition Display Reserved",general,success,2.4086291790008545,['Too long: 38 vs 11'],False
+811,力之契约1级,Contract of Power Lv.1,general,success,2.4589226245880127,['Too long: 22 vs 6'],False
+812,力之契约2级,Contract of Strength Lv.2,general,success,2.514193296432495,['Too long: 25 vs 6'],False
+813,力之契约3级,Contract of Strength Lv.3,general,success,2.460775852203369,['Too long: 25 vs 6'],False
+814,力之契约4级,Contract of Power Lv.4,general,success,2.74052095413208,['Too long: 22 vs 6'],False
+815,力之契约5级,Contract of Power Lv.5,general,success,2.660555362701416,['Too long: 22 vs 6'],False
+816,力之契约6级,Contract of Strength Lv.6,general,success,3.7394089698791504,['Too long: 25 vs 6'],False
+817,力之契约7级,Contract of Power Lv.7,general,success,2.481071949005127,['Too long: 22 vs 6'],False
+818,力之契约8级,Contract of Power Lv.8,general,success,3.2960398197174072,['Too long: 22 vs 6'],False
+819,力之契约9级,Contract of Power Lv.9,general,success,2.677829504013061,['Too long: 22 vs 6'],False
+820,力之契约10级,Contract of Power Lv.10,general,success,4.337096929550171,['Too long: 23 vs 7'],False
+821,术之契约1级,Ninjutsu Contract Lv.1,general,success,2.9118402004241943,['Too long: 22 vs 6'],False
+822,术之契约2级,Ninjutsu Contract Lv.2,general,success,2.4598450660705566,['Too long: 22 vs 6'],False
+823,术之契约3级,Ninjutsu Contract Lv.3,general,success,2.618717908859253,['Too long: 22 vs 6'],False
+824,术之契约4级,Ninjutsu Contract Lv.4,general,success,5.095556974411011,['Too long: 22 vs 6'],False
+825,术之契约5级,Ninjutsu Contract Lv.5,general,success,3.6351187229156494,['Too long: 22 vs 6'],False
+826,术之契约6级,Ninjutsu Contract Lv.6,general,success,3.093535661697388,['Too long: 22 vs 6'],False
+827,术之契约7级,Ninjutsu Contract Lv.7,general,success,2.8710899353027344,['Too long: 22 vs 6'],False
+828,术之契约8级,Ninjutsu Contract Lv.8,general,success,2.753880739212036,['Too long: 22 vs 6'],False
+829,术之契约9级,Ninjutsu Contract Lv.9,general,success,2.985146999359131,['Too long: 22 vs 6'],False
+830,术之契约10级,Ninjutsu Contract Lv.10,general,success,2.8214447498321533,['Too long: 23 vs 7'],False
+831,命之契约1级,Contract of Life Lv.1,general,success,63.696388721466064,['Too long: 21 vs 6'],False
+832,命之契约2级,Life Contract Lv.2,general,success,3.062936782836914,['Too long: 18 vs 6'],False
+833,命之契约3级,Life Contract Lv.3,general,success,2.4231317043304443,['Too long: 18 vs 6'],False
+834,命之契约4级,Life Contract Lv.4,general,success,2.965937852859497,['Too long: 18 vs 6'],False
+835,命之契约5级,Life Contract Lv.5,general,success,2.4874727725982666,['Too long: 18 vs 6'],False
+836,命之契约6级,Life Contract Lv.6,general,success,2.664714813232422,['Too long: 18 vs 6'],False
+837,命之契约7级,Life Contract Lv.7,general,success,13.206985712051392,['Too long: 18 vs 6'],False
+838,命之契约8级,Life Contract Lv.8,general,success,2.4485251903533936,['Too long: 18 vs 6'],False
+839,命之契约9级,Life Contract Lv.9,general,success,3.2743067741394043,['Too long: 18 vs 6'],False
+840,命之契约10级,Life Contract Lv.10,general,success,3.7643885612487793,['Too long: 19 vs 7'],False
+851,居住在妙木山隐之里的蛤蟆健，是传说中的蛤蟆老大文太的兄弟。蛤蟆健有着极为独特的紫红色皮肤，同时脸上还有极具个性的U型黑色纹身。它所常用的武器是布满棱刺的鱼叉以及锅盖型的铁之大盾。蛤蟆健的性格低调沉稳，常说自己十分愚，实则十分坚忍，且心思细腻，能与搭档的通灵者完成完美的配合。擅长防御的他总能给人安心的感觉，曾在与佩恩的一战中又不俗的表现，受到自来也的夸赞。,"Gama Ken, residing in the hidden village of Mount Myōboku, is the brother of the legendary toad boss Gamabunta. He has distinctive purple skin and a unique U-shaped black facial marking. His weapons are a spiked harpoon and a pot-lid iron shield. Though humble and self-deprecating, calling himself foolish, he is actually resilient and attentive—able to coordinate perfectly with his summoner. A defensive specialist, he always inspires confidence.",quest,success,5.924363374710083,['Too long: 449 vs 178'],False
+853,来自猿魔一族的猿猴王·猿魔，三代火影的通灵兽，大蛇丸称其为最强的通灵兽。猿魔不仅能说话，同时自身还拥有查克拉，能够独立释放忍术和变形，拥有金刚不坏之躯，可变身为金刚如意棒，在战斗中作为武器为三代所用，伸缩自如变换万千。在大蛇丸实施木叶崩溃计划时与三代联手对抗大蛇丸以及他的历代火影秽土转生军团，最后力救三代取得惨胜。,"Enma, the Monkey King from the Sarugami clan and Third Hokage's summoning beast—Orochimaru called him the strongest. Capable of speech and possessing his own chakra, Enma could cast jutsu independently and transform at will. His indestructible body could become the Adamantine Staff, serving as the Third's weapon in combat: extending, contracting, and shifting forms freely. During Orochimaru's Konoha Crush, he fought alongside the",skill,success,7.288098096847534,['Too long: 433 vs 158'],False
+856,佩恩六道当中畜生道所使用的众多通灵兽之一，也是最为特殊的一个。与畜生道其他攻击能力惊人的通灵兽不同，石熊猫只有单纯的防御能力。然而其坚硬的石质皮肤在防御方面却是能与传说中的尾兽守鹤相媲美。任何常规的忍术都不可能击破它的防御，因此毫无进攻能力的它才会被,"One of the many summoning beasts used by the Animal Path among the Six Paths of Pain, and also the most unique one. Unlike the Animal Path's other summons with devastating offensive capabilities, the Stone Panda possessed only pure defensive ability. However, its hard stone skin rivaled the legendary tailed beast Shukaku in terms of defense. No conventional ninjutsu could break through its defenses, which is why this completely offense-less creature was...",skill,success,4.479214668273926,['Too long: 460 vs 125'],False
+857,妙木山的长老之一，大蛤蟆仙人的得力亲信，同时也是传授自来也仙法的恩师。因为修炼仙法而与自然达成了共生，已经活了800多年之久。在自来也作战时会被通灵到其肩膀上作为仙法发动的辅助者，也因此受到限制很少直接出手，但认真起来的时候能使出各种强力的仙法。而身为妙木山长老的他也被隐之里的一众强者尊称为「头儿」，可见其人望之高。,"One of Mount Myōboku's elders and a trusted confidant of the Great Toad Sage, he was also Jiraiya's master who taught him Sage Mode. Having achieved symbiosis with nature through senjutsu training, he has lived over 800 years. During Jiraiya's battles, he's summoned to his shoulders to assist in casting Sage Techniques—a role that limits his direct involvement. However, when serious, he can unleash various powerful senjutsu",story,success,5.42559814453125,['Too long: 427 vs 159'],False
+859,雨隐村前任首领山椒鱼半藏的通灵兽。是与那个被称为半神的男人比肩，站在忍界大战顶峰的传奇忍兽。山椒鱼能喷吐大范围的毒雾，笼罩整个战场。身中山椒鱼之毒若是自身实力较弱便会当场毙命，即便是影级强者也很可能会失去战斗能力。可以说半藏能威震忍界，山椒鱼的实力有着很大的功劳。而山椒鱼作为远古的生物，即便是对上传说中的尾兽也有一战之力。,"The former leader of Amegakure, Hanzō the Salamander's summoning creature. A legendary beast that stood alongside the man called the Demigod at the pinnacle of the ninja world wars. The salamander can spew large-scale poison mist that engulfs the entire battlefield. Those afflicted by its poison die instantly if weak; even Kage-level shinobi may lose their combat ability. Hanzō's fearsome reputation owed much to the salamander's power",story,success,7.32573938369751,['Too long: 438 vs 162'],False
+860,妙木山隐之里的蛤蟆龙，喜欢零食的可爱小蛤蟆。与哥哥蛤蟆吉不同，作为蛤蟆老大文太的次子，龙似乎并没有从他那里继承到太多才能，反而时常因为迟钝和缺乏危机感而陷入危险之中。过于天然的性格或许让他并不适合成为一名优秀的战士，但他却并非毫无战斗力，他能够与鸣人配合使用风遁·蛤蟆铁炮等仙术。若是他能够认真起来，也是相当可靠的存在。,"Gamakichi, the adorable snack-loving toad from Mount Myōboku's hidden village. Unlike his brother Gamatatsu, as Lord Gamabunta's second son, he seems to have inherited little of his father's talent—often landing in danger due to his sluggishness and lack of crisis awareness. His overly naive nature may make him unsuited for combat, yet he's far from helpless: he can perform Senjutsu like Wind Release: Toad Gun alongside Naruto. If",general,success,7.415778875350952,['Too long: 434 vs 160'],False
+861,卡卡西的通灵兽八忍犬之首。虽说在八忍犬中帕克的战斗力可能是最为弱小的，但它出色的头脑，让他足以担任忍犬的领头。帕克不但精通人类语言，还能与其他动物沟通，收集情报。配合他本身惊人的嗅觉帕克十分擅长追踪搜寻。曾在追回佐助一战中帮助木叶下忍们找到音忍逃离的路线，还能察觉敌人的埋伏帮助小队脱险。有帕克在，无论进行什么任务都能多一份安心。,"Kakashi's ninken pack leader. Though arguably the weakest in combat among the eight, Pakkun's superior intellect makes him leader. Fluent in human speech and able to communicate with other animals for intel gathering. Combined with his remarkable sense of smell, he excels at tracking—helped Leaf genin locate the Sound Four's escape route during the Sasuke Retrieval mission and detected enemy ambushes. With Pakkun around, no...",quest,success,4.0542943477630615,['Too long: 430 vs 165'],False
+870,通灵兽总星级12星解锁,Unlocks when total familiar stars reach 12.,general,success,3.521221399307251,['Too long: 43 vs 11'],False
+871,通灵兽总星级30星解锁,Unlocks at 30 total stars for Spirit Beasts.,general,success,2.69378924369812,['Too long: 44 vs 11'],False
+872,通灵兽总星级60星解锁,Unlocks at 60 total stars for all spirit beasts.,general,success,4.65505576133728,['Too long: 48 vs 11'],False
+873,通灵兽总星级90星解锁,Unlocks at 90 total stars for all summoning beasts.,general,success,3.135443925857544,['Too long: 51 vs 11'],False
+901,水系,Water element / Water type,general,success,2.904658317565918,['Too long: 26 vs 2'],False
+902,风系,Wind element / Wind-type / Anemo (Genshin Impact style),general,success,2.7120206356048584,['Too long: 55 vs 2'],False
+903,火系,Fire element / Fire-type,general,success,3.2751779556274414,['Too long: 24 vs 2'],False
+905,魔系,"""Demon/magic path"" or ""demonic style""
+
+(Context-dependent: 魔系 can refer to a demonic faction in games, a magic-based character build, or an edgy/chaotic personality type in internet slang.)",general,success,4.25355863571167,['Too long: 189 vs 2'],False
+906,攻击,Attack / Offensive (in gaming context),general,success,2.774855136871338,['Too long: 38 vs 2'],False
+907,防御,Defense,general,success,2.42144513130188,['Too long: 7 vs 2'],False
+908,医术,Medical skill / Healing art,general,success,2.623074531555176,['Too long: 27 vs 2'],False
+909,暴击,Critical hit / Crit,general,success,3.712200164794922,['Too long: 19 vs 2'],False
+910,水愈,"**Aquaheal** / **Water Cure** / **Healing Water**
+
+(Context-dependent: could be a skill name, item, or ability in a game)",general,success,3.2672698497772217,['Too long: 121 vs 2'],False
+911,崩坏,"**Honkai** (or ""Collapse/Honkai"" in some contexts)
+
+(Note: In the context of miHoYo/HoYoverse games like *Honkai Impact 3rd* or *Honkai: Star Rail*, it's kept as **Honkai**)",general,success,3.5517117977142334,['Too long: 173 vs 2'],False
+912,灼燃,"**Blaze** / **Scorch** / **Ignite**
+
+(Context-dependent: ""灼燃"" suggests intense burning/scorching heat. In gaming contexts like *Arknights*, it's localized as **""Burning""** or kept as **""Scorching""**.)",general,success,3.364283800125122,['Too long: 200 vs 2'],False
+913,逢生,"**""Survival against the odds""** or **""A narrow escape from death""**
+
+(Literally: ""encountering life"" — implying finding life/survival when facing death)",general,success,4.295897483825684,['Too long: 152 vs 2'],False
+914,霞幕,"""Xiamu"" (lit. ""misty curtain"") — a poetic Chinese term often used in place names or literary contexts to describe mist-shrouded mountains resembling hanging curtains.",general,success,3.891770601272583,['Too long: 166 vs 2'],False
+915,复仇,Revenge,general,success,2.4038431644439697,['Too long: 7 vs 2'],False
+916,蓄势,"**""Building momentum""** or **""Gathering strength""**
+
+(Depending on context: ""Charging up"" / ""Preparing to strike"" / ""Lying in wait"")",general,success,5.153789281845093,['Too long: 132 vs 2'],False
+917,伤刃,"**Wounded Blade** or **Injured Edge**
+
+(Context-dependent: could refer to a damaged weapon, a character name, or metaphorical ""hurtful sharpness"")",general,success,3.3475100994110107,['Too long: 146 vs 2'],False
+918,物攻推荐,Recommended: Physical Attack / Phys. ATK Recommended,general,success,2.746137380599976,['Too long: 52 vs 4'],False
+919,法攻推荐,Magic ATK Recommended,general,success,3.016984939575196,['Too long: 21 vs 4'],False
+920,肉盾推荐,Tank recommendation,general,success,2.963578939437866,['Too long: 19 vs 4'],False
+922,辅助推荐,"""Auxiliary recommendation"" or ""Assistive suggestion""",general,success,3.452720165252685,['Too long: 52 vs 4'],False
+923,强力辅助,"""Strong support"" or ""Powerful assist""
+
+(In gaming context: ""OP support"" or ""Hard carry support"")",general,success,3.915438890457153,['Too long: 96 vs 4'],False
+924,高防前排,Tanky frontline / High-defense front row,general,success,4.534934043884277,['Too long: 40 vs 4'],False
+925,强力输出,High damage output / Heavy hitter,general,success,4.220243692398071,['Too long: 33 vs 4'],False
+926,速升六星,"""Fast 6-star upgrade"" or ""Quick 6★ promotion""",general,success,4.218197345733643,['Too long: 45 vs 4'],False
+1001,金币采集,Gold collection,reward,success,2.4345765113830566,['Too long: 15 vs 4'],False
+1002,忍者召集,Ninja Summoning / Ninja Assembly,general,success,2.69321346282959,['Too long: 32 vs 4'],False
+1003,营救忍者,Rescue the ninja / Ninja rescue,general,success,3.409944772720337,['Too long: 31 vs 4'],False
+1005,探宝行动,Treasure Hunt,general,success,2.4765727519989014,['Too long: 13 vs 4'],False
+1008,营救忍者,Rescue the ninja / Ninja rescue,general,success,11.782939672470093,['Too long: 31 vs 4'],False
+1013,救援行动,Rescue operation,general,success,2.4909822940826416,['Too long: 16 vs 4'],False
+1015,晓组织对抗,Akatsuki Confrontation / Akatsuki vs. [Opponent],general,success,2.70359754562378,['Too long: 48 vs 5'],False
+1016,雾隐迷幻,"**Misty Mirage** or **Veiled Illusion**
+
+(4 characters → 2 words, preserving the atmospheric/mysterious tone)",general,success,5.161157369613648,['Too long: 109 vs 4'],False
+1018,木叶试炼,Konoha Trial / Hidden Leaf Trial,general,success,4.404440641403198,['Too long: 32 vs 4'],False
+1022,火影考核,Hokage Exam / Hokage Assessment,general,success,3.2675716876983643,['Too long: 31 vs 4'],False
+1023,绝密委托,"**Top-Secret Commission**
+
+or
+
+**Classified Assignment**",general,success,3.1977851390838623,['Too long: 56 vs 4'],False
+1025,晓组织清灭,"""Akatsuki Annihilation"" or ""Akatsuki Elimination""
+
+(If referring to the Naruto organization: ""Akatsuki Purge/Cleansing"")",general,success,4.263754606246948,['Too long: 120 vs 5'],False
+1026,雾隐暗杀,"**Mist Assassination**
+
+or
+
+**Fog Shadow Kill** (more literal)",general,success,3.0868210792541504,['Too long: 62 vs 4'],False
+1027,沙漠风暴,"""Desert Storm""",general,success,3.508080244064331,['Too long: 14 vs 4'],False
+1028,忍者集结,Ninjas Assemble / Ninja Gathering,general,success,2.6309964656829834,['Too long: 33 vs 4'],False
+1045,地下密藏,**Underground Secret Vault / Hidden Underground Repository**,general,success,2.600956439971924,['Too long: 60 vs 4'],False
+1046,隐秘行动,**Stealth operation** or **covert action**,general,success,2.7738940715789795,['Too long: 42 vs 4'],False
+1047,忍玉收购,"""Nintama acquisition"" or ""Acquisition of Nintama""
+
+(Note: ""忍玉"" refers to ""Nintama Rantarō,"" a Japanese anime/manga series about ninja children. Without context, this most likely refers to a corporate acquisition involving the franchise.)",general,success,4.233947992324829,['Too long: 237 vs 4'],False
+1067,营救忍者,Rescue the ninja / Ninja rescue,general,success,2.688793182373047,['Too long: 31 vs 4'],False
+1123,营救忍者,Rescue the ninja,general,success,3.519291400909424,['Too long: 16 vs 4'],False
+1174,营救忍者,Rescue the ninja / Ninja rescue,general,success,2.6747095584869385,['Too long: 31 vs 4'],False
+1179,营救忍者,Rescue the ninja / Ninja rescue,general,success,3.465988874435425,['Too long: 31 vs 4'],False
+1219,影级试炼,"Shadow Rank Trial
+
+or
+
+Kage-level Trial",general,success,5.1307213306427,['Too long: 39 vs 4'],False
+1232,营救忍者,Rescue the ninja,general,success,2.8556363582611084,['Too long: 16 vs 4'],False
+1237,营救忍者,Rescue the ninja / Ninja rescue,general,success,3.601693630218506,['Too long: 31 vs 4'],False
+1290,营救忍者,Rescue the ninja / Ninja rescue,general,success,2.878856658935547,['Too long: 31 vs 4'],False
+1295,营救忍者,Rescue the ninja / Ninja rescue,general,success,2.5271196365356445,['Too long: 31 vs 4'],False
+1337,忍界大战,Ninja World War / Fourth Great Ninja War,general,success,2.707306385040283,['Too long: 40 vs 4'],False
+1346,忍玉精炼,Ninja Jade Refinement,general,success,2.852045774459839,['Too long: 21 vs 4'],False
+2011,为了获胜我将不择手段,"""I'll do whatever it takes to win.""",general,success,2.774693012237549,['Too long: 35 vs 10'],False
+2012,让你看看我的全力,"""Let me show you my full power.""",general,success,2.700233221054077,['Too long: 32 vs 8'],False
+2021,不能只是受人保护！我也得好好战斗才行！,"""I can't just be protected! I have to fight too!""",general,success,2.6241493225097656,['Too long: 49 vs 19'],False
+2022,好~得让无聊的争斗快点结束才行！,"""Alright~ gotta end this boring fight quickly!""",general,success,2.6934456825256348,['Too long: 47 vs 16'],False
+2023,看起来很弱哎,Looks weak. / Seems pretty weak.,general,success,2.561746835708618,['Too long: 32 vs 6'],False
+2031,别小看了我的力量,"""Don't underestimate my power.""",general,success,6.675403833389282,['Too long: 31 vs 8'],False
+2032,接下来就是超水平的战斗了..！,"""Next comes the battle beyond our limits..!""",general,success,4.275404930114746,['Too long: 44 vs 15'],False
+2033,喔..竟敢向我挑战啊..那我就享受一阵子吧,"""Oh... daring to challenge me, huh? Then I'll enjoy this for a while.""",quest,success,3.708140134811402,['Too long: 70 vs 21'],False
+2042,让你见识一下我的术！,"""Witness my technique!"" or ""Behold my art!""",general,success,5.128634691238403,['Too long: 43 vs 10'],False
+2051,你的坟上该插哪一种花呢~？,"""What flower should grace your grave~?""",general,success,3.760297298431397,['Too long: 39 vs 13'],False
+2052,靠我的魅力来一击必杀！,"""One-hit KO with my charm!"" or ""Charming them into submission in one blow!""",general,success,2.850252389907837,['Too long: 75 vs 11'],False
+2061,我绝对...绝对不会输的...！,"""I absolutely... absolutely won't lose...!""",general,success,2.593356132507324,['Too long: 43 vs 16'],False
+2062,就让你瞧瞧！女人的执着！和少女的心！,"""Let me show you! A woman's determination—and a maiden's heart!""",general,success,3.44690465927124,['Too long: 64 vs 18'],False
+2063,开什么玩笑啊~！！（这句有点嘶哑，不是很好听，最好别配置了···）,"""Are you kidding me~!! (This line is a bit hoarse and doesn't sound great, better not to include it...)""",general,success,3.28857684135437,['Too long: 104 vs 33'],False
+2071,我真的生气了！,"""I'm really angry!"" or ""I'm seriously mad!""",general,success,4.527305364608765,['Too long: 43 vs 7'],False
+2082,虽属僭越，但容在下用刀测试一下你的信念吧,"""Forgive the presumption, but allow me to test your conviction with my blade.""",general,success,3.4862539768218994,['Too long: 78 vs 20'],False
+2083,现在正是在战场上展现胸中“信心”的时机,Now is the time to demonstrate your conviction on the battlefield.,general,success,3.093186855316162,['Too long: 66 vs 19'],False
+2091,我没办法手下留情了喔,"""I won't hold back anymore.""",general,success,2.8764407634735107,['Too long: 28 vs 10'],False
+2101,我从地狱回来了！,"""I'm back from hell!""",general,success,2.669200897216797,['Too long: 21 vs 8'],False
+2102,你应该知道..挡在我前面代表什么吧,"""You should know... what standing in my way means.""",general,success,2.5573320388793945,['Too long: 51 vs 17'],False
+2103,手臂..身体蠢蠢欲动..来吧..快点开始吧,"""Arms... body trembling with anticipation... come on... let's start already.""",general,success,4.205389022827148,['Too long: 77 vs 21'],False
+2111,最好不要太小看我哦~,"""Don't underestimate me~"" or ""Better not take me lightly~""",general,success,3.6091253757476807,['Too long: 58 vs 10'],False
+2112,我要认真了！,"""I'm getting serious!"" or ""Time to get serious!""",general,success,2.6340365409851074,['Too long: 48 vs 6'],False
+2113,找上门的挑战就必须彻底解决,"""A challenge that comes knocking must be thoroughly resolved.""",quest,success,2.955282926559448,['Too long: 62 vs 13'],False
+2122,轮到我出场咯。,"""My turn."" / ""Here I come.""",general,success,3.606235265731812,['Too long: 27 vs 7'],False
+2123,那么..就来大闹一场吧！,"""Then... let's raise some hell!""",general,success,3.480668783187866,['Too long: 32 vs 12'],False
+2131,太过美丽就会成为嫉妒与羡慕的目标啊！,"""Too beautiful, and you become a target of envy.""",general,success,2.5022130012512207,['Too long: 49 vs 18'],False
+2132,不用废话，痛扁一顿就对了！,"""Cut the crap—just beat the hell out of him!""",general,success,2.759202003479004,['Too long: 45 vs 13'],False
+2133,华丽刺激！我会在战场上绽放花朵！,"""Glorious and thrilling! I'll bloom on the battlefield!""",general,success,2.6172797679901123,['Too long: 56 vs 16'],False
+2151,别看我这样，我还挺强的喔,"""Don't let looks fool you—I'm actually pretty strong.""",general,success,3.668379068374634,['Too long: 54 vs 12'],False
+2152,如果不手下留情的话，会被讨厌吗,"""Will they hate me if I don't hold back?""",general,success,3.54919958114624,['Too long: 41 vs 15'],False
+2153,这种时候...该做出什么表情才好呢？,"""What expression should I make... at a time like this?""",general,success,2.625631809234619,['Too long: 55 vs 18'],False
+2161,你将在此腐朽...由我亲手送葬,"""Here you shall rot... buried by my own hand.""",general,success,3.772225141525269,['Too long: 46 vs 15'],False
+2163,软弱无力的人别站在我面前,"""Weaklings, don't stand before me.""",general,success,2.7166733741760254,['Too long: 35 vs 12'],False
+2171,手术的时间到了,It's time for the surgery.,general,success,2.681450843811035,['Too long: 26 vs 7'],False
+2173,让我分析一下各种资料吧,"""Let me analyze the various materials.""",general,success,5.5149359703063965,['Too long: 39 vs 11'],False
+2181,开什么玩笑！,"""Are you kidding me?!"" / ""You've got to be kidding!""",general,success,4.957016944885254,['Too long: 52 vs 6'],False
+2182,自己的道路要靠自己走！正因如此，我才会变强的！,"""My path is mine to walk—that's exactly why I've grown stronger!""",general,success,2.64231824874878,['Too long: 65 vs 23'],False
+2191,结婚时机..延迟了..？,"""Wedding timing... delayed...?""",general,success,4.344980001449585,['Too long: 31 vs 12'],False
+2192,让你静静地沉睡..就像融化一样,"""Let you sleep peacefully... as if melting away""",general,success,3.834940195083618,['Too long: 48 vs 15'],False
+2193,让我告诉你..什么是杀意与恐惧的夹缝吧,"""Let me show you... the space between killing intent and terror.""",general,success,2.868449211120605,['Too long: 65 vs 19'],False
+2201,现在就把我的火之意志传达给你！,"""I'll pass my Will of Fire to you right now!""",general,success,4.642399072647095,['Too long: 45 vs 15'],False
+2202,肩负起新时代的，是年轻的火之意志们！,"""The young inheritors of the Will of Fire step up to bear the new era!""",general,success,2.788252830505371,['Too long: 71 vs 18'],False
+2203,我会守护珍爱村子、相信我的人！这就是火影的任务！,I'll protect the village I love and those who believe in me! That's the Hokage's duty!,quest,success,3.64755654335022,['Too long: 86 vs 24'],False
+2211,嘿！是看起来很弱的对手嘛！,"""Hey! Looks like a weak opponent!""",general,success,2.5655431747436523,['Too long: 34 vs 13'],False
+2212,让我教教你何为恐怖吧,"""Let me show you true terror.""",general,success,2.7579150199890137,['Too long: 30 vs 10'],False
+2213,老早就看得出胜负了,"""The outcome was obvious from the start.""",general,success,2.953920602798462,['Too long: 41 vs 9'],False
+2221,哼，我一步也不打算退让喔,"""Hmph, I don't intend to back down a single step.""",general,success,2.512160539627075,['Too long: 50 vs 12'],False
+2222,为了保护重要的人，我会挺身战斗！,"""I'll fight to protect those who matter!""",general,success,2.615939855575561,['Too long: 41 vs 16'],False
+2223,没办法花太多时间，让我一瞬间斩倒你,"""No time to waste—I'll cut you down in an instant.""",general,success,3.317312479019165,['Too long: 51 vs 17'],False
+2231,嘿！是看起来很弱的对手嘛！,"""Hey! Looks like a weak opponent!""",general,success,3.915156602859497,['Too long: 34 vs 13'],False
+2232,机关状态极佳..那么，开始吧,"""The mechanism is in perfect condition... Then, let's begin.""",general,success,2.974769115447998,['Too long: 61 vs 14'],False
+2233,老早就看得出胜负了,The outcome was obvious from the start.,general,success,4.1723473072052,['Too long: 39 vs 9'],False
+2242,得、得努力才行了！,"""I-I've got to work hard!""",general,success,4.23563027381897,['Too long: 26 vs 9'],False
+2243,我向来都是有话直说...！,"""I've always been straight-talking...!""",general,success,3.337732076644897,['Too long: 39 vs 13'],False
+2251,你是我的猎物.我不会放过你,"""You're my prey. I won't let you go.""",general,success,2.9366252422332764,['Too long: 37 vs 13'],False
+2252,既然冲着我来...那我也不会手下留情,"""Since you're coming for me... I won't hold back either.""",general,success,2.586661100387573,['Too long: 57 vs 18'],False
+2253,让你尝尝恐怖的滋味,"""Taste fear."" / ""Get a taste of terror.""",general,success,2.632007837295532,['Too long: 40 vs 9'],False
+2261,我一定会赢过你！！,"""I'll definitely beat you!!""",general,success,2.746184825897217,['Too long: 28 vs 9'],False
+2262,光明正大地打一场吧！,"""Let's fight fair and square!""",general,success,2.6066744327545166,['Too long: 30 vs 10'],False
+2263,燃烧起来啦！,"""It's burning!"" / ""It's on fire!""",general,success,4.321189403533936,['Too long: 33 vs 6'],False
+2271,嗯、应该不会输啦,"""Mm, I probably won't lose.""",general,success,2.775839805603028,['Too long: 28 vs 8'],False
+2272,打破规定的家伙就是废物,"""Those who break the rules are trash.""",general,success,3.330150365829468,['Too long: 38 vs 11'],False
+2273,会流于一时的情感就不配当忍者,"""A ninja unworthy of the name lets emotion sway them in the moment.""",general,success,2.962214469909668,['Too long: 68 vs 14'],False
+2281,我一定会赢！！,"""I will definitely win!!""",general,success,3.6920337677001953,['Too long: 25 vs 7'],False
+2282,我决定了！我要坚持自己的忍道！,"""I've decided! I'll stick to my ninja way!""",general,success,3.2082412242889404,['Too long: 43 vs 15'],False
+2283,我向来都是有话直说，这就是我的忍道！,"""I've always been straightforward—that's my ninja way!""",general,success,2.908264398574829,['Too long: 55 vs 18'],False
+2291,到时会没人制得住我哦~,"""No one will be able to stop me then~""",general,success,2.69504189491272,['Too long: 38 vs 11'],False
+2292,嘿嘿..久违的热血沸腾了...！,"""Heh... it's been a while since I felt this fired up...!""",general,success,2.820692300796509,['Too long: 57 vs 16'],False
+2293,要上咯！赤丸！,"""Here we go! Akamaru!""",general,success,2.7499372959136963,['Too long: 22 vs 7'],False
+2301,竟然敢跟我对峙，胆子很大嘛..,"""Bold of you to confront me like that...""",general,success,2.755721092224121,['Too long: 41 vs 15'],False
+2311,日向是木叶最强的一族！,"""The Hyuga are Konoha's strongest clan!""",general,success,2.669269323348999,['Too long: 40 vs 11'],False
+2312,不管是什么样的忍者，都逃不过我的白眼,"""No matter what kind of ninja, none can escape my Byakugan.""",general,success,2.8892180919647217,['Too long: 60 vs 18'],False
+2313,没有我看不透的东西,"""There's nothing I can't see through.""",general,success,2.901707887649536,['Too long: 38 vs 9'],False
+2321,老是逃避，是无法前进的！,"""Keep running away, and you'll never move forward!""",general,success,2.688845634460449,['Too long: 51 vs 12'],False
+2323,记好了！日向是木叶村最强的一族！,"""Remember this! The Hyuga are the strongest clan in Konoha!""",general,success,2.83926010131836,['Too long: 60 vs 16'],False
+2331,如果不相信自己，也不会有胜利之道！,"""Without self-belief, there is no path to victory!""",general,success,3.294635057449341,['Too long: 51 vs 17'],False
+2332,好好看着吧！阿凯老师！,"""Watch closely, Guy-sensei!""",general,success,2.758219242095948,['Too long: 28 vs 11'],False
+2342,既然要战斗，那我就拿出真本事获胜,"""If I'm going to fight, I'll win with everything I've got.""",general,success,4.14491605758667,['Too long: 59 vs 16'],False
+2351,你的未来...就只有死亡,"""Your future... is death alone.""",general,success,2.729945659637451,['Too long: 32 vs 12'],False
+2353,心里的洞其他人会帮我们把它补上的..,"""Others will help us fill the hole in our hearts.""",general,success,6.429689645767212,['Too long: 50 vs 18'],False
+2361,现在的你..真是蛮不错的呢,"""You're pretty great now, you know.""",general,success,3.012814283370972,['Too long: 36 vs 13'],False
+2362,凄凉地凋零吧！,"""Wither away in desolation!""",general,success,4.127408742904663,['Too long: 28 vs 7'],False
+2363,没有人能反抗我,"""No one can defy me.""",general,success,2.5550875663757324,['Too long: 21 vs 7'],False
+2371,要挑战我吗..既然如此，我也只能排除你了,"""Challenge me, then? In that case... I'll have to eliminate you.""",quest,success,2.8071298599243164,['Too long: 65 vs 20'],False
+2372,快回来..即使是现在的你，应该也能看得到微小的光明,"Come back... Even as you are now, you should still be able to see the faint light.",general,success,3.031733274459839,['Too long: 82 vs 25'],False
+2373,我来保护这个村子,"""I'll protect this village.""",general,success,2.524402141571045,['Too long: 28 vs 8'],False
+2381,如果想要签名的话，我也可以帮你签哦.,"""If you'd like an autograph, I can sign one for you too.""",general,success,3.0544581413269043,['Too long: 57 vs 18'],False
+2382,坚持实现自己所说的话，不要扭曲信念，那就是我的忍道,"""Keep my word, never compromise my beliefs—that's my ninja way.""",story,success,3.718599319458008,['Too long: 64 vs 25'],False
+2383,拉面，拉面！,"""Ramen, ramen!"" or ""Pulled noodles, pulled noodles!""
+
+(If this is a vendor's call: ""Fresh ramen! Get your ramen here!"")",general,success,5.136389255523682,['Too long: 119 vs 6'],False
+2391,我有赌上性命..也要保护的东西！,"""I have something worth dying to protect!""",general,success,2.569231986999512,['Too long: 42 vs 16'],False
+2393,只要我有重要的东西，我就不会输,"""As long as I have something important, I won't lose.""",general,success,2.8010945320129395,['Too long: 54 vs 15'],False
+2402,我相信保护村子是保护大家、忍者以及孩子的最好方式..！,"""I believe protecting the village is the best way to protect everyone, the shinobi, and the children..!""",general,success,2.780163526535034,['Too long: 104 vs 27'],False
+2403,吾名千手柱间..！即为初代之火影！,"""My name is Hashirama Senju...! The First Hokage!""",general,success,7.848512887954712,['Too long: 50 vs 17'],False
+2411,你的生命很快要结束了,"""Your life is about to end.""",general,success,2.5094900131225586,['Too long: 28 vs 10'],False
+2413,我是这世界的统治者..没有人能赢的了我,"""I am the ruler of this world... no one can defeat me.""",general,success,5.327073335647583,['Too long: 55 vs 19'],False
+2421,老师曾经告诉我！忍道是没有捷径的！,"""Sensei once told me! There's no shortcut to the ninja way!""",general,success,2.9918179512023926,['Too long: 60 vs 17'],False
+2431,已经准备好了，那我们开始吧,"""Ready when you are."" / ""All set, let's begin.""",general,success,2.714898109436035,['Too long: 47 vs 13'],False
+2432,你已经是瓮中之鳖了。接下来只能任我摆布,"""You're already trapped like a turtle in a jar. From here on, you're at my mercy.""",general,success,3.260845184326172,['Too long: 82 vs 19'],False
+2433,挑战我的这份好奇心，会让你步向毁灭！,"""Challenge my curiosity, and you'll meet your doom!""",quest,success,2.532199621200561,['Too long: 52 vs 18'],False
+2441,唉，肚子饿了..,"""Sigh, I'm hungry...""",general,success,2.6717722415924072,['Too long: 21 vs 8'],False
+2442,谁？！刚才骂我是肥猪的！,"""Who the hell just called me a fat pig?!""",general,success,8.81261920928955,['Too long: 41 vs 12'],False
+2443,呜哦！丰满系万岁！！,"""Woo! All hail the voluptuous type!!""
+
+Or more naturally: ""Ooh, curvy girls for the win!!""",general,success,4.107234716415405,['Too long: 90 vs 10'],False
+2451,偶尔也拿出干劲来吧,"""Show some motivation once in a while.""",general,success,16.010334730148315,['Too long: 39 vs 9'],False
+2452,啊——啊...真羡慕云..真的好自由哦,"""Ah... so envious of the clouds... so truly free.""",general,success,2.853224039077759,['Too long: 50 vs 19'],False
+2453,是是是，我做就是了,"""Yes, yes, yes, I'll do it.""",general,success,2.585374593734741,['Too long: 28 vs 9'],False
+2461,不管是什么样的对手，都不能掉以轻心,"Never underestimate any opponent, no matter who they are.",general,success,3.70257306098938,['Too long: 57 vs 17'],False
+2462,时时保持冷静，才是通往胜利的捷径,"""Stay calm at all times—that's the shortcut to victory.""",general,success,2.7974209785461426,['Too long: 56 vs 16'],False
+2463,我要全心全意地打倒你,"""I'll defeat you with everything I've got.""",general,success,2.8530032634735107,['Too long: 43 vs 10'],False
+2471,不必客气，放马过来吧！,"""No need to be polite—bring it on!""",general,success,2.7773354053497314,['Too long: 35 vs 11'],False
+2472,给我到走廊去罚站！,Go stand in the hallway!,general,success,2.373632907867432,['Too long: 24 vs 9'],False
+2473,接下来是特别个人指导时间，我会好好教育你的！,"""Next up is private tutoring time—I'll teach you a lesson!""",general,success,2.680137634277344,['Too long: 59 vs 22'],False
+2481,哼哼..我完全不觉得自己会输！,"""Hmph... I don't feel like losing at all!""",general,success,2.54292631149292,['Too long: 42 vs 15'],False
+2482,我要用我自己的方式...别妨碍我,"""I'll do this my own way... Don't get in my way.""",general,success,2.600468397140503,['Too long: 49 vs 16'],False
+2483,有趣..上吧...,"""Interesting... Let's go...""",general,success,2.3937020301818848,['Too long: 28 vs 9'],False
+2491,糟糕..好像有点太显眼了,"""Uh oh... I think I might be a bit too conspicuous.""",general,success,3.7224550247192383,['Too long: 52 vs 12'],False
+2492,我不会手下留情。这是对对手的礼仪,"""I won't hold back. That's my respect for my opponent.""",general,success,2.525303840637207,['Too long: 55 vs 16'],False
+2493,这场战斗也没有问题,This battle is also fine. / No problem with this fight either.,general,success,2.578068733215332,['Too long: 62 vs 9'],False
+2502,让你静静地沉睡..就像融化一样,"""Let you sleep peacefully... as if melting away""",general,success,2.6835286617279053,['Too long: 48 vs 15'],False
+2503,让我告诉你..什么是杀意与恐惧的夹缝吧,"""Let me show you... the space between killing intent and terror.""",general,success,3.7779579162597656,['Too long: 65 vs 19'],False
+2511,别小看我啊！,"""Don't underestimate me!""",general,success,2.766925573348999,['Too long: 25 vs 6'],False
+2513,小心我揍你喔！,"""Watch it, or I'll deck you!"" / ""Don't make me hit you!""",general,success,2.6301498413085938,['Too long: 56 vs 7'],False
+2522,我心中的的热血正在燃烧！,"""The fire in my heart burns!"" or ""My passion ignites!""",general,success,2.5703892707824707,['Too long: 54 vs 12'],False
+2531,战斗结束后，烤肉在等着我啊！,"""After the battle, barbecue awaits me!""",general,success,2.764030933380127,['Too long: 39 vs 14'],False
+2532,我不会再停下脚步了，我会不断向前进！,"""I won't stop anymore. I'll keep moving forward!""",general,success,2.582491159439087,['Too long: 49 vs 18'],False
+2541,如果想打倒我就去恨..去憎恶吧,"""If you want to defeat me, then hate me... despise me.""",general,success,2.538597345352173,['Too long: 55 vs 15'],False
+2543,告诉你什么叫无限的恐怖,"""Let me show you what true terror is.""",general,success,2.619267463684082,['Too long: 38 vs 11'],False
+2551,不会让你阻挠我们的！,"""We won't let you stop us!""",general,success,2.624351739883423,['Too long: 27 vs 10'],False
+2552,我可不想过着持续逃避的麻烦人生呀,I don't want to live a life of constant running away from trouble.,general,success,3.744642972946167,['Too long: 66 vs 16'],False
+2553,为了接下来的世代，得成为帅气的大人才行！,"""Gotta become a cool adult for the next generation!""",general,success,2.5102016925811768,['Too long: 52 vs 20'],False
+2561,我会赌上性命守护木叶忍者村！,"""I'll risk my life to protect the Hidden Leaf Village!""",general,success,2.9321300983428955,['Too long: 55 vs 14'],False
+2562,别小看火之意志啊！,"""Don't underestimate the Will of Fire!""",general,success,2.4370129108428955,['Too long: 39 vs 9'],False
+2563,呵呵！要挑战我奉陪！,"""Heh! You want a challenge? Bring it on!""",quest,success,3.1375882625579834,['Too long: 41 vs 10'],False
+2572,阻挠我的家伙全都得死,"""All who stand in my way must die.""",general,success,2.839587688446045,['Too long: 35 vs 10'],False
+2573,这双眼和忍术，一切力量都是为了复仇！,"These eyes, these techniques—all my power exists for vengeance!",skill,success,2.5178639888763428,['Too long: 63 vs 18'],False
+2581,哎呀请稍作留步,"""Oh, please wait a moment.""",general,success,2.513655185699463,['Too long: 27 vs 7'],False
+2582,收你为徒弟真是太好了！,Taking you as my disciple was truly wonderful!,general,success,2.541420221328736,['Too long: 46 vs 11'],False
+2583,我就稍微陪你一下吧,"""I'll keep you company for a bit.""",general,success,2.644002676010132,['Too long: 34 vs 9'],False
+2591,现在正是最高潮的时刻！,"""This is the climax!"" or ""Now's the peak moment!""",general,success,2.4988138675689697,['Too long: 49 vs 11'],False
+2592,热血沸腾吧！让彼此的热血擦出火花！,"""Let your blood boil! Let our passions ignite!""",general,success,2.908322334289551,['Too long: 47 vs 17'],False
+2593,我现在正燃烧到最高点哦,"""I'm burning at my peak right now.""",general,success,3.486938714981079,['Too long: 35 vs 11'],False
+2601,你以为可以击败我么？,"""You think you can defeat me?""",quest,success,4.18561863899231,['Too long: 30 vs 10'],False
+2602,木叶飘舞之处火焰燃烧,"""Where leaves fall, flames rise.""",general,success,2.80163836479187,['Too long: 33 vs 10'],False
+2603,不管过去还是未来，全是为了年轻的火之意志！,"""For the Will of Fire, young and eternal—past or future!""",general,success,2.526230573654175,['Too long: 57 vs 21'],False
+2612,让我告诉你..什么是杀意与恐惧的夹缝吧,"""Let me show you... the space between killing intent and terror.""",general,success,2.5461173057556152,['Too long: 65 vs 19'],False
+2613,让你静静地沉睡..就像融化一样,"""Let you sleep peacefully... as if melting away""",general,success,2.564525365829468,['Too long: 48 vs 15'],False
+2621,精彩的偶戏要开始了！,"""The puppet show is about to begin!""",general,success,2.827413558959961,['Too long: 36 vs 10'],False
+2631,那么..如果能当个好对手就好了,"""Then... I hope you can be a good rival.""",general,success,3.56333065032959,['Too long: 41 vs 15'],False
+2632,毫无保留地放马过来吧。我也会抱着这种决心进攻,"""Come at me with everything you've got. I'll attack with the same resolve.""",general,success,2.623474836349488,['Too long: 75 vs 22'],False
+2633,为了获胜我发誓将竭尽所能,"""I swear I'll do whatever it takes to win.""",general,success,2.6696572303771973,['Too long: 43 vs 12'],False
+2641,那么..如果能当个好对手就好了,"""Then... I hope we can be good rivals.""",general,success,3.782937049865722,['Too long: 39 vs 15'],False
+2642,毫无保留地放马过来吧。我也会抱着这种决心进攻,"""Come at me with everything you've got. I'll attack with the same resolve.""",general,success,2.5122499465942383,['Too long: 75 vs 22'],False
+2643,为了获胜我发誓将竭尽所能,"""I swear I'll do whatever it takes to win.""",general,success,2.416517734527588,['Too long: 43 vs 12'],False
+2651,看来你的觉悟是在是不太够,"""Seems your awareness is rather lacking.""",general,success,2.429847955703736,['Too long: 41 vs 12'],False
+2652,反正我也有点无聊，没办法..就陪你打一场吧,"""Well, I'm a bit bored anyway... might as well humor you for a match.""",general,success,2.69092059135437,['Too long: 70 vs 21'],False
+2661,看来没办法再懒下去了..！,Looks like I can't slack off any longer..!,general,success,2.6428310871124268,['Too long: 42 vs 13'],False
+2662,啊，真懒得动..！,"""Ugh, too lazy to move...!""",general,success,2.925501823425293,['Too long: 27 vs 9'],False
+2663,你的假面或许会被我剥下喔,"""Your mask might just slip off.""",general,success,2.4820587635040283,['Too long: 32 vs 12'],False
+2671,跟最强的大爷交手，你的命运是大凶，啊~！,Fighting the strongest old man? Your fate is **doomed**—ah~!,general,success,3.801077365875244,['Too long: 60 vs 20'],False
+2673,自己开拓未来！下定决心！,Forge your own future! Make up your mind!,general,success,2.4054079055786133,['Too long: 41 vs 12'],False
+2683,高兴吧。由我亲自把你变成灰尘,"""Rejoice. I'll turn you to dust myself.""",general,success,2.5161893367767334,['Too long: 40 vs 14'],False

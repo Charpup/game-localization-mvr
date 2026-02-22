@@ -1,0 +1,266 @@
+id,source_zh,target_en,context
+1,忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。,"Ninja upgrades and star promotions can significantly improve ninja attribute growth, with increased stat bonuses from leveling up.",skill
+2,忍者共分为13个星级，只有部分忍者可以突破到13星。,"Ninjas are divided into 13 star ranks, and only certain ninjas can breakthrough to 13 stars.",skill
+3,除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。,"Translation:
+
+""In addition to the 4 basic attributes of HP, Attack, Defense, and Speed, there are also 16 special attributes.""",general
+4,忍者初始质量从低到高为蓝、紫、橙，分别对应3-5星,"Ninja initial quality ranges from low to high: Blue, Purple, and Orange, corresponding to 3-5 stars respectively.",general
+5,升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能,"**Translation:**
+
+""Ascending stars allows certain ninjas' skill levels to reach Level 3, while Potential Awakening unlocks access to even higher skill levels.""",skill
+6,消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还,"Translation:
+
+""When consuming ninjas for synthesis, breakthrough, or other operations, resources previously used for their cultivation will be refunded.""",skill
+7,技能分为主动和被动。[沉默]阻止主动技能释放,Skills are divided into Active and Passive. [Silence] prevents the activation of Active Skills.,skill
+8,忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体,"When a ninja is promoted to a higher star rank, it consumes copies of that same ninja. Therefore, you should try to preserve extra copies of ninjas during the early game.",skill
+9,忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力,"Ninja skills have cooldowns of either 2 turns or 4 turns, with 4-turn cooldown skills being more powerful.",skill
+10,阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害,"Team composition counters will greatly increase ninja combat power, specifically manifested as increased accuracy and damage.",general
+11,开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3,"Translation:
+
+""When starting to hunt down rogue ninjas, auto-sweep will be activated automatically. The number of sweep stages equals your highest cleared stage from yesterday minus 3.""",general
+12,每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择,"Translation:
+
+""Each time you challenge Konoha Guard, you can select 1 buff. If no action is taken for an extended period, the system will automatically make the selection.""",quest
+13,仙人试炼每2天重置1次，所累积的复活币道具不清空,"**Translation:**
+
+""The Sage Trial resets every 2 days. The accumulated revival coin items will not be cleared.""",reward
+14,晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取,"**Translation:**
+
+""In addition to the cumulative damage rewards and ranking rewards, the Akatsuki Suppression Battle also features a Lucky Draw/Koi Prize lottery.""
+
+---
+
+**Alternative (more natural for gaming context):**
+
+""The Akatsuki Raid offers not only cumulative damage and ranking rewards, but also a jackpot/lucky draw prize pool.""",reward
+15,精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一,Elite Summon points obtained through Elite Summon recruitment are one of the reliable ways to exchange for your desired ninja.,reward
+16,高级招募每次十连必出5星忍者，并有概率出多位5星忍者,"**Translation:**
+
+""Advanced Recruitment guarantees at least one 5-star ninja with every 10-draw, with a chance to obtain multiple 5-star ninjas.""",general
+17,VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者,"Translation:
+
+""When VIP level reaches 3 or higher, you can spend points obtained from summons to directly draw a 5-star ninja.""",reward
+18,忍者背包格子上限可通过提升VIP等级或消耗金币提升,"Translation:
+
+""The maximum number of ninja inventory slots can be increased by upgrading your VIP level or spending gold.""",reward
+19,每一期的轮换活动都会有排名奖励，包含大量金币和高级探宝券,"Each rotation event features ranking rewards, including a large amount of gold and advanced treasure hunt tickets.",reward
+20,玩家可消耗金币进行改名，首次改名免费，之后仅需低额金币,"Players can spend Gold to change their name. The first rename is free, with only a small amount of Gold required for subsequent renames.",reward
+21,可消耗组织贡献升级六道之力，六道之力可百分比提高忍者属性,"Translation:
+
+""Consumable Organization Contribution can be used to upgrade Six Paths Power, which increases ninja stats by a percentage.""",skill
+22,布阵中同名忍者无法同时上阵，即使是好友支援的同名忍者,"Translation:
+
+""Ninjas with the same name cannot be deployed simultaneously in formation, even if one is from a friend's support.""",general
+23,忍者在误操作升星后，可在忍者重生中消耗一定道具全额退回资源,"Translation:
+
+""If a ninja is accidentally upgraded in star level, players can consume certain items in the Ninja Rebirth feature to receive a full refund of resources.""",skill
+24,忍者上阵后，可启动对应阵营的属性增幅，为忍者提高百分比属性,"Translation:
+
+""After ninjas are deployed, they can activate the corresponding faction's attribute boost, increasing the ninjas' stats by a percentage.""",general
+25,在忍传中可获得强力忍道，装备后在战斗中持续为忍者提高属性,"Translation:
+
+""Obtain powerful Ninja Ways in the Ninja Chronicles. Once equipped, they will continuously boost your ninja's stats during battle.""",reward
+26,除竞技场PK外，每周两次的忍者对决竞猜是获得声望的稳定途径,"Translation:
+
+""Aside from Arena PvP, the twice-weekly Ninja Showdown betting is a reliable way to earn Reputation.""
+
+---
+
+**Note for context:** In Naruto games, ""声望"" (Reputation/Prestige) is typically a currency used to unlock or upgrade ninjas, while ""忍者对决竞猜"" refers to a prediction/betting system where players guess winners of matches for rewards.",reward
+27,忍者小队的职业组合十分重要，最好能攻击、防御与治疗三者兼备,"Translation:
+
+""The team composition of a ninja squad is extremely important. Ideally, it should have all three roles covered: attack, defense, and healing.""",general
+28,随着回合数的增加，会开启决战模式，逐渐提高全体忍者伤害,"As the number of rounds increases, Final Battle Mode will be activated, gradually increasing all ninjas' damage.",general
+29,不需要的忍者最好不要分解，可以用作主力忍者的升星材料,"Translation:
+
+""Unwanted ninjas are best not disassembled, as they can be used as star-up materials for your main ninjas.""
+
+Or alternatively:
+
+""Don't break down unnecessary ninjas—they make good star-up fodder for your main units.""",skill
+30,有时候非主流阵容代表的并不是不强，而是尚未被搭配与开发,"Translation:
+
+""Sometimes, off-meta lineups don't represent weakness—they simply haven't been properly paired and developed yet.""",general
+40,天下大势，非久必欧！,"Here's the translation for this Naruto game reference:
+
+**""The world's fate—if not soon, then Europe!""**
+
+Or more naturally in gaming context:
+
+**""RNG wills it—EU or bust!""**
+
+---
+
+This is a pun on the Chinese idiom **""天下大势，分久必合，合久必分""** (The world under heaven, after long division must unite; after long unity must divide), famously from *Romance of the Three Kingdoms*.
+
+In gacha games like Naruto Mobile (火影忍者手游), players twisted it into **""非久必欧""** — replacing 合 (unite) with 欧 (Europe/luck), meaning ""If you don't get lucky soon, you'll eventually",general
+41,如果幸福有颜色，那一定是金色,"""If happiness had a color, it would definitely be golden yellow.""
+
+This is a reference to **Naruto Uzumaki's** iconic line about his hair color, often associated with his mother Kushina's words or fan interpretations of his character representing hope and warmth.",general
+42,运气爆棚，欧皇附体！,"**Translation:**
+
+""Luck is through the roof, the RNG gods have blessed me!""
+
+or alternatively:
+
+""Jackpot! The gacha gods are on my side today!""
+
+---
+
+**Context note for Naruto game:** This refers to getting extremely lucky with random drops/ summons (like pulling an SSR character or rare ninja cards). ""欧皇"" (European Emperor) is Chinese gaming slang for someone with absurdly good RNG luck, as opposed to ""非酋"" (African Chieftain) for the unlucky ones.",general
+43,感受一下天选之子欧皇的气息,"Translation:
+
+**""Feel the aura of the Chosen One, the ultimate lucky draw king.""**
+
+Or more contextually for a Naruto game:
+
+**""Bask in the presence of destiny's favorite—true gacha royalty.""**
+
+---
+
+*Note: ""欧皇"" (Ōu Huáng) is Chinese gaming slang combining ""Europe"" (implying good luck/fortune) + ""emperor"" = someone with absurdly good RNG/luck, especially in gacha/draw systems. In Naruto context, this likely refers to someone who pulls rare characters/cards effortlessly.*",general
+50,切勿相信任何第三方管道，谨防诈骗！,"**Translation:**
+
+""Do not trust any third-party channels. Beware of scams!""",general
+51,请勿相信聊天中送兑换码信息，谨防诈骗。,"Translation:
+
+**""Do not trust in-game chat messages offering redeem codes. Beware of scams.""**
+
+Or alternatively for a more natural gaming context:
+
+**""Never trust players offering redeem codes in chat. Stay alert for scams.""**",general
+52,警惕聊天中发兑换码的诈骗模式！,"**Translation:**
+
+""Beware of the scam pattern where people send fake redemption codes in chat!""
+
+---
+
+Or for a more natural gaming context:
+
+""Watch out for scammers sending fake redeem codes in chat!"" / ""Don't fall for players posting phony gift codes in chat!""",general
+53,切勿随意通过游戏外聊天申请，不给骗子可乘之机。,"**Translation:**
+
+Never accept friend requests or chat invites from outside the game casually, and don't give scammers any opportunity to take advantage.",general
+54,切记非官方人员加联系方式的都是诈骗行为！,"**Translation:**
+
+""Remember: anyone who is not an official staff member adding you for contact is a scam!"" 
+
+or more naturally for gaming contexts:
+
+""Beware: Anyone claiming to be staff and adding you outside official channels is a scammer!""
+
+---
+
+*Common variation seen in games:*
+**""Official staff will never ask for your password or add you privately. All such attempts are scams!""**",general
+55,牢记天上不会掉馅饼，不要相信非官方人员！,"Translation:
+
+""Always remember that pies don't fall from the sky—don't trust non-official personnel!""
+
+Or more naturally for a game context:
+
+""Remember: there's no such thing as a free lunch. Never trust unofficial sources!""",general
+70,护盾免伤,"**Translation:**
+
+""Shield Damage Reduction"" or ""Shield Damage Immunity/Negation""
+
+---
+
+**Context for Naruto games:**
+
+- **护盾 (hùdùn)** = Shield / Barrier
+- **免伤 (miǎn shāng)** = Damage reduction / Damage immunity / Damage negation
+
+In most Naruto mobile games (like *Naruto Mobile* 火影忍者手游), this typically refers to a **shield that reduces or nullifies incoming damage**.
+
+Common English equivalents used in games:
+- ""Shield: DMG Reduction""
+- ""Barrier Damage Immunity""
+- ""Shield Negates Damage""
+- ""Invincible Shield"" (if complete immunity)",general
+71,降攻降疗,"**Translation:**
+
+""降攻降疗"" → **""ATK Down / Heal Down""** or **""Reduce Attack & Reduce Healing""**
+
+---
+
+**Breakdown:**
+- 降攻 (jiàng gōng) = Reduce/Decrease Attack
+- 降疗 (jiàng liáo) = Reduce/Decrease Healing
+
+This is a common debuff combination in Naruto/gacha games where an enemy skill lowers both your attack power and healing received.",general
+72,治疗重生,"**Translation:**
+
+""Healing Rebirth"" or ""Regenerative Healing""
+
+---
+
+In Naruto game context, this likely refers to a medical ninjutsu or passive ability that combines **healing** with **resurrection/revival mechanics** (restoring HP and possibly reviving fallen allies).",general
+73,削防真伤,"**Translation:**
+
+- **削防** = Defense Reduction / Defense Shred / Armor Break
+- **真伤** = True Damage
+
+**Combined:** ""Defense Reduction + True Damage"" or ""Armor Break with True Damage""
+
+---
+
+In Naruto game context, this typically refers to a skill/ability that:
+1. Reduces the enemy's defense (削防)
+2. Deals damage that ignores defense/resistance (真伤)",general
+74,群体增速,"**Translation:** Group Speed Boost / Mass Haste
+
+---
+
+**Context (Naruto game):**
+- **群体增速** typically refers to a buff skill that increases movement speed or attack speed for multiple allies/party members
+- Common equivalent terms in Naruto games: ""Mass Swiftness,"" ""Party Speed Up,"" ""Allied Acceleration,"" or simply ""Group Haste""
+
+If this is a specific jutsu name, it may also be localized as something like **""Multi-Target Quickening""** or **""Squad Speed Enhancement""** depending on the game's translation style.",general
+75,前排控制,"**Translation:**
+
+""前排控制"" → **""Front Row Control""** or **""Frontline Control""**
+
+---
+
+In Naruto game terminology, this typically refers to:
+- A character/team role positioned in the front row
+- Focused on crowd control (CC), tanking, or disabling enemies
+- Often paired with terms like 输出 (DPS), 辅助 (Support), or 后排 (Back Row)",general
+76,攻击噬取,"**Translation:**
+
+**""Attack Drain""** or **""Leech Attack""**
+
+---
+
+Context: This appears to be a skill/ability name from a Naruto game, likely referring to an attack that drains HP/life from the enemy while dealing damage.",general
+77,残血收割,"**Translation:** ""Low HP execute"" or ""Finisher""
+
+**Context for Naruto game:**
+- **残血 (cán xuè)** = Low/remaining HP (health)
+- **收割 (shōu gē)** = Harvest/reap → in gaming terms, ""execute"" or ""clean up""
+
+This refers to a character or ability specialized in finishing off enemies who are already at low health. Common mechanic in MOBAs and fighting games where certain skills deal bonus damage to low-HP targets.
+
+Alternative translations depending on game type:
+- ""Executioner""
+- ""Cleanup specialist""
+- ""Last hit finisher""",general
+78,单体驱散,"**Translation:**
+
+**Single-target Dispel** or **Single-target Cleanse**
+
+---
+
+**Context notes for Naruto game:**
+- 单体 (dāntǐ) = single target / single unit
+- 驱散 (qūsàn) = dispel / cleanse / remove (debuffs/buffs)
+
+This typically refers to a skill that removes negative status effects (or sometimes buffs) from one ally/enemy in Naruto mobile games like *Naruto Mobile* (火影忍者手游) or similar gacha RPGs.",general
+79,生命恢复,"**Life Recovery** or **HP Regeneration**
+
+In Naruto games, this typically refers to:
+- **Life Recovery** (restoring HP/health)
+- **Health Regeneration** (gradual HP recovery over time)
+
+Context would help determine the best choice - ""Life Recovery"" is more common for instant healing items/skills, while ""HP Regeneration"" is used for passive recovery effects.",general
