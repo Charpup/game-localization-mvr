@@ -1,0 +1,7 @@
+models:
+  kimi-k2.5:
+    input_per_1M: 0.5
+    output_per_1M: 1.5
+  gpt-4o-mini:
+    input_per_1M: 0.15
+    output_per_1M: 0.60
