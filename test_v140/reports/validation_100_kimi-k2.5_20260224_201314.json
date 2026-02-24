@@ -1,0 +1,28 @@
+{
+  "model": "kimi-k2.5",
+  "input_path": "output/test_50rows.csv",
+  "input_sha256": "7f5fa1c08cf02331bcc20a00b0961df3a9dee913cc152c9890ceab92aebb6179",
+  "timestamp": "2026-02-24T20:13:14.394832",
+  "scoring_formula": "score = 100 - (missing_rate*40 + escalation_rate*30 + parse_error_rate*20 + cost_norm*10)",
+  "baseline_cost_per_100_rows": 0.1,
+  "metrics": {
+    "total_rows": 50,
+    "total_batches": 5,
+    "missing_count": 10,
+    "missing_rate": 0.2,
+    "escalation_count": 0,
+    "escalation_rate": 0.0,
+    "parse_error_count": 1,
+    "parse_error_rate": 0.2,
+    "avg_latency_ms": 36369.4,
+    "p95_latency_ms": 60426,
+    "total_input_tokens": 1036,
+    "total_output_tokens": 1185,
+    "cost_usd": 0.0022955,
+    "cost_norm": 0.04590999999999999,
+    "errors": [
+      "Request timeout after 60s: HTTPSConnectionPool(host='api.apiyi.com', port=443): Read timed out. (read timeout=60)"
+    ],
+    "score": 87.5409
+  }
+}
