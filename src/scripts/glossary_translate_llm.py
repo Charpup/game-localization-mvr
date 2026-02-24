@@ -4,14 +4,13 @@
 """
 glossary_translate_llm.py
 
-Dedicated script for glossary term translation (multi-language support).
+Dedicated script for glossary term translation (zh→ru).
 Uses router-configured model for "glossary_translate" step.
 
 Usage:
     python scripts/glossary_translate_llm.py \
         --proposals glossary/proposals.yaml \
         --output glossary/proposals_translated.yaml \
-        --source-lang zh-CN --target-lang ru-RU \
         --batch_size 20 --max_terms 400
 
 Environment:
@@ -38,46 +37,16 @@ try:
 except ImportError:
     yaml = None
 
-try:
-    from scripts.runtime_adapter import LLMClient, LLMError, BatchConfig, batch_llm_call, log_llm_progress
-except ImportError:
-    from runtime_adapter import LLMClient, LLMError, BatchConfig, batch_llm_call, log_llm_progress
-
-
-# Language code mapping for short codes used in field names
-LANG_CODE_MAP = {
-    "zh-CN": "zh",
-    "zh-TW": "zh_tw",
-    "en-US": "en",
-    "en-GB": "en",
-    "ru-RU": "ru",
-    "ja-JP": "ja",
-    "ko-KR": "ko",
-    "fr-FR": "fr",
-    "de-DE": "de",
-    "es-ES": "es",
-    "pt-BR": "pt",
-    "it-IT": "it",
-    "ar-SA": "ar",
-    "th-TH": "th",
-    "vi-VN": "vi",
-    "id-ID": "id",
-}
+from runtime_adapter import LLMClient, LLMError, BatchConfig, batch_llm_call, log_llm_progress
 
 
 @dataclass
 class TranslatedTerm:
-    term_source: str
-    term_target: str
+    term_zh: str
+    term_ru: str
     confidence: float
     reason: str
     context: Optional[str] = None
-    pos: Optional[str] = None
-
-
-def get_short_lang_code(lang_code: str) -> str:
-    """Get short language code for field naming (e.g., 'ru-RU' -> 'ru')."""
-    return LANG_CODE_MAP.get(lang_code, lang_code.split('-')[0].lower())
 
 
 def load_proposals(path: str) -> List[Dict[str, Any]]:
@@ -102,184 +71,67 @@ def load_style_guide(path: str) -> str:
         return f.read().strip()
 
 
-def get_language_name(lang_code: str) -> str:
-    """Get human-readable language name."""
-    names = {
-        "zh-CN": "简体中文",
-        "zh-TW": "繁體中文",
-        "en-US": "English",
-        "en-GB": "English (UK)",
-        "ru-RU": "Русский",
-        "ja-JP": "日本語",
-        "ko-KR": "한국어",
-        "fr-FR": "Français",
-        "de-DE": "Deutsch",
-        "es-ES": "Español",
-        "pt-BR": "Português (Brasil)",
-        "it-IT": "Italiano",
-        "ar-SA": "العربية",
-        "th-TH": "ไทย",
-        "vi-VN": "Tiếng Việt",
-        "id-ID": "Bahasa Indonesia",
-    }
-    return names.get(lang_code, lang_code)
-
-
-def build_system_prompt(source_lang: str, target_lang: str) -> str:
-    """
-    Build system prompt for glossary translation based on language pair.
-    
-    Args:
-        source_lang: Source language code (e.g., 'zh-CN', 'en-US')
-        target_lang: Target language code (e.g., 'ru-RU', 'en-US')
-    
-    Returns:
-        System prompt string tailored for the language pair
-    """
-    source_name = get_language_name(source_lang)
-    target_name = get_language_name(target_lang)
-    target_short = get_short_lang_code(target_lang)
-    
-    # Base prompt template with language placeholders
-    base_prompt = (
-        f"你是术语表译者（{source_name} → {target_name}），为手游项目生成「可落地」的术语对。\n"
-        f"任务：把候选 id 翻译为 term_{target_short}，并给出简短注释，避免把整句当术语。\n\n"
-    )
-    
-    # Language-specific rules
-    lang_rules = {
-        "ru": [
-            "term_ru 不得包含【】；如需要引号用 «»。",
-            "专有名词/技能名优先音译或官方惯用译法；系统词优先简洁一致。",
-        ],
-        "en": [
-            "Use natural, game-appropriate English terminology.",
-            "Prioritize official translations for proper nouns/skill names.",
-            "Keep system terms concise and consistent.",
-        ],
-        "ja": [
-            "カタカナ表記はゲーム業界標準に従う。",
-            "固有名詞は公式訳を優先する。",
-        ],
-        "ko": [
-            "게임 업계 표준 용어를 사용하세요.",
-            "고유명사는 공식 번역을 우선시하세요.",
-        ],
-        "fr": [
-            "Utilisez la terminologie naturelle et appropriée pour les jeux.",
-            "Priorisez les traductions officielles pour les noms propres.",
-        ],
-        "de": [
-            "Verwenden Sie natürliche, spielgerechte deutsche Terminologie.",
-            "Priorisieren Sie offizielle Übersetzungen für Eigennamen.",
-        ],
-        "es": [
-            "Utilice terminología natural y apropiada para videojuegos.",
-            "Priorice las traducciones oficiales para nombres propios.",
-        ],
-    }
-    
-    # Get rules for target language (default to generic)
-    target_rules = lang_rules.get(target_short, [
-        f"Use natural, game-appropriate {target_name} terminology.",
-        "Prioritize official translations for proper nouns/skill names.",
-    ])
-    
-    # Build rules section
-    rules_section = "规则（硬性）：\n" if target_short in ["zh", "ru", "ja", "ko"] else "Rules (Mandatory):\n"
-    rules_section += "- id 必须与输入一致（不要改写）。\n" if target_short in ["zh", "ru", "ja", "ko"] else "- id must match input exactly (do not rewrite).\n"
-    
-    for rule in target_rules:
-        rules_section += f"- {rule}\n"
-    
-    # Output format section
-    output_section = (
-        "\n输出 JSON（仅输出 JSON）：\n"
+def build_system_prompt() -> str:
+    """Build system prompt for glossary translation."""
+    return (
+        "你是术语表译者（zh-CN → ru-RU），为手游项目生成“可落地”的术语对。\n"
+        "任务：把候选 id 翻译为 term_ru，并给出简短注释，避免把整句当术语。\n\n"
+        "输出 JSON（仅输出 JSON）：\n"
         "{\n"
-        '  "items": [\n'
+        "  \"items\": [\n"
         "    {\n"
-        '      "id": "<原样>",\n'
-        f'      "term_{target_short}": "<{target_name}术语>",\n'
-        '      "pos": "noun|verb|adj|phrase|name|system",\n'
-        '      "notes": "<可选：一句话说明语境/是否可变格>",\n'
-        '      "confidence": 0.0\n'
+        "      \"id\": \"<原样>\",\n"
+        "      \"term_ru\": \"<俄文术语>\",\n"
+        "      \"pos\": \"noun|verb|adj|phrase|name|system\",\n"
+        "      \"notes\": \"<可选：一句话说明语境/是否可变格>\",\n"
+        "      \"confidence\": 0.0\n"
         "    }\n"
         "  ]\n"
-        "}\n"
-    ) if target_short in ["zh", "ru", "ja", "ko"] else (
-        "\nOutput JSON (output JSON only):\n"
-        "{\n"
-        '  "items": [\n'
-        "    {\n"
-        '      "id": "<original>",\n'
-        f'      "term_{target_short}": "<{target_name} Term>",\n'
-        '      "pos": "noun|verb|adj|phrase|name|system",\n'
-        '      "notes": "<optional: context notes>",\n'
-        '      "confidence": 0.0\n'
-        "    }\n"
-        "  ]\n"
-        "}\n"
+        "}\n\n"
+        "规则（硬性）：\n"
+        "- id 必须与输入一致（不要改写）。\n"
+        "- term_ru 不得包含【】；如需要引号用 «».\n"
+        "- 专有名词/技能名优先音译或官方惯用译法；系统词优先简洁一致。\n"
     )
-    
-    return base_prompt + output_section + "\n" + rules_section
 
 
-def build_user_prompt(items: List[Dict], source_lang: str, target_lang: str) -> str:
+def build_user_prompt(items: List[Dict]) -> str:
     """Build user prompt for glossary translation from batch items."""
-    source_name = get_language_name(source_lang)
-    target_name = get_language_name(target_lang)
-    
     candidates = []
     for item in items:
         candidates.append({
-            "term_source": item.get('id', ''),
+            "term_zh": item.get('id', ''),
             "context": item.get('source_text', '') or ''
         })
     
     return (
-        f"language_pair: {source_lang} -> {target_lang}\n"
+        f"language_pair: zh-CN -> ru-RU\n"
         f"context_hint: Game Localization (Naruto-like)\n\n"
         "candidates:\n"
         f"{json.dumps(candidates, ensure_ascii=False, indent=2)}\n"
     )
 
 
-def process_batch_results(
-    batch_items: List[Dict], 
-    original_entries: List[Dict],
-    target_lang: str
-) -> List[TranslatedTerm]:
-    """
-    Convert batch output items back to TranslatedTerm objects.
-    
-    Args:
-        batch_items: Items returned from LLM batch processing
-        original_entries: Original input entries
-        target_lang: Target language code for field name resolution
-    """
+def process_batch_results(batch_items: List[Dict], original_entries: List[Dict]) -> List[TranslatedTerm]:
+    """Convert batch output items back to TranslatedTerm objects."""
     results = []
     entry_map = {e.get("term_zh"): e for e in original_entries}
     
-    # Get dynamic field name for target language
-    target_short = get_short_lang_code(target_lang)
-    term_field = f"term_{target_short}"
-    
     for item in batch_items:
-        term_source = item.get("id")
-        entry = entry_map.get(term_source)
+        term_zh = item.get("id")
+        entry = entry_map.get(term_zh)
         
         if not entry:
-            continue
+             continue
 
-        term_target = item.get(term_field, "")
-        if term_target:
+        term_ru = item.get("term_ru", "")
+        if term_ru:
             results.append(TranslatedTerm(
-                term_source=term_source,
-                term_target=term_target,
+                term_zh=term_zh,
+                term_ru=term_ru,
                 confidence=float(item.get("confidence", 0.0)),
                 reason=item.get("notes", "") + " | " + item.get("pos", ""),
-                context=entry.get("context"),
-                pos=item.get("pos")
+                context=entry.get("context")
             ))
     
     return results
@@ -307,16 +159,12 @@ def write_translated_yaml(path: str, results: List[TranslatedTerm], meta: Dict) 
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Glossary term translation (multi-language) using LLM"
+        description="Glossary term translation (zh→ru) using LLM"
     )
     ap.add_argument("--proposals", "--input", required=True,
                     help="Input proposals YAML (from extract_terms)")
     ap.add_argument("--output", default="glossary/proposals_translated.yaml",
                     help="Output translated terms YAML")
-    ap.add_argument("--source-lang", default="zh-CN",
-                    help="Source language code (default: zh-CN)")
-    ap.add_argument("--target-lang", default="ru-RU",
-                    help="Target language code (default: ru-RU)")
     ap.add_argument("--style", default="workflow/style_guide.md",
                     help="Style guide for context")
     ap.add_argument("--batch_size", type=int, default=20,
@@ -329,12 +177,8 @@ def main():
                     help="Validate without making LLM calls")
     args = ap.parse_args()
     
-    source_name = get_language_name(args.source_lang)
-    target_name = get_language_name(args.target_lang)
-    
     print("🔤 Glossary Translate LLM")
     print(f"   Step: glossary_translate")
-    print(f"   Language Pair: {source_name} ({args.source_lang}) → {target_name} ({args.target_lang})")
     print(f"   Proposals: {args.proposals}")
     print(f"   Output: {args.output}")
     print()
@@ -365,7 +209,6 @@ def main():
         print("DRY-RUN MODE - Validation Summary")
         print("=" * 60)
         print(f"[OK] Would translate {len(entries)} terms")
-        print(f"[OK] From {source_name} ({args.source_lang}) to {target_name} ({args.target_lang})")
         print(f"[OK] Step: glossary_translate (router-configured)")
         print(f"[OK] Would write to: {args.output}")
         print("[OK] Dry-run validation PASSED")
@@ -384,14 +227,14 @@ def main():
             step="glossary_translate",
             rows=rows,
             model=args.model,
-            system_prompt=build_system_prompt(args.source_lang, args.target_lang),
-            user_prompt_template=lambda items: build_user_prompt(items, args.source_lang, args.target_lang),
+            system_prompt=build_system_prompt(),
+            user_prompt_template=build_user_prompt,
             content_type="normal",
             retry=1,
             allow_fallback=True
         )
         
-        all_results = process_batch_results(batch_results, entries, args.target_lang)
+        all_results = process_batch_results(batch_results, entries)
         
     except Exception as e:
         print(f"❌ Batch translation failed: {e}")
@@ -402,8 +245,6 @@ def main():
     # Write output
     meta = {
         "source_proposals": args.proposals,
-        "source_lang": args.source_lang,
-        "target_lang": args.target_lang,
         "style_guide": args.style if style_guide else None,
         "batch_size": args.batch_size,
     }
@@ -411,7 +252,6 @@ def main():
     
     print(f"📋 Translated terms written to: {args.output}")
     print(f"   Total: {len(all_results)}")
-    print(f"   Language: {source_name} → {target_name}")
     print()
     print("📝 Next steps:")
     print("   1. Run glossary_review_llm.py to review translations")
