@@ -341,7 +341,7 @@ class QAHardValidator:
                 
                 # 检查是否有翻译列
                 target_field = None
-                for possible_field in ['target_text', 'translated_text', 'target_zh', 'tokenized_target']:
+                for possible_field in ['target_text', 'translated_text', 'target_zh', 'tokenized_target', 'target_ru', 'target_en']:
                     if possible_field in reader.fieldnames:
                         target_field = possible_field
                         break

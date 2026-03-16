@@ -401,7 +401,7 @@ def main():
         print(f"   Semantic scoring: Enabled")
     
     # Filter rows with target_text
-    rows_with_target = [r for r in rows if r.get("target_text")]
+    rows_with_target = [r for r in rows if r.get("target_text") or r.get("target_ru") or r.get("target_en")]
     print(f"   Rows with translations: {len(rows_with_target)}")
     
     # Semantic pre-scoring if enabled
