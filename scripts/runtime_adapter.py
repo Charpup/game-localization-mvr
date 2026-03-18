@@ -505,9 +505,10 @@ class LLMClient:
         # Initialize or reuse router
         if router is not None:
             self.router = router
-        elif LLMClient._router is None:
-            LLMClient._router = LLMRouter()
-        self.router = LLMClient._router
+        else:
+            if LLMClient._router is None:
+                LLMClient._router = LLMRouter()
+            self.router = LLMClient._router
         self.timeout_s = timeout_s or int(os.getenv("LLM_TIMEOUT_S", "60"))
 
         # Validate base config (model can come from router)

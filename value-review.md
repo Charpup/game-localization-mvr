@@ -1,4 +1,4 @@
-# Value Review: deep-cleanup-r3
+# Value Review: deep-cleanup-r3 Batch 2
 
 ## Decision
 
@@ -6,32 +6,45 @@ GO
 
 ## Why this is worth doing
 
-The branch needs a brownfield TriadDev control plane before any deeper cleanup work can be
-sequenced safely. The current runtime truth is already concentrated in
-`main_worktree/scripts`, while `src/scripts` functions as a compatibility mirror. Writing
-that split down reduces accidental edits in the wrong zone and gives later implementation
-steps a stable authority model.
+The repo is no longer blocked by obvious P0/P2 drift in the smoke chain, so the next
+highest-value cleanup work is to make the shared runtime and side surfaces safer to keep
+or later retire. Batch 2 does that without deleting uncertain code:
+
+- `runtime_adapter.py` is the highest-connectivity shared dependency and needed stronger
+  contract tests before any future cleanup.
+- `normalize_*` and `soft_qa_llm.py` are not current smoke-core steps, but they still have
+  live references in docs, stress flows, or compatibility entrypoints, so they need
+  evidence-first status marking instead of removal.
+- `src/scripts` remains a compatibility mirror, so the right move is to keep drift
+  governance visible rather than force a premature migration.
 
 ## Evidence captured
 
-- Active branch is `codex/deep-cleanup-r3`.
-- The stable smoke path is preserved by `scripts/run_smoke_pipeline.py` as
+- The active keep chain is still
   `llm_ping -> normalize_guard -> translate_llm -> qa_hard -> rehydrate_export -> smoke_verify`.
-- Coverage/decision helpers (`scripts/m4_3_collect_coverage.py` and
-  `scripts/m4_4_decision.py`) reference the same chain, which reinforces that it is the
-  intended keep chain.
-- `main_worktree/scripts` and repo-root `src/scripts` both exist, matching the desired
-  authority-plus-compat-zone model.
+- `runtime_adapter.py` now has explicit Batch 2 contract coverage for:
+  router chain selection, batch enforcement, error classification, tracing, retry, and
+  partial batch handling.
+- `normalize_ingest.py` now has fixture coverage for header aliases, required-column
+  enforcement, and output-schema stabilization.
+- `normalize_tagger.py` and `normalize_tag_llm.py` now have fixture coverage for row
+  preservation, fallback tagging, and rules-driven length limits.
+- `soft_qa_llm.py` now has fixture coverage for dry-run, resume, optional dependency
+  degradation, and non-blocking repair-task emission.
 
 ## Scope guardrails
 
-- This bootstrap is artifact-only and does not modify production code.
-- First wave remains blocked from `scripts/repair_loop.py`, `scripts/run_validation.py`,
-  `gate/**`, `stress/**`, `skill-v1.4.0/**`, and `packaging/**`.
-- No existing user changes are reverted.
+- Batch 2 does not remove files from `main_worktree/scripts`.
+- Batch 2 does not change `run_smoke_pipeline.py` orchestration.
+- Batch 2 does not enter `repair`, `validation`, `gate`, `stress`, or repo-root
+  `src/scripts` implementation surfaces.
+- Compatibility wrappers such as `qa_soft.py` remain in place.
 
 ## Exit condition for this step
 
-TriadDev artifacts exist and describe the current brownfield state accurately enough for
-later work to proceed without ambiguity about authority, compat boundaries, or protected
-surfaces.
+Batch 2 is complete when:
+
+- the new contract/fixture tests are green,
+- the smoke-focused regression suite and M4 evidence gate stay green,
+- module statuses are written down clearly enough that later cleanup can distinguish
+  `must-keep`, `compat-keep`, `frozen duplicate`, and `blocked` without re-discovery.

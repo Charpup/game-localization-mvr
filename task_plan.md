@@ -39,4 +39,26 @@ Bootstrap the TriadDev brownfield control plane for `codex/deep-cleanup-r3`, add
 - [complete] Phase 1: Materialize `.triadev/*`, `SPEC.yaml`, `SPEC-delta.yaml`, and `value-review.md`.
 - [complete] Phase 2: Add/update Batch 1 tests for `runtime_adapter` and script authority drift.
 - [complete] Phase 3: Run Batch 1 regression suite plus M4 evidence gate.
-- [in_progress] Phase 4: Stage and commit `codex/deep-cleanup-r3` Batch 1 changes.
+- [complete] Phase 4: Stage and commit `codex/deep-cleanup-r3` Batch 1 changes.
+
+## 2026-03-19 Deep Cleanup R3 Batch 2
+
+### Goal
+Stabilize the shared runtime contract, audit `normalize_*` and `soft QA` surfaces using
+fixture tests, and keep cleanup aligned to the smallest system needed for continued
+development.
+
+### Scope
+- Keep `main_worktree/scripts` as the runtime authority.
+- Treat `src/scripts` as drift-governed compatibility only.
+- Work only in `runtime_adapter.py`, `normalize_ingest.py`,
+  `normalize_tagger.py`, `normalize_tag_llm.py`, `qa_soft.py`, `soft_qa_llm.py`,
+  and supporting `tests/`.
+- Freeze `repair`, `validation`, `gate`, `stress`, and repo-root `src/scripts`.
+
+### Phases
+- [complete] Phase 0: Re-confirm first-principles core, compat zone, and blocked surfaces.
+- [complete] Phase 1: Add RED contract tests for runtime adapter routing/error handling.
+- [complete] Phase 2: Add fixture tests for normalize ingest/tagger and soft QA behavior.
+- [complete] Phase 3: Apply minimal fixes for router injection, dry-run batching, and import-time stream side effects.
+- [in_progress] Phase 4: Run Batch 2 regression + evidence gate and prepare commit scope.

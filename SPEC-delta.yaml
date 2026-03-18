@@ -1,16 +1,16 @@
-delta_version: 0.1.0
-change_id: deep-cleanup-r3
-change_type: brownfield-control-plane-bootstrap
-status: proposed-and-materialized
+delta_version: 0.2.0
+change_id: deep-cleanup-r3-batch2
+change_type: contract-stabilization-and-evidence-audit
+status: in_progress
 intent:
   summary: >
-    Establish TriadDev brownfield control artifacts that describe the current runtime truth
-    without changing production scripts.
+    Stabilize the shared runtime contract, audit normalize and soft-QA side surfaces,
+    and keep deep cleanup aligned to the first-principles core without physical deletion.
   non_goals:
-    - Rewriting pipeline stages
-    - Migrating compat-zone files
-    - Touching repair_loop.py or run_validation.py
-    - Touching gate, stress, skill-v1.4.0, or packaging surfaces
+    - Rewriting run_smoke_pipeline.py
+    - Physically cleaning repo-root src/scripts
+    - Touching repair, validation, gate, or stress implementation paths
+    - Archiving normalize or soft-QA files before fixture evidence exists
 assertions:
   authority_zone: main_worktree/scripts
   compat_zone: src/scripts
@@ -21,12 +21,37 @@ assertions:
     - qa_hard
     - rehydrate_export
     - smoke_verify
+  minimal_irreversible_core:
+    - scripts/run_smoke_pipeline.py
+    - scripts/runtime_adapter.py
+    - scripts/smoke_issue_logger.py
+    - scripts/m4_3_collect_coverage.py
+    - scripts/m4_4_decision.py
+    - tests/test_smoke_verify.py
+    - tests/test_qa_hard.py
+    - tests/test_normalize_segmentation.py
 planned_controls:
-  - Record branch-local brownfield state in .triadev/state.json.
-  - Record route and guardrails in .triadev/workflow.json.
-  - Capture current baseline in SPEC.yaml.
-  - Capture value-first justification in value-review.md.
+  - Expand runtime_adapter contract coverage for routing, fallback, trace, and batch retry behavior.
+  - Add fixture tests for normalize_ingest and normalize_tagger/normalize_tag_llm.
+  - Add soft_qa_llm dry-run/resume/task-emission tests to clarify non-blocking responsibilities.
+  - Record canonical and compat statuses for normalize_* and soft QA surfaces.
+status_map:
+  runtime_adapter.py: must-keep core
+  normalize_ingest.py: frozen audit candidate
+  normalize_tagger.py: must-keep candidate
+  normalize_tag_llm.py: frozen duplicate / compat-keep
+  qa_soft.py: compat-keep wrapper
+  soft_qa_llm.py: compat-keep canonical
+blocked_zones:
+  - scripts/repair_loop.py
+  - scripts/repair_loop_v2.py
+  - scripts/repair_checkpoint_gaps.py
+  - scripts/run_validation.py
+  - scripts/build_validation_set.py
+  - gate/**
+  - stress/**
+  - ../src/scripts/**
 risk_controls:
-  - Artifact-only write scope.
-  - Preserve authority/compat split explicitly.
-  - Freeze first-wave no-touch zones before implementation work starts.
+  - No physical deletion in Batch 2.
+  - New tests must pass before any behavior cleanup is kept.
+  - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.

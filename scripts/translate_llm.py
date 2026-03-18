@@ -20,11 +20,20 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
-# Ensure UTF-8 output on Windows
-if sys.platform == 'win32':
+def configure_standard_streams() -> None:
+    """Configure stdout/stderr only for CLI execution, not on import."""
+    if sys.platform != 'win32':
+        return
     import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if not stream or not hasattr(stream, "buffer"):
+            continue
+        try:
+            wrapped = io.TextIOWrapper(stream.buffer, encoding='utf-8', errors='replace')
+            setattr(sys, stream_name, wrapped)
+        except Exception:
+            pass
 
 try:
     import yaml
@@ -285,6 +294,7 @@ def save_checkpoint(path: str, done_ids: set):
 # Main Process
 # -----------------------------
 def main():
+    configure_standard_streams()
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True)
     parser.add_argument("--output", required=True)

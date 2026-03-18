@@ -16,3 +16,9 @@
 - Ran Batch 1 regression suite successfully: `29 passed`.
 - Re-ran `m4_3_collect_coverage.py` and `m4_4_decision.py`; the decision summary remains `KEEP=6`.
 - Current authority report is `WARN` because `runtime_adapter.py` is still alert-only drift, while required mirrors remain aligned.
+- Started Batch 2 under the first-principles rule: preserve the smallest system needed for continued development, do not delete uncertain code.
+- Added Batch 2 contract tests for `runtime_adapter`, `normalize_*`, and `soft_qa_llm`.
+- Fixed explicit-router injection in `runtime_adapter.LLMClient`.
+- Moved import-time standard-stream rewiring out of `normalize_tagger.py`, `normalize_tag_llm.py`, `translate_llm.py`, and `soft_qa_llm.py` into CLI-time configuration.
+- Fixed `soft_qa_llm.py --dry-run` to use `batch_utils.SplitBatchConfig` and `split_into_batches`.
+- Batch 2 focused test surface is green: `14 passed`.
