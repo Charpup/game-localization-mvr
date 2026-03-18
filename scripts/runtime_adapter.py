@@ -1088,7 +1088,7 @@ def parse_llm_response(
         for key in ["items", "results", "data", "translations"]:
             if key in data_obj and isinstance(data_obj[key], list):
                 return data_obj[key]
-        if data_obj.keys() == {"id", "target_ru"}:
+        if data_obj.keys() in ({"id", "target_ru"}, {"string_id", "target_ru"}):
             return [data_obj]
         return None
 
@@ -1141,17 +1141,17 @@ def parse_llm_response(
     # 5) 贪婪提取对象或数组片段
     if data is None:
         parse_strategy = "greedy_extract"
-        start_obj = raw.find("{")
-        end_obj = raw.rfind("}")
-        if start_obj != -1 and end_obj != -1 and end_obj > start_obj:
-            data = _try_parse(raw[start_obj:end_obj + 1])
+        start_arr = raw.find("[")
+        end_arr = raw.rfind("]")
+        if start_arr != -1 and end_arr != -1 and end_arr > start_arr:
+            data = _try_parse(raw[start_arr:end_arr + 1])
             if data is not None:
                 parse_error_code = "PARSE_PARTIAL_EXTRACT"
         if data is None:
-            start_arr = raw.find("[")
-            end_arr = raw.rfind("]")
-            if start_arr != -1 and end_arr != -1 and end_arr > start_arr:
-                data = _try_parse(raw[start_arr:end_arr + 1])
+            start_obj = raw.find("{")
+            end_obj = raw.rfind("}")
+            if start_obj != -1 and end_obj != -1 and end_obj > start_obj:
+                data = _try_parse(raw[start_obj:end_obj + 1])
                 if data is not None:
                     parse_error_code = "PARSE_PARTIAL_EXTRACT"
 

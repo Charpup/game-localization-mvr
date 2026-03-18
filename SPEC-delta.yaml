@@ -1,0 +1,32 @@
+delta_version: 0.1.0
+change_id: deep-cleanup-r3
+change_type: brownfield-control-plane-bootstrap
+status: proposed-and-materialized
+intent:
+  summary: >
+    Establish TriadDev brownfield control artifacts that describe the current runtime truth
+    without changing production scripts.
+  non_goals:
+    - Rewriting pipeline stages
+    - Migrating compat-zone files
+    - Touching repair_loop.py or run_validation.py
+    - Touching gate, stress, skill-v1.4.0, or packaging surfaces
+assertions:
+  authority_zone: main_worktree/scripts
+  compat_zone: src/scripts
+  keep_chain:
+    - llm_ping
+    - normalize_guard
+    - translate_llm
+    - qa_hard
+    - rehydrate_export
+    - smoke_verify
+planned_controls:
+  - Record branch-local brownfield state in .triadev/state.json.
+  - Record route and guardrails in .triadev/workflow.json.
+  - Capture current baseline in SPEC.yaml.
+  - Capture value-first justification in value-review.md.
+risk_controls:
+  - Artifact-only write scope.
+  - Preserve authority/compat split explicitly.
+  - Freeze first-wave no-touch zones before implementation work starts.
