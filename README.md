@@ -95,16 +95,64 @@ loc-mvr/
 ```bash
 git clone https://github.com/Charpup/game-localization-mvr.git
 cd game-localization-mvr
-pip install pyyaml requests jieba
+pip install pyyaml requests numpy pandas jieba
 ```
 
-### 2. Configure LLM
+### 2. Configure LLM (推荐持久化)
 
 ```powershell
 # Windows PowerShell
 $env:LLM_BASE_URL="https://api.apiyi.com/v1"
 $env:LLM_API_KEY="sk-your-key"
 $env:LLM_MODEL="gpt-4.1-mini"
+```
+
+也可在本地持久化文件中配置（优先于环境变量自动读取）：
+```text
+# 在 main_worktree/.llm_credentials 创建
+LLM_BASE_URL=https://api.apiyi.com/v1
+LLM_API_KEY=sk-your-key
+```
+
+当前加载顺序：`LLM_API_KEY_FILE` -> `./.llm_credentials`/`./.llm_env`/`./config/llm_credentials.env`/`~/.game-localization-mvr/.llm_credentials` -> `LLM_API_KEY`
+
+### 4. Dependency + Environment Quick Check (before every smoke run)
+
+```bash
+python - <<'PY'
+import os
+import importlib
+
+for pkg in ["requests", "numpy", "yaml", "pandas"]:
+    try:
+        importlib.import_module(pkg)
+        print(f"[OK] {pkg}")
+    except Exception:
+        print(f"[MISSING] {pkg}")
+
+for key in ["LLM_BASE_URL", "LLM_API_KEY", "LLM_MODEL"]:
+    print(f"{key}={'SET' if os.getenv(key) else 'MISSING'}")
+PY
+```
+
+If any dependency shows MISSING or env variable shows MISSING, do not start smoke run yet.
+
+PowerShell 快速检查：
+
+```powershell
+$missing = @()
+foreach ($m in @("requests","numpy","yaml","pandas","jieba")) {
+  try {
+    python -c "import importlib.util; print(bool(importlib.util.find_spec('$m')))"
+    Write-Host "[OK] $m"
+  } catch {
+    $missing += $m
+    Write-Host "[MISSING] $m"
+  }
+}
+Write-Host "LLM_BASE_URL=$([bool]$env:LLM_BASE_URL)"
+Write-Host "LLM_API_KEY=$([bool]$env:LLM_API_KEY)"
+Write-Host "LLM_MODEL=$([bool]$env:LLM_MODEL)"
 ```
 
 ### 3. Run Pipeline
@@ -119,6 +167,34 @@ python scripts/translate_llm.py normalized.csv translated.csv workflow/style_gui
 python scripts/qa_hard.py translated.csv qa_report.json map.json
 python scripts/rehydrate_export.py translated.csv map.json final.csv
 ```
+
+### 3.1 Smoke Pipeline (Manifest + Issue Record)
+
+```bash
+# Full smoke pass with manifest output + issue recording
+python scripts/run_smoke_pipeline.py --input "D:\\Dev_Env\\loc-mvr 测试文档\\test_input_200-row.csv" --target-lang en-US
+# 可选：仅做预检
+python scripts/run_smoke_pipeline.py --input "D:\\Dev_Env\\loc-mvr 测试文档\\test_input_200-row.csv" --target-lang en-US --verify-mode preflight
+```
+
+This command:
+- runs `llm_ping -> normalize_guard -> translate_llm -> qa_hard -> rehydrate_export`
+- generates a run manifest: `data/smoke_run_<timestamp>/run_manifest.json`
+- runs `smoke_verify --manifest ...`
+- records issues to `reports/smoke_issues_<run-id>.json` and `.jsonl`
+- emits `manifest.stage_artifacts` with:
+  - `connectivity_log`
+  - `normalize_log`
+  - `translate_log`
+  - `qa_hard_report`
+  - `final_csv`
+  - `smoke_verify_log`
+- `verify_mode` supports `preflight|full`，默认 `full`（含行数/QA 统计）
+
+建议每次冒烟固定检查以下产物：
+- `D:\Dev_Env\GPT_Codex_Workspace\game-localization-mvr\main_worktree\data\smoke_runs\<run>\run_manifest.json`
+- `D:\Dev_Env\GPT_Codex_Workspace\game-localization-mvr\main_worktree\reports\smoke_issues_<run_id>.json`
+- `D:\Dev_Env\GPT_Codex_Workspace\game-localization-mvr\main_worktree\reports\smoke_verify_<run_id>.json`
 
 ---
 
