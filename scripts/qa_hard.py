@@ -20,29 +20,49 @@ Features:
 """
 
 import csv
+import io
 import json
 import re
 import sys
 from pathlib import Path
-from typing import List, Dict, Set, Tuple
+from typing import Any, Dict, List
 from datetime import datetime
 from collections import Counter
 
-# Ensure UTF-8 output on Windows
-if sys.platform == 'win32':
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+def configure_standard_streams() -> None:
+    """Best-effort UTF-8 console setup for CLI execution only."""
+    if sys.platform != 'win32':
+        return
+
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if stream is None:
+            continue
+        try:
+            if hasattr(stream, "reconfigure"):
+                stream.reconfigure(encoding="utf-8", errors="replace")
+                continue
+            buffer = getattr(stream, "buffer", None)
+            if buffer is not None:
+                wrapped = io.TextIOWrapper(buffer, encoding="utf-8", errors="replace")
+                setattr(sys, stream_name, wrapped)
+        except Exception:
+            continue
 
 try:
     import yaml
 except ImportError:
-    print("❌ Error: PyYAML is required. Install with: pip install pyyaml")
+    print("[ERROR] PyYAML is required. Install with: pip install pyyaml")
     sys.exit(1)
 
 
 class QAHardValidator:
     """硬性规则校验器 v2.0"""
+
+    APPROVED_WARNING_TYPES = {
+        'empty_source_translation_soft',
+        'source_tag_unbalanced',
+    }
     
     def __init__(self, translated_csv: str, placeholder_map: str,
                  schema_yaml: str, forbidden_txt: str, report_json: str):
@@ -60,11 +80,18 @@ class QAHardValidator:
         
         # 错误收集
         self.errors: List[Dict] = []
+        self.warnings: List[Dict] = []
         self.error_counts: Dict[str, int] = {
             'token_mismatch': 0,
             'tag_unbalanced': 0,
             'forbidden_hit': 0,
-            'new_placeholder_found': 0
+            'new_placeholder_found': 0,
+            'empty_translation': 0
+        }
+        self.warning_counts: Dict[str, int] = {
+            'source_tag_unbalanced': 0,
+            'empty_source_translation': 0,
+            'token_mismatch_soft': 0,
         }
         self.total_rows = 0
         
@@ -91,6 +118,10 @@ class QAHardValidator:
         try:
             with open(self.schema_yaml, 'r', encoding='utf-8') as f:
                 schema = yaml.safe_load(f)
+                if not isinstance(schema, dict):
+                    print(f"❌ Error: Invalid schema format, expected mapping in {self.schema_yaml}")
+                    return False
+
                 schema_version = schema.get('version', 1)
                 
                 # 尝试 v2.0 格式
@@ -98,6 +129,9 @@ class QAHardValidator:
                 if patterns is None:
                     # Fallback 到 v1.0 格式
                     patterns = schema.get('placeholder_patterns', [])
+                    if not patterns:
+                        print(f"⚠️  schema missing both 'patterns' and 'placeholder_patterns', skipping placeholder checks.")
+                        return True
                     print(f"⚠️  Using schema v1.0 format (placeholder_patterns)")
                 else:
                     print(f"✅ Using schema v2.0 format (patterns)")
@@ -121,11 +155,11 @@ class QAHardValidator:
                 return True
                 
         except FileNotFoundError:
-            print(f"⚠️  Warning: Schema not found, skipping advanced validation")
-            return True
+            print(f"❌ Error: Schema not found: {self.schema_yaml}")
+            return False
         except Exception as e:
-            print(f"⚠️  Warning: Error loading schema: {str(e)}")
-            return True
+            print(f"❌ Error loading schema: {str(e)}")
+            return False
     
     def load_forbidden_patterns(self) -> bool:
         """加载禁用模式（编译正则）"""
@@ -148,17 +182,107 @@ class QAHardValidator:
             print(f"⚠️  Warning: Error loading forbidden patterns: {str(e)}")
             return True
     
-    def extract_tokens(self, text: str) -> Set[str]:
-        """提取文本中的所有 token"""
+    def extract_tokens(self, text: str) -> List[str]:
+        """提取文本中的所有 token，保留重复出现次数"""
         if not text:
-            return set()
-        return set(self.token_pattern.findall(text))
+            return []
+        return self.token_pattern.findall(text)
+
+    def _token_matches_pattern(self, tag_text: str, pattern: str) -> bool:
+        """判断标签是否匹配配置模式；为 <c / </c 做边界保护避免与 <color 误判。"""
+        if not tag_text or not pattern:
+            return False
+        text = tag_text.lower()
+        p = pattern.lower()
+
+        if p == "<c":
+            return bool(re.match(r"^<\s*c(?=[\s>])", text))
+        if p == "</c":
+            return bool(re.match(r"^</\s*c(?=[\s>])", text))
+        return text.startswith(p)
+
+    def _source_has_unbalanced_tags(self, source_text: str) -> bool:
+        if not source_text:
+            return False
+        tags = re.findall(r"</?\w+(?:\s*=?\s*[^>]*)?>", source_text)
+        if not tags:
+            return False
+        opens = 0
+        closes = 0
+        self_closing = {"br", "img", "hr", "meta", "input", "base", "link"}
+        for tag in tags:
+            if tag.endswith("/>"):
+                continue
+            if tag.startswith("</"):
+                closes += 1
+                continue
+            m = re.match(r"<\s*(\w+)", tag)
+            if m and m.group(1).lower() in self_closing:
+                continue
+            opens += 1
+        return opens != closes
+
+    def _normalize_paired_tags(self) -> List[Dict[str, Any]]:
+        """按 family 归并 paired_tags，避免 <color 与 <c 重复统计。"""
+        if not self.paired_tags:
+            return []
+
+        merged: Dict[str, Dict[str, Any]] = {}
+        for pair_config in self.paired_tags:
+            open_pattern = (pair_config.get("open") or "").strip()
+            close_pattern = (pair_config.get("close") or "").strip()
+            if not open_pattern or not close_pattern:
+                continue
+
+            if open_pattern.lower() in ("<color", "<c"):
+                family = "color"
+                open_patterns = ["<color", "<c"]
+                close_patterns = ["</color", "</c"]
+                description = "Unity 颜色标签"
+            elif open_pattern.lower() in ("<size",):
+                family = "size"
+                open_patterns = [open_pattern]
+                close_patterns = [close_pattern]
+                description = pair_config.get("description", "Unity 大小标签")
+            elif open_pattern.lower() in ("<b",):
+                family = "bold"
+                open_patterns = [open_pattern]
+                close_patterns = [close_pattern]
+                description = pair_config.get("description", "粗体标签")
+            elif open_pattern.lower() in ("<i",):
+                family = "italic"
+                open_patterns = [open_pattern]
+                close_patterns = [close_pattern]
+                description = pair_config.get("description", "斜体标签")
+            else:
+                family = f"custom:{open_pattern}"
+                open_patterns = [open_pattern]
+                close_patterns = [close_pattern]
+                description = pair_config.get("description", f"paired tag {open_pattern}")
+
+            rule = merged.get(family, {
+                "family": family,
+                "open_patterns": [],
+                "close_patterns": [],
+                "description": description,
+                "open_sample": open_patterns[0],
+                "close_sample": close_patterns[0],
+            })
+            for pattern in open_patterns:
+                if pattern not in rule["open_patterns"]:
+                    rule["open_patterns"].append(pattern)
+            for pattern in close_patterns:
+                if pattern not in rule["close_patterns"]:
+                    rule["close_patterns"].append(pattern)
+            merged[family] = rule
+
+        return list(merged.values())
     
     def check_token_mismatch(self, string_id: str, source_text: str,
                             target_text: str, row_num: int) -> None:
         """检查 token 是否匹配"""
-        source_tokens = self.extract_tokens(source_text)
-        target_tokens = self.extract_tokens(target_text)
+        source_tokens = Counter(self.extract_tokens(source_text))
+        target_tokens = Counter(self.extract_tokens(target_text))
         
         missing = source_tokens - target_tokens
         extra = target_tokens - source_tokens
@@ -176,18 +300,31 @@ class QAHardValidator:
                 self.error_counts['token_mismatch'] += 1
         
         if extra:
-            for token in extra:
-                self.errors.append({
+            # 若仅出现单 token 的重复且源中已存在该 token，视为软告警，避免模型重述时误判阻断
+            token = next(iter(extra), None)
+            if len(extra) == 1 and token in source_tokens and sum(extra.values()) == 1:
+                self.warnings.append({
                     'row': row_num,
                     'string_id': string_id,
-                    'type': 'token_mismatch',
+                    'type': 'token_mismatch_soft',
                     'detail': f"extra ⟦{token}⟧ in target_text",
                     'source': source_text,
                     'target': target_text
                 })
-                self.error_counts['token_mismatch'] += 1
+                self.warning_counts['token_mismatch_soft'] += 1
+            else:
+                for token in extra:
+                    self.errors.append({
+                        'row': row_num,
+                        'string_id': string_id,
+                        'type': 'token_mismatch',
+                        'detail': f"extra ⟦{token}⟧ in target_text",
+                        'source': source_text,
+                        'target': target_text
+                    })
+                    self.error_counts['token_mismatch'] += 1
     
-    def check_tag_balance(self, string_id: str, target_text: str,
+    def check_tag_balance(self, string_id: str, target_text: str, source_text: str,
                          row_num: int) -> None:
         """
         检查标签是否平衡（使用 paired_tags 配置）
@@ -204,6 +341,19 @@ class QAHardValidator:
         
         if not tag_tokens:
             return
+
+        # 源文本标签本身不平衡则降级为非阻断告警：由 source schema 预检查负责
+        if self._source_has_unbalanced_tags(source_text):
+            self.warnings.append({
+                'row': row_num,
+                'string_id': string_id,
+                'type': 'source_tag_unbalanced',
+                'detail': 'source text has unbalanced raw tags, skip strict target tag validation',
+                'source': source_text,
+                'target': target_text
+            })
+            self.warning_counts['source_tag_unbalanced'] += 1
+            return
         
         # 如果有 paired_tags 配置，使用精确配对检查
         if self.paired_tags:
@@ -215,31 +365,52 @@ class QAHardValidator:
     def _check_paired_tags(self, string_id: str, target_text: str,
                           tag_tokens: List[str], row_num: int) -> None:
         """使用 paired_tags 配置进行精确配对检查"""
-        # 统计每种标签对的数量
-        for pair_config in self.paired_tags:
-            open_pattern = pair_config['open']
-            close_pattern = pair_config['close']
-            
-            open_count = 0
-            close_count = 0
-            
-            for tag_token in tag_tokens:
-                original = self.placeholder_map.get(tag_token, '')
-                if open_pattern in original and not original.startswith('</'):
-                    open_count += 1
-                elif close_pattern in original:
-                    close_count += 1
-            
-            # 检查配对是否平衡
+        paired_rules = self._normalize_paired_tags()
+        if not paired_rules:
+            self._check_tag_count(string_id, target_text, tag_tokens, row_num)
+            return
+
+        open_counts: Dict[str, int] = Counter()
+        close_counts: Dict[str, int] = Counter()
+
+        for tag_token in tag_tokens:
+            original = self.placeholder_map.get(tag_token, '')
+            if not original:
+                continue
+
+            original_l = original.lower()
+            if original_l.startswith('</'):
+                for rule in paired_rules:
+                    for pattern in rule.get("close_patterns", []):
+                        if self._token_matches_pattern(original_l, pattern):
+                            close_counts[rule["family"]] += 1
+                            break
+                    else:
+                        continue
+                    break
+            else:
+                for rule in paired_rules:
+                    for pattern in rule.get("open_patterns", []):
+                        if self._token_matches_pattern(original_l, pattern):
+                            open_counts[rule["family"]] += 1
+                            break
+                    else:
+                        continue
+                    break
+
+        for rule in paired_rules:
+            family = rule["family"]
+            open_count = open_counts.get(family, 0)
+            close_count = close_counts.get(family, 0)
             if open_count != close_count:
                 self.errors.append({
                     'row': row_num,
                     'string_id': string_id,
                     'type': 'tag_unbalanced',
-                    'detail': f"unbalanced {pair_config.get('description', 'tags')}: {open_count} opening, {close_count} closing",
+                    'detail': f"unbalanced {rule['description']}: {open_count} opening, {close_count} closing",
                     'target': target_text,
-                    'open_pattern': open_pattern,
-                    'close_pattern': close_pattern
+                    'open_pattern': rule["open_sample"],
+                    'close_pattern': rule["close_sample"]
                 })
                 self.error_counts['tag_unbalanced'] += 1
     
@@ -291,7 +462,7 @@ class QAHardValidator:
                 pass
     
     def check_new_placeholders(self, string_id: str, target_text: str,
-                              row_num: int) -> None:
+                              source_text: str, row_num: int) -> None:
         """
         检查是否出现了未经冻结的新占位符
         
@@ -312,6 +483,10 @@ class QAHardValidator:
                         
                         # 跳过已经是 token 的
                         if match.startswith('⟦') or '⟦' in match:
+                            continue
+
+                        # 目标文本里原样出现于源文本，说明不是新占位符
+                        if source_text and match in source_text:
                             continue
                         
                         self.errors.append({
@@ -341,7 +516,14 @@ class QAHardValidator:
                 
                 # 检查是否有翻译列
                 target_field = None
-                for possible_field in ['target_text', 'translated_text', 'target_zh', 'tokenized_target']:
+                for possible_field in [
+                    'target_text',
+                    'translated_text',
+                    'target_en',
+                    'target_ru',
+                    'target_zh',
+                    'tokenized_target'
+                ]:
                     if possible_field in reader.fieldnames:
                         target_field = possible_field
                         break
@@ -360,17 +542,41 @@ class QAHardValidator:
                     
                     string_id = row.get('string_id', '')
                     source_text = row.get('tokenized_zh') or row.get('source_zh') or ''
+                    source_zh = row.get('source_zh', '')
+                    source_for_warning = source_zh if source_zh.strip() else source_text
                     target_text = row.get(target_field, '')
                     
-                    # 跳过空翻译
+                    # 空翻译且源文本也为空：记录软告警，继续后续流程（保留可复核痕迹）
+                    if (not source_for_warning or not source_for_warning.strip()) and (not target_text or not target_text.strip()):
+                        self.warnings.append({
+                            'row': idx,
+                            'string_id': string_id,
+                            'type': 'empty_source_translation_soft',
+                            'detail': 'empty source_zh; keep as non-blocking warning',
+                            'source': source_text,
+                            'target': target_text
+                        })
+                        self.warning_counts['empty_source_translation'] += 1
+                        continue
+
+                    # 空翻译视为硬错误
                     if not target_text or not target_text.strip():
+                        self.errors.append({
+                            'row': idx,
+                            'string_id': string_id,
+                            'type': 'empty_translation',
+                            'detail': f"empty translation field: {target_field}",
+                            'source': source_text,
+                            'target': target_text
+                        })
+                        self.error_counts['empty_translation'] += 1
                         continue
                     
                     # 运行所有检查
                     self.check_token_mismatch(string_id, source_text, target_text, idx)
-                    self.check_tag_balance(string_id, target_text, idx)
+                    self.check_tag_balance(string_id, target_text, source_for_warning, idx)
                     self.check_forbidden_patterns(string_id, target_text, idx)
-                    self.check_new_placeholders(string_id, target_text, idx)
+                    self.check_new_placeholders(string_id, target_text, source_text, idx)
                     self.check_length_overflow(string_id, target_text, row, idx)
                 
                 return True
@@ -415,16 +621,30 @@ class QAHardValidator:
 
     def generate_report(self) -> None:
         """生成 JSON 报告（限制错误数量）"""
+        approved_warnings = [w for w in self.warnings if w.get('type') in self.APPROVED_WARNING_TYPES]
+        actionable_warnings = [w for w in self.warnings if w.get('type') not in self.APPROVED_WARNING_TYPES]
+        approved_warning_counts = dict(Counter(w.get('type', 'unknown') for w in approved_warnings))
+        actionable_warning_counts = dict(Counter(w.get('type', 'unknown') for w in actionable_warnings))
         report = {
             'has_errors': len(self.errors) > 0,
             'total_rows': self.total_rows,
+            'warning_counts': self.warning_counts,
+            'warning_policy': {
+                'approved_non_blocking_types': sorted(self.APPROVED_WARNING_TYPES),
+                'approved_warning_total': len(approved_warnings),
+                'approved_warning_counts': approved_warning_counts,
+                'actionable_warning_total': len(actionable_warnings),
+                'actionable_warning_counts': actionable_warning_counts,
+            },
             'error_counts': self.error_counts,
             'errors': self.errors[:2000],  # 限制到 2000 条
+            'warnings': self.warnings[:2000],
             'metadata': {
                 'version': '2.0',
                 'generated_at': datetime.now().isoformat(),
                 'input_file': str(self.translated_csv),
                 'total_errors': len(self.errors),
+                'total_warnings': len(self.warnings),
                 'errors_truncated': len(self.errors) > 2000
             }
         }
@@ -453,6 +673,20 @@ class QAHardValidator:
         
         if self.error_counts['new_placeholder_found'] > 0:
             print(f"   ❌ New placeholders found: {self.error_counts['new_placeholder_found']}")
+
+        if self.error_counts['empty_translation'] > 0:
+            print(f"   ❌ Empty translations: {self.error_counts['empty_translation']}")
+        if self.warning_counts['empty_source_translation'] > 0:
+            print(f"   ⚠️  Empty source rows (non-blocking): {self.warning_counts['empty_source_translation']}")
+        if self.warning_counts['source_tag_unbalanced'] > 0:
+            print(f"   ⚠️  Source tag imbalance (non-blocking): {self.warning_counts['source_tag_unbalanced']}")
+        if self.warning_counts['token_mismatch_soft'] > 0:
+            print(f"   ⚠️  Soft token mismatch: {self.warning_counts['token_mismatch_soft']}")
+        if self.warnings:
+            approved_total = sum(1 for w in self.warnings if w.get('type') in self.APPROVED_WARNING_TYPES)
+            actionable_total = len(self.warnings) - approved_total
+            print(f"   ℹ️  Approved non-blocking warnings: {approved_total}")
+            print(f"   ⚠️  Actionable warnings: {actionable_total}")
         
         print()
         
@@ -504,6 +738,7 @@ class QAHardValidator:
 def main():
     """主入口"""
     import argparse
+    configure_standard_streams()
     
     ap = argparse.ArgumentParser(description="QA Hard - 硬性规则校验")
     ap.add_argument("translated_csv", nargs="?", default="data/translated.csv",

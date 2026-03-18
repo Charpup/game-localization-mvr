@@ -16,7 +16,7 @@ patterns:
   # Curly braces placeholders: {0}, {name}, {value:0.2f}
   - name: brace_placeholder
     type: placeholder
-    regex: "\\{[^{}]+\\}"
+    regex: "\\{(?:\\d+|[A-Za-z_][A-Za-z0-9_]*)(?:\\:[0-9A-Za-z_\\.\\-]+)?\\}"
     description: "花括号占位符，如 {0}, {playerName}, {value:0.2f}"
     examples:
       - "{0}"
@@ -27,7 +27,7 @@ patterns:
   # printf-style placeholders: %s %d %.2f %1$d
   - name: printf_placeholder
     type: placeholder
-    regex: "%(?:\\d+\\$)?[\\-\\+0# ]*(?:\\d+)?(?:\\.\\d+)?[a-zA-Z]"
+    regex: "%(?:(\\d+\\$)?[-+ 0#]*\\d*(?:\\.\\d+)?[sSdiuxXfFeEgG])"
     description: "printf 风格占位符"
     examples:
       - "%s"
@@ -36,20 +36,22 @@ patterns:
       - "%1$d"
       - "%+5d"
 
-  # Unity/NGUI rich text tags: <color=...>, </color>, <b>, </b>, <i>, </i>, <size=...>
-  #- name: angle_tag
-  #  type: tag
-  #  regex: "</?\\w+(?:\\s*=?\\s*[^>]*)?>"
-  #  description: "Unity 富文本标签和 HTML 风格标签"
-  #  examples:
-  #    - "<color=#FF00FF>"
-  #    - "</color>"
-  #    - "<b>"
-  #    - "</b>"
-  #    - "<i>"
-  #    - "</i>"
-  #    - "<size=14>"
-  #    - "</size>"
+  # Unity/NGUI rich text tags: <color=...>, </color>, <c>, </c>, <b>, </b>, <i>, </i>, <size=...>
+  - name: angle_tag
+    type: tag
+    regex: "</?\\w+(?:\\s*=?\\s*[^>]*)?>"
+    description: "Unity 富文本标签和 HTML 风格标签（含 <color>, </color>, <c>, </c>）"
+    examples:
+      - "<color=#FF00FF>"
+      - "</color>"
+      - "<c>"
+      - "</c>"
+      - "<b>"
+      - "</b>"
+      - "<i>"
+      - "</i>"
+      - "<size=14>"
+      - "</size>"
 
   # Square bracket placeholders: [NAME], [0], [PLAYER_NAME]
   # NOTE: Only matches technical placeholders (ALL CAPS or pure numbers)
@@ -71,14 +73,30 @@ patterns:
       - "[Name]"
 
   # Escape sequences: \n \t \r
-  #- name: escapes
-  #  type: placeholder
-  #  regex: "\\\\[ntr]"
-  #  description: "转义序列"
-  #  examples:
-  #    - "\\n"
-  #    - "\\t"
-  #    - "\\r"
+  - name: escapes
+    type: placeholder
+    regex: "\\\\[ntr]"
+    description: "转义序列"
+    examples:
+      - "\\n"
+      - "\\t"
+      - "\\r"
+
+  # Preserve full-width brackets as symbols
+  - name: full_width_open_bracket
+    type: placeholder
+    regex: "【"
+    description: "全角左括号"
+    examples:
+      - "【"
+
+  # Preserve full-width close bracket
+  - name: full_width_close_bracket
+    type: placeholder
+    regex: "】"
+    description: "全角右括号"
+    examples:
+      - "】"
 
 # 用于检测"标签平衡"的配对规则
 # QA 脚本会检查开放标签和闭合标签是否成对出现
@@ -86,6 +104,10 @@ paired_tags:
   - open: "<color"
     close: "</color>"
     description: "Unity 颜色标签"
+
+  - open: "<c"
+    close: "</c>"
+    description: "Unity 简写颜色标签（<c>...</c>）"
 
   - open: "<b>"
     close: "</b>"

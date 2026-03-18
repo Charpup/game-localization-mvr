@@ -406,44 +406,83 @@ class LLMClient:
     _router: Optional[LLMRouter] = None
     
     @staticmethod
+    def _iter_api_key_files() -> list[str]:
+        candidates = []
+        explicit = os.getenv("LLM_API_KEY_FILE", "").strip()
+        if explicit:
+            candidates.append(explicit)
+
+        # Optional working-directory based credential files
+        base_dir = os.getcwd()
+        repo_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        home = os.path.expanduser("~")
+
+        candidates.extend([
+            os.path.join(base_dir, ".llm_credentials"),
+            os.path.join(base_dir, ".llm_env"),
+            os.path.join(base_dir, "config", "llm_credentials.env"),
+            os.path.join(repo_root_dir, ".llm_credentials"),
+            os.path.join(home, ".game-localization-mvr", ".llm_credentials"),
+        ])
+
+        # de-duplicate while preserving order
+        out = []
+        seen = set()
+        for path in candidates:
+            if path and path not in seen:
+                seen.add(path)
+                out.append(path)
+        return out
+
+    @staticmethod
+    def _read_api_key_file(path: str) -> str:
+        try:
+            if not path or not os.path.exists(path):
+                return ""
+            with open(path, "r", encoding="utf-8") as f:
+                raw = f.read().strip()
+            for line in raw.splitlines():
+                text = line.strip()
+                if not text or text.startswith("#"):
+                    continue
+                if "=" in text and not text.lower().startswith("api key:"):
+                    lhs, rhs = text.split("=", 1)
+                    if lhs.strip() == "LLM_API_KEY":
+                        return rhs.strip().strip("\"'")
+                lower = text.lower()
+                if lower.startswith("api key:"):
+                    return text.split(":", 1)[1].strip()
+                if lower.startswith("api_key:"):
+                    return text.split(":", 1)[1].strip()
+            if raw and "\n" not in raw and ":" not in raw and "=" not in raw:
+                return raw
+        except Exception as e:
+            _trace({
+                "type": "api_key_file_error",
+                "path": path,
+                "error": str(e)
+            })
+        return ""
+
+    @staticmethod
     def _load_api_key() -> str:
         """
         Load API key with file-based injection support.
         
         Priority:
             1. LLM_API_KEY_FILE: Read key from file (supports "api key: xxx" format)
-            2. LLM_API_KEY: Direct environment variable
+            2. Known fallback files in workspace/user paths
+            3. LLM_API_KEY: Direct environment variable
         
         Returns:
             API key string (may be empty if not configured)
         """
-        # Try file-based injection first
-        key_file = os.getenv("LLM_API_KEY_FILE", "").strip()
-        if key_file and os.path.exists(key_file):
-            try:
-                with open(key_file, 'r', encoding='utf-8') as f:
-                    content = f.read().strip()
-                
-                # Parse "api key: xxx" format (case-insensitive)
-                for line in content.splitlines():
-                    line = line.strip()
-                    if line.lower().startswith("api key:"):
-                        return line.split(":", 1)[1].strip()
-                    elif line.lower().startswith("api_key:"):
-                        return line.split(":", 1)[1].strip()
-                
-                # If no key: prefix found, treat entire content as key
-                # (single-line file with just the key)
-                if content and '\n' not in content and ':' not in content:
-                    return content
-                    
-            except Exception as e:
-                _trace({
-                    "type": "api_key_file_error",
-                    "path": key_file,
-                    "error": str(e)
-                })
-        
+        # Try file-based injection first (explicit env path first)
+        for key_file in LLMClient._iter_api_key_files():
+            api_key = LLMClient._read_api_key_file(key_file)
+            if api_key:
+                return api_key
+
         # Fallback to direct env var
         return os.getenv("LLM_API_KEY", "")
     
@@ -1012,98 +1051,184 @@ def log_llm_progress(step: str, event_type: str, data: Dict[str, Any],
         sys.stdout.flush()
 
 
-def parse_llm_response(response_text: str, expected_rows: list, partial_match: bool = False) -> list:
+def parse_llm_response(
+    response_text: str,
+    expected_rows: list,
+    partial_match: bool = False
+) -> list:
     """
     解析 LLM JSON 响应
 
-    Args:
-        response_text: LLM 原始响应文本
-        expected_rows: 期望的数据行 (用于验证 ID 覆盖率)
-        partial_match: 是否允许返回 ID 为输入的子集 (用于 QA 等仅报问题的场景)
+    支持多种输出形式:
+    - {"items": [...]}
+    - [...]
+    - {"results": [...]} / {"data": [...]} / {"translations": [...]}
+    - 带 markdown 代码块
+    - 带 <thinking>...</thinking> 的响应
 
-    Returns:
-        list: 解析后的结果 (items 数组)
-
-    Raises:
-        ValueError: 如果解析失败或 ID 不匹配
+    对关键失败路径进行可追踪分类，便于统一问题记录。
     """
-    # 去除可能的 Markdown 代码块
-    text = response_text.strip()
-    if text.startswith("```"):
-        parts = text.split("```")
-        if len(parts) >= 3:
-            inner = parts[1].strip()
-            if inner.startswith("json"):
-                text = inner[4:].strip()
-            else:
-                text = inner
+    import hashlib
+    import re
 
-    # === 新增: JSON 修复尝试 ===
-    def try_fix_json(raw: str) -> str:
-        """尝试修复常见的 JSON 格式错误"""
-        import re as fix_re
-        fixed = raw
+    raw = (response_text or "").strip()
+    raw_sha1 = hashlib.sha1(raw.encode("utf-8", errors="ignore")).hexdigest()
+    expected_ids = {str(r.get("id") or r.get("string_id") or "") for r in (expected_rows or [])}
 
-        # 1. 修复尾部多余逗号: {"a": 1,} -> {"a": 1}
-        fixed = fix_re.sub(r',(\s*[}\]])', r'\1', fixed)
+    parse_strategy = "raw_json"
+    parse_error_code = ""
 
-        # 2. 修复缺失逗号 (在 } 或 ] 后面紧跟 { 或 " 的情况)
-        fixed = fix_re.sub(r'(\}|\])(\s*)(\{|")', r'\1,\2\3', fixed)
+    def _normalize_items(data_obj):
+        if data_obj is None:
+            return None
+        if isinstance(data_obj, list):
+            return data_obj
+        if not isinstance(data_obj, dict):
+            return None
+        for key in ["items", "results", "data", "translations"]:
+            if key in data_obj and isinstance(data_obj[key], list):
+                return data_obj[key]
+        if data_obj.keys() == {"id", "target_ru"}:
+            return [data_obj]
+        return None
 
-        # 3. 修复单引号: {'a': 1} -> {"a": 1}
-        # 注意: 只在值不包含双引号时替换
-        if "'" in fixed and '"' not in fixed:
-            fixed = fixed.replace("'", '"')
-
-        return fixed
-
-    # 第一次尝试: 原始文本
-    parse_error = None
-    try:
-        data = json.loads(text)
-    except json.JSONDecodeError as e:
-        parse_error = e
-        # 第二次尝试: 修复后的文本
+    def _try_parse(candidate: str):
+        if candidate is None:
+            return None
+        candidate = candidate.strip()
+        if not candidate:
+            return None
         try:
-            fixed_text = try_fix_json(text)
-            data = json.loads(fixed_text)
-            parse_error = None  # 修复成功
-            _trace({
-                "type": "json_repair_success",
-                "original_error": str(e),
-                "repair_applied": True
-            })
+            return json.loads(candidate)
         except json.JSONDecodeError:
-            pass  # 修复失败，保留原始错误
+            return None
 
-    if parse_error:
-        raise ValueError(f"JSON parse error: {str(parse_error)[:100]}")
-    # === 修复尝试结束 ===
+    # 1) 直接解析
+    data = _try_parse(raw)
 
-    # 验证结构
-    if "items" not in data:
-        raise ValueError("Missing 'items' key in response")
+    # 2) 去除 thinking 区域再尝试
+    if data is None:
+        parse_strategy = "strip_thinking"
+        cleaned = re.sub(r"<thinking>.*?</thinking>", "", raw, flags=re.DOTALL).strip()
+        data = _try_parse(cleaned)
+        if data is not None:
+            parse_error_code = "PARSE_THINKING_STRIPPED"
 
-    items = data["items"]
+    # 3) 尝试 markdown 代码块
+    if data is None:
+        parse_strategy = "markdown_code_fence"
+        fence_match = re.search(r"```(?:json)?\s*(.*?)```", raw, flags=re.DOTALL)
+        if fence_match:
+            fence_content = fence_match.group(1).strip()
+            if fence_content.lower().startswith("json"):
+                fence_content = fence_content[4:].strip()
+            data = _try_parse(fence_content)
+            if data is not None:
+                parse_error_code = "PARSE_FENCE_STRIPPED"
 
+    # 4) 修复并重试
+    if data is None:
+        parse_strategy = "repair_json"
+        repaired = raw
+        repaired = re.sub(r',(\s*[}\]])', r'\1', repaired)
+        repaired = re.sub(r'(\}|\])(\s*)(\{|")', r'\1,\2\3', repaired)
+        if "'" in repaired and '"' not in repaired:
+            repaired = repaired.replace("'", '"')
+        data = _try_parse(repaired)
+        if data is not None:
+            parse_error_code = "PARSE_FIX_APPLIED"
+
+    # 5) 贪婪提取对象或数组片段
+    if data is None:
+        parse_strategy = "greedy_extract"
+        start_obj = raw.find("{")
+        end_obj = raw.rfind("}")
+        if start_obj != -1 and end_obj != -1 and end_obj > start_obj:
+            data = _try_parse(raw[start_obj:end_obj + 1])
+            if data is not None:
+                parse_error_code = "PARSE_PARTIAL_EXTRACT"
+        if data is None:
+            start_arr = raw.find("[")
+            end_arr = raw.rfind("]")
+            if start_arr != -1 and end_arr != -1 and end_arr > start_arr:
+                data = _try_parse(raw[start_arr:end_arr + 1])
+                if data is not None:
+                    parse_error_code = "PARSE_PARTIAL_EXTRACT"
+
+    items = _normalize_items(data)
     if not isinstance(items, list):
-        raise ValueError("'items' must be an array")
+        _trace({
+            "type": "llm_parse_failed",
+            "strategy": parse_strategy,
+            "error_code": "PARSE_SCHEMA_MISMATCH",
+            "raw_response_len": len(raw),
+            "raw_response_sha1": raw_sha1
+        })
+        raise ValueError("PARSE_SCHEMA_MISMATCH: could not find items/results/data/translations array")
+
+    # 修复常见结构：id 可能写成 string_id
+    normalized = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        sid = item.get("id")
+        if sid is None:
+            sid = item.get("string_id")
+            if sid is not None:
+                item = dict(item)
+                item["id"] = sid
+        normalized.append(item)
+    items = normalized
+
+    if parse_error_code:
+        _trace({
+            "type": "llm_parse_recovered",
+            "strategy": parse_strategy,
+            "error_code": parse_error_code,
+            "raw_response_len": len(raw),
+            "raw_response_sha1": raw_sha1,
+            "items_count": len(items)
+        })
 
     # 验证 ID 覆盖率
-    expected_ids = {str(r["id"]) for r in expected_rows}
-    returned_ids = {str(item.get("id", "")) for item in items if item.get("id")}
+    returned_ids = {str(item.get("id", "")) for item in items if str(item.get("id", ""))}
 
     if partial_match:
-        # 子集校验
         extra = returned_ids - expected_ids
         if extra:
-            raise ValueError(f"ID mismatch: extra={extra}")
+            _trace({
+                "type": "llm_parse_failed",
+                "strategy": parse_strategy,
+                "error_code": "PARSE_SCHEMA_MISMATCH",
+                "missing_ids": [],
+                "extra_ids": list(sorted(extra)),
+                "raw_response_len": len(raw),
+                "raw_response_sha1": raw_sha1
+            })
+            raise ValueError(f"PARSE_SCHEMA_MISMATCH: extra ids={extra}")
     else:
-        # 完全匹配校验
         if expected_ids != returned_ids:
             missing = expected_ids - returned_ids
             extra = returned_ids - expected_ids
-            raise ValueError(f"ID mismatch: missing={missing}, extra={extra}")
+            _trace({
+                "type": "llm_parse_failed",
+                "strategy": parse_strategy,
+                "error_code": "PARSE_SCHEMA_MISMATCH",
+                "missing_ids": list(sorted(missing)),
+                "extra_ids": list(sorted(extra)),
+                "raw_response_len": len(raw),
+                "raw_response_sha1": raw_sha1
+            })
+            raise ValueError(f"PARSE_SCHEMA_MISMATCH: missing={missing}, extra={extra}")
+
+    if parse_strategy != "raw_json" and parse_error_code:
+        _trace({
+            "type": "llm_parse_recover_used",
+            "strategy": parse_strategy,
+            "error_code": parse_error_code or "UNKNOWN",
+            "raw_response_len": len(raw),
+            "raw_response_sha1": raw_sha1
+        })
 
     return items
 

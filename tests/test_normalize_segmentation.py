@@ -48,6 +48,23 @@ def test_non_chinese_passthrough(freezer):
     # Frozen text will replace {0} with token, which might have spaces around it or not depending on regex replacement?
     # Actually regex replacement just swaps.
     # So space count should stay relatively same, definitely not exploding like segmented chinese.
-    
+
     print(f"Frozen EN: {frozen}")
     assert frozen_spaces == original_spaces, "English should not differ in space count"
+
+
+def test_color_tag_and_short_closing_tag_is_tokenized(freezer):
+    text = "<color=#ffffff>选择一条</c><color=#f6bd0f>新增</color><color=#ffffff>的属性</c>"
+
+    frozen, local_map = freezer.freeze_text(text, source_lang='zh-CN')
+
+    # 问题复现路径里，</c> 与 <color=...> 一起出现时不会再被模型直接处理
+    assert '</c>' not in frozen
+    assert '<c>' not in frozen
+
+    # 至少有一类标签会被识别为 TAG_ token
+    assert any(token.startswith('TAG_') for token in local_map.keys())
+
+    # 至少出现这两个可识别的闭合/开标签原样映射
+    assert '</c>' in local_map.values()
+    assert any(value.startswith('<color=#') for value in local_map.values())

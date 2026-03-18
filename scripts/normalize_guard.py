@@ -19,6 +19,7 @@ Features:
 """
 
 import csv
+import io
 import json
 import re
 import sys
@@ -27,16 +28,31 @@ from pathlib import Path
 from typing import List, Dict, Tuple, Set
 from datetime import datetime
 
-# Ensure UTF-8 output on Windows
-if sys.platform == 'win32':
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+def configure_standard_streams() -> None:
+    """Best-effort UTF-8 console setup for CLI execution only."""
+    if sys.platform != 'win32':
+        return
+
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if stream is None:
+            continue
+        try:
+            if hasattr(stream, "reconfigure"):
+                stream.reconfigure(encoding='utf-8', errors='replace')
+                continue
+            buffer = getattr(stream, "buffer", None)
+            if buffer is not None:
+                wrapped = io.TextIOWrapper(buffer, encoding='utf-8', errors='replace')
+                setattr(sys, stream_name, wrapped)
+        except Exception:
+            # Test runners and wrapped streams may not support reconfiguration.
+            continue
 
 try:
     import yaml
 except ImportError:
-    print("❌ Error: PyYAML is required. Install with: pip install pyyaml")
+    print("[ERROR] PyYAML is required. Install with: pip install pyyaml")
     sys.exit(1)
 
 
@@ -47,6 +63,7 @@ class PlaceholderFreezer:
         self.schema_path = Path(schema_path)
         self.patterns: List[Dict] = []
         self.token_format: Dict[str, str] = {}
+        self._skip_segmentation_re = re.compile(r"(<[^>]+>|\{[^{}]*\}|\[[^\[\]]+\]|\\[ntr]|【|】)")
         
         # 计数器
         self.ph_counter = 0
@@ -74,16 +91,16 @@ class PlaceholderFreezer:
                 })
                 
                 if not self.patterns:
-                    print("⚠️  Warning: No patterns found in schema")
+                    print("[WARN] No patterns found in schema")
                     print(f"   Schema keys: {list(schema.keys())}")
                 else:
-                    print(f"✅ Loaded {len(self.patterns)} patterns from schema v{schema.get('version', 'unknown')}")
-                
+                    print(f"[OK] Loaded {len(self.patterns)} patterns from schema v{schema.get('version', 'unknown')}")
+
         except FileNotFoundError:
-            print(f"❌ Error: Schema file not found: {self.schema_path}")
+            print(f"[ERROR] Schema file not found: {self.schema_path}")
             sys.exit(1)
         except Exception as e:
-            print(f"❌ Error loading schema: {str(e)}")
+            print(f"[ERROR] Error loading schema: {str(e)}")
             sys.exit(1)
     
     def freeze_text(self, text: str, source_lang: str = 'zh-CN') -> Tuple[str, Dict[str, str]]:
@@ -103,10 +120,20 @@ class PlaceholderFreezer:
         result = text
 
         # 新增: 中文分词预处理
-        if source_lang.startswith('zh'):
-            # 分词并用空格分隔(临时标记词边界)
-            words = jieba.lcut(result)
-            result = ' '.join(words)
+        # 遇到占位符/标签时按块分词，避免将 {0} 误切成 { 0 } 这类序列，
+        # 同时保留中文语块的空格边界。
+        if source_lang.startswith('zh') and result:
+            parts = re.split(f"({self._skip_segmentation_re.pattern})", result)
+            segmented_parts = []
+            for part in parts:
+                if not part:
+                    continue
+                if self._skip_segmentation_re.fullmatch(part):
+                    segmented_parts.append(part)
+                    continue
+                words = jieba.lcut(part)
+                segmented_parts.append(' '.join(word for word in words if word))
+            result = ' '.join(part for part in segmented_parts if part).strip()
         
         # 编译所有模式的正则表达式
         compiled_patterns = []
@@ -118,7 +145,7 @@ class PlaceholderFreezer:
                     'regex': re.compile(p['regex'])
                 })
             except re.error as e:
-                print(f"⚠️  Warning: Invalid regex in pattern '{p['name']}': {e}")
+                print(f"[WARN] Invalid regex in pattern '{p['name']}': {e}")
         
         # 按优先级顺序处理每个模式
         for pattern_def in compiled_patterns:
@@ -186,13 +213,21 @@ def detect_unbalanced_basic(text: str) -> List[str]:
 class NormalizeGuard:
     """主处理类：规范化输入并生成 draft.csv 和 placeholder_map.json"""
     
-    def __init__(self, input_path: str, output_draft_path: str,
-                 output_map_path: str, schema_path: str, source_lang: str = "zh-CN"):
+    def __init__(
+        self,
+        input_path: str,
+        output_draft_path: str,
+        output_map_path: str,
+        schema_path: str,
+        source_lang: str = "zh-CN",
+        long_text_threshold: int = 200,
+    ):
         self.source_lang = source_lang
         self.input_path = Path(input_path)
         self.output_draft_path = Path(output_draft_path)
         self.output_map_path = Path(output_map_path)
         self.schema_path = Path(schema_path)
+        self.long_text_threshold = int(long_text_threshold)
         
         self.freezer = PlaceholderFreezer(schema_path)
         self.errors: List[str] = []
@@ -232,8 +267,7 @@ class NormalizeGuard:
                         continue
                     
                     if string_id in seen_ids:
-                        self.errors.append(f"Row {idx}: Duplicate string_id '{string_id}'")
-                        continue
+                        self.warnings.append(f"Row {idx}: Duplicate string_id '{string_id}'")
                     
                     seen_ids.add(string_id)
                     
@@ -255,6 +289,7 @@ class NormalizeGuard:
                         'string_id': string_id,
                         'source_zh': source_zh,
                         'tokenized_zh': tokenized_zh,
+                        'is_long_text': "true" if len(source_zh) >= self.long_text_threshold else "false",
                     }
                     
                     # 保留其他列
@@ -300,7 +335,7 @@ class NormalizeGuard:
                 writer.writeheader()
                 writer.writerows(rows)
             
-            print(f"✅ Wrote {len(rows)} rows to {self.output_draft_path}")
+            print(f"[OK] Wrote {len(rows)} rows to {self.output_draft_path}")
             return True
             
         except Exception as e:
@@ -328,7 +363,7 @@ class NormalizeGuard:
             with open(self.output_map_path, 'w', encoding='utf-8') as f:
                 json.dump(output, f, indent=2, ensure_ascii=False)
             
-            print(f"✅ Wrote {len(self.freezer.placeholder_map)} placeholder mappings to {self.output_map_path}")
+            print(f"[OK] Wrote {len(self.freezer.placeholder_map)} placeholder mappings to {self.output_map_path}")
             return True
             
         except Exception as e:
@@ -371,12 +406,12 @@ class NormalizeGuard:
         with open(early_path, 'w', encoding='utf-8') as f:
             json.dump(early_report, f, ensure_ascii=False, indent=2)
         
-        print(f"⚠️  Found {len(self.sanity_errors)} source sanity issues")
-        print(f"   Early QA report written: {early_path}")
+            print(f"[WARN] Found {len(self.sanity_errors)} source sanity issues")
+            print(f"   Early QA report written: {early_path}")
     
     def run(self) -> bool:
         """执行规范化流程"""
-        print("🚀 Starting normalize guard v2.0...")
+        print("[INFO] Starting normalize guard v2.0...")
         print(f"   Input: {self.input_path}")
         print(f"   Output draft: {self.output_draft_path}")
         print(f"   Output map: {self.output_map_path}")
@@ -412,41 +447,48 @@ class NormalizeGuard:
     def _print_errors(self) -> None:
         """打印错误信息"""
         if self.warnings:
-            print("\n⚠️  Warnings:")
+            print("\n[WARN] Warnings:")
             for warning in self.warnings:
                 print(f"   {warning}")
         
         if self.errors:
-            print("\n❌ Errors:")
+            print("\n[ERROR] Errors:")
             for error in self.errors:
                 print(f"   {error}")
     
     def _print_summary(self, rows: List[Dict]) -> None:
         """打印处理总结"""
-        print(f"\n📊 Summary:")
+        print(f"\n[SUMMARY]")
         print(f"   Total strings processed: {len(rows)}")
         print(f"   Total placeholders frozen: {len(self.freezer.placeholder_map)}")
         print(f"   PH tokens: {self.freezer.ph_counter}")
         print(f"   TAG tokens: {self.freezer.tag_counter}")
         
         if self.sanity_errors:
-            print(f"   ⚠️  Source balance issues: {len(self.sanity_errors)}")
+            print(f"   Source balance issues: {len(self.sanity_errors)}")
         
         if self.warnings:
             print(f"   Warnings: {len(self.warnings)}")
         
-        print(f"\n✅ Normalization complete!")
+        print(f"\n[OK] Normalization complete!")
 
 
 def main():
     """主入口"""
     import argparse
+    configure_standard_streams()
     parser = argparse.ArgumentParser(description="Normalize Guard v2.0")
     parser.add_argument("input_csv", help="Input CSV path")
     parser.add_argument("output_draft", help="Output draft CSV path")
     parser.add_argument("output_map", help="Output map JSON path")
     parser.add_argument("schema_yaml", help="Schema YAML path")
     parser.add_argument("--source-lang", default="zh-CN", help="Source language (default: zh-CN)")
+    parser.add_argument(
+        "--long-text-threshold",
+        type=int,
+        default=200,
+        help="Length threshold to flag long text for single-row translation.",
+    )
     
     args = parser.parse_args()
     
@@ -455,7 +497,8 @@ def main():
         output_draft_path=args.output_draft,
         output_map_path=args.output_map,
         schema_path=args.schema_yaml,
-        source_lang=args.source_lang
+        source_lang=args.source_lang,
+        long_text_threshold=args.long_text_threshold,
     )
     
     success = guard.run()
