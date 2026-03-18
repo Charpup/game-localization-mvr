@@ -13,7 +13,7 @@ sys.path.insert(0, '/workspace/scripts')
 sys.path.insert(0, 'scripts')
 
 try:
-    from runtime_adapter import LLMClient
+    from runtime_adapter import LLMClient, parse_llm_response
 except ImportError:
     print("ERROR: runtime_adapter not found")
     sys.exit(1)
@@ -67,16 +67,19 @@ def test_single_batch(client, model_name):
         
         # Validate response structure
         try:
-            data = json.loads(response.text)
-            if "items" in data and len(data["items"]) == 1:
+            items = parse_llm_response(response.text, [{"id": SAMPLE_ITEM["string_id"]}], partial_match=False)
+            if len(items) == 1:
                 result["status"] = "PASS"
                 result["response_valid"] = True
             else:
                 result["status"] = "FAIL"
                 result["error"] = "Invalid JSON structure"
-        except json.JSONDecodeError:
+        except Exception as e:
             result["status"] = "FAIL"
-            result["error"] = "JSON parse failure"
+            err_msg = str(e)
+            result["error"] = err_msg[:200]
+            if "PARSE_" in err_msg:
+                result["error_code"] = err_msg.split(":")[0]
             
     except Exception as e:
         result["status"] = "FAIL"
