@@ -1,4 +1,4 @@
-# Value Review: deep-cleanup-main-batch9
+# Value Review: deep-cleanup-main-batch10
 
 ## Decision
 
@@ -6,42 +6,40 @@ GO
 
 ## Why this is worth doing
 
-Batch 8 already removed the last obvious low-risk repair-side historical utilities from the
-active `scripts/` surface. The only meaningful blocked cleanup surface still left inside
-`main_worktree` is the cluster of stress-like shell entrypoints and adjacent helpers.
+Batch 9 already reduced the remaining active cleanup surface to a final governance decision
+around `src/scripts`. That makes Batch 10 worth doing because it finishes the roadmap
+without pretending the compatibility mirror can be removed before packaging, tests, and
+docs are detached from it.
 
-This is worth doing now because it reduces the final ambiguous operator surface without
-opening a new implementation front. One retained stress shell entrypoint is still useful
-for side-path pressure validation, but the drifted `acceptance_stress_*` scripts should no
-longer sit in an undifferentiated blocked bucket when they are not part of the keep-chain
-and are not covered by recent mainline smoke usage.
+This batch creates closure by turning `src/scripts` from a vague long-tail concern into an
+explicitly managed compatibility liability with a fixed exit program. That lets the cleanup
+roadmap end cleanly while still preserving the current packaging and governance truth.
 
 ## Evidence captured
 
 - The active keep chain remains
   `llm_ping -> normalize_guard -> translate_llm -> qa_hard -> rehydrate_export -> smoke_verify`.
-- Batch 7 restored the retained production development baselines.
-- Batch 8 completed the repair-side physical archive closeout and left stress-like shell
-  entrypoints plus the `src/scripts` compatibility mirror as the only meaningful remaining
-  cleanup surfaces.
-- `scripts/stress_test_3k_run.sh` is the least-drifted retained shell path and already ties
-  into retained scripts such as `normalize_tag_llm.py`, `soft_qa_llm.py`, and `repair_loop.py`.
-- Several `acceptance_stress_*` scripts still use historical CLI patterns, especially around
-  `rehydrate_export.py`, which is evidence for archive-candidate rather than must-keep status.
+- Batch 9 moved the roadmap into closeout readiness and left `src/scripts` as the only
+  meaningful unresolved governance decision.
+- `src/scripts` is still operationally bound by packaging (`package_v1.3.0.sh`), authority
+  tests, and legacy inventory/docs.
+- The authority manifest already encodes the correct reduction gate: no physical reduction
+  until packaging/tests/docs are detached and required mirror gaps remain zero.
+- Current authority evidence remains stable at `WARN(runtime_adapter only)`.
 
 ## Scope guardrails
 
-- Batch 9 does not change keep-chain, M4, authority drift policy, or Metrics optionality.
-- Batch 9 does not modify retained repair or validation surfaces.
-- Batch 9 does not physically archive stress scripts yet; it only canonicalizes and reclassifies them.
-- Repo-root `src/scripts` remains compatibility-only and stays outside this batch.
+- Batch 10 does not change keep-chain, M4, authority drift policy, or Metrics optionality.
+- Batch 10 does not modify retained repair, validation, or stress authority surfaces.
+- Batch 10 does not physically remove or migrate `src/scripts`.
+- Batch 10 does not change packaging behavior.
 
 ## Exit condition for this step
 
 This step is complete when:
 
-- `scripts/stress_test_3k_run.sh` is explicitly retained as the canonical stress shell path,
-- the `acceptance_stress_*` scripts and adjacent helpers are individually classified,
-- the frozen-zone inventory no longer represents the entire stress surface as a single blocked bucket,
+- `../src/scripts/**` remains present but is explicitly marked as `closeout_decision: separate-exit-program`,
+- the frozen-zone inventory no longer contains any real blocked surface,
+- the authority manifest records the exit blockers and frozen mirror policy,
 - the regression suite and evidence gate remain green,
-- and the Batch 9 report states whether the cleanup roadmap has entered final closeout.
+- and the Batch 10 report states that the current cleanup roadmap is complete.

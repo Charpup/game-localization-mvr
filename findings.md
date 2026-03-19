@@ -172,6 +172,21 @@
   path, and `run_long_text_gate_v1.py` is best treated as a gate experiment candidate.
 - Batch 9 should move the roadmap into closeout territory: after stress canonicalization,
   the only meaningful remaining cleanup decision should be `src/scripts` compat mirror.
+
+## 2026-03-19 Deep Cleanup Batch 10
+- `src/scripts` is not the runtime authority and should not remain framed as a healthy
+  long-term keep surface; authority already lives in `main_worktree/scripts`.
+- `src/scripts` still cannot be physically removed in the same batch because it remains
+  bound by `package_v1.3.0.sh`, authority/governance tests, and legacy inventory/docs.
+- The correct Batch 10 decision is therefore governance closeout, not mirror deletion:
+  keep `src/scripts` operationally, but mark it as `separate-exit-program`.
+- Removing the non-real `gate/**` placeholder from the frozen-zone inventory is part of
+  honest closure; after Batch 10 there should be no real blocked cleanup surface left.
+- If the team later wants to retire `src/scripts`, that work should be tracked as a new
+  compat-mirror migration project, not as unfinished cleanup debt from the current roadmap.
+- Batch 10 meets the closure bar when treated as a governance decision batch:
+  the inventory can now reach zero real blocked surfaces while authority stays at
+  `WARN(runtime_adapter only)` and M4 remains `KEEP=6`.
 - Batch 9 regression/evidence state is green: focused governance regression passed, the
   explicit full test-file run passed at `98 passed, 8 skipped`, authority remains `WARN`
   only on `runtime_adapter.py`, and `M4_4_decision.jsonl` still reports `KEEP=6`.

@@ -41,6 +41,17 @@ def test_batch4_frozen_zone_inventory_keeps_validation_baseline_visible():
     assert statuses["../src/scripts/**"] == "compat-keep"
 
 
+def test_batch10_inventory_has_no_real_blocked_surface_and_closes_src_mirror():
+    inventory = json.loads((ROOT / "workflow" / "batch4_frozen_zone_inventory.json").read_text(encoding="utf-8"))
+
+    blocked = [item["path"] for item in inventory["surfaces"] if item["status"] == "blocked"]
+    src_entry = next(item for item in inventory["surfaces"] if item["path"] == "../src/scripts/**")
+
+    assert blocked == []
+    assert src_entry["closeout_decision"] == "separate-exit-program"
+    assert "package_v1.3.0.sh still packages src/scripts" in src_entry["exit_blockers"]
+
+
 def test_qa_soft_wrapper_forwards_cli_to_soft_qa_llm(monkeypatch):
     script_path = ROOT / "scripts" / "qa_soft.py"
     captured = {}

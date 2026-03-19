@@ -3,9 +3,9 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "batch9_in_progress",
-  "branch": "codex/deep-cleanup-batch9",
-  "change_id": "deep-cleanup-main-batch9",
+  "status": "batch10_complete",
+  "branch": "codex/deep-cleanup-batch10",
+  "change_id": "deep-cleanup-main-batch10",
   "authority_zone": "main_worktree/scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
@@ -19,9 +19,8 @@
       "scripts/repair_loop.py",
       "scripts/run_validation.py",
       "scripts/build_validation_set.py",
-      "gate/**",
+      "../src/scripts/**",
       "scripts/stress_test_3k_run.sh",
-      "scripts/acceptance_stress_*.sh",
       "skill-v1.4.0/**",
       "packaging/**"
     ]
@@ -45,7 +44,7 @@
   },
   "value_gate": {
     "status": "GO",
-    "reason": "Batch 9 remains GO because stress-like shell canonicalization reduces the last real blocked operator surface inside main_worktree without changing keep-chain, M4, authority, retained repair authority, retained validation baselines, or optional Metrics semantics."
+    "reason": "Batch 10 remains GO because it closes the roadmap with a governance decision for src/scripts without changing keep-chain, M4, authority, retained repair authority, retained validation baselines, packaging behavior, or optional Metrics semantics."
   },
   "last_updated": "2026-03-19"
 }

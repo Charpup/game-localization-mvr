@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_for": "codex/deep-cleanup-batch5",
+  "generated_for": "codex/deep-cleanup-batch10",
   "authority_root": "scripts",
   "status_model": [
     "must-keep",
@@ -123,20 +123,6 @@
       "unfreeze_conditions": [
         "Deterministic sampling and metadata tests stay green",
         "Validation runner keeps consuming the documented dataset contract"
-      ]
-    },
-    {
-      "path": "gate/**",
-      "status": "blocked",
-      "why_not_touching": "No gate directory exists in main_worktree today, so any cleanup action would be guesswork rather than reduction of real surface area.",
-      "direct_references": [],
-      "input_outputs": [],
-      "test_gaps": [
-        "Directory absent; no concrete target to audit"
-      ],
-      "unfreeze_conditions": [
-        "A real gate surface appears in main_worktree",
-        "Ownership and fixture scope are defined"
       ]
     },
     {
@@ -352,22 +338,33 @@
     {
       "path": "../src/scripts/**",
       "status": "compat-keep",
-      "why_not_touching": "Repo-root src/scripts remains the compatibility mirror and is governed only by authority/drift reporting in this roadmap.",
+      "why_not_touching": "Repo-root src/scripts remains an operationally retained compatibility mirror for packaging/tooling/tests, but Batch 10 closes the cleanup roadmap by moving its physical retirement into a separate exit program.",
       "direct_references": [
         "workflow/script_authority_manifest.json",
         "scripts/check_script_authority.py",
-        "reports/script_authority_report_20260319.json"
+        "reports/script_authority_report_20260319.json",
+        "../package_v1.3.0.sh",
+        "../SCRIPTS_INVENTORY.md",
+        "tests/test_script_authority.py",
+        "tests/test_batch3_batch4_governance.py"
+      ],
+      "closeout_decision": "separate-exit-program",
+      "closeout_reason": "Not runtime authority, but still bound by packaging, authority tooling/tests, and legacy inventory/docs.",
+      "exit_blockers": [
+        "package_v1.3.0.sh still packages src/scripts",
+        "authority tests still bind compat_root ../src/scripts",
+        "root inventory and project docs still describe src/scripts workflows"
       ],
       "input_outputs": [
         "inputs: authority manifest, main_worktree/scripts, src/scripts",
         "outputs: authority drift report"
       ],
       "test_gaps": [
-        "No physical cleanup plan by design",
-        "Mirror retirement criteria not yet met"
+        "No physical cleanup plan inside the completed cleanup roadmap",
+        "Mirror retirement criteria are deferred into a separate migration program"
       ],
       "unfreeze_conditions": [
-        "Authority mirror plan approved",
+        "Separate compat-exit program approved",
         "Required mirrors removed from manifest",
         "Migration checklist completed"
       ]

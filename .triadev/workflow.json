@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "deep-cleanup-main-batch9",
+  "change_id": "deep-cleanup-main-batch10",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -41,48 +41,49 @@
       "name": "Implementation Guardrails",
       "status": "completed",
       "protected_first_wave": [
-        "gate/**",
+        "../src/scripts/**",
         "scripts/stress_test_3k_run.sh",
-        "scripts/acceptance_stress_*.sh",
         "skill-v1.4.0/**",
         "packaging/**"
       ]
     },
     {
-      "id": "batch9-stress-surface-mapping",
-      "name": "Batch 9 Stress Surface Mapping",
+      "id": "batch10-compat-mirror-mapping",
+      "name": "Batch 10 Compat Mirror Mapping",
       "status": "completed",
       "outputs": [
         "workflow/batch4_frozen_zone_inventory.json",
-        "reports/cleanup_batch8_repair_archive_closeout_20260319.md",
-        "reports/legacy_candidates.jsonl",
-        "workflow/batch3_surface_inventory.json"
+        "workflow/script_authority_manifest.json",
+        "../SCRIPTS_INVENTORY.md",
+        "reports/cleanup_batch9_stress_surface_20260319.md"
       ]
     },
     {
-      "id": "batch9-red-tests",
-      "name": "Batch 9 RED Tests",
+      "id": "batch10-red-tests",
+      "name": "Batch 10 RED Tests",
       "status": "completed",
       "outputs": [
-        "tests/test_batch9_stress_surface_governance.py"
+        "tests/test_batch10_closeout_decision.py",
+        "tests/test_script_authority.py",
+        "tests/test_batch3_batch4_governance.py"
       ]
     },
     {
-      "id": "batch9-canonicalization",
-      "name": "Batch 9 Stress Surface Canonicalization",
+      "id": "batch10-closeout-decision",
+      "name": "Batch 10 Compat Mirror Closeout Decision",
       "status": "completed",
       "outputs": [
-        "scripts/stress_test_3k_run.sh",
-        "workflow/batch3_surface_inventory.json",
+        "workflow/script_authority_manifest.json",
+        "../SCRIPTS_INVENTORY.md",
         "workflow/batch4_frozen_zone_inventory.json"
       ]
     },
     {
-      "id": "batch9-regression-evidence",
-      "name": "Batch 9 Regression And Evidence",
+      "id": "batch10-regression-evidence",
+      "name": "Batch 10 Regression And Evidence",
       "status": "completed",
       "outputs": [
-        "reports/cleanup_batch9_stress_surface_20260319.md",
+        "reports/cleanup_batch10_compat_mirror_closeout_20260319.md",
         "reports/script_authority_report_20260319.json",
         "data/smoke_runs/M4_4_decision.jsonl"
       ]
@@ -92,8 +93,8 @@
     "Authority stays on main_worktree/scripts.",
     "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists.",
     "Batch 7 already restored the retained validation baseline and repair authority as must-keep surfaces.",
-    "Batch 8 completed the repair-side archive closeout, so Batch 9 focuses on the remaining stress-like shell surface.",
-    "Batch 9 keeps stress_test_3k_run.sh as the retained stress authority and downgrades drifted acceptance_stress_* scripts through inventory governance rather than immediate physical archive.",
+    "Batch 8 completed the repair-side archive closeout and Batch 9 canonicalized the stress shell surface.",
+    "Batch 10 closes the cleanup roadmap by fixing src/scripts as an operationally retained, exit-planned compatibility mirror.",
     "Metrics stays optional and non-blocking exactly as established in Batch 6.",
     "Control plane changes remain descriptive and must not alter keep-chain behavior."
   ]

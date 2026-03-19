@@ -126,6 +126,23 @@
   point to `scripts/stress_test_3k_run.sh` rather than historical 5k acceptance helpers.
 - Fixed the retained stress shell export invocation in `scripts/stress_test_3k_run.sh` so
   it now matches the current positional `rehydrate_export.py` contract.
+- Started Batch 10 on branch `codex/deep-cleanup-batch10` as a stacked closeout branch on
+  top of Batch 9 while PR #4 remains open.
+- Reframed `src/scripts` from vague long-tail compat noise into an explicit
+  `separate-exit-program` compatibility liability in the authority manifest and frozen-zone inventory.
+- Removed the non-real `gate/**` placeholder from the frozen-zone inventory so closure is
+  judged only against real surfaces.
+- Added Batch 10 governance coverage for closeout decision semantics, root inventory
+  wording, and the requirement that no real blocked surface remains in the cleanup inventory.
+- Ran focused Batch 10 governance tests successfully: `15 passed`.
+- Ran the full retained regression suite successfully with Batch 10 included: `92 passed`.
+- Re-ran the evidence gate successfully:
+  `scripts/check_script_authority.py` remains `WARN` on `runtime_adapter.py` only,
+  `scripts/m4_3_collect_coverage.py` reports `0` issue hotspots,
+  and `scripts/m4_4_decision.py` still reports `KEEP=6`.
+- Batch 10 therefore closes the current cleanup roadmap:
+  `src/scripts` remains operationally present, but any future mirror retirement now moves
+  into a separate migration program instead of staying on the main cleanup path.
 - Ran focused Batch 9 governance regression successfully:
   `42 passed`.
 - Re-ran the evidence gate successfully:

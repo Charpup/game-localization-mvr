@@ -1,19 +1,18 @@
 delta_version: 0.3.0
-change_id: deep-cleanup-main-batch9
-change_type: stress-surface-canonicalization
+change_id: deep-cleanup-main-batch10
+change_type: compat-mirror-closeout-decision
 status: in_progress
 intent:
   summary: >
-    Canonicalize the remaining stress-like shell surface by retaining one stress
-    authority entrypoint, downgrading drifted acceptance helpers to archive-candidate,
-    and preserving retained production-dev baselines, keep-chain, M4, authority drift,
-    and optional Metrics semantics unchanged.
+    Close the current cleanup roadmap by fixing a final governance decision for
+    repo-root src/scripts as an operationally retained, exit-planned compatibility
+    mirror while preserving retained production-dev baselines, keep-chain, M4,
+    authority drift, and optional Metrics semantics unchanged.
   non_goals:
-    - Reworking repair_loop.py, run_validation.py, build_validation_set.py, or rebuild_checkpoint.py
-    - Physically archiving stress shell scripts in this batch
+    - Reworking retained authority scripts or packaging behavior
+    - Physically deleting or migrating src/scripts in this batch
     - Making Metrics a blocking smoke gate
     - Altering the keep-chain runtime contract
-    - Physically cleaning repo-root src/scripts
 assertions:
   authority_zone: main_worktree/scripts
   compat_zone: src/scripts
@@ -34,29 +33,25 @@ assertions:
     - tests/test_qa_hard.py
     - tests/test_normalize_segmentation.py
 planned_controls:
-  - Classify scripts/stress_test_3k_run.sh as the retained canonical stress shell authority.
-  - Downgrade drifted acceptance_stress_*.sh scripts to archive-candidate unless a current runbook still binds them.
-  - Classify adjacent stress helpers individually instead of keeping the whole stress surface as a single blocked bucket.
-  - Add Batch 9 governance tests and a closeout-readiness report.
+  - Keep ../src/scripts/** operationally present but explicitly mark it as closeout_decision=separate-exit-program.
+  - Freeze the mirror_required list and describe future shrinkage as separate compat migration work.
+  - Remove non-real blocked placeholders from the frozen-zone inventory so closeout criteria reflect only real surfaces.
+  - Add Batch 10 closeout governance tests and a closeout report.
   - Keep authority drift at WARN(runtime_adapter only), keep Metrics optional, and keep M4 decision logic unchanged.
 status_map:
+  ../src/scripts/**: compat-keep managed compatibility liability with closeout_decision separate-exit-program
   stress_test_3k_run.sh: must-keep canonical stress shell authority
-  acceptance_stress_*.sh: archive-candidate historical stress helpers unless a retained runbook still binds them
-  verify_3k_test.py: compat-keep stress helper
-  finalize_stress_report.py: archive-candidate helper
-  run_long_text_gate_v1.py: archive-candidate gate experiment helper
   repair_loop.py: must-keep retained repair authority
   run_validation.py: must-keep retained validation baseline
   build_validation_set.py: must-keep retained validation baseline generator
   runtime_adapter.py: must-keep core
   metrics_aggregator.py: optional observability surface
 blocked_zones:
-  - ../src/scripts/**
+  []
 risk_controls:
   - Keep-chain scripts remain untouched except for already-established optional Metrics wiring.
   - Retained validation and repair authority surfaces must not be modified.
-  - The retained stress shell path may receive only the minimum CLI alignment needed to match current script contracts.
-  - Governance artifacts must explain that stress_test_3k_run.sh is retained as a side-path validation tool, not as part of the keep-chain.
-  - Drifted acceptance_stress_*.sh scripts must not remain implied must-keep surfaces when they still use outdated CLI.
+  - Governance artifacts must explain that src/scripts is not the authority root and remains only as an exit-planned compatibility liability.
+  - package_v1.3.0.sh and package_v140.sh behavior must remain unchanged in this batch.
   - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.
   - M4 decision logic and smoke evidence generation remain unchanged.

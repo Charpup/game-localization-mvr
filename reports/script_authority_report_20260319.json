@@ -1,6 +1,6 @@
 {
   "type": "script_authority_report",
-  "timestamp": "2026-03-19T11:43:37.137587+00:00",
+  "timestamp": "2026-03-19T15:09:35.985628+00:00",
   "status": "warn",
   "authority_root": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\main_worktree\\scripts",
   "compat_root": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\src\\scripts",
@@ -155,7 +155,14 @@
   "archived_still_live_in_authority": [],
   "archived_missing_copy": [],
   "compat_notes": {
-    "src_scripts_role": "compatibility mirror only; not the runtime authority for main_worktree",
+    "src_scripts_role": "managed compatibility liability only; not the runtime authority for main_worktree",
+    "closeout_decision": "separate-exit-program",
+    "cleanup_roadmap_status": "closed-after-batch10",
+    "exit_blockers": [
+      "package_v1.3.0.sh still packages src/scripts",
+      "authority tests still bind compat_root ../src/scripts",
+      "root inventory and project docs still describe src/scripts workflows"
+    ],
     "exit_condition": "src/scripts can only be reduced after packaging/tests/docs are detached from it and drift checks show no required mirror gaps"
   }
 }

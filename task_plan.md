@@ -198,3 +198,27 @@ archive-candidate scripts, and auditable helper classifications.
 - [complete] Phase 2: Reclassify the stress shell and helper surfaces in inventory, update TriadDev control files, and align the retained shell path to current CLI contracts.
 - [complete] Phase 3: Run Batch 9 regression suite plus evidence gate.
 - [complete] Phase 4: Prepare commit scope, push the branch, and record the closeout-readiness decision for Batch 10.
+
+## 2026-03-19 Deep Cleanup Batch 10
+
+### Goal
+Close the current cleanup roadmap by fixing a final governance decision for `src/scripts`
+as an operationally retained but exit-planned compatibility mirror, without treating its
+physical removal as part of this batch's final roadmap closeout.
+
+### Scope
+- Keep `../src/scripts/**` present and `compat-keep`, but add explicit closeout decision
+  metadata and exit blockers.
+- Remove non-real blocked placeholders from the frozen-zone inventory so the closeout
+  criteria only reflect real surfaces.
+- Keep keep-chain, M4, authority semantics, retained production-dev baselines, retained
+  stress authority, and packaging behavior unchanged.
+- Treat any future `src/scripts` retirement as a separate migration program rather than an
+  unfinished part of this cleanup roadmap.
+
+### Phases
+- [complete] Phase 0: Reconfirm from Batch 9 report and authority/packaging evidence that `src/scripts` is the only remaining governance decision.
+- [complete] Phase 1: Add Batch 10 closeout governance tests for compat mirror decision and no-real-blocked-surface criteria.
+- [complete] Phase 2: Update authority manifest, frozen-zone inventory, root inventory, and closeout report with the fixed compat mirror decision.
+- [complete] Phase 3: Run Batch 10 regression suite plus authority/M4 evidence gate.
+- [complete] Phase 4: Prepare stacked closeout branch output and declare the cleanup roadmap closed after Batch 10, with any future compat mirror retirement handled as a separate migration program.
