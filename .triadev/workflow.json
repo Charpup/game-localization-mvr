@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "deep-cleanup-r3-roadmap-phase1",
+  "change_id": "deep-cleanup-main-batch5",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -50,28 +50,46 @@
       ]
     },
     {
-      "id": "batch3-surface-freeze",
-      "name": "Batch 3 Surface Freeze",
-      "status": "completed",
-      "outputs": [
-        "workflow/batch3_surface_inventory.json",
-        "tests/test_batch3_batch4_governance.py"
-      ]
-    },
-    {
-      "id": "batch4-blocked-zone-audit",
-      "name": "Batch 4 Blocked Zone Audit",
+      "id": "batch5-reference-recheck",
+      "name": "Batch 5 Reference Recheck",
       "status": "completed",
       "outputs": [
         "workflow/batch4_frozen_zone_inventory.json",
-        "reports/github_branch_audit_20260319.md"
+        "reports/cleanup_batch5_archive_20260319.md"
+      ]
+    },
+    {
+      "id": "batch5-red-tests",
+      "name": "Batch 5 RED Tests",
+      "status": "completed",
+      "outputs": [
+        "tests/test_batch5_archive_candidates.py"
+      ]
+    },
+    {
+      "id": "batch5-fallback-decision",
+      "name": "Batch 5 Fallback Decision",
+      "status": "completed",
+      "outputs": [
+        "workflow/batch4_frozen_zone_inventory.json",
+        "reports/cleanup_batch5_archive_20260319.md"
+      ]
+    },
+    {
+      "id": "batch5-regression-evidence",
+      "name": "Batch 5 Regression And Evidence",
+      "status": "completed",
+      "outputs": [
+        "reports/cleanup_batch5_archive_20260319.md",
+        "reports/script_authority_report_20260319.json",
+        "data/smoke_runs/M4_4_decision.jsonl"
       ]
     }
   ],
   "notes": [
     "Authority stays on main_worktree/scripts.",
     "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists.",
-    "Control plane is descriptive only; no production script behavior changes are introduced here.",
-    "Remote branch merge/delete actions remain deferred until cleanup verification is complete."
+    "Batch 5 started from previously approved archive-candidates, but hidden dependencies forced a fallback-to-blocked decision.",
+    "Control plane changes remain descriptive and must not alter keep-chain behavior."
   ]
 }

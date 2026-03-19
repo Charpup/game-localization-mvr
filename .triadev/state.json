@@ -3,9 +3,9 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "phase1_verified_ready_for_branch_audit",
-  "branch": "codex/deep-cleanup-r3",
-  "change_id": "deep-cleanup-r3-roadmap-phase1",
+  "status": "batch5_verified_ready_for_commit",
+  "branch": "codex/deep-cleanup-batch5",
+  "change_id": "deep-cleanup-main-batch5",
   "authority_zone": "main_worktree/scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
@@ -18,6 +18,7 @@
     "protected_first_wave": [
       "scripts/repair_loop.py",
       "scripts/run_validation.py",
+      "scripts/build_validation_set.py",
       "gate/**",
       "stress/**",
       "skill-v1.4.0/**",
@@ -43,7 +44,7 @@
   },
   "value_gate": {
     "status": "GO",
-    "reason": "Batch 3/4 governance work is artifact- and test-led, keeping high-risk zones frozen while roadmap evidence is completed."
+    "reason": "Batch 5 remains GO as an audit-and-fallback step: hidden dependencies were found, so the archive action was rolled back and the targets stay blocked without changing keep-chain behavior."
   },
   "last_updated": "2026-03-19"
 }

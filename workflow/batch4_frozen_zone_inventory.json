@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_for": "codex/deep-cleanup-r3-batch4",
+  "generated_for": "codex/deep-cleanup-batch5",
   "authority_root": "scripts",
   "status_model": [
     "must-keep",
@@ -37,11 +37,13 @@
     },
     {
       "path": "scripts/repair_loop_v2.py",
-      "status": "archive-candidate",
-      "why_not_touching": "No active runtime caller was found in main_worktree, but it lacks fixture coverage and a signed-off replacement/retention decision.",
+      "status": "blocked",
+      "why_not_touching": "Batch 5 archive attempt was rolled back after hidden-dependency review: the script still appears in active rules and root-level inventory, so it cannot exit mainline scripts until those contracts are explicitly retired.",
       "direct_references": [
         ".agent/rules/localization-mvr-rules.md",
-        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+        "reports/m4_mainsmoke_core_obsolete_20260318.md",
+        "reports/cleanup_batch5_archive_20260319.md",
+        "../SCRIPTS_INVENTORY.md"
       ],
       "input_outputs": [
         "inputs: repair tasks, translated.csv, config/repair_config.yaml",
@@ -49,20 +51,24 @@
       ],
       "test_gaps": [
         "No main_worktree fixture coverage",
-        "No decision record for v1 vs v2 ownership"
+        "No decision record for v1 vs v2 ownership",
+        "No cleanup-safe rule and inventory retirement plan"
       ],
       "unfreeze_conditions": [
-        "Reference and operator ownership clarified",
-        "Fixture tests added",
-        "Archive decision approved or replacement/retention decision written"
+        "Rule and inventory references retired or rewritten",
+        "Deterministic fixture tests added",
+        "Explicit v1 vs v2 ownership decision approved"
       ]
     },
     {
       "path": "scripts/repair_checkpoint_gaps.py",
-      "status": "archive-candidate",
-      "why_not_touching": "No active runtime caller was found; it is a one-off recovery utility with hard-coded paths and no fixture safety net.",
+      "status": "blocked",
+      "why_not_touching": "Batch 5 archive attempt was rolled back after hidden-dependency review showed translate_checkpoint recovery is still part of the documented recovery contract.",
       "direct_references": [
-        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+        "reports/m4_mainsmoke_core_obsolete_20260318.md",
+        "reports/cleanup_batch5_archive_20260319.md",
+        "scripts/rebuild_checkpoint.py",
+        ".agent/workflows/loc-translate.md"
       ],
       "input_outputs": [
         "inputs: checkpoint lock JSON, partial CSV, normalized CSV",
@@ -70,12 +76,13 @@
       ],
       "test_gaps": [
         "No fixture tests",
-        "Hard-coded local paths not abstracted"
+        "Hard-coded local paths not abstracted",
+        "No recovery-contract retirement plan for translate_checkpoint.json"
       ],
       "unfreeze_conditions": [
+        "translate_checkpoint recovery contract explicitly replaced or retired",
         "Fixture-based recovery test added",
-        "Path contract documented",
-        "Proven to be unused or safely replaceable"
+        "Operator runbook updated to remove or replace this utility"
       ]
     },
     {

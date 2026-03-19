@@ -81,4 +81,27 @@ needed before any later PR merge or remote branch cleanup.
 - [complete] Phase 1: Materialize Batch 3 surface-status and Batch 4 blocked-surface inventories.
 - [complete] Phase 2: Add governance tests for wrapper forwarding and CLI failure boundaries.
 - [complete] Phase 3: Run smoke-focused regression, authority gate, and M4 evidence gate.
-- [in_progress] Phase 4: Prepare commit scope for roadmap Phase 1 artifacts and branch audit checklist.
+- [complete] Phase 4: Prepare commit scope for roadmap Phase 1 artifacts and branch audit checklist.
+
+## 2026-03-19 Deep Cleanup Batch 5
+
+### Goal
+Archive the two lowest-risk repair-side historical utilities out of `main_worktree/scripts`
+after characterization tests and reference rechecks confirm they are not part of the
+active runtime or current repair authority path.
+
+### Scope
+- Work only on `repair_loop_v2.py`, `repair_checkpoint_gaps.py`, Batch 5 tests, and
+  supporting TriadDev/governance artifacts.
+- Attempt archive only if reference and recovery-contract checks stay clean.
+- Keep `repair_loop.py`, `run_validation.py`, `build_validation_set.py`, stress-like shell
+  entrypoints, and repo-root `src/scripts` frozen.
+- Preserve the keep chain:
+  `llm_ping -> normalize_guard -> translate_llm -> qa_hard -> rehydrate_export -> smoke_verify`.
+
+### Phases
+- [complete] Phase 0: Recheck references and confirm both targets remain archive-candidates.
+- [complete] Phase 1: Add Batch 5 characterization tests for archived CLI/recovery contracts.
+- [complete] Phase 2: Roll back archive action after hidden dependency review; keep both targets in `scripts/` and reclassify them as blocked for now.
+- [complete] Phase 3: Run Batch 5 regression suite, authority gate, and M4 evidence gate.
+- [in_progress] Phase 4: Prepare commit scope and report the new roadmap position.

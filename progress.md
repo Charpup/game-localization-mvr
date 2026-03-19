@@ -38,3 +38,18 @@
   and the soft repair loop consumes the emitted tasks JSONL instead of the report JSON.
 - Phase 1 regression plus evidence gate is green again: `50 passed`, authority remains `WARN`
   on `runtime_adapter.py` alert-only drift, and M4 remains at `KEEP=6`.
+- Started Batch 5 on branch `codex/deep-cleanup-batch5` after local `main_worktree` was
+  re-aligned with `origin/main` and GitHub governance was fully closed out.
+- Added `tests/test_batch5_archive_candidates.py` to characterize the archived CLI shape of
+  `repair_loop_v2.py` and the hard-coded recovery behavior of `repair_checkpoint_gaps.py`.
+- Independent subagent review found hidden dependency blockers before archive could be
+  finalized: active rules/root inventory still mention `repair_loop_v2.py`, and
+  `repair_checkpoint_gaps.py` still participates in the documented translate-checkpoint recovery contract.
+- Rolled the archive action back immediately, restored both files to `scripts/`, and
+  converted Batch 5 into an audit-and-fallback step instead of a physical cleanup step.
+- Updated the cleanup roadmap to treat Batch 5 as the point where these two repair-side
+  utilities move from `archive-candidate` to `blocked` until their surrounding contracts
+  are formally retired.
+- Batch 5 regression and evidence gate are green:
+  `56 passed`, authority is back to `WARN` on `runtime_adapter.py` only after required
+  compat mirrors were resynced, and `M4_4_decision.jsonl` remains `KEEP=6`.

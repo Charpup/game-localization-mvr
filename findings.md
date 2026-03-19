@@ -73,3 +73,22 @@
     `feature/batch-llm-runtime`, `feature/omni-test-cost-monitoring`, `sync/local-baseline-20260122`
   - same tip as `origin/main`: `release/production-go-complete`
   - audit-first outlier: `reorg/v1.3.0-structure`
+
+## 2026-03-19 Deep Cleanup Batch 5
+- `repair_loop_v2.py` and `repair_checkpoint_gaps.py` were already the lowest-risk cleanup
+  targets in the frozen-zone inventory because they were classified as `archive-candidate`
+  rather than `blocked`.
+- Local reference recheck still finds no active runtime caller for either file; remaining
+  mentions are limited to rules, legacy reports, inventory, and the new Batch 5 artifacts.
+- `repair_loop_v2.py` still exposes a real CLI contract (`--input`, `--tasks`, `--output`,
+  `--output-dir`, `--qa-type`, `--config`), so Batch 5 characterizes that contract before archive.
+- `repair_checkpoint_gaps.py` is confirmed to be a one-off hard-coded recovery tool that
+  reconstructs `data/translate_checkpoint.json` from specific checkpoint and CSV inputs.
+- Independent audit found hidden blockers:
+  `repair_loop_v2.py` still appears in active rules and root-level inventory, and
+  `repair_checkpoint_gaps.py` is still tied to the documented `translate_checkpoint.json`
+  recovery contract via `scripts/rebuild_checkpoint.py` and `.agent/workflows/loc-translate.md`.
+- Batch 5 therefore falls back to inventory-only: both files stay in `scripts/` and are
+  reclassified as `blocked` until the rule/inventory/recovery contracts are explicitly retired.
+- `repair_loop.py`, `run_validation.py`, and `build_validation_set.py` remain frozen:
+  this batch does not change their status or interfaces.
