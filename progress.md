@@ -97,3 +97,5 @@
   `scripts/check_script_authority.py` remains `WARN` on `runtime_adapter.py` only,
   `scripts/m4_3_collect_coverage.py` reports `0` issue hotspots,
   and `scripts/m4_4_decision.py` still reports `KEEP=6`.
+- Committed Batch 7 as `ddd14e2` (`cleanup(batch7): recover production dev baselines`)
+  and pushed branch `origin/codex/deep-cleanup-batch7` for PR review.
