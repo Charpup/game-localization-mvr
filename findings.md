@@ -116,3 +116,24 @@
 - Authority drift remains at the accepted level:
   only `runtime_adapter.py` is alert-only drift after re-syncing the required
   `src/scripts/run_smoke_pipeline.py` mirror.
+
+## 2026-03-19 Deep Cleanup Batch 7
+- `run_validation.py` and `build_validation_set.py` are not cleanup noise; they are the
+  retained development validation baseline and now have deterministic contract coverage for
+  sampling, metadata, scoring, parse fallback, and explicit I/O paths.
+- `docs/repro_baseline.md` had real drift before Batch 7:
+  it favored implicit defaults and still referenced `config/api_key.txt` even though the
+  current retained contract uses `--api-key-path` and defaults to `data/attachment/api_key.txt`.
+- `repair_loop.py` remains the active repair authority, not a historical side surface.
+  The real CLI is flags-only, and the script already supports both hard-report JSON and
+  soft-task JSONL through `--tasks`.
+- `docs/WORKSPACE_RULES.md` was still overstating checkpoint behavior and still listed a
+  generic `repair` step. Batch 7 aligns that policy surface to the real runtime steps:
+  `repair_hard` and `repair_soft_major`, with snapshot-only checkpoint semantics.
+- After Batch 6, `repair_loop_v2.py` and `repair_checkpoint_gaps.py` are already in the
+  right place for now: `archive-candidate`. Batch 7 should not mix physical archive work
+  into production-dev recovery.
+- Batch 7 focused validation and repair contract suites are green, and the full regression
+  suite now passes at `77 passed`.
+- Authority remains at the accepted level (`WARN`) with `runtime_adapter.py` as the only
+  alert-only drift, and `M4_4_decision.jsonl` still reports `KEEP=6`.

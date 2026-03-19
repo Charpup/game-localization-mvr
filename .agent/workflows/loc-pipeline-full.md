@@ -62,7 +62,12 @@ python scripts/qa_hard.py data/translated.csv data/placeholder_map.json workflow
 1. **Repair Loop Hard** (if qa_hard fails, max 3 attempts)
 
 ```bash
-python scripts/repair_loop.py data/translated.csv data/qa_hard_report.json data/repair_tasks.jsonl workflow/style_guide.md data/glossary.yaml --out_csv data/repaired.csv
+python scripts/repair_loop.py \
+  --input data/translated.csv \
+  --tasks data/qa_hard_report.json \
+  --output data/repaired.csv \
+  --output-dir data/repair_reports/hard \
+  --qa-type hard
 # Then repeat Step 6
 ```
 
@@ -77,8 +82,15 @@ python scripts/soft_qa_llm.py data/translated.csv workflow/style_guide.md data/g
 1. **Repair Loop Soft**
 
 ```bash
-python scripts/repair_loop.py data/translated.csv data/qa_hard_report.json data/repair_tasks.jsonl workflow/style_guide.md --only_soft_major
+python scripts/repair_loop.py \
+  --input data/translated.csv \
+  --tasks data/repair_tasks.jsonl \
+  --output data/repaired.csv \
+  --output-dir data/repair_reports/soft \
+  --qa-type soft
 ```
+
+`--qa-type soft` is the CLI contract; runtime routing still records this phase as `repair_soft_major`.
 
 6b. **QA Hard Recheck** (verify soft repair didn't break hard constraints)
 

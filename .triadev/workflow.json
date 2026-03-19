@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "deep-cleanup-main-batch6",
+  "change_id": "deep-cleanup-main-batch7",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -41,8 +41,8 @@
       "name": "Implementation Guardrails",
       "status": "completed",
       "protected_first_wave": [
-        "scripts/repair_loop.py",
-        "scripts/run_validation.py",
+        "scripts/repair_loop_v2.py",
+        "scripts/repair_checkpoint_gaps.py",
         "gate/**",
         "stress/**",
         "skill-v1.4.0/**",
@@ -50,51 +50,60 @@
       ]
     },
     {
-      "id": "batch6-contract-mapping",
-      "name": "Batch 6 Contract Mapping",
+      "id": "batch7-contract-mapping",
+      "name": "Batch 7 Contract Mapping",
       "status": "completed",
       "outputs": [
-        ".agent/rules/localization-mvr-rules.md",
-        ".agent/workflows/loc-translate.md",
-        "../SCRIPTS_INVENTORY.md",
+        "docs/repro_baseline.md",
+        ".agent/workflows/loc-repair-loop.md",
+        ".agent/workflows/loc-pipeline-full.md",
+        "docs/localization_pipeline_workflow.md",
+        "docs/WORKSPACE_RULES.md",
         "workflow/batch4_frozen_zone_inventory.json"
       ]
     },
     {
-      "id": "batch6-red-tests",
-      "name": "Batch 6 RED Tests",
+      "id": "batch7-red-tests",
+      "name": "Batch 7 RED Tests",
       "status": "completed",
       "outputs": [
-        "tests/test_batch6_repair_metrics_contract.py"
+        "tests/test_validation_contract.py",
+        "tests/test_repair_loop_contract.py"
       ]
     },
     {
-      "id": "batch6-repair-retirement",
-      "name": "Batch 6 Repair Contract Retirement",
+      "id": "batch7-validation-baseline",
+      "name": "Batch 7 Validation Baseline Recovery",
       "status": "completed",
       "outputs": [
-        ".agent/rules/localization-mvr-rules.md",
-        ".agent/workflows/loc-translate.md",
-        "../SCRIPTS_INVENTORY.md",
+        "scripts/build_validation_set.py",
+        "scripts/run_validation.py",
+        "docs/repro_baseline.md",
+        "tests/test_validation_contract.py",
         "workflow/batch4_frozen_zone_inventory.json"
       ]
     },
     {
-      "id": "batch6-metrics-rewire",
-      "name": "Batch 6 Metrics Rewire",
+      "id": "batch7-repair-authority",
+      "name": "Batch 7 Repair Authority Recovery",
       "status": "completed",
       "outputs": [
-        "scripts/run_smoke_pipeline.py",
-        "scripts/metrics_aggregator.py",
-        "tests/test_batch6_repair_metrics_contract.py"
+        "scripts/repair_loop.py",
+        ".agent/rules/localization-mvr-rules.md",
+        ".agent/workflows/loc-repair-loop.md",
+        ".agent/workflows/loc-pipeline-full.md",
+        "docs/localization_pipeline_workflow.md",
+        "docs/WORKSPACE_RULES.md",
+        "tests/test_repair_loop_contract.py",
+        "workflow/batch4_frozen_zone_inventory.json"
       ]
     },
     {
-      "id": "batch6-regression-evidence",
-      "name": "Batch 6 Regression And Evidence",
+      "id": "batch7-regression-evidence",
+      "name": "Batch 7 Regression And Evidence",
       "status": "completed",
       "outputs": [
-        "reports/cleanup_batch6_contract_metrics_20260319.md",
+        "reports/cleanup_batch7_production_dev_recovery_20260319.md",
         "reports/script_authority_report_20260319.json",
         "data/smoke_runs/M4_4_decision.jsonl"
       ]
@@ -103,8 +112,9 @@
   "notes": [
     "Authority stays on main_worktree/scripts.",
     "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists.",
-    "Batch 6 does not physically archive repair-side targets; it only retires external contracts so those targets can move back to archive-candidate.",
-    "Metrics is restored as an optional observability stage before verify and must never become a blocking gate.",
+    "Batch 7 restores the retained validation baseline and repair authority as must-keep surfaces through contract tests and doc alignment.",
+    "Batch 7 does not physically archive repair_loop_v2.py or repair_checkpoint_gaps.py; they remain archive-candidates for a later closeout batch.",
+    "Metrics stays optional and non-blocking exactly as established in Batch 6.",
     "Control plane changes remain descriptive and must not alter keep-chain behavior."
   ]
 }

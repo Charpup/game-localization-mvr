@@ -71,3 +71,29 @@
 - Re-synced `src/scripts/run_smoke_pipeline.py` from the authority copy after the new
   Metrics stage introduced required-mirror drift; authority returned to the expected
   non-blocking state immediately afterward.
+- Started Batch 7 on branch `codex/deep-cleanup-batch7` with the new top-level priority:
+  restore sustainable production development rather than continue chasing script deletion.
+- Added and expanded deterministic validation coverage in
+  `tests/test_validation_contract.py` for explicit CLI paths, scoring, parse fallback,
+  and metadata/report schema.
+- Added and expanded deterministic repair coverage in
+  `tests/test_repair_loop_contract.py` for hard-report JSON input, soft JSONL input,
+  passthrough copy behavior, routing metadata, and runbook alignment.
+- Updated `docs/repro_baseline.md` so validation commands now prefer explicit `--input`,
+  `--output-dir`, `--report-dir`, and `--api-key-path` flags, and switched the retained
+  credential example away from the drifted `config/api_key.txt` path.
+- Updated `docs/WORKSPACE_RULES.md` so repair metadata steps now match the runtime truth
+  (`repair_hard` / `repair_soft_major`) and checkpoint behavior is documented as
+  snapshot-only rather than true resume support.
+- Promoted `scripts/run_validation.py` and `scripts/build_validation_set.py` to
+  `must-keep` in `workflow/batch4_frozen_zone_inventory.json`; `scripts/repair_loop.py`
+  is being promoted in the same inventory as the retained repair authority.
+- Ran focused Batch 7 contract tests successfully:
+  `tests/test_validation_contract.py`, `tests/test_repair_loop_contract.py`, and
+  `tests/test_batch3_batch4_governance.py` are green.
+- Ran the full Batch 7 regression suite successfully:
+  `77 passed`.
+- Re-ran the evidence gate successfully:
+  `scripts/check_script_authority.py` remains `WARN` on `runtime_adapter.py` only,
+  `scripts/m4_3_collect_coverage.py` reports `0` issue hotspots,
+  and `scripts/m4_4_decision.py` still reports `KEEP=6`.

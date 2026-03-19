@@ -1,16 +1,16 @@
 delta_version: 0.3.0
-change_id: deep-cleanup-main-batch6
-change_type: repair-contract-retirement-and-metrics-rewire
+change_id: deep-cleanup-main-batch7
+change_type: production-dev-recovery-validation-and-repair-authority
 status: in_progress
 intent:
   summary: >
-    Retire the repair-side governance contracts that kept two historical utilities blocked,
-    and restore Metrics as a manifest-visible optional observability stage inside the smoke
-    pipeline without changing the keep-chain pass/fail semantics.
+    Restore the retained validation baseline and repair authority surfaces so the repo
+    can return to sustainable production development, while keeping keep-chain, M4,
+    authority drift, and optional Metrics semantics unchanged.
   non_goals:
-    - Reworking repair_loop.py, run_validation.py, or build_validation_set.py
+    - Reworking repair_loop_v2.py or repair_checkpoint_gaps.py
+    - Implementing true repair resume support in this batch
     - Making Metrics a blocking smoke gate
-    - Physically archiving repair_loop_v2.py or repair_checkpoint_gaps.py in this batch
     - Physically cleaning repo-root src/scripts
     - Altering the keep-chain runtime contract
 assertions:
@@ -33,28 +33,26 @@ assertions:
     - tests/test_qa_hard.py
     - tests/test_normalize_segmentation.py
 planned_controls:
-  - Retire active rule, inventory, and workflow references that still described repair_loop_v2.py and repair_checkpoint_gaps.py as current tools.
-  - Add characterization tests for repair-side governance and optional metrics wiring before changing implementation.
-  - Restore metrics only as a warning-capable optional stage whose artifacts are written into the run manifest.
-  - Keep authority drift at WARN(runtime_adapter only) and keep M4 decision logic unchanged.
+  - Add deterministic validation tests for sampling, metadata schema, scoring, parse fallback, and explicit CLI paths before promoting the validation pair to must-keep.
+  - Add deterministic repair tests for flags-only CLI, supported task formats, passthrough behavior, artifact output, and routing metadata before promoting repair_loop.py to must-keep.
+  - Align runbooks and rules to the real script contracts rather than expanding scripts to fit stale docs.
+  - Keep authority drift at WARN(runtime_adapter only), keep Metrics optional, and keep M4 decision logic unchanged.
 status_map:
-  repair_loop_v2.py: archive-candidate after contract retirement
-  repair_checkpoint_gaps.py: archive-candidate after contract retirement
-  repair_loop.py: blocked
-  run_validation.py: blocked
-  build_validation_set.py: blocked
+  repair_loop_v2.py: archive-candidate pending Batch 8 archive closeout
+  repair_checkpoint_gaps.py: archive-candidate pending Batch 8 archive closeout
+  repair_loop.py: must-keep retained repair authority
+  run_validation.py: must-keep retained validation baseline
+  build_validation_set.py: must-keep retained validation baseline generator
   runtime_adapter.py: must-keep core
   metrics_aggregator.py: optional observability surface
 blocked_zones:
-  - scripts/repair_loop.py
-  - scripts/run_validation.py
-  - scripts/build_validation_set.py
   - gate/**
   - stress/**
   - ../src/scripts/**
 risk_controls:
-  - Keep-chain scripts and blocked repair/validation surfaces remain untouched except for non-blocking metrics wiring in the orchestrator.
-  - Metrics failures must only emit P2 warnings and must not change the smoke pipeline exit code on an otherwise healthy run.
-  - Governance artifacts must explain that the two repair-side scripts are historical candidates pending later archive, not restored active tools.
+  - Keep-chain scripts remain untouched except for already-established optional Metrics wiring.
+  - Validation scoring, report schema, and artifact paths may only change with deterministic fixture updates and runbook alignment.
+  - Repair docs must stop promising true resume support unless a later batch actually implements it.
+  - Governance artifacts must explain that repair_loop_v2.py and repair_checkpoint_gaps.py remain archive-candidates pending Batch 8 physical closeout.
   - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.
   - M4 decision logic and smoke evidence generation remain unchanged.

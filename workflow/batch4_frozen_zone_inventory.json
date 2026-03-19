@@ -12,27 +12,26 @@
   "surfaces": [
     {
       "path": "scripts/repair_loop.py",
-      "status": "blocked",
-      "why_not_touching": "Still documented in README and agent workflows as the repair executor; no deterministic fixture suite exists in main_worktree/tests.",
+      "status": "must-keep",
+      "why_not_touching": "Retained repair authority entrypoint; deterministic Batch 7 coverage now pins its flags-only CLI, supported task formats, artifact paths, and routing metadata contract.",
       "direct_references": [
-        "README.md",
         ".agent/workflows/loc-pipeline-full.md",
         ".agent/workflows/loc-repair-loop.md",
-        "docs/localization_pipeline_workflow.md"
+        "docs/localization_pipeline_workflow.md",
+        "docs/WORKSPACE_RULES.md",
+        "tests/test_repair_loop_contract.py"
       ],
       "input_outputs": [
         "inputs: translated.csv, qa_hard_report.json, repair_tasks.jsonl",
         "outputs: repaired.csv, repair history, escalation records, repair_checkpoint.json"
       ],
       "test_gaps": [
-        "No deterministic unit/fixture tests in main_worktree/tests",
-        "No contract test pinning output schema or escalation behavior"
+        "Resume remains intentionally unsupported and must stay documented as snapshot-only unless implemented in a later batch",
+        "Changes to artifact naming or CLI flags must update docs and contract tests together"
       ],
       "unfreeze_conditions": [
-        "Direct reference map confirmed",
-        "Deterministic fixture tests added",
-        "Input/output schema inventory written",
-        "Operator runbook updated"
+        "Deterministic repair contract tests stay green",
+        "Repair runbooks remain aligned with the flags-only CLI authority"
       ]
     },
     {
@@ -85,45 +84,44 @@
     },
     {
       "path": "scripts/run_validation.py",
-      "status": "blocked",
-      "why_not_touching": "Validation runner is still the reference path in docs and repro baseline; it also depends on runtime_adapter and validation-set generation.",
+      "status": "must-keep",
+      "why_not_touching": "Retained validation baseline entrypoint; deterministic fixture coverage now pins its row-count contract, artifact paths, scoring report schema, and CSV output shape.",
       "direct_references": [
         "docs/repro_baseline.md",
-        "reports/script_authority_report_20260319.json"
+        "tests/test_validation_contract.py"
       ],
       "input_outputs": [
         "inputs: validation CSV, model selection, pricing and credential inputs",
         "outputs: translation CSV, metrics JSON, deterministic score report"
       ],
       "test_gaps": [
-        "No deterministic fixtures in main_worktree/tests",
-        "No contract tests for scoring/report schemas"
+        "Any score formula or artifact-path change must update docs and deterministic contract tests together",
+        "Runtime adapter/network behavior still depends on dedicated adapter coverage outside the validation fixture slice"
       ],
       "unfreeze_conditions": [
-        "Direct call graph captured",
-        "Fixture data and scoring tests added",
-        "Packaging/docs sync plan written"
+        "Deterministic validation contract tests stay green",
+        "Repro runbook remains aligned with the default input/output contract"
       ]
     },
     {
       "path": "scripts/build_validation_set.py",
-      "status": "blocked",
-      "why_not_touching": "Companion dataset generator for run_validation.py; must stay paired with validation flow until deterministic sampling contracts are tested.",
+      "status": "must-keep",
+      "why_not_touching": "Retained validation dataset generator; deterministic sampling and metadata schema are now part of the baseline contract for validation reproducibility.",
       "direct_references": [
         "scripts/run_validation.py",
-        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+        "tests/test_validation_contract.py"
       ],
       "input_outputs": [
         "inputs: source draft CSV, row count, seed",
         "outputs: validation sample CSV, sampling metadata"
       ],
       "test_gaps": [
-        "No fixture coverage for stratified sampling",
-        "No schema assertions for generated set"
+        "Sampling bucket heuristics should only change with fixture updates",
+        "Metadata contract must stay in sync with repro documentation"
       ],
       "unfreeze_conditions": [
-        "Sampling fixture tests added",
-        "run_validation dependency audit completed"
+        "Deterministic sampling and metadata tests stay green",
+        "Validation runner keeps consuming the documented dataset contract"
       ]
     },
     {

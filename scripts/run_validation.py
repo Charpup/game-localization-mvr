@@ -40,6 +40,10 @@ except ImportError:
 # Constants
 BATCH_SIZE = 10
 VALID_ROW_COUNTS = [100, 300, 500, 1000]
+REQUIRED_INPUT_COLUMNS = ["string_id"]
+SOURCE_TEXT_COLUMNS = ["source_zh", "tokenized_zh"]
+OUTPUT_COLUMNS = ["string_id", "source_zh", "target_ru", "status"]
+REPORT_VERSION = "validation.v1"
 
 # Scoring weights (must sum to 100)
 SCORE_WEIGHTS = {
@@ -62,10 +66,30 @@ def calculate_sha256(path: str) -> str:
     return sha256.hexdigest()
 
 
-def load_validation_data(path: str) -> List[Dict[str, str]]:
-    """Load validation CSV data."""
+def validate_validation_columns(fieldnames: List[str], path: str) -> None:
+    """Validate the validation-set CSV contract."""
+    missing = [column for column in REQUIRED_INPUT_COLUMNS if column not in fieldnames]
+    if missing:
+        raise ValueError(f"Missing required columns in {path}: {', '.join(missing)}")
+    if not any(column in fieldnames for column in SOURCE_TEXT_COLUMNS):
+        supported = ", ".join(SOURCE_TEXT_COLUMNS)
+        raise ValueError(f"Missing source text column in {path}; expected one of: {supported}")
+
+
+def load_validation_dataset(path: str) -> Tuple[List[Dict[str, str]], List[str]]:
+    """Load validation CSV data with header contract details."""
     with open(path, "r", encoding="utf-8-sig") as f:
-        return list(csv.DictReader(f))
+        reader = csv.DictReader(f)
+        rows = list(reader)
+        fieldnames = reader.fieldnames or []
+    validate_validation_columns(fieldnames, path)
+    return rows, fieldnames
+
+
+def load_validation_data(path: str) -> List[Dict[str, str]]:
+    """Load validation CSV rows only."""
+    rows, _ = load_validation_dataset(path)
+    return rows
 
 
 def resolve_api_credentials(args) -> None:
@@ -332,7 +356,7 @@ def write_output_csv(rows: List[Dict[str, str]], path: str) -> None:
     """Write output CSV."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["string_id", "source_zh", "target_ru", "status"])
+        writer = csv.DictWriter(f, fieldnames=OUTPUT_COLUMNS)
         writer.writeheader()
         writer.writerows(rows)
 
@@ -345,7 +369,7 @@ def main():
     parser.add_argument("--input", help="Input CSV (default: data/validation_<rows>_v1.csv)")
     parser.add_argument("--batch-size", type=int, default=10, help="Batch size")
     parser.add_argument("--api-key-path", help="Path to API key file")
-    parser.add_argument("--output-dir", default="data", help="Output directory for CSV")
+    parser.add_argument("--output-dir", default="reports", help="Output directory for CSV")
     parser.add_argument("--report-dir", default="reports", help="Output directory for report")
     args = parser.parse_args()
     
@@ -358,13 +382,26 @@ def main():
         print(f"ERROR: Validation set not found: {input_path}")
         print(f"Run: python scripts/build_validation_set.py --rows {args.rows}")
         sys.exit(1)
+    input_path_abs = os.path.abspath(input_path)
     
     # Resolve credentials
     resolve_api_credentials(args)
     
     # Load data
     print(f"Loading validation set from {input_path}...")
-    rows = load_validation_data(input_path)
+    try:
+        rows, input_columns = load_validation_dataset(input_path)
+    except ValueError as exc:
+        print(f"ERROR: {exc}")
+        sys.exit(1)
+
+    if len(rows) != args.rows:
+        print(
+            f"ERROR: Validation set row count mismatch for {input_path}: "
+            f"expected {args.rows}, found {len(rows)}."
+        )
+        sys.exit(1)
+
     input_sha = calculate_sha256(input_path)
     print(f"Loaded {len(rows)} rows (SHA: {input_sha[:16]}...)")
     
@@ -390,16 +427,28 @@ def main():
     
     output_csv = os.path.join(args.output_dir, f"validation_{args.rows}_output_{model_safe}.csv")
     report_json = os.path.join(args.report_dir, f"validation_{args.rows}_{model_safe}_{date_str}.json")
+    output_csv_abs = os.path.abspath(output_csv)
+    report_json_abs = os.path.abspath(report_json)
     
     # Write CSV
     write_output_csv(output_rows, output_csv)
+    output_sha = calculate_sha256(output_csv)
     print(f"\nOutput CSV: {output_csv}")
-    
+
     # Write report
     report = {
+        "report_version": REPORT_VERSION,
         "model": args.model,
-        "input_path": input_path,
+        "rows_requested": args.rows,
+        "rows_loaded": len(rows),
+        "batch_size": BATCH_SIZE,
+        "input_path": input_path_abs,
         "input_sha256": input_sha,
+        "input_columns": input_columns,
+        "output_csv": output_csv_abs,
+        "output_csv_sha256": output_sha,
+        "output_columns": OUTPUT_COLUMNS,
+        "report_path": report_json_abs,
         "timestamp": datetime.now().isoformat(),
         "scoring_formula": "score = 100 - (missing_rate*40 + escalation_rate*30 + parse_error_rate*20 + cost_norm*10)",
         "baseline_cost_per_100_rows": BASELINE_COST_PER_100_ROWS,

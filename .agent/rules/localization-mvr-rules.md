@@ -16,7 +16,8 @@ trigger: always_on
 6) 一旦检测到未知占位符模式或源文本标签不平衡：立刻 Reject（停止），在 qa_hard_report.json 写明原因与样例行。
 7) 默认以可复现为先：若脚本/规则版本变化，必须在输出文件头部或 report 中记录版本号/时间戳。
 8) Soft QA 不作为阻断门槛，但必须产出 repair_tasks.jsonl，用于驱动 Repair Loop。
-9) Repair Loop 的输出必须是"只改动被标记行"的 repaired.csv；并且必须保存 repair_checkpoint.json 以支持断点续传。
+9) Repair Loop 的输出必须是"只改动被标记行"的 repaired.csv；并且必须保存 repair_checkpoint.json 作为轮次快照/观测证据。
+   当前实现不承诺恢复中断前的 repair 状态，文档中不得把该文件描述为真实断点续传能力。
 10) Runtime Adapter 是唯一允许的 LLM 调用入口：业务脚本不得直接写 HTTP 调用逻辑，必须通过 scripts/runtime_adapter.py 统一处理与留痕。
 11) **流水线遵从性 (Pipeline Compliance)**：Agent 在运行标准流水线任务时，必须以 `docs/localization_pipeline_workflow.md` 为基准流程，按 Phase 1-6 顺序执行。严禁在未完成前置阶段（如 Normalization）的情况下执行后续步骤（如 Translation）。
 12) **Docker 容器强制执行**：所有调用 LLM API 的脚本必须在 gate_v2 容器内运行。禁止在宿主机直接执行以下脚本：

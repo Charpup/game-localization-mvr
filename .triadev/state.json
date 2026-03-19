@@ -3,9 +3,9 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "batch6_verified_ready_for_commit",
-  "branch": "codex/deep-cleanup-batch6",
-  "change_id": "deep-cleanup-main-batch6",
+  "status": "batch7_verified_ready_for_commit",
+  "branch": "codex/deep-cleanup-batch7",
+  "change_id": "deep-cleanup-main-batch7",
   "authority_zone": "main_worktree/scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
@@ -16,9 +16,8 @@
       "value-review.md"
     ],
     "protected_first_wave": [
-      "scripts/repair_loop.py",
-      "scripts/run_validation.py",
-      "scripts/build_validation_set.py",
+      "scripts/repair_loop_v2.py",
+      "scripts/repair_checkpoint_gaps.py",
       "gate/**",
       "stress/**",
       "skill-v1.4.0/**",
@@ -44,7 +43,7 @@
   },
   "value_gate": {
     "status": "GO",
-    "reason": "Batch 6 remains GO because repair-side contract retirement now happens through docs/inventory/workflow governance only, while Metrics is restored as a non-blocking observability stage that does not change keep-chain semantics."
+    "reason": "Batch 7 remains GO because it restores the retained validation and repair authority surfaces through deterministic contract tests and runbook alignment only, without changing keep-chain, M4, authority, or optional Metrics semantics."
   },
   "last_updated": "2026-03-19"
 }

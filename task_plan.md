@@ -129,3 +129,26 @@ and keep the keep-chain and M4 evidence logic unchanged.
 - [complete] Phase 2: Retire repair-side rules/inventory/workflow references and downgrade both scripts to `archive-candidate`.
 - [complete] Phase 3: Rewire Metrics into the smoke manifest as a warning-only optional stage and add token fallback support.
 - [complete] Phase 4: Run Batch 6 full regression + evidence gate and prepare commit scope.
+
+## 2026-03-19 Deep Cleanup Batch 7
+
+### Goal
+Recover the retained validation baseline and repair authority surfaces so normal production
+development can continue on top of a tested, documented mainline.
+
+### Scope
+- Promote `run_validation.py` and `build_validation_set.py` from `blocked` to `must-keep`
+  by pinning their deterministic sampling, scoring, report-schema, and explicit I/O
+  contracts.
+- Promote `repair_loop.py` from `blocked` to `must-keep` by pinning its flags-only CLI,
+  supported task formats, artifact outputs, and routing metadata.
+- Keep `repair_loop_v2.py` and `repair_checkpoint_gaps.py` as `archive-candidate`; do not
+  physically archive them in this batch.
+- Preserve keep-chain, M4, authority drift policy, and optional Metrics semantics.
+
+### Phases
+- [complete] Phase 0: Reconfirm Batch 7 route and guardrails from `task_plan.md`.
+- [complete] Phase 1: Land deterministic validation and repair contract tests.
+- [complete] Phase 2: Align docs, rules, and frozen-zone inventory to the retained validation and repair authority contracts.
+- [complete] Phase 3: Run Batch 7 regression suite plus evidence gate.
+- [in_progress] Phase 4: Prepare commit, push branch, and write the Batch 7 report.

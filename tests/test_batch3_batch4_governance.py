@@ -30,14 +30,14 @@ def test_batch3_surface_inventory_keeps_expected_canonical_relationships():
     assert relationships[("soft_qa_llm.py", "qa_soft.py")] == "wrapper compatibility entrypoint"
 
 
-def test_batch4_frozen_zone_inventory_blocks_high_risk_surfaces():
+def test_batch4_frozen_zone_inventory_keeps_validation_baseline_visible():
     inventory = json.loads((ROOT / "workflow" / "batch4_frozen_zone_inventory.json").read_text(encoding="utf-8"))
 
     statuses = {item["path"]: item["status"] for item in inventory["surfaces"]}
 
-    assert statuses["scripts/repair_loop.py"] == "blocked"
-    assert statuses["scripts/run_validation.py"] == "blocked"
-    assert statuses["scripts/build_validation_set.py"] == "blocked"
+    assert statuses["scripts/repair_loop.py"] == "must-keep"
+    assert statuses["scripts/run_validation.py"] == "must-keep"
+    assert statuses["scripts/build_validation_set.py"] == "must-keep"
     assert statuses["../src/scripts/**"] == "compat-keep"
 
 
