@@ -115,3 +115,5 @@
   `scripts/check_script_authority.py` remains `WARN` on `runtime_adapter.py` only,
   `scripts/m4_3_collect_coverage.py` reports `0` issue hotspots,
   and `scripts/m4_4_decision.py` still reports `KEEP=6`.
+- Committed Batch 8 as `3ae4fac` (`cleanup(batch8): close out repair archive migration`),
+  pushed branch `origin/codex/deep-cleanup-batch8`, and opened PR #3.

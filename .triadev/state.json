@@ -3,7 +3,7 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "batch8_verified_ready_for_commit",
+  "status": "batch8_pushed_for_review",
   "branch": "codex/deep-cleanup-batch8",
   "change_id": "deep-cleanup-main-batch8",
   "authority_zone": "main_worktree/scripts",

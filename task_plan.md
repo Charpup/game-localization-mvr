@@ -174,4 +174,4 @@ or smoke-chain semantics.
 - [complete] Phase 1: Add/archive-adjust characterization tests for physical closeout.
 - [complete] Phase 2: Move both files into `_obsolete/repair_archive/` and sync README/inventory/reporting.
 - [complete] Phase 3: Run Batch 8 regression suite plus evidence gate.
-- [in_progress] Phase 4: Prepare commit, push branch, and open the Batch 8 PR.
+- [complete] Phase 4: Prepare commit, push branch, and open the Batch 8 PR.
