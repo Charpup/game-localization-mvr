@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "deep-cleanup-r3",
+  "change_id": "deep-cleanup-r3-roadmap-phase1",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -39,7 +39,7 @@
     {
       "id": "implementation-guardrails",
       "name": "Implementation Guardrails",
-      "status": "ready",
+      "status": "completed",
       "protected_first_wave": [
         "scripts/repair_loop.py",
         "scripts/run_validation.py",
@@ -48,11 +48,30 @@
         "skill-v1.4.0/**",
         "packaging/**"
       ]
+    },
+    {
+      "id": "batch3-surface-freeze",
+      "name": "Batch 3 Surface Freeze",
+      "status": "completed",
+      "outputs": [
+        "workflow/batch3_surface_inventory.json",
+        "tests/test_batch3_batch4_governance.py"
+      ]
+    },
+    {
+      "id": "batch4-blocked-zone-audit",
+      "name": "Batch 4 Blocked Zone Audit",
+      "status": "completed",
+      "outputs": [
+        "workflow/batch4_frozen_zone_inventory.json",
+        "reports/github_branch_audit_20260319.md"
+      ]
     }
   ],
   "notes": [
     "Authority stays on main_worktree/scripts.",
     "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists.",
-    "Control plane is descriptive only; no production script behavior changes are introduced here."
+    "Control plane is descriptive only; no production script behavior changes are introduced here.",
+    "Remote branch merge/delete actions remain deferred until cleanup verification is complete."
   ]
 }

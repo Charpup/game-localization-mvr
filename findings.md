@@ -50,3 +50,26 @@
   - `tests/test_runtime_adapter_contract.py`
   - `tests/test_normalize_auxiliary_contract.py`
   - `tests/test_soft_qa_contract.py`
+
+## 2026-03-19 Deep Cleanup R3 Phase 1 Batch 3/4
+- `normalize_tagger.py` is still the best-supported canonical normalize classifier:
+  it has live workflow references plus fixture coverage for heuristic/LLM fallback behavior.
+- `normalize_tag_llm.py` is not a pure duplicate: it still owns the `--length-rules`
+  variant and appears in stress-like shell entrypoints, so it is now classified as a
+  stress-only compatibility entrypoint rather than a frozen duplicate.
+- `qa_soft.py` is intentionally tiny, but it still represents a compatibility contract:
+  callers expect it to forward CLI arguments into `soft_qa_llm.py`.
+- `normalize_ingest.py` is still a documented ingest path and now stays classified as a
+  compat-keep documented ingest surface rather than an audit-only candidate.
+- `repair_loop.py`, `repair_loop_v2.py`, `repair_checkpoint_gaps.py`, `run_validation.py`,
+  and `build_validation_set.py` all remain blocked because they lack deterministic test
+  coverage in `main_worktree/tests` and still have doc/config/runbook references.
+- There is no concrete `gate/` or `stress/` directory inside `main_worktree`; the real
+  stress-like surface currently lives in shell entrypoints under `scripts/`.
+- `stress_test_3k_run.sh` had live CLI drift against `soft_qa_llm.py`; it now points to
+  `--out_report`/`--out_tasks` and feeds repair loop the actual tasks JSONL instead of the report JSON.
+- Remote branch topology now supports the planned end-state:
+  - fully contained in `origin/main`: `backup-before-cleanup`, `feat/apiyi-metrics-integration`,
+    `feature/batch-llm-runtime`, `feature/omni-test-cost-monitoring`, `sync/local-baseline-20260122`
+  - same tip as `origin/main`: `release/production-go-complete`
+  - audit-first outlier: `reorg/v1.3.0-structure`

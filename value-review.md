@@ -1,4 +1,4 @@
-# Value Review: deep-cleanup-r3 Batch 2
+# Value Review: deep-cleanup-r3 Phase 1 Batch 3/4
 
 ## Decision
 
@@ -7,44 +7,50 @@ GO
 ## Why this is worth doing
 
 The repo is no longer blocked by obvious P0/P2 drift in the smoke chain, so the next
-highest-value cleanup work is to make the shared runtime and side surfaces safer to keep
-or later retire. Batch 2 does that without deleting uncertain code:
+highest-value cleanup work is to turn the remaining near-core ambiguity into explicit,
+test-backed governance. Batch 3/4 does that without deleting uncertain code:
 
-- `runtime_adapter.py` is the highest-connectivity shared dependency and needed stronger
-  contract tests before any future cleanup.
-- `normalize_*` and `soft_qa_llm.py` are not current smoke-core steps, but they still have
-  live references in docs, stress flows, or compatibility entrypoints, so they need
-  evidence-first status marking instead of removal.
-- `src/scripts` remains a compatibility mirror, so the right move is to keep drift
-  governance visible rather than force a premature migration.
+- `normalize_*` and `soft QA` are now the smallest near-core surfaces still needing
+  canonical/frozen/compat decisions before any deeper cleanup can proceed safely.
+- `repair`, `validation`, stress-like shell flows, and `src/scripts` are too loosely
+  specified to clean yet; freezing them behind an explicit inventory reduces accidental
+  deletion risk and makes later work testable.
+- A branch audit checklist has value now because it prevents remote cleanup from becoming
+  an ad hoc decision after code cleanup finishes.
 
 ## Evidence captured
 
-- The active keep chain is still
+- The active keep chain remains
   `llm_ping -> normalize_guard -> translate_llm -> qa_hard -> rehydrate_export -> smoke_verify`.
-- `runtime_adapter.py` now has explicit Batch 2 contract coverage for:
-  router chain selection, batch enforcement, error classification, tracing, retry, and
-  partial batch handling.
-- `normalize_ingest.py` now has fixture coverage for header aliases, required-column
-  enforcement, and output-schema stabilization.
-- `normalize_tagger.py` and `normalize_tag_llm.py` now have fixture coverage for row
-  preservation, fallback tagging, and rules-driven length limits.
-- `soft_qa_llm.py` now has fixture coverage for dry-run, resume, optional dependency
-  degradation, and non-blocking repair-task emission.
+- Batch 2 already established fixture coverage for `normalize_ingest.py`,
+  `normalize_tagger.py`, `normalize_tag_llm.py`, and `soft_qa_llm.py`.
+- Batch 3 adds explicit governance coverage for:
+  wrapper compatibility (`qa_soft.py`), CLI failure boundaries (`normalize_ingest.py`),
+  and canonical/frozen relationship artifacts.
+- Batch 3 also tightens the actual status model:
+  `normalize_ingest.py` remains a documented compat-keep ingest surface, while
+  `normalize_tag_llm.py` is treated as a stress-only compatibility entrypoint rather than
+  a pure duplicate.
+- Batch 4 adds a blocked-surface inventory that records direct references, I/O expectations,
+  and missing tests for `repair`, `validation`, stress-like shell flows, and the compat mirror.
+- Remote branch evidence already shows that several branches are fully contained in `main`,
+  while `reorg/v1.3.0-structure` remains the only audit-first outlier.
 
 ## Scope guardrails
 
-- Batch 2 does not remove files from `main_worktree/scripts`.
-- Batch 2 does not change `run_smoke_pipeline.py` orchestration.
-- Batch 2 does not enter `repair`, `validation`, `gate`, `stress`, or repo-root
+- Batch 3/4 does not remove files from `main_worktree/scripts`.
+- Batch 3/4 does not change `run_smoke_pipeline.py` orchestration or M4 decision logic.
+- Batch 3/4 does not enter `repair`, `validation`, `gate`, `stress`, or repo-root
   `src/scripts` implementation surfaces.
 - Compatibility wrappers such as `qa_soft.py` remain in place.
+- Remote branch actions remain planning-only in this step.
 
 ## Exit condition for this step
 
-Batch 2 is complete when:
+This step is complete when:
 
-- the new contract/fixture tests are green,
+- the new governance/CLI tests are green,
 - the smoke-focused regression suite and M4 evidence gate stay green,
-- module statuses are written down clearly enough that later cleanup can distinguish
-  `must-keep`, `compat-keep`, `frozen duplicate`, and `blocked` without re-discovery.
+- near-core statuses are written down clearly enough that later cleanup can distinguish
+  `must-keep`, `compat-keep`, `frozen`, and `blocked` without re-discovery,
+- and the GitHub branch audit checklist exists before any merge/delete step is attempted.

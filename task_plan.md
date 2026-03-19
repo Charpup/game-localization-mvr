@@ -61,4 +61,24 @@ development.
 - [complete] Phase 1: Add RED contract tests for runtime adapter routing/error handling.
 - [complete] Phase 2: Add fixture tests for normalize ingest/tagger and soft QA behavior.
 - [complete] Phase 3: Apply minimal fixes for router injection, dry-run batching, and import-time stream side effects.
-- [in_progress] Phase 4: Run Batch 2 regression + evidence gate and prepare commit scope.
+- [complete] Phase 4: Run Batch 2 regression + evidence gate and prepare commit scope.
+
+## 2026-03-19 Deep Cleanup R3 Phase 1 Batch 3/4
+
+### Goal
+Finish Phase 1 of the cleanup roadmap by freezing near-core surface decisions, adding
+minimal CLI governance tests, and producing the blocked-zone and branch-audit artifacts
+needed before any later PR merge or remote branch cleanup.
+
+### Scope
+- Keep `main_worktree/scripts` as the authority zone.
+- Do not physically delete `normalize_*`, `soft QA`, or compat-mirror files.
+- Do not implement inside `repair`, `validation`, stress-like shell flows, or repo-root `src/scripts`.
+- Produce a GitHub branch audit checklist, but do not merge or delete remote branches yet.
+
+### Phases
+- [complete] Phase 0: Re-collect Batch 3/4 evidence from tests, docs, and branch topology.
+- [complete] Phase 1: Materialize Batch 3 surface-status and Batch 4 blocked-surface inventories.
+- [complete] Phase 2: Add governance tests for wrapper forwarding and CLI failure boundaries.
+- [complete] Phase 3: Run smoke-focused regression, authority gate, and M4 evidence gate.
+- [in_progress] Phase 4: Prepare commit scope for roadmap Phase 1 artifacts and branch audit checklist.

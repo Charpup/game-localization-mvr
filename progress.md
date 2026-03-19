@@ -22,3 +22,19 @@
 - Moved import-time standard-stream rewiring out of `normalize_tagger.py`, `normalize_tag_llm.py`, `translate_llm.py`, and `soft_qa_llm.py` into CLI-time configuration.
 - Fixed `soft_qa_llm.py --dry-run` to use `batch_utils.SplitBatchConfig` and `split_into_batches`.
 - Batch 2 focused test surface is green: `14 passed`.
+- Started roadmap Phase 1 Batch 3/4 to convert near-core status decisions and frozen-zone
+  boundaries into explicit governance artifacts.
+- Collected branch-topology evidence for the later GitHub cleanup phase:
+  several remote branches are fully contained in `origin/main`, while
+  `reorg/v1.3.0-structure` remains the only audit-first diverged branch.
+- Added `workflow/batch3_surface_inventory.json` and `workflow/batch4_frozen_zone_inventory.json`
+  plus `reports/github_branch_audit_20260319.md` to make Phase 1 and Phase 2 decisions auditable.
+- Added `tests/test_batch3_batch4_governance.py` to lock wrapper forwarding, CLI compatibility,
+  and governance status expectations.
+- Refined surface statuses:
+  `normalize_ingest.py` is now `compat-keep documented ingest`,
+  `normalize_tag_llm.py` is now `stress-only compat entrypoint`.
+- Fixed `scripts/stress_test_3k_run.sh` so soft QA writes `--out_report` and `--out_tasks`,
+  and the soft repair loop consumes the emitted tasks JSONL instead of the report JSON.
+- Phase 1 regression plus evidence gate is green again: `50 passed`, authority remains `WARN`
+  on `runtime_adapter.py` alert-only drift, and M4 remains at `KEEP=6`.

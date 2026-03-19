@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-normalize_tagger.py (v2.0)
+normalize_tag_llm.py (v2.0 - stress compat variant)
 
 Classify source text entries with module_tag and length constraints.
 Features:
@@ -11,7 +11,7 @@ Features:
 - Invariant: ALL input rows preserved.
 
 Usage:
-    python scripts/normalize_tagger.py \
+    python scripts/normalize_tag_llm.py \
         --input "data/source_raw.csv" \
         --output "data/normalized.csv" \
         --source-locale "zh-CN"

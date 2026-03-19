@@ -1,16 +1,18 @@
-delta_version: 0.2.0
-change_id: deep-cleanup-r3-batch2
-change_type: contract-stabilization-and-evidence-audit
+delta_version: 0.3.0
+change_id: deep-cleanup-r3-roadmap-phase1
+change_type: batch3-batch4-governance-and-audit
 status: in_progress
 intent:
   summary: >
-    Stabilize the shared runtime contract, audit normalize and soft-QA side surfaces,
-    and keep deep cleanup aligned to the first-principles core without physical deletion.
+    Finalize near-core auxiliary surface statuses, freeze high-risk cleanup zones behind
+    explicit governance artifacts, and prepare the post-cleanup GitHub branch audit path
+    without changing the smoke-chain runtime contract.
   non_goals:
     - Rewriting run_smoke_pipeline.py
     - Physically cleaning repo-root src/scripts
     - Touching repair, validation, gate, or stress implementation paths
-    - Archiving normalize or soft-QA files before fixture evidence exists
+    - Merging or deleting remote branches during this step
+    - Physically deleting normalize or soft-QA files
 assertions:
   authority_zone: main_worktree/scripts
   compat_zone: src/scripts
@@ -31,17 +33,17 @@ assertions:
     - tests/test_qa_hard.py
     - tests/test_normalize_segmentation.py
 planned_controls:
-  - Expand runtime_adapter contract coverage for routing, fallback, trace, and batch retry behavior.
-  - Add fixture tests for normalize_ingest and normalize_tagger/normalize_tag_llm.
-  - Add soft_qa_llm dry-run/resume/task-emission tests to clarify non-blocking responsibilities.
-  - Record canonical and compat statuses for normalize_* and soft QA surfaces.
+  - Lock Batch 3 statuses for normalize_* and soft QA surfaces in a dedicated inventory artifact.
+  - Add CLI compatibility tests for qa_soft.py and normalize_ingest.py.
+  - Produce a blocked-surface inventory for repair, validation, stress-like, and compat-mirror zones.
+  - Produce a GitHub branch audit checklist without performing any remote cleanup.
 status_map:
-  runtime_adapter.py: must-keep core
-  normalize_ingest.py: frozen audit candidate
+  normalize_ingest.py: compat-keep documented ingest
   normalize_tagger.py: must-keep candidate
-  normalize_tag_llm.py: frozen duplicate / compat-keep
+  normalize_tag_llm.py: stress-only compat entrypoint
   qa_soft.py: compat-keep wrapper
   soft_qa_llm.py: compat-keep canonical
+  runtime_adapter.py: must-keep core
 blocked_zones:
   - scripts/repair_loop.py
   - scripts/repair_loop_v2.py
@@ -52,6 +54,7 @@ blocked_zones:
   - stress/**
   - ../src/scripts/**
 risk_controls:
-  - No physical deletion in Batch 2.
-  - New tests must pass before any behavior cleanup is kept.
+  - No physical deletion in Batch 3/4.
+  - Governance artifacts must explain why frozen zones stay blocked and how they can be safely unfrozen later.
   - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.
+  - Cleanup roadmap may classify remote branches, but merge/delete actions stay deferred until Phase 3/4.
