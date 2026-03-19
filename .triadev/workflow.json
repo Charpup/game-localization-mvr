@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "deep-cleanup-main-batch8",
+  "change_id": "deep-cleanup-main-batch9",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -41,51 +41,48 @@
       "name": "Implementation Guardrails",
       "status": "completed",
       "protected_first_wave": [
-        "scripts/repair_loop_v2.py",
-        "scripts/repair_checkpoint_gaps.py",
         "gate/**",
-        "stress/**",
+        "scripts/stress_test_3k_run.sh",
+        "scripts/acceptance_stress_*.sh",
         "skill-v1.4.0/**",
         "packaging/**"
       ]
     },
     {
-      "id": "batch8-contract-mapping",
-      "name": "Batch 8 Contract Mapping",
+      "id": "batch9-stress-surface-mapping",
+      "name": "Batch 9 Stress Surface Mapping",
       "status": "completed",
       "outputs": [
-        "_obsolete/repair_archive/README.md",
-        "../SCRIPTS_INVENTORY.md",
-        "workflow/batch4_frozen_zone_inventory.json"
-      ]
-    },
-    {
-      "id": "batch8-red-tests",
-      "name": "Batch 8 RED Tests",
-      "status": "completed",
-      "outputs": [
-        "tests/test_batch8_repair_archive_closeout.py",
-        "tests/test_batch5_archive_candidates.py"
-      ]
-    },
-    {
-      "id": "batch8-archive-closeout",
-      "name": "Batch 8 Repair Archive Closeout",
-      "status": "completed",
-      "outputs": [
-        "_obsolete/repair_archive/repair_loop_v2.py",
-        "_obsolete/repair_archive/repair_checkpoint_gaps.py",
-        "_obsolete/repair_archive/README.md",
-        "../SCRIPTS_INVENTORY.md",
-        "workflow/batch4_frozen_zone_inventory.json"
-      ]
-    },
-    {
-      "id": "batch8-regression-evidence",
-      "name": "Batch 8 Regression And Evidence",
-      "status": "completed",
-      "outputs": [
+        "workflow/batch4_frozen_zone_inventory.json",
         "reports/cleanup_batch8_repair_archive_closeout_20260319.md",
+        "reports/legacy_candidates.jsonl",
+        "workflow/batch3_surface_inventory.json"
+      ]
+    },
+    {
+      "id": "batch9-red-tests",
+      "name": "Batch 9 RED Tests",
+      "status": "completed",
+      "outputs": [
+        "tests/test_batch9_stress_surface_governance.py"
+      ]
+    },
+    {
+      "id": "batch9-canonicalization",
+      "name": "Batch 9 Stress Surface Canonicalization",
+      "status": "completed",
+      "outputs": [
+        "scripts/stress_test_3k_run.sh",
+        "workflow/batch3_surface_inventory.json",
+        "workflow/batch4_frozen_zone_inventory.json"
+      ]
+    },
+    {
+      "id": "batch9-regression-evidence",
+      "name": "Batch 9 Regression And Evidence",
+      "status": "completed",
+      "outputs": [
+        "reports/cleanup_batch9_stress_surface_20260319.md",
         "reports/script_authority_report_20260319.json",
         "data/smoke_runs/M4_4_decision.jsonl"
       ]
@@ -95,7 +92,8 @@
     "Authority stays on main_worktree/scripts.",
     "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists.",
     "Batch 7 already restored the retained validation baseline and repair authority as must-keep surfaces.",
-    "Batch 8 physically removes repair_loop_v2.py and repair_checkpoint_gaps.py from scripts after the earlier governance retirement steps proved they are no longer active tools.",
+    "Batch 8 completed the repair-side archive closeout, so Batch 9 focuses on the remaining stress-like shell surface.",
+    "Batch 9 keeps stress_test_3k_run.sh as the retained stress authority and downgrades drifted acceptance_stress_* scripts through inventory governance rather than immediate physical archive.",
     "Metrics stays optional and non-blocking exactly as established in Batch 6.",
     "Control plane changes remain descriptive and must not alter keep-chain behavior."
   ]

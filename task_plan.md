@@ -175,3 +175,26 @@ or smoke-chain semantics.
 - [complete] Phase 2: Move both files into `_obsolete/repair_archive/` and sync README/inventory/reporting.
 - [complete] Phase 3: Run Batch 8 regression suite plus evidence gate.
 - [complete] Phase 4: Prepare commit, push branch, and open the Batch 8 PR.
+
+## 2026-03-19 Deep Cleanup Batch 9
+
+### Goal
+Canonicalize the remaining stress-like shell surface so the active `main_worktree`
+cleanup roadmap can enter final closeout with one retained stress entrypoint, clear
+archive-candidate scripts, and auditable helper classifications.
+
+### Scope
+- Keep `scripts/stress_test_3k_run.sh` as the retained canonical stress shell path.
+- Reclassify `acceptance_stress_*.sh` and adjacent stress helpers using evidence from
+  live CLI drift, runbook bindings, and recent mainline coverage.
+- Keep `repair_loop.py`, `run_validation.py`, `build_validation_set.py`,
+  `rebuild_checkpoint.py`, keep-chain, M4, authority drift policy, and optional Metrics unchanged.
+- Do not physically archive any stress shell in this batch; this batch is status
+  canonicalization plus the minimum CLI alignment needed for the retained path.
+
+### Phases
+- [complete] Phase 0: Reconfirm Batch 9 target scope from the frozen-zone inventory and Batch 8 closeout report.
+- [complete] Phase 1: Add Batch 9 governance tests for stress-shell canonicalization and helper status assertions.
+- [complete] Phase 2: Reclassify the stress shell and helper surfaces in inventory, update TriadDev control files, and align the retained shell path to current CLI contracts.
+- [complete] Phase 3: Run Batch 9 regression suite plus evidence gate.
+- [complete] Phase 4: Prepare commit scope, push the branch, and record the closeout-readiness decision for Batch 10.

@@ -117,3 +117,24 @@
   and `scripts/m4_4_decision.py` still reports `KEEP=6`.
 - Committed Batch 8 as `3ae4fac` (`cleanup(batch8): close out repair archive migration`),
   pushed branch `origin/codex/deep-cleanup-batch8`, and opened PR #3.
+- Started Batch 9 on branch `codex/deep-cleanup-batch9`.
+- Added `tests/test_batch9_stress_surface_governance.py` to pin one retained stress shell
+  path, explicit helper statuses, and the removal of the generic blocked stress bucket.
+- Reclassified the stress surface in `workflow/batch4_frozen_zone_inventory.json` from one
+  blocked umbrella to explicit shell/helper statuses.
+- Updated `workflow/batch3_surface_inventory.json` so retained near-core references now
+  point to `scripts/stress_test_3k_run.sh` rather than historical 5k acceptance helpers.
+- Fixed the retained stress shell export invocation in `scripts/stress_test_3k_run.sh` so
+  it now matches the current positional `rehydrate_export.py` contract.
+- Ran focused Batch 9 governance regression successfully:
+  `42 passed`.
+- Re-ran the evidence gate successfully:
+  `scripts/check_script_authority.py` remains `WARN` on `runtime_adapter.py` only,
+  `scripts/m4_3_collect_coverage.py` reports `0` issue hotspots,
+  and `scripts/m4_4_decision.py` still reports `KEEP=6`.
+- Re-ran the full explicit test-file suite successfully with `-s` to avoid the existing
+  pytest capture issue in this workspace:
+  `98 passed, 8 skipped`.
+- Batch 9 now marks the roadmap as closeout-ready: Batch 10 should focus only on the
+  long-term decision for `src/scripts` compat mirror rather than opening new cleanup
+  surfaces.

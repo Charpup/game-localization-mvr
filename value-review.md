@@ -1,4 +1,4 @@
-# Value Review: deep-cleanup-main-batch8
+# Value Review: deep-cleanup-main-batch9
 
 ## Decision
 
@@ -6,41 +6,42 @@ GO
 
 ## Why this is worth doing
 
-Batch 7 already restored the retained production development baselines. That makes Batch 8
-the right moment to finish the earlier repair-side cleanup and physically remove the two
-historical utilities that no longer belong in the active `scripts/` surface.
+Batch 8 already removed the last obvious low-risk repair-side historical utilities from the
+active `scripts/` surface. The only meaningful blocked cleanup surface still left inside
+`main_worktree` is the cluster of stress-like shell entrypoints and adjacent helpers.
 
-This is worth doing now because the governance retirement work is already complete:
-`repair_loop_v2.py` is no longer a retained repair path, and `repair_checkpoint_gaps.py`
-is no longer the supported checkpoint recovery path. Keeping them in `scripts/` after that
-creates avoidable operator noise without adding runtime value.
+This is worth doing now because it reduces the final ambiguous operator surface without
+opening a new implementation front. One retained stress shell entrypoint is still useful
+for side-path pressure validation, but the drifted `acceptance_stress_*` scripts should no
+longer sit in an undifferentiated blocked bucket when they are not part of the keep-chain
+and are not covered by recent mainline smoke usage.
 
 ## Evidence captured
 
 - The active keep chain remains
   `llm_ping -> normalize_guard -> translate_llm -> qa_hard -> rehydrate_export -> smoke_verify`.
-- Batch 6 retired active governance references and reclassified the two historical
-  repair utilities to `archive-candidate`.
-- Batch 7 restored `repair_loop.py`, `run_validation.py`, and `build_validation_set.py`
-  as tested must-keep surfaces, so Batch 8 can archive the historical pair without
-  weakening current production development paths.
-- `loc-translate.md` already keeps `scripts/rebuild_checkpoint.py` as the supported
-  checkpoint recovery path.
-- The remaining work is physical archive closeout, README/reporting, and inventory sync.
+- Batch 7 restored the retained production development baselines.
+- Batch 8 completed the repair-side physical archive closeout and left stress-like shell
+  entrypoints plus the `src/scripts` compatibility mirror as the only meaningful remaining
+  cleanup surfaces.
+- `scripts/stress_test_3k_run.sh` is the least-drifted retained shell path and already ties
+  into retained scripts such as `normalize_tag_llm.py`, `soft_qa_llm.py`, and `repair_loop.py`.
+- Several `acceptance_stress_*` scripts still use historical CLI patterns, especially around
+  `rehydrate_export.py`, which is evidence for archive-candidate rather than must-keep status.
 
 ## Scope guardrails
 
-- Batch 8 does not change keep-chain, M4, authority drift policy, or Metrics optionality.
-- Batch 8 does not modify retained repair or validation surfaces.
-- Batch 8 does not add wrappers or compatibility aliases for archived files.
-- Repo-root `src/scripts` remains compatibility-only and stays outside physical cleanup.
+- Batch 9 does not change keep-chain, M4, authority drift policy, or Metrics optionality.
+- Batch 9 does not modify retained repair or validation surfaces.
+- Batch 9 does not physically archive stress scripts yet; it only canonicalizes and reclassifies them.
+- Repo-root `src/scripts` remains compatibility-only and stays outside this batch.
 
 ## Exit condition for this step
 
 This step is complete when:
 
-- `repair_loop_v2.py` and `repair_checkpoint_gaps.py` no longer live under `scripts/`,
-- `_obsolete/repair_archive/` contains both files plus an auditable README,
-- the frozen-zone inventory marks both as `archive-complete`,
+- `scripts/stress_test_3k_run.sh` is explicitly retained as the canonical stress shell path,
+- the `acceptance_stress_*` scripts and adjacent helpers are individually classified,
+- the frozen-zone inventory no longer represents the entire stress surface as a single blocked bucket,
 - the regression suite and evidence gate remain green,
-- and the Batch 8 report explains why no wrapper was retained.
+- and the Batch 9 report states whether the cleanup roadmap has entered final closeout.

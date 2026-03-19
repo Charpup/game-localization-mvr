@@ -153,3 +153,25 @@
   `81 passed`.
 - Authority remains at the accepted level (`WARN`) with `runtime_adapter.py` as the only
   alert-only drift, and `M4_4_decision.jsonl` still reports `KEEP=6`.
+
+## 2026-03-19 Deep Cleanup Batch 9
+- The only real blocked surface left in `main_worktree/scripts` after Batch 8 is the
+  stress-like shell layer; `gate/**` is only a placeholder entry, not a real directory.
+- `scripts/stress_test_3k_run.sh` is the best retained stress shell candidate because it
+  already matches the current `repair_loop.py` and `soft_qa_llm.py` contracts, but before
+  Batch 9 it still had a live export drift against `rehydrate_export.py`.
+- `acceptance_stress_final.sh` and `acceptance_stress_resume.sh` still use drifted
+  `rehydrate_export.py --input --placeholder-map --output` syntax and have no active
+  `main_worktree` doc/runbook bindings, so they should not remain implied must-keep.
+- `acceptance_stress_resume_fix.sh` uses a less-drifted export form, but it is still a
+  one-off fix variant rather than a retained operator path.
+- `acceptance_stress_run.sh` and `acceptance_stress_phase3.sh` are historical split-phase
+  5k helpers, not the retained stress authority path.
+- `finalize_stress_report.py` belongs to the historical 5k acceptance flow,
+  `verify_3k_test.py` is only a read-only 3k verification helper adjacent to the retained
+  path, and `run_long_text_gate_v1.py` is best treated as a gate experiment candidate.
+- Batch 9 should move the roadmap into closeout territory: after stress canonicalization,
+  the only meaningful remaining cleanup decision should be `src/scripts` compat mirror.
+- Batch 9 regression/evidence state is green: focused governance regression passed, the
+  explicit full test-file run passed at `98 passed, 8 skipped`, authority remains `WARN`
+  only on `runtime_adapter.py`, and `M4_4_decision.jsonl` still reports `KEEP=6`.

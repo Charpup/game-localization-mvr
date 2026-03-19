@@ -52,9 +52,7 @@
       "role": "canonical soft QA task producer",
       "entrypoints": [
         ".agent/workflows/loc-soft-qa.md",
-        "scripts/acceptance_stress_final.sh",
-        "scripts/acceptance_stress_resume.sh",
-        "scripts/acceptance_stress_resume_fix.sh"
+        "scripts/stress_test_3k_run.sh"
       ],
       "test_evidence": [
         "tests/test_soft_qa_contract.py",

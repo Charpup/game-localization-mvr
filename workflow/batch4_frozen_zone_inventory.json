@@ -7,7 +7,8 @@
     "compat-keep",
     "frozen",
     "archive-candidate",
-    "blocked"
+    "blocked",
+    "archive-complete"
   ],
   "surfaces": [
     {
@@ -140,12 +141,14 @@
     },
     {
       "path": "stress/**",
-      "status": "blocked",
-      "why_not_touching": "No stress directory exists in main_worktree today, while stress-like shell entrypoints still live under scripts/ and docs.",
+      "status": "compat-keep",
+      "why_not_touching": "The stress directory itself does not exist; this umbrella status now only groups the explicit shell/helper surfaces listed below after Batch 9 canonicalization.",
       "direct_references": [
         "scripts/acceptance_stress_final.sh",
+        "scripts/acceptance_stress_phase3.sh",
         "scripts/acceptance_stress_resume.sh",
         "scripts/acceptance_stress_resume_fix.sh",
+        "scripts/acceptance_stress_run.sh",
         "scripts/stress_test_3k_run.sh"
       ],
       "input_outputs": [
@@ -153,11 +156,197 @@
         "outputs: stress reports, soft QA reports, repaired outputs"
       ],
       "test_gaps": [
-        "No deterministic coverage for shell-driven stress flows"
+        "Shell-driven stress flows still rely on governance tests rather than end-to-end fixture execution"
       ],
       "unfreeze_conditions": [
-        "Stress entrypoints normalized into a testable surface",
-        "Fixture coverage exists for the chosen retained path"
+        "Batch 10 makes an explicit long-term retain/archive decision for the compat mirror and remaining helper scripts"
+      ]
+    },
+    {
+      "path": "scripts/stress_test_3k_run.sh",
+      "status": "must-keep",
+      "why_not_touching": "Retained canonical stress shell entrypoint; it is the only stress shell path aligned to the current repair_loop.py and soft_qa_llm.py contracts after Batch 9.",
+      "direct_references": [
+        "workflow/batch3_surface_inventory.json",
+        "findings.md",
+        "progress.md",
+        "tests/test_batch9_stress_surface_governance.py"
+      ],
+      "input_outputs": [
+        "inputs: 3k stress CSV, glossary sample, placeholder map, style guide",
+        "outputs: 3k translated/repaired/export CSVs, QA reports, stress reports"
+      ],
+      "test_gaps": [
+        "No deterministic end-to-end fixture run for the full shell flow",
+        "Any future CLI change in normalize_tag_llm.py, repair_loop.py, soft_qa_llm.py, or rehydrate_export.py must keep this shell aligned"
+      ],
+      "unfreeze_conditions": [
+        "A future batch replaces shell orchestration with a tested Python entrypoint"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_final.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical 5k phase helper with drifted export invocation and no active runbook binding in main_worktree.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+      ],
+      "input_outputs": [
+        "inputs: 5k stress translated data, glossary, placeholder map",
+        "outputs: 5k export, metrics, final validation report"
+      ],
+      "test_gaps": [
+        "Uses drifted rehydrate_export.py flag syntax",
+        "Not covered by retained stress governance beyond archive candidacy"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k stress runbook is reintroduced and the shell is updated to current CLI contracts",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_resume.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical 5k resume helper with drifted export invocation and no active runbook binding in main_worktree.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md",
+        "scripts/finalize_stress_report.py"
+      ],
+      "input_outputs": [
+        "inputs: 5k stress translated data, glossary, placeholder map",
+        "outputs: 5k export, metrics, final validation report"
+      ],
+      "test_gaps": [
+        "Uses drifted rehydrate_export.py flag syntax",
+        "Resume path is not a retained supported workflow"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k resume workflow is reintroduced and updated to current CLI contracts",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_resume_fix.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical one-off fix variant for the 5k resume flow; not a retained operational path after Batch 9.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md",
+        "scripts/finalize_stress_report.py"
+      ],
+      "input_outputs": [
+        "inputs: 5k stress translated data, glossary, placeholder map",
+        "outputs: 5k export, metrics, final validation report"
+      ],
+      "test_gaps": [
+        "Variant naming indicates a one-off repair path, not a stable retained surface",
+        "No active runbook binds this script"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k resume workflow explicitly adopts this fixed variant",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_run.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical 5k phase 3/4 helper superseded by the retained 3k canonical path and not bound by current docs.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+      ],
+      "input_outputs": [
+        "inputs: 5k draft CSV, glossary candidates",
+        "outputs: 5k translated CSV, compiled glossary"
+      ],
+      "test_gaps": [
+        "No retained operator workflow depends on this split phase helper"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k workflow is reinstated and explicitly binds this helper",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_phase3.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical phase-only 5k glossary helper with no active runbook binding after Batch 9.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+      ],
+      "input_outputs": [
+        "inputs: 5k term candidates",
+        "outputs: sampled glossary candidates and compiled glossary"
+      ],
+      "test_gaps": [
+        "Standalone phase helper is not part of the retained stress authority path"
+      ],
+      "unfreeze_conditions": [
+        "A retained phase-split 5k workflow is reinstated",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/finalize_stress_report.py",
+      "status": "archive-candidate",
+      "why_not_touching": "Helper belongs only to the historical 5k acceptance stress flow and has no active runbook binding after Batch 9.",
+      "direct_references": [
+        "scripts/acceptance_stress_resume.sh",
+        "scripts/acceptance_stress_resume_fix.sh",
+        "reports/script_authority_report_20260319.json"
+      ],
+      "input_outputs": [
+        "inputs: 5k QA and metrics artifacts",
+        "outputs: s5k_final_validation_report.json"
+      ],
+      "test_gaps": [
+        "No retained stress authority path consumes this helper"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k validation closeout flow is reinstated",
+        "Otherwise archive with the historical 5k helpers"
+      ]
+    },
+    {
+      "path": "scripts/verify_3k_test.py",
+      "status": "compat-keep",
+      "why_not_touching": "Read-only verification helper for the retained 3k stress path; it does not drive the pipeline but still audits the 3k artifacts.",
+      "direct_references": [
+        "reports/script_authority_report_20260319.json",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+      ],
+      "input_outputs": [
+        "inputs: 3k translated CSV, QA report, repaired CSV",
+        "outputs: console verification summary"
+      ],
+      "test_gaps": [
+        "Helper is not covered by dedicated tests and is not part of the retained shell authority itself"
+      ],
+      "unfreeze_conditions": [
+        "A future batch either archives it or promotes it into a tested retained verification helper"
+      ]
+    },
+    {
+      "path": "scripts/run_long_text_gate_v1.py",
+      "status": "archive-candidate",
+      "why_not_touching": "Independent long-text gate experiment; not part of the retained stress shell authority and not bound by active docs in main_worktree.",
+      "direct_references": [
+        "reports/script_authority_report_20260319.json",
+        "reports/m4_core_obsolete_inventory.md"
+      ],
+      "input_outputs": [
+        "inputs: destructive template CSV, model ladder, reports directory",
+        "outputs: long text gate JSON/Markdown reports"
+      ],
+      "test_gaps": [
+        "No retained workflow binds this experimental gate runner"
+      ],
+      "unfreeze_conditions": [
+        "A future batch explicitly promotes it as a maintained gate experiment",
+        "Otherwise archive in a later cleanup batch"
       ]
     },
     {
