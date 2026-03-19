@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "project": "game-localization-mvr",
+  "mode": "brownfield",
+  "route": "extended",
+  "status": "phase1_verified_ready_for_branch_audit",
+  "branch": "codex/deep-cleanup-r3",
+  "change_id": "deep-cleanup-r3-roadmap-phase1",
+  "authority_zone": "main_worktree/scripts",
+  "compat_zone": "src/scripts",
+  "control_plane_scope": {
+    "allowed_write_paths": [
+      ".triadev/*",
+      "SPEC.yaml",
+      "SPEC-delta.yaml",
+      "value-review.md"
+    ],
+    "protected_first_wave": [
+      "scripts/repair_loop.py",
+      "scripts/run_validation.py",
+      "gate/**",
+      "stress/**",
+      "skill-v1.4.0/**",
+      "packaging/**"
+    ]
+  },
+  "brownfield": {
+    "authority_root_exists": true,
+    "compat_root_exists": true,
+    "base_spec_generated": true,
+    "compat_mirror_expected": true
+  },
+  "pipeline": {
+    "keep_chain": [
+      "llm_ping",
+      "normalize_guard",
+      "translate_llm",
+      "qa_hard",
+      "rehydrate_export",
+      "smoke_verify"
+    ],
+    "orchestrator": "scripts/run_smoke_pipeline.py"
+  },
+  "value_gate": {
+    "status": "GO",
+    "reason": "Batch 3/4 governance work is artifact- and test-led, keeping high-risk zones frozen while roadmap evidence is completed."
+  },
+  "last_updated": "2026-03-19"
+}

@@ -19,7 +19,9 @@ Features:
 
 import csv
 import json
+import argparse
 import re
+import os
 import sys
 import yaml
 from pathlib import Path
@@ -41,9 +43,11 @@ class RehydrateExporter:
                  target_lang: str = "ru-RU"):
         self.translated_csv = Path(translated_csv)
         self.placeholder_map_path = Path(placeholder_map)
-        self.final_csv = Path(final_csv)
+        self.final_csv = self.normalize_output_path(final_csv)
         self.overwrite_mode = overwrite_mode
         self.target_lang = target_lang
+        self.target_key = self._derive_target_key(target_lang)
+        self.preserve_symbols = {"【", "】"}
         
         # 默认标点符号映射路径
         if punctuation_map_path:
@@ -61,6 +65,24 @@ class RehydrateExporter:
         self.total_rows = 0
         self.tokens_restored = 0
         self.punctuation_converted = 0
+        self.unmapped_tokens: List[str] = []
+
+    def normalize_output_path(self, raw_path: str) -> Path:
+        """Normalize output path and avoid duplicate absolute path fragments."""
+        raw = str(raw_path).strip().strip('"')
+        if not raw:
+            raise ValueError("final_csv path is empty")
+
+        drive_matches = [m.start() for m in re.finditer(r"[A-Za-z]:[\\/]", raw)]
+        if len(drive_matches) > 1:
+            raw = raw[drive_matches[-1]:]
+            print(f"⚠️  Duplicate absolute path detected, normalized to: {raw}")
+
+        # Handle mixed separators and relative/absolute join safety
+        p = Path(raw)
+        if p.is_absolute():
+            return p
+        return Path(raw)
     
     def load_placeholder_map(self) -> bool:
         """加载占位符映射（支持 v1.0 和 v2.0 格式）"""
@@ -106,6 +128,11 @@ class RehydrateExporter:
         
         self.punctuation_mappings = load_punctuation_config(base_conf, locale_conf)
         if self.punctuation_mappings:
+            self.punctuation_mappings = [
+                rule for rule in self.punctuation_mappings
+                if str(rule.get("source", "")) not in self.preserve_symbols
+            ]
+        if self.punctuation_mappings:
             print(f"✅ Loaded {len(self.punctuation_mappings)} punctuation rules")
         
         return True
@@ -134,6 +161,14 @@ class RehydrateExporter:
         if not text:
             return set()
         return set(self.token_pattern.findall(text))
+
+    def _derive_target_key(self, target_lang: str) -> str:
+        if not target_lang:
+            return "target_ru"
+        norm = target_lang.split("-", 1)[0].strip().lower().replace("_", "")
+        if not norm:
+            return "target_ru"
+        return f"target_{norm}"
     
     def rehydrate_text(self, text: str, string_id: str, row_num: int) -> str:
         """
@@ -173,6 +208,24 @@ class RehydrateExporter:
             self.tokens_restored += 1
         
         return result
+
+    def sync_delivery_columns(self, row: Dict[str, str], rehydrated: str) -> None:
+        """
+        Sync primary delivery columns for audit and downstream consumers.
+        - Always sync `target` as primary.
+        - Sync target language specific column if it exists (target_en / target_ru).
+        """
+        row["target"] = rehydrated
+
+        if self.target_key and self.target_key in row:
+            row[self.target_key] = rehydrated
+
+        if self.target_lang.lower().startswith("en"):
+            if "target_en" in row:
+                row["target_en"] = rehydrated
+        elif self.target_lang.lower().startswith("ru"):
+            if "target_ru" in row:
+                row["target_ru"] = rehydrated
     
     def process_csv(self) -> bool:
         """处理 CSV 文件"""
@@ -188,7 +241,15 @@ class RehydrateExporter:
                 
                 # 查找目标翻译列
                 target_field = None
-                for possible_field in ['target_text', 'translated_text', 'target_zh', 'tokenized_target']:
+                for possible_field in [
+                    self.target_key,
+                    'target_text',
+                    'translated_text',
+                    'target_en',
+                    'target_ru',
+                    'target_zh',
+                    'tokenized_target',
+                ]:
                     if possible_field in headers:
                         target_field = possible_field
                         break
@@ -223,6 +284,9 @@ class RehydrateExporter:
                     
                     # 标点符号转换
                     rehydrated = self.normalize_punctuation(rehydrated)
+
+                    # 主消费列同步（兼容模式）：保持 target_text/其他历史列稳定，仅补齐审计与主消费链路。
+                    self.sync_delivery_columns(row=row, rehydrated=rehydrated)
                     
                     # 构建输出行
                     output_row = dict(row)
@@ -254,6 +318,10 @@ class RehydrateExporter:
         try:
             # 构建输出列
             fieldnames = list(original_headers)
+            for row in rows:
+                for key in row.keys():
+                    if key not in fieldnames:
+                        fieldnames.append(key)
             
             if not self.overwrite_mode and 'rehydrated_text' not in fieldnames:
                 # 在 target_field 后面插入 rehydrated_text
@@ -319,29 +387,20 @@ class RehydrateExporter:
 
 def main():
     """主入口"""
-    # 解析参数
-    args = sys.argv[1:]
-    overwrite_mode = '--overwrite' in args
-    
-    # 移除 --overwrite 标志
-    args = [a for a in args if a != '--overwrite']
-    
-    if len(args) != 3:
-        print("Usage: python rehydrate_export.py <translated_csv> <placeholder_map_json> <final_csv> [--overwrite]")
-        print()
-        print("Options:")
-        print("  --overwrite    Modify target_text directly instead of adding rehydrated_text column")
-        print()
-        print("Example:")
-        print("  python rehydrate_export.py data/translated.csv data/placeholder_map.json data/final.csv")
-        print("  python rehydrate_export.py data/translated.csv data/placeholder_map.json data/final.csv --overwrite")
-        sys.exit(1)
-    
+    parser = argparse.ArgumentParser(description="Rehydrate tokenized texts back to original placeholders")
+    parser.add_argument("translated_csv")
+    parser.add_argument("placeholder_map_json")
+    parser.add_argument("final_csv")
+    parser.add_argument("--overwrite", action="store_true", help="Overwrite target field directly")
+    parser.add_argument("--target-lang", default="ru-RU", help="Target language for punctuation map")
+    args = parser.parse_args()
+
     exporter = RehydrateExporter(
-        translated_csv=args[0],
-        placeholder_map=args[1],
-        final_csv=args[2],
-        overwrite_mode=overwrite_mode
+        translated_csv=args.translated_csv,
+        placeholder_map=args.placeholder_map_json,
+        final_csv=args.final_csv,
+        overwrite_mode=args.overwrite,
+        target_lang=args.target_lang
     )
     
     success = exporter.run()

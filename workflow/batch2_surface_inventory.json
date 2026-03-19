@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "generated_for": "codex/deep-cleanup-r3-batch2",
+  "authority_root": "scripts",
+  "compat_root": "../src/scripts",
+  "core_status": {
+    "runtime_adapter.py": "must-keep core",
+    "smoke_issue_logger.py": "must-keep core",
+    "run_smoke_pipeline.py": "must-keep core"
+  },
+  "surface_status": {
+    "normalize_ingest.py": "frozen audit candidate",
+    "normalize_tagger.py": "must-keep candidate",
+    "normalize_tag_llm.py": "frozen duplicate / compat-keep",
+    "qa_soft.py": "compat-keep wrapper",
+    "soft_qa_llm.py": "compat-keep canonical"
+  },
+  "canonical_relationships": [
+    {
+      "canonical": "normalize_tagger.py",
+      "related": "normalize_tag_llm.py",
+      "relationship": "frozen duplicate",
+      "reason": "docs point to normalize_tagger.py while stress flows still reference normalize_tag_llm.py"
+    },
+    {
+      "canonical": "soft_qa_llm.py",
+      "related": "qa_soft.py",
+      "relationship": "wrapper compatibility entrypoint",
+      "reason": "qa_soft.py forwards CLI execution to soft_qa_llm.py"
+    }
+  ],
+  "blocked_zones": [
+    "repair_loop.py",
+    "repair_loop_v2.py",
+    "repair_checkpoint_gaps.py",
+    "run_validation.py",
+    "build_validation_set.py",
+    "gate/**",
+    "stress/**",
+    "../src/scripts/**"
+  ]
+}

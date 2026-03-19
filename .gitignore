@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 .env.ps1
+.llm_credentials
+.llm_env
+config/llm_credentials.env
 
 # Python
 **/__pycache__/
@@ -12,6 +15,9 @@
 .Python
 venv/
 env/
+.venv_main/
+.venv_smoke/
+.pytest_cache/
 
 # IDE
 .vscode/
@@ -26,10 +32,19 @@ env/
 data/
 cache/
 logs/
+$out/
+test_output/
 
 # Logs
 reports/*.jsonl
+reports/llm_ping_*.json
+reports/smoke_issue_record_*.json
+reports/smoke_issues_smoke_run_*.json
+reports/smoke_verify_smoke_run_*.json
 *.log
+
+# Local automation
+.codex_run_smoke_m4_3.ps1
 
 # Backups
 *.bak

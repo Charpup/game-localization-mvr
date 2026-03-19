@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "generated_for": "codex/deep-cleanup-r3",
+  "authority_root": "scripts",
+  "compat_root": "../src/scripts",
+  "archive_root": "_obsolete/diagnostics",
+  "keep_chain": [
+    "llm_ping.py",
+    "normalize_guard.py",
+    "translate_llm.py",
+    "qa_hard.py",
+    "rehydrate_export.py",
+    "smoke_verify.py"
+  ],
+  "mirror_required": [
+    "llm_ping.py",
+    "normalize_guard.py",
+    "qa_hard.py",
+    "rehydrate_export.py",
+    "run_smoke_pipeline.py",
+    "smoke_issue_logger.py",
+    "smoke_verify.py",
+    "translate_llm.py",
+    "m4_4_decision.py"
+  ],
+  "alert_only_drift": [
+    "runtime_adapter.py",
+    "m4_3_collect_coverage.py"
+  ],
+  "authority_only": [
+    "normalize_ingest.py",
+    "normalize_tag_llm.py",
+    "normalize_tagger.py",
+    "semantic_scorer.py"
+  ],
+  "archived": [
+    "debug_auth.py",
+    "debug_destructive_failures.py",
+    "debug_llm_format.py",
+    "debug_translation.py",
+    "debug_v4_traces.py",
+    "diagnose_direct_api.py",
+    "diagnose_sequential_batch.py",
+    "diagnose_single_call.py",
+    "diagnose_sonnet_retest.py"
+  ],
+  "compat_notes": {
+    "src_scripts_role": "compatibility mirror only; not the runtime authority for main_worktree",
+    "exit_condition": "src/scripts can only be reduced after packaging/tests/docs are detached from it and drift checks show no required mirror gaps"
+  },
+  "protected_exclusions": [
+    "repair_loop.py",
+    "run_validation.py"
+  ]
+}

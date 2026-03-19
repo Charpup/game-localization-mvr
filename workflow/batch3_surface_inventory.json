@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "generated_for": "codex/deep-cleanup-r3-batch3",
+  "authority_root": "scripts",
+  "decision_mode": "conservative layering",
+  "surface_status": [
+    {
+      "script": "normalize_tagger.py",
+      "status": "must-keep candidate",
+      "role": "canonical normalize classifier",
+      "entrypoints": [
+        "docs/localization_pipeline_workflow.md",
+        ".agent/workflows/loc-normalize.md"
+      ],
+      "test_evidence": [
+        "tests/test_normalize_auxiliary_contract.py",
+        "tests/test_normalize_segmentation.py"
+      ],
+      "decision": "keep",
+      "notes": "Canonical normalize classifier; retain as the documented path for heuristic plus LLM fallback tagging."
+    },
+    {
+      "script": "normalize_tag_llm.py",
+      "status": "stress-only compat entrypoint",
+      "role": "stress-specific normalize variant",
+      "entrypoints": [
+        "scripts/stress_test_3k_run.sh"
+      ],
+      "test_evidence": [
+        "tests/test_normalize_auxiliary_contract.py"
+      ],
+      "decision": "keep",
+      "notes": "Not a pure duplicate: it owns the length-rules variant still used by stress flows, so keep as a stress-only compatibility entrypoint."
+    },
+    {
+      "script": "normalize_ingest.py",
+      "status": "compat-keep documented ingest",
+      "role": "documented CSV/XLSX source ingestion",
+      "entrypoints": [
+        ".agent/workflows/loc-normalize.md"
+      ],
+      "test_evidence": [
+        "tests/test_normalize_auxiliary_contract.py",
+        "tests/test_batch3_batch4_governance.py"
+      ],
+      "decision": "keep",
+      "notes": "Still documented as the ingest entrypoint and covered by fixture tests, so keep it as the documented ingest surface instead of treating it as audit-only."
+    },
+    {
+      "script": "soft_qa_llm.py",
+      "status": "compat-keep canonical",
+      "role": "canonical soft QA task producer",
+      "entrypoints": [
+        ".agent/workflows/loc-soft-qa.md",
+        "scripts/acceptance_stress_final.sh",
+        "scripts/acceptance_stress_resume.sh",
+        "scripts/acceptance_stress_resume_fix.sh"
+      ],
+      "test_evidence": [
+        "tests/test_soft_qa_contract.py",
+        "tests/test_qa_soft_logic.py",
+        "tests/test_batch3_batch4_governance.py"
+      ],
+      "decision": "keep",
+      "notes": "Canonical soft QA entry; contract is to emit repair tasks and reports without becoming a hard blocking gate."
+    },
+    {
+      "script": "qa_soft.py",
+      "status": "compat-keep wrapper",
+      "role": "wrapper compatibility entrypoint",
+      "entrypoints": [
+        "scripts/qa_soft.py"
+      ],
+      "test_evidence": [
+        "tests/test_batch3_batch4_governance.py"
+      ],
+      "decision": "keep",
+      "notes": "Thin wrapper to preserve older invocation paths while forwarding CLI execution to soft_qa_llm.py."
+    }
+  ],
+  "canonical_relationships": [
+    {
+      "canonical": "normalize_tagger.py",
+      "related": "normalize_tag_llm.py",
+      "relationship": "stress-only compatibility variant",
+      "exit_condition": "Only consolidate after length-rules support is either migrated into the canonical path or the stress entrypoint is retired."
+    },
+    {
+      "canonical": "soft_qa_llm.py",
+      "related": "qa_soft.py",
+      "relationship": "wrapper compatibility entrypoint",
+      "exit_condition": "Retire wrapper only after all docs, scripts, and operator runbooks stop calling qa_soft.py."
+    }
+  ],
+  "acceptance_targets": {
+    "keep_chain": "KEEP=6",
+    "authority_gate": "WARN allowed only for runtime_adapter.py alert_only_drift",
+    "blocked_zones_unchanged": true
+  }
+}

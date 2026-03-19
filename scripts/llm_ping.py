@@ -52,17 +52,25 @@ def check_env_vars() -> tuple[bool, list[str]]:
     if not os.environ.get('LLM_BASE_URL'):
         missing.append('LLM_BASE_URL')
     
-    # Check API key: LLM_API_KEY_FILE or LLM_API_KEY
+    # Check API key: LLM_API_KEY_FILE / LLM_CREDENTIAL_FILE / fallback files or LLM_API_KEY
     api_key_file = os.environ.get('LLM_API_KEY_FILE', '').strip()
     api_key = os.environ.get('LLM_API_KEY', '').strip()
     
     if not api_key:
-        # Try file-based injection
         if api_key_file and os.path.exists(api_key_file):
-            # File exists, will be read by runtime_adapter
+            # File exists, will be read by runtime_adapter/runtime_adapter-compatible key reader
             pass
         else:
-            missing.append('LLM_API_KEY')
+            # Try known fallback files for this workspace
+            fallback_files = [
+                os.path.join(os.getcwd(), '.llm_credentials'),
+                os.path.join(os.getcwd(), '.llm_env'),
+                os.path.join(os.getcwd(), 'config', 'llm_credentials.env'),
+                os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.llm_credentials'),
+                os.path.join(os.path.expanduser('~'), '.game-localization-mvr', '.llm_credentials'),
+            ]
+            if not any(os.path.exists(path) for path in fallback_files):
+                missing.append('LLM_API_KEY')
     
     return len(missing) == 0, missing
 

@@ -30,14 +30,17 @@ import time
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
-# 强制 unbuffered 与 UTF-8 输出 (兼容 Windows)
-for stream in [sys.stdout, sys.stderr]:
-    if stream:
-        if hasattr(stream, 'reconfigure'):
+def configure_standard_streams() -> None:
+    """Configure stdout/stderr only for CLI execution, not on import."""
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if not stream:
+            continue
+        if hasattr(stream, "reconfigure"):
             try:
                 stream.reconfigure(encoding='utf-8', errors='replace', line_buffering=True)
             except Exception:
-                pass # Fallback if reconfigure fails on certain streams
+                pass
 
 try:
     import yaml
@@ -45,6 +48,7 @@ except Exception:
     yaml = None
 
 from runtime_adapter import LLMClient, LLMError, BatchConfig, get_batch_config, batch_llm_call, log_llm_progress
+from batch_utils import BatchConfig as SplitBatchConfig, split_into_batches
 
 # v2.1: RAG and Semantic Scoring integration
 try:
@@ -190,6 +194,7 @@ def process_batch_results(batch_items: List[Dict]) -> List[dict]:
 
 
 def main():
+    configure_standard_streams()
     ap = argparse.ArgumentParser(description="LLM-based soft QA (Batch Mode v2.0)")
     ap.add_argument("translated_csv", nargs="?", help="Input translated.csv")
     ap.add_argument("--input", help="Alias for translated_csv")
@@ -286,7 +291,7 @@ def main():
         print("DRY-RUN MODE - Validation Summary")
         print("=" * 60)
         
-        config = BatchConfig(max_items=args.batch_size, max_tokens=args.max_batch_tokens)
+        config = SplitBatchConfig(max_items=args.batch_size, max_tokens=args.max_batch_tokens)
         config.text_fields = ["source_zh", "tokenized_zh", "target_text"]
         batches = split_into_batches(rows_with_target, config)
         

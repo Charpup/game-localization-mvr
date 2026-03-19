@@ -1,0 +1,57 @@
+spec_version: 0.1.0
+project:
+  name: game-localization-mvr
+  type: brownfield
+  branch: codex/deep-cleanup-r3
+  authority_zone: main_worktree/scripts
+  compat_zone: src/scripts
+system:
+  summary: >
+    Brownfield game localization pipeline whose active execution authority lives under
+    main_worktree/scripts, with repo-root src/scripts retained as a compatibility mirror.
+  orchestrator:
+    path: scripts/run_smoke_pipeline.py
+    purpose: Preserves the smoke path from connectivity check through final verification.
+  stable_chain:
+    - llm_ping
+    - normalize_guard
+    - translate_llm
+    - qa_hard
+    - rehydrate_export
+    - smoke_verify
+  chain_contract:
+    llm_ping: Connectivity and routing preflight for LLM access.
+    normalize_guard: Input normalization and placeholder map generation.
+    translate_llm: Main translation execution against normalized assets.
+    qa_hard: Hard QA validation before export.
+    rehydrate_export: Placeholder and formatting restoration into exportable CSV.
+    smoke_verify: Final smoke verification over manifest/report outputs.
+ownership:
+  authority:
+    root: main_worktree/scripts
+    rule: New truth for deep-cleanup-r3 is authored here first.
+  compatibility:
+    root: src/scripts
+    rule: Keep behavior-compatible mirror semantics; do not treat as the primary change surface.
+constraints:
+  first_wave_do_not_touch:
+    - scripts/repair_loop.py
+    - scripts/run_validation.py
+    - gate/**
+    - stress/**
+    - skill-v1.4.0/**
+    - packaging/**
+  editing_scope:
+    - .triadev/*
+    - SPEC.yaml
+    - SPEC-delta.yaml
+    - value-review.md
+verification_evidence:
+  branch_checked: codex/deep-cleanup-r3
+  chain_sources:
+    - scripts/run_smoke_pipeline.py
+    - scripts/m4_3_collect_coverage.py
+    - scripts/m4_4_decision.py
+  topology_sources:
+    - main_worktree/scripts
+    - src/scripts

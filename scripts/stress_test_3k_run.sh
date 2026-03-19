@@ -75,13 +75,14 @@ python3 -u scripts/repair_loop.py \
 echo "=== Phase 6: Soft QA ==="
 python3 -u scripts/soft_qa_llm.py \
     --input "$BATCH_DIR/3k_repaired_hard.csv" \
-    --output "$BATCH_DIR/3k_qa_soft_report.json" \
+    --out_report "$BATCH_DIR/3k_qa_soft_report.json" \
+    --out_tasks "$BATCH_DIR/3k_repair_tasks_soft.jsonl" \
     --model "$MODEL"
 
 # 3. Repair Loop (Soft)
 python3 -u scripts/repair_loop.py \
     --input "$BATCH_DIR/3k_repaired_hard.csv" \
-    --tasks "$BATCH_DIR/3k_qa_soft_report.json" \
+    --tasks "$BATCH_DIR/3k_repair_tasks_soft.jsonl" \
     --output "$BATCH_DIR/3k_final.csv" \
     --output-dir "$BATCH_DIR/reports" \
     --qa-type soft
