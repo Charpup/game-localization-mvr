@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_for": "codex/deep-cleanup-r3",
+  "generated_for": "codex/deep-cleanup-batch10",
   "authority_root": "scripts",
   "compat_root": "../src/scripts",
   "archive_root": "_obsolete/diagnostics",
@@ -23,6 +23,10 @@
     "translate_llm.py",
     "m4_4_decision.py"
   ],
+  "mirror_required_policy": {
+    "status": "frozen-for-closeout",
+    "change_process": "separate-compat-change"
+  },
   "alert_only_drift": [
     "runtime_adapter.py",
     "m4_3_collect_coverage.py"
@@ -45,7 +49,14 @@
     "diagnose_sonnet_retest.py"
   ],
   "compat_notes": {
-    "src_scripts_role": "compatibility mirror only; not the runtime authority for main_worktree",
+    "src_scripts_role": "managed compatibility liability only; not the runtime authority for main_worktree",
+    "closeout_decision": "separate-exit-program",
+    "cleanup_roadmap_status": "closed-after-batch10",
+    "exit_blockers": [
+      "package_v1.3.0.sh still packages src/scripts",
+      "authority tests still bind compat_root ../src/scripts",
+      "root inventory and project docs still describe src/scripts workflows"
+    ],
     "exit_condition": "src/scripts can only be reduced after packaging/tests/docs are detached from it and drift checks show no required mirror gaps"
   },
   "protected_exclusions": [

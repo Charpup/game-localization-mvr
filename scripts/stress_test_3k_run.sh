@@ -89,7 +89,8 @@ python3 -u scripts/repair_loop.py \
 
 echo "=== Phase 7: Export ==="
 python3 scripts/rehydrate_export.py \
-    --input "$BATCH_DIR/3k_final.csv" \
-    --output "$BATCH_DIR/3k_export_package.csv"
+    "$BATCH_DIR/3k_final.csv" \
+    "data/placeholder_map.json" \
+    "$BATCH_DIR/3k_export_package.csv"
 
 echo "✅ 3k Stress Test Complete"

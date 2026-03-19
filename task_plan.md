@@ -81,4 +81,144 @@ needed before any later PR merge or remote branch cleanup.
 - [complete] Phase 1: Materialize Batch 3 surface-status and Batch 4 blocked-surface inventories.
 - [complete] Phase 2: Add governance tests for wrapper forwarding and CLI failure boundaries.
 - [complete] Phase 3: Run smoke-focused regression, authority gate, and M4 evidence gate.
-- [in_progress] Phase 4: Prepare commit scope for roadmap Phase 1 artifacts and branch audit checklist.
+- [complete] Phase 4: Prepare commit scope for roadmap Phase 1 artifacts and branch audit checklist.
+
+## 2026-03-19 Deep Cleanup Batch 5
+
+### Goal
+Archive the two lowest-risk repair-side historical utilities out of `main_worktree/scripts`
+after characterization tests and reference rechecks confirm they are not part of the
+active runtime or current repair authority path.
+
+### Scope
+- Work only on `repair_loop_v2.py`, `repair_checkpoint_gaps.py`, Batch 5 tests, and
+  supporting TriadDev/governance artifacts.
+- Attempt archive only if reference and recovery-contract checks stay clean.
+- Keep `repair_loop.py`, `run_validation.py`, `build_validation_set.py`, stress-like shell
+  entrypoints, and repo-root `src/scripts` frozen.
+- Preserve the keep chain:
+  `llm_ping -> normalize_guard -> translate_llm -> qa_hard -> rehydrate_export -> smoke_verify`.
+
+### Phases
+- [complete] Phase 0: Recheck references and confirm both targets remain archive-candidates.
+- [complete] Phase 1: Add Batch 5 characterization tests for archived CLI/recovery contracts.
+- [complete] Phase 2: Roll back archive action after hidden dependency review; keep both targets in `scripts/` and reclassify them as blocked for now.
+- [complete] Phase 3: Run Batch 5 regression suite, authority gate, and M4 evidence gate.
+- [complete] Phase 4: Prepare commit scope and report the new roadmap position.
+
+## 2026-03-19 Deep Cleanup Batch 6
+
+### Goal
+Retire the remaining governance contracts around `repair_loop_v2.py` and
+`repair_checkpoint_gaps.py`, restore Metrics as a visible but non-blocking smoke stage,
+and keep the keep-chain and M4 evidence logic unchanged.
+
+### Scope
+- Work in rules, workflow docs, root inventory, metrics wiring, Batch 6 tests, and
+  TriadDev control files only.
+- Reclassify `repair_loop_v2.py` and `repair_checkpoint_gaps.py` from `blocked` back to
+  `archive-candidate` without physically archiving them in this batch.
+- Reconnect `scripts/metrics_aggregator.py` to `scripts/run_smoke_pipeline.py` as an
+  optional observability stage.
+- Keep `repair_loop.py`, `run_validation.py`, `build_validation_set.py`, and repo-root
+  `src/scripts` frozen.
+
+### Phases
+- [complete] Phase 0: Collect Batch 6 evidence from repair contracts, metrics workflow, and existing smoke wiring.
+- [complete] Phase 1: Add RED tests for repair-side governance retirement and optional metrics behavior.
+- [complete] Phase 2: Retire repair-side rules/inventory/workflow references and downgrade both scripts to `archive-candidate`.
+- [complete] Phase 3: Rewire Metrics into the smoke manifest as a warning-only optional stage and add token fallback support.
+- [complete] Phase 4: Run Batch 6 full regression + evidence gate and prepare commit scope.
+
+## 2026-03-19 Deep Cleanup Batch 7
+
+### Goal
+Recover the retained validation baseline and repair authority surfaces so normal production
+development can continue on top of a tested, documented mainline.
+
+### Scope
+- Promote `run_validation.py` and `build_validation_set.py` from `blocked` to `must-keep`
+  by pinning their deterministic sampling, scoring, report-schema, and explicit I/O
+  contracts.
+- Promote `repair_loop.py` from `blocked` to `must-keep` by pinning its flags-only CLI,
+  supported task formats, artifact outputs, and routing metadata.
+- Keep `repair_loop_v2.py` and `repair_checkpoint_gaps.py` as `archive-candidate`; do not
+  physically archive them in this batch.
+- Preserve keep-chain, M4, authority drift policy, and optional Metrics semantics.
+
+### Phases
+- [complete] Phase 0: Reconfirm Batch 7 route and guardrails from `task_plan.md`.
+- [complete] Phase 1: Land deterministic validation and repair contract tests.
+- [complete] Phase 2: Align docs, rules, and frozen-zone inventory to the retained validation and repair authority contracts.
+- [complete] Phase 3: Run Batch 7 regression suite plus evidence gate.
+- [complete] Phase 4: Prepare commit, push branch, and write the Batch 7 report.
+
+## 2026-03-19 Deep Cleanup Batch 8
+
+### Goal
+Complete the physical archive closeout for the two historical repair-side utilities so
+they leave the active `scripts/` surface without changing retained development baselines
+or smoke-chain semantics.
+
+### Scope
+- Move `repair_loop_v2.py` and `repair_checkpoint_gaps.py` from `scripts/` into
+  `_obsolete/repair_archive/`.
+- Add a repair-archive README plus a Batch 8 closeout report.
+- Promote both surfaces from `archive-candidate` to `archive-complete` in
+  `workflow/batch4_frozen_zone_inventory.json`.
+- Preserve `repair_loop.py`, `run_validation.py`, `build_validation_set.py`,
+  `rebuild_checkpoint.py`, keep-chain, M4, authority drift policy, and optional Metrics.
+
+### Phases
+- [complete] Phase 0: Reconfirm that both repair-side targets have no retained active caller and only historical references remain.
+- [complete] Phase 1: Add/archive-adjust characterization tests for physical closeout.
+- [complete] Phase 2: Move both files into `_obsolete/repair_archive/` and sync README/inventory/reporting.
+- [complete] Phase 3: Run Batch 8 regression suite plus evidence gate.
+- [complete] Phase 4: Prepare commit, push branch, and open the Batch 8 PR.
+
+## 2026-03-19 Deep Cleanup Batch 9
+
+### Goal
+Canonicalize the remaining stress-like shell surface so the active `main_worktree`
+cleanup roadmap can enter final closeout with one retained stress entrypoint, clear
+archive-candidate scripts, and auditable helper classifications.
+
+### Scope
+- Keep `scripts/stress_test_3k_run.sh` as the retained canonical stress shell path.
+- Reclassify `acceptance_stress_*.sh` and adjacent stress helpers using evidence from
+  live CLI drift, runbook bindings, and recent mainline coverage.
+- Keep `repair_loop.py`, `run_validation.py`, `build_validation_set.py`,
+  `rebuild_checkpoint.py`, keep-chain, M4, authority drift policy, and optional Metrics unchanged.
+- Do not physically archive any stress shell in this batch; this batch is status
+  canonicalization plus the minimum CLI alignment needed for the retained path.
+
+### Phases
+- [complete] Phase 0: Reconfirm Batch 9 target scope from the frozen-zone inventory and Batch 8 closeout report.
+- [complete] Phase 1: Add Batch 9 governance tests for stress-shell canonicalization and helper status assertions.
+- [complete] Phase 2: Reclassify the stress shell and helper surfaces in inventory, update TriadDev control files, and align the retained shell path to current CLI contracts.
+- [complete] Phase 3: Run Batch 9 regression suite plus evidence gate.
+- [complete] Phase 4: Prepare commit scope, push the branch, and record the closeout-readiness decision for Batch 10.
+
+## 2026-03-19 Deep Cleanup Batch 10
+
+### Goal
+Close the current cleanup roadmap by fixing a final governance decision for `src/scripts`
+as an operationally retained but exit-planned compatibility mirror, without treating its
+physical removal as part of this batch's final roadmap closeout.
+
+### Scope
+- Keep `../src/scripts/**` present and `compat-keep`, but add explicit closeout decision
+  metadata and exit blockers.
+- Remove non-real blocked placeholders from the frozen-zone inventory so the closeout
+  criteria only reflect real surfaces.
+- Keep keep-chain, M4, authority semantics, retained production-dev baselines, retained
+  stress authority, and packaging behavior unchanged.
+- Treat any future `src/scripts` retirement as a separate migration program rather than an
+  unfinished part of this cleanup roadmap.
+
+### Phases
+- [complete] Phase 0: Reconfirm from Batch 9 report and authority/packaging evidence that `src/scripts` is the only remaining governance decision.
+- [complete] Phase 1: Add Batch 10 closeout governance tests for compat mirror decision and no-real-blocked-surface criteria.
+- [complete] Phase 2: Update authority manifest, frozen-zone inventory, root inventory, and closeout report with the fixed compat mirror decision.
+- [complete] Phase 3: Run Batch 10 regression suite plus authority/M4 evidence gate.
+- [complete] Phase 4: Prepare stacked closeout branch output and declare the cleanup roadmap closed after Batch 10, with any future compat mirror retirement handled as a separate migration program.

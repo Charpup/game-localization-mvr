@@ -15,6 +15,7 @@ import os
 import sys
 import json
 import glob
+import math
 import yaml
 import requests
 from datetime import datetime
@@ -149,6 +150,62 @@ def load_trace_logs(trace_path: str = "data/llm_trace.jsonl") -> list:
 
     return events
 
+
+def _estimate_tokens_from_chars(char_count: Any) -> int:
+    if char_count in (None, "", 0):
+        return 0
+    try:
+        value = int(char_count)
+    except (TypeError, ValueError):
+        return 0
+    if value <= 0:
+        return 0
+    return max(1, math.ceil(value / 4))
+
+
+def _normalize_usage_record(record: Dict[str, Any]) -> Dict[str, int]:
+    usage = record.get("usage")
+    if isinstance(usage, dict):
+        prompt_tokens = int(usage.get("prompt_tokens") or 0)
+        completion_tokens = int(usage.get("completion_tokens") or 0)
+        total_tokens = int(usage.get("total_tokens") or (prompt_tokens + completion_tokens))
+        return {
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": total_tokens,
+            "estimated": False,
+        }
+
+    prompt_tokens = record.get("prompt_tokens")
+    completion_tokens = record.get("completion_tokens")
+    total_tokens = record.get("total_tokens")
+    if prompt_tokens is not None or completion_tokens is not None or total_tokens is not None:
+        pt = int(prompt_tokens or 0)
+        ct = int(completion_tokens or 0)
+        return {
+            "prompt_tokens": pt,
+            "completion_tokens": ct,
+            "total_tokens": int(total_tokens or (pt + ct)),
+            "estimated": False,
+        }
+
+    estimated_prompt = _estimate_tokens_from_chars(record.get("req_chars"))
+    estimated_completion = _estimate_tokens_from_chars(record.get("resp_chars"))
+    if estimated_prompt or estimated_completion:
+        return {
+            "prompt_tokens": estimated_prompt,
+            "completion_tokens": estimated_completion,
+            "total_tokens": estimated_prompt + estimated_completion,
+            "estimated": True,
+        }
+
+    return {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "estimated": False,
+    }
+
 def aggregate_metrics(events: list, trace_events: list = None, pricing: dict = None) -> dict:
     """汇总指标，包含 Token 和费用计算"""
 
@@ -166,7 +223,8 @@ def aggregate_metrics(events: list, trace_events: list = None, pricing: dict = N
             'total_prompt_tokens': 0,
             'total_completion_tokens': 0,
             'total_tokens': 0,
-            'estimated_cost_usd': 0.0
+            'estimated_cost_usd': 0.0,
+            'estimated_usage_batches': 0,
         },
         'by_step': defaultdict(lambda: {
             'batches': 0,
@@ -199,9 +257,9 @@ def aggregate_metrics(events: list, trace_events: list = None, pricing: dict = N
     if trace_events:
         for event in trace_events:
             req_id = event.get("request_id")
-            usage = event.get("usage")
-            if req_id and usage:
-                token_lookup[req_id] = usage
+            if not req_id:
+                continue
+            token_lookup[req_id] = _normalize_usage_record(event)
 
     for event in events:
         step = event.get('step', 'unknown')
@@ -230,9 +288,13 @@ def aggregate_metrics(events: list, trace_events: list = None, pricing: dict = N
                 req_id = event.get('request_id')
                 if req_id and req_id in token_lookup:
                     usage = token_lookup[req_id]
+                else:
+                    usage = _normalize_usage_record(event)
 
             prompt_tokens = usage.get('prompt_tokens', 0)
             completion_tokens = usage.get('completion_tokens', 0)
+            if usage.get('estimated'):
+                metrics['summary']['estimated_usage_batches'] += 1
 
             # 计算费用
             mp = model_pricing.get(model, default_pricing)
@@ -333,6 +395,7 @@ def generate_report(metrics: dict, output_path: str = "reports/metrics_report.md
         f"| Completion Tokens | {s['total_completion_tokens']:,} |",
         f"| **总 Tokens** | **{s['total_tokens']:,}** |",
         f"| **估算费用** | **${s['estimated_cost_usd']:.4f} USD** |",
+        f"| 估算 Token 批次数 | {s.get('estimated_usage_batches', 0)} |",
     ])
 
     # 按步骤统计

@@ -1,6 +1,6 @@
 {
   "type": "script_authority_report",
-  "timestamp": "2026-03-19T08:28:49.369988+00:00",
+  "timestamp": "2026-03-19T15:09:35.985628+00:00",
   "status": "warn",
   "authority_root": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\main_worktree\\scripts",
   "compat_root": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\src\\scripts",
@@ -18,11 +18,11 @@
     "run_validation.py"
   ],
   "summary": {
-    "common": 91,
+    "common": 89,
     "same": 10,
-    "diff": 81,
+    "diff": 79,
     "only_main": 15,
-    "only_src": 9
+    "only_src": 11
   },
   "same": [
     "llm_ping.py",
@@ -90,9 +90,7 @@
     "progress_reporter.py",
     "qa_soft.py",
     "rebuild_checkpoint.py",
-    "repair_checkpoint_gaps.py",
     "repair_loop.py",
-    "repair_loop_v2.py",
     "run_destructive_batch_v1.py",
     "run_destructive_batch_v2.py",
     "run_destructive_batch_v3.py",
@@ -145,7 +143,9 @@
     "diagnose_direct_api.py",
     "diagnose_sequential_batch.py",
     "diagnose_single_call.py",
-    "diagnose_sonnet_retest.py"
+    "diagnose_sonnet_retest.py",
+    "repair_checkpoint_gaps.py",
+    "repair_loop_v2.py"
   ],
   "mirror_required_missing": [],
   "mirror_required_drift": [],
@@ -155,7 +155,14 @@
   "archived_still_live_in_authority": [],
   "archived_missing_copy": [],
   "compat_notes": {
-    "src_scripts_role": "compatibility mirror only; not the runtime authority for main_worktree",
+    "src_scripts_role": "managed compatibility liability only; not the runtime authority for main_worktree",
+    "closeout_decision": "separate-exit-program",
+    "cleanup_roadmap_status": "closed-after-batch10",
+    "exit_blockers": [
+      "package_v1.3.0.sh still packages src/scripts",
+      "authority tests still bind compat_root ../src/scripts",
+      "root inventory and project docs still describe src/scripts workflows"
+    ],
     "exit_condition": "src/scripts can only be reduced after packaging/tests/docs are detached from it and drift checks show no required mirror gaps"
   }
 }

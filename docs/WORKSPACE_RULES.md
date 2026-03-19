@@ -27,9 +27,12 @@ resp = requests.post("https://api.openai.com/v1/chat/completions", ...)
 
 有效的 step 值：
 
+- `llm_ping` - llm_ping.py
 - `translate` - translate_llm.py
 - `soft_qa` - soft_qa_llm.py
-- `repair` - repair_loop.py
+- `repair_hard` - repair_loop.py (`--qa-type hard`)
+- `repair_soft_major` - repair_loop.py (`--qa-type soft`)
+- `validation` - run_validation.py
 - `glossary_autopromote` - glossary_autopromote.py
 
 ```python
@@ -223,7 +226,9 @@ python scripts/translate_llm.py --input normalized.csv ...
 
 ### 7.2 checkpoint 支持
 
-`repair_loop.py` 必须保存 `repair_checkpoint.json` 以支持断点续传。
+`repair_loop.py` 必须保存 `repair_checkpoint.json` 作为 checkpoint snapshot / 运行证据。
+
+当前实现不承诺恢复中断前的 repair 状态。若 repair 中断，请基于最新输入文件和任务文件重新运行完整命令，而不是依赖自动 resume。
 
 ---
 

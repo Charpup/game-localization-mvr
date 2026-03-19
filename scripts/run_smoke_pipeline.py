@@ -84,11 +84,20 @@ def _read_json(path: Path) -> dict:
 
 
 def _append_stage(manifest: dict, name: str, files: list, status: str, required: bool = True) -> None:
+    normalized_files = []
+    for item in files:
+        if isinstance(item, dict):
+            normalized_files.append({
+                "path": str(item.get("path", "")),
+                "required": bool(item.get("required", True)),
+            })
+            continue
+        normalized_files.append({"path": str(item), "required": True})
     manifest["stages"].append({
         "name": name,
         "status": status,
         "required": required,
-        "files": [{"path": str(p), "required": True} for p in files],
+        "files": normalized_files,
     })
 
 
@@ -105,6 +114,11 @@ def _append_artifact(manifest: dict, name: str, path: Path) -> None:
 def _append_stage_artifact(manifest: dict, name: str, path: Path) -> None:
     manifest.setdefault("stage_artifacts", {})
     manifest["stage_artifacts"][name] = str(path)
+
+
+def _set_manifest_artifact(manifest: dict, name: str, value: Any) -> None:
+    manifest.setdefault("artifacts", {})
+    manifest["artifacts"][name] = value
 
 
 def _make_manifest(args: argparse.Namespace, run_id: str, input_csv: Path, run_dir: Path, issue_file: Path) -> dict:
@@ -169,6 +183,104 @@ def _issue_row_mismatch(run_id: str, issue_file: Path, stage: str, expected: int
         },
         suggest="检查输入/输出 CSV 行数一致性，避免丢行。"
     ))
+
+
+def _run_metrics_stage(
+    manifest: dict,
+    run_id: str,
+    run_dir: Path,
+    issue_file: Path,
+) -> None:
+    metrics_log = run_dir / f"05_{_safe_stage_name('metrics')}.log"
+    metrics_output_base = run_dir / "smoke_metrics_report"
+    metrics_md = run_dir / "smoke_metrics_report.md"
+    metrics_json = run_dir / "smoke_metrics_report.json"
+    metrics_script = Path("scripts") / "metrics_aggregator.py"
+    reports_dir = run_dir
+    trace_path = run_dir / "llm_trace.jsonl"
+    progress_logs = sorted(reports_dir.glob("*_progress.jsonl")) if reports_dir.exists() else []
+    trace_exists = trace_path.exists()
+
+    _append_stage(
+        manifest,
+        "Metrics",
+        [
+            {"path": str(metrics_md), "required": False},
+            {"path": str(metrics_json), "required": False},
+        ],
+        "skip",
+        required=False,
+    )
+    _append_stage_artifact(manifest, "metrics_log", metrics_log)
+    _append_stage_artifact(manifest, "metrics_report_md", metrics_md)
+    _append_stage_artifact(manifest, "metrics_report_json", metrics_json)
+    _set_manifest_artifact(manifest, "metrics_report", [str(metrics_md), str(metrics_json)])
+    _set_manifest_artifact(manifest, "metrics_report_json", str(metrics_json))
+    manifest["metrics_status"] = {
+        "stage": "metrics",
+        "script": str(metrics_script),
+        "reports_dir": str(reports_dir),
+        "trace_path": str(trace_path),
+        "progress_log_count": len(progress_logs),
+        "trace_exists": trace_exists,
+        "status": "skipped",
+    }
+
+    if not metrics_script.exists():
+        append_issue(str(issue_file), build_issue(
+            run_id=run_id,
+            stage="metrics",
+            severity="P2",
+            error_code="METRICS_SCRIPT_MISSING",
+            context={"script": str(metrics_script)},
+            suggest="恢复 metrics_aggregator.py 后再启用 smoke metrics。"
+        ))
+        return
+
+    if not progress_logs:
+        return
+
+    metrics = _run_step([
+        sys.executable, str(metrics_script),
+        "--reports-dir", str(reports_dir),
+        "--trace-path", str(trace_path),
+        "--output", str(metrics_output_base),
+        "--json",
+    ], metrics_log)
+
+    metrics_ok = metrics.returncode == 0 and metrics_md.exists() and metrics_json.exists()
+    manifest["stages"][-1]["status"] = "pass" if metrics_ok else "warn"
+    manifest["metrics_status"] = {
+        "stage": "metrics",
+        "script": str(metrics_script),
+        "reports_dir": str(reports_dir),
+        "trace_path": str(trace_path),
+        "progress_log_count": len(progress_logs),
+        "trace_exists": trace_exists,
+        "status": "pass" if metrics_ok else "warn",
+        "returncode": metrics.returncode,
+        "log": str(metrics_log),
+    }
+
+    if not metrics_ok:
+        append_issue(str(issue_file), build_issue(
+            run_id=run_id,
+            stage="metrics",
+            severity="P2",
+            error_code="METRICS_STAGE_WARN",
+            context={
+                "script": str(metrics_script),
+                "log": str(metrics_log),
+                "returncode": metrics.returncode,
+                "reports_dir": str(reports_dir),
+                "trace_path": str(trace_path),
+                "progress_log_count": len(progress_logs),
+                "trace_exists": trace_exists,
+                "output_md_exists": metrics_md.exists(),
+                "output_json_exists": metrics_json.exists(),
+            },
+            suggest="检查 metrics 聚合输入日志与 trace 路径，但无需阻断 smoke 主链。"
+        ))
 
 
 def _read_rows_as_dict(path: Path, key_field: str) -> Dict[str, Dict[str, str]]:
@@ -375,7 +487,10 @@ def run_pipeline(args: argparse.Namespace) -> int:
         "--checkpoint", str(run_dir / "smoke_translate_checkpoint.json")
     ]
 
-    translate = _run_step(target_cmd, translation_log)
+    metrics_env = {
+        "LLM_TRACE_PATH": str(run_dir / "llm_trace.jsonl"),
+    }
+    translate = _run_step(target_cmd, translation_log, env=metrics_env)
     if translate.returncode != 0 and active_target != "ru-RU" and args.enable_target_fallback:
         # fallback to ru-RU once when EN route fails
         used_fallback = True
@@ -400,7 +515,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             "--model", args.model,
             "--checkpoint", str(run_dir / "smoke_translate_checkpoint.json")
         ]
-        translate = _run_step(target_cmd, translation_log)
+        translate = _run_step(target_cmd, translation_log, env=metrics_env)
         manifest["fallback_used"] = True
         manifest["fallback_from"] = args.target_lang
         manifest["fallback_to"] = active_target
@@ -569,7 +684,15 @@ def run_pipeline(args: argparse.Namespace) -> int:
         _write_manifest(run_manifest_path, manifest)
         return 1
 
-    # 6) verify (manifest-driven)
+    # 6) metrics (non-blocking observability)
+    _run_metrics_stage(
+        manifest=manifest,
+        run_id=run_id,
+        run_dir=run_dir,
+        issue_file=issue_file,
+    )
+
+    # 7) verify (manifest-driven)
     verify_log = run_dir / f"99_{_safe_stage_name('smoke_verify')}.log"
     manifest["final_file"] = str(final_csv)
     manifest["stage_artifacts"].update({

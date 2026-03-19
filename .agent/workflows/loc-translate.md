@@ -43,6 +43,15 @@ python scripts/translate_llm.py `
 
 进度保存在 `data/translate_checkpoint.json`。
 
+如果 checkpoint 文件损坏或需要重建，当前保留恢复入口是：
+
+```powershell
+python scripts/rebuild_checkpoint.py
+```
+
+`repair_checkpoint_gaps.py` 已归档到 `_obsolete/repair_archive/repair_checkpoint_gaps.py`，
+仅作为历史问题处理脚本保留，不属于当前支持的恢复流程。
+
 ### 3. 查看结果
 
 运行结束后检查：

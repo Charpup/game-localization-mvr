@@ -115,10 +115,13 @@ python scripts/qa_hard.py \
 ```bash
 python scripts/repair_loop.py \
   --input data/translated.csv \
-  --report data/qa_hard_report.json \
-  --mode repair_hard \
-  --out_csv data/repaired_v1.csv
+  --tasks data/qa_hard_report.json \
+  --output data/repaired_v1.csv \
+  --output-dir data/repair_reports/hard \
+  --qa-type hard
 ```
+
+说明：`repair_loop.py` 的公开契约只有 flags CLI。`--tasks` 可直接接收 `qa_hard_report.json`，旧的 report/mode 风格调用已退役。
 
 ---
 
@@ -144,9 +147,14 @@ python scripts/soft_qa_llm.py \
 python scripts/repair_loop.py \
   --input data/repaired_v1.csv \
   --tasks data/repair_tasks.jsonl \
-  --mode repair_soft_major \
-  --out_csv data/repaired_final.csv
+  --output data/repaired_final.csv \
+  --output-dir data/repair_reports/soft \
+  --qa-type soft
 ```
+
+说明：CLI 仍使用 `--qa-type soft`；脚本内部会把 LLM routing step 记为 `repair_soft_major`，与 runtime adapter / metrics 规则对齐。
+
+Repair Loop 生成的 `repair_checkpoint.json` 仅作为 checkpoint snapshot 和运行证据使用；当前实现不承诺恢复中断前的 repair 状态，若中断请重新运行完整 repair 命令。
 
 ---
 

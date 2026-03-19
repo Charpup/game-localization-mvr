@@ -1,18 +1,18 @@
 delta_version: 0.3.0
-change_id: deep-cleanup-r3-roadmap-phase1
-change_type: batch3-batch4-governance-and-audit
+change_id: deep-cleanup-main-batch10
+change_type: compat-mirror-closeout-decision
 status: in_progress
 intent:
   summary: >
-    Finalize near-core auxiliary surface statuses, freeze high-risk cleanup zones behind
-    explicit governance artifacts, and prepare the post-cleanup GitHub branch audit path
-    without changing the smoke-chain runtime contract.
+    Close the current cleanup roadmap by fixing a final governance decision for
+    repo-root src/scripts as an operationally retained, exit-planned compatibility
+    mirror while preserving retained production-dev baselines, keep-chain, M4,
+    authority drift, and optional Metrics semantics unchanged.
   non_goals:
-    - Rewriting run_smoke_pipeline.py
-    - Physically cleaning repo-root src/scripts
-    - Touching repair, validation, gate, or stress implementation paths
-    - Merging or deleting remote branches during this step
-    - Physically deleting normalize or soft-QA files
+    - Reworking retained authority scripts or packaging behavior
+    - Physically deleting or migrating src/scripts in this batch
+    - Making Metrics a blocking smoke gate
+    - Altering the keep-chain runtime contract
 assertions:
   authority_zone: main_worktree/scripts
   compat_zone: src/scripts
@@ -33,28 +33,25 @@ assertions:
     - tests/test_qa_hard.py
     - tests/test_normalize_segmentation.py
 planned_controls:
-  - Lock Batch 3 statuses for normalize_* and soft QA surfaces in a dedicated inventory artifact.
-  - Add CLI compatibility tests for qa_soft.py and normalize_ingest.py.
-  - Produce a blocked-surface inventory for repair, validation, stress-like, and compat-mirror zones.
-  - Produce a GitHub branch audit checklist without performing any remote cleanup.
+  - Keep ../src/scripts/** operationally present but explicitly mark it as closeout_decision=separate-exit-program.
+  - Freeze the mirror_required list and describe future shrinkage as separate compat migration work.
+  - Remove non-real blocked placeholders from the frozen-zone inventory so closeout criteria reflect only real surfaces.
+  - Add Batch 10 closeout governance tests and a closeout report.
+  - Keep authority drift at WARN(runtime_adapter only), keep Metrics optional, and keep M4 decision logic unchanged.
 status_map:
-  normalize_ingest.py: compat-keep documented ingest
-  normalize_tagger.py: must-keep candidate
-  normalize_tag_llm.py: stress-only compat entrypoint
-  qa_soft.py: compat-keep wrapper
-  soft_qa_llm.py: compat-keep canonical
+  ../src/scripts/**: compat-keep managed compatibility liability with closeout_decision separate-exit-program
+  stress_test_3k_run.sh: must-keep canonical stress shell authority
+  repair_loop.py: must-keep retained repair authority
+  run_validation.py: must-keep retained validation baseline
+  build_validation_set.py: must-keep retained validation baseline generator
   runtime_adapter.py: must-keep core
+  metrics_aggregator.py: optional observability surface
 blocked_zones:
-  - scripts/repair_loop.py
-  - scripts/repair_loop_v2.py
-  - scripts/repair_checkpoint_gaps.py
-  - scripts/run_validation.py
-  - scripts/build_validation_set.py
-  - gate/**
-  - stress/**
-  - ../src/scripts/**
+  []
 risk_controls:
-  - No physical deletion in Batch 3/4.
-  - Governance artifacts must explain why frozen zones stay blocked and how they can be safely unfrozen later.
+  - Keep-chain scripts remain untouched except for already-established optional Metrics wiring.
+  - Retained validation and repair authority surfaces must not be modified.
+  - Governance artifacts must explain that src/scripts is not the authority root and remains only as an exit-planned compatibility liability.
+  - package_v1.3.0.sh and package_v140.sh behavior must remain unchanged in this batch.
   - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.
-  - Cleanup roadmap may classify remote branches, but merge/delete actions stay deferred until Phase 3/4.
+  - M4 decision logic and smoke evidence generation remain unchanged.

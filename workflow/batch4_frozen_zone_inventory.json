@@ -1,148 +1,140 @@
 {
   "version": 1,
-  "generated_for": "codex/deep-cleanup-r3-batch4",
+  "generated_for": "codex/deep-cleanup-batch10",
   "authority_root": "scripts",
   "status_model": [
     "must-keep",
     "compat-keep",
     "frozen",
     "archive-candidate",
-    "blocked"
+    "blocked",
+    "archive-complete"
   ],
   "surfaces": [
     {
       "path": "scripts/repair_loop.py",
-      "status": "blocked",
-      "why_not_touching": "Still documented in README and agent workflows as the repair executor; no deterministic fixture suite exists in main_worktree/tests.",
+      "status": "must-keep",
+      "why_not_touching": "Retained repair authority entrypoint; deterministic Batch 7 coverage now pins its flags-only CLI, supported task formats, artifact paths, and routing metadata contract.",
       "direct_references": [
-        "README.md",
         ".agent/workflows/loc-pipeline-full.md",
         ".agent/workflows/loc-repair-loop.md",
-        "docs/localization_pipeline_workflow.md"
+        "docs/localization_pipeline_workflow.md",
+        "docs/WORKSPACE_RULES.md",
+        "tests/test_repair_loop_contract.py"
       ],
       "input_outputs": [
         "inputs: translated.csv, qa_hard_report.json, repair_tasks.jsonl",
         "outputs: repaired.csv, repair history, escalation records, repair_checkpoint.json"
       ],
       "test_gaps": [
-        "No deterministic unit/fixture tests in main_worktree/tests",
-        "No contract test pinning output schema or escalation behavior"
+        "Resume remains intentionally unsupported and must stay documented as snapshot-only unless implemented in a later batch",
+        "Changes to artifact naming or CLI flags must update docs and contract tests together"
       ],
       "unfreeze_conditions": [
-        "Direct reference map confirmed",
-        "Deterministic fixture tests added",
-        "Input/output schema inventory written",
-        "Operator runbook updated"
+        "Deterministic repair contract tests stay green",
+        "Repair runbooks remain aligned with the flags-only CLI authority"
       ]
     },
     {
       "path": "scripts/repair_loop_v2.py",
-      "status": "archive-candidate",
-      "why_not_touching": "No active runtime caller was found in main_worktree, but it lacks fixture coverage and a signed-off replacement/retention decision.",
+      "status": "archive-complete",
+      "why_not_touching": "Batch 8 physically removed this script from scripts/ and archived it under _obsolete/repair_archive after the retained repair authority was confirmed to be repair_loop.py.",
       "direct_references": [
         ".agent/rules/localization-mvr-rules.md",
-        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+        "reports/m4_mainsmoke_core_obsolete_20260318.md",
+        "reports/cleanup_batch5_archive_20260319.md",
+        "reports/cleanup_batch8_repair_archive_closeout_20260319.md",
+        "../SCRIPTS_INVENTORY.md"
       ],
       "input_outputs": [
         "inputs: repair tasks, translated.csv, config/repair_config.yaml",
         "outputs: repaired rows, escalation records, stats"
       ],
       "test_gaps": [
-        "No main_worktree fixture coverage",
-        "No decision record for v1 vs v2 ownership"
+        "Archived utility remains unmaintained unless a future batch explicitly restores it",
+        "Any restore attempt must re-evaluate retained repair authority ownership"
       ],
       "unfreeze_conditions": [
-        "Reference and operator ownership clarified",
-        "Fixture tests added",
-        "Archive decision approved or replacement/retention decision written"
+        "A future batch explicitly promotes it back into scripts with new contract tests",
+        "Restore decision record supersedes Batch 8 archive closeout"
       ]
     },
     {
       "path": "scripts/repair_checkpoint_gaps.py",
-      "status": "archive-candidate",
-      "why_not_touching": "No active runtime caller was found; it is a one-off recovery utility with hard-coded paths and no fixture safety net.",
+      "status": "archive-complete",
+      "why_not_touching": "Batch 8 physically removed this script from scripts/ and archived it under _obsolete/repair_archive after rebuild_checkpoint.py was retained as the supported recovery path.",
       "direct_references": [
-        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+        "reports/m4_mainsmoke_core_obsolete_20260318.md",
+        "reports/cleanup_batch5_archive_20260319.md",
+        "scripts/rebuild_checkpoint.py",
+        ".agent/workflows/loc-translate.md",
+        "reports/cleanup_batch8_repair_archive_closeout_20260319.md"
       ],
       "input_outputs": [
         "inputs: checkpoint lock JSON, partial CSV, normalized CSV",
         "outputs: corrected data/translate_checkpoint.json"
       ],
       "test_gaps": [
-        "No fixture tests",
-        "Hard-coded local paths not abstracted"
+        "Archived utility remains one-off historical logic and is not a supported recovery path",
+        "Any restore attempt must re-evaluate rebuild_checkpoint.py ownership and recovery documentation"
       ],
       "unfreeze_conditions": [
-        "Fixture-based recovery test added",
-        "Path contract documented",
-        "Proven to be unused or safely replaceable"
+        "A future batch explicitly promotes it back into scripts with new contract tests",
+        "Restore decision record supersedes Batch 8 archive closeout"
       ]
     },
     {
       "path": "scripts/run_validation.py",
-      "status": "blocked",
-      "why_not_touching": "Validation runner is still the reference path in docs and repro baseline; it also depends on runtime_adapter and validation-set generation.",
+      "status": "must-keep",
+      "why_not_touching": "Retained validation baseline entrypoint; deterministic fixture coverage now pins its row-count contract, artifact paths, scoring report schema, and CSV output shape.",
       "direct_references": [
         "docs/repro_baseline.md",
-        "reports/script_authority_report_20260319.json"
+        "tests/test_validation_contract.py"
       ],
       "input_outputs": [
         "inputs: validation CSV, model selection, pricing and credential inputs",
         "outputs: translation CSV, metrics JSON, deterministic score report"
       ],
       "test_gaps": [
-        "No deterministic fixtures in main_worktree/tests",
-        "No contract tests for scoring/report schemas"
+        "Any score formula or artifact-path change must update docs and deterministic contract tests together",
+        "Runtime adapter/network behavior still depends on dedicated adapter coverage outside the validation fixture slice"
       ],
       "unfreeze_conditions": [
-        "Direct call graph captured",
-        "Fixture data and scoring tests added",
-        "Packaging/docs sync plan written"
+        "Deterministic validation contract tests stay green",
+        "Repro runbook remains aligned with the default input/output contract"
       ]
     },
     {
       "path": "scripts/build_validation_set.py",
-      "status": "blocked",
-      "why_not_touching": "Companion dataset generator for run_validation.py; must stay paired with validation flow until deterministic sampling contracts are tested.",
+      "status": "must-keep",
+      "why_not_touching": "Retained validation dataset generator; deterministic sampling and metadata schema are now part of the baseline contract for validation reproducibility.",
       "direct_references": [
         "scripts/run_validation.py",
-        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+        "tests/test_validation_contract.py"
       ],
       "input_outputs": [
         "inputs: source draft CSV, row count, seed",
         "outputs: validation sample CSV, sampling metadata"
       ],
       "test_gaps": [
-        "No fixture coverage for stratified sampling",
-        "No schema assertions for generated set"
+        "Sampling bucket heuristics should only change with fixture updates",
+        "Metadata contract must stay in sync with repro documentation"
       ],
       "unfreeze_conditions": [
-        "Sampling fixture tests added",
-        "run_validation dependency audit completed"
-      ]
-    },
-    {
-      "path": "gate/**",
-      "status": "blocked",
-      "why_not_touching": "No gate directory exists in main_worktree today, so any cleanup action would be guesswork rather than reduction of real surface area.",
-      "direct_references": [],
-      "input_outputs": [],
-      "test_gaps": [
-        "Directory absent; no concrete target to audit"
-      ],
-      "unfreeze_conditions": [
-        "A real gate surface appears in main_worktree",
-        "Ownership and fixture scope are defined"
+        "Deterministic sampling and metadata tests stay green",
+        "Validation runner keeps consuming the documented dataset contract"
       ]
     },
     {
       "path": "stress/**",
-      "status": "blocked",
-      "why_not_touching": "No stress directory exists in main_worktree today, while stress-like shell entrypoints still live under scripts/ and docs.",
+      "status": "compat-keep",
+      "why_not_touching": "The stress directory itself does not exist; this umbrella status now only groups the explicit shell/helper surfaces listed below after Batch 9 canonicalization.",
       "direct_references": [
         "scripts/acceptance_stress_final.sh",
+        "scripts/acceptance_stress_phase3.sh",
         "scripts/acceptance_stress_resume.sh",
         "scripts/acceptance_stress_resume_fix.sh",
+        "scripts/acceptance_stress_run.sh",
         "scripts/stress_test_3k_run.sh"
       ],
       "input_outputs": [
@@ -150,32 +142,229 @@
         "outputs: stress reports, soft QA reports, repaired outputs"
       ],
       "test_gaps": [
-        "No deterministic coverage for shell-driven stress flows"
+        "Shell-driven stress flows still rely on governance tests rather than end-to-end fixture execution"
       ],
       "unfreeze_conditions": [
-        "Stress entrypoints normalized into a testable surface",
-        "Fixture coverage exists for the chosen retained path"
+        "Batch 10 makes an explicit long-term retain/archive decision for the compat mirror and remaining helper scripts"
+      ]
+    },
+    {
+      "path": "scripts/stress_test_3k_run.sh",
+      "status": "must-keep",
+      "why_not_touching": "Retained canonical stress shell entrypoint; it is the only stress shell path aligned to the current repair_loop.py and soft_qa_llm.py contracts after Batch 9.",
+      "direct_references": [
+        "workflow/batch3_surface_inventory.json",
+        "findings.md",
+        "progress.md",
+        "tests/test_batch9_stress_surface_governance.py"
+      ],
+      "input_outputs": [
+        "inputs: 3k stress CSV, glossary sample, placeholder map, style guide",
+        "outputs: 3k translated/repaired/export CSVs, QA reports, stress reports"
+      ],
+      "test_gaps": [
+        "No deterministic end-to-end fixture run for the full shell flow",
+        "Any future CLI change in normalize_tag_llm.py, repair_loop.py, soft_qa_llm.py, or rehydrate_export.py must keep this shell aligned"
+      ],
+      "unfreeze_conditions": [
+        "A future batch replaces shell orchestration with a tested Python entrypoint"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_final.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical 5k phase helper with drifted export invocation and no active runbook binding in main_worktree.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+      ],
+      "input_outputs": [
+        "inputs: 5k stress translated data, glossary, placeholder map",
+        "outputs: 5k export, metrics, final validation report"
+      ],
+      "test_gaps": [
+        "Uses drifted rehydrate_export.py flag syntax",
+        "Not covered by retained stress governance beyond archive candidacy"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k stress runbook is reintroduced and the shell is updated to current CLI contracts",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_resume.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical 5k resume helper with drifted export invocation and no active runbook binding in main_worktree.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md",
+        "scripts/finalize_stress_report.py"
+      ],
+      "input_outputs": [
+        "inputs: 5k stress translated data, glossary, placeholder map",
+        "outputs: 5k export, metrics, final validation report"
+      ],
+      "test_gaps": [
+        "Uses drifted rehydrate_export.py flag syntax",
+        "Resume path is not a retained supported workflow"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k resume workflow is reintroduced and updated to current CLI contracts",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_resume_fix.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical one-off fix variant for the 5k resume flow; not a retained operational path after Batch 9.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md",
+        "scripts/finalize_stress_report.py"
+      ],
+      "input_outputs": [
+        "inputs: 5k stress translated data, glossary, placeholder map",
+        "outputs: 5k export, metrics, final validation report"
+      ],
+      "test_gaps": [
+        "Variant naming indicates a one-off repair path, not a stable retained surface",
+        "No active runbook binds this script"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k resume workflow explicitly adopts this fixed variant",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_run.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical 5k phase 3/4 helper superseded by the retained 3k canonical path and not bound by current docs.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+      ],
+      "input_outputs": [
+        "inputs: 5k draft CSV, glossary candidates",
+        "outputs: 5k translated CSV, compiled glossary"
+      ],
+      "test_gaps": [
+        "No retained operator workflow depends on this split phase helper"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k workflow is reinstated and explicitly binds this helper",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/acceptance_stress_phase3.sh",
+      "status": "archive-candidate",
+      "why_not_touching": "Historical phase-only 5k glossary helper with no active runbook binding after Batch 9.",
+      "direct_references": [
+        "reports/legacy_candidates.jsonl",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+      ],
+      "input_outputs": [
+        "inputs: 5k term candidates",
+        "outputs: sampled glossary candidates and compiled glossary"
+      ],
+      "test_gaps": [
+        "Standalone phase helper is not part of the retained stress authority path"
+      ],
+      "unfreeze_conditions": [
+        "A retained phase-split 5k workflow is reinstated",
+        "Otherwise archive in a later cleanup batch"
+      ]
+    },
+    {
+      "path": "scripts/finalize_stress_report.py",
+      "status": "archive-candidate",
+      "why_not_touching": "Helper belongs only to the historical 5k acceptance stress flow and has no active runbook binding after Batch 9.",
+      "direct_references": [
+        "scripts/acceptance_stress_resume.sh",
+        "scripts/acceptance_stress_resume_fix.sh",
+        "reports/script_authority_report_20260319.json"
+      ],
+      "input_outputs": [
+        "inputs: 5k QA and metrics artifacts",
+        "outputs: s5k_final_validation_report.json"
+      ],
+      "test_gaps": [
+        "No retained stress authority path consumes this helper"
+      ],
+      "unfreeze_conditions": [
+        "A retained 5k validation closeout flow is reinstated",
+        "Otherwise archive with the historical 5k helpers"
+      ]
+    },
+    {
+      "path": "scripts/verify_3k_test.py",
+      "status": "compat-keep",
+      "why_not_touching": "Read-only verification helper for the retained 3k stress path; it does not drive the pipeline but still audits the 3k artifacts.",
+      "direct_references": [
+        "reports/script_authority_report_20260319.json",
+        "reports/m4_mainsmoke_core_obsolete_20260318.md"
+      ],
+      "input_outputs": [
+        "inputs: 3k translated CSV, QA report, repaired CSV",
+        "outputs: console verification summary"
+      ],
+      "test_gaps": [
+        "Helper is not covered by dedicated tests and is not part of the retained shell authority itself"
+      ],
+      "unfreeze_conditions": [
+        "A future batch either archives it or promotes it into a tested retained verification helper"
+      ]
+    },
+    {
+      "path": "scripts/run_long_text_gate_v1.py",
+      "status": "archive-candidate",
+      "why_not_touching": "Independent long-text gate experiment; not part of the retained stress shell authority and not bound by active docs in main_worktree.",
+      "direct_references": [
+        "reports/script_authority_report_20260319.json",
+        "reports/m4_core_obsolete_inventory.md"
+      ],
+      "input_outputs": [
+        "inputs: destructive template CSV, model ladder, reports directory",
+        "outputs: long text gate JSON/Markdown reports"
+      ],
+      "test_gaps": [
+        "No retained workflow binds this experimental gate runner"
+      ],
+      "unfreeze_conditions": [
+        "A future batch explicitly promotes it as a maintained gate experiment",
+        "Otherwise archive in a later cleanup batch"
       ]
     },
     {
       "path": "../src/scripts/**",
       "status": "compat-keep",
-      "why_not_touching": "Repo-root src/scripts remains the compatibility mirror and is governed only by authority/drift reporting in this roadmap.",
+      "why_not_touching": "Repo-root src/scripts remains an operationally retained compatibility mirror for packaging/tooling/tests, but Batch 10 closes the cleanup roadmap by moving its physical retirement into a separate exit program.",
       "direct_references": [
         "workflow/script_authority_manifest.json",
         "scripts/check_script_authority.py",
-        "reports/script_authority_report_20260319.json"
+        "reports/script_authority_report_20260319.json",
+        "../package_v1.3.0.sh",
+        "../SCRIPTS_INVENTORY.md",
+        "tests/test_script_authority.py",
+        "tests/test_batch3_batch4_governance.py"
+      ],
+      "closeout_decision": "separate-exit-program",
+      "closeout_reason": "Not runtime authority, but still bound by packaging, authority tooling/tests, and legacy inventory/docs.",
+      "exit_blockers": [
+        "package_v1.3.0.sh still packages src/scripts",
+        "authority tests still bind compat_root ../src/scripts",
+        "root inventory and project docs still describe src/scripts workflows"
       ],
       "input_outputs": [
         "inputs: authority manifest, main_worktree/scripts, src/scripts",
         "outputs: authority drift report"
       ],
       "test_gaps": [
-        "No physical cleanup plan by design",
-        "Mirror retirement criteria not yet met"
+        "No physical cleanup plan inside the completed cleanup roadmap",
+        "Mirror retirement criteria are deferred into a separate migration program"
       ],
       "unfreeze_conditions": [
-        "Authority mirror plan approved",
+        "Separate compat-exit program approved",
         "Required mirrors removed from manifest",
         "Migration checklist completed"
       ]

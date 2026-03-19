@@ -1,14 +1,14 @@
 """
-Repair Checkpoint Gaps
-Purpose: 
-  The translation process crashed/restarted, resulting in data loss in the CSV file 
-  (~90% missing), while the checkpoint incorrectly reports completion.
-  This script reconstructs a valid checkpoint based on:
-  1. Part 1 Lock File (Trusted verification of Part 1)
-  2. Actual CSV Output (Trusted verification of Part 3 partial progress)
+Historical checkpoint recovery helper.
 
-Usage:
-  python scripts/repair_checkpoint_gaps.py
+Purpose:
+  the translation process once crashed/restarted, causing CSV loss while the checkpoint
+  incorrectly reported completion. This script reconstructs a legacy checkpoint from
+  one-off artifacts.
+
+Status:
+  preserved as a historical candidate pending archive.
+  The retained recovery path for current mainline runs is scripts/rebuild_checkpoint.py.
 """
 import json
 import csv

@@ -21,6 +21,17 @@ from typing import List, Dict, Optional, Tuple
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(line_buffering=True)
 
+
+QA_TYPE_TO_STEP = {
+    "hard": "repair_hard",
+    "soft": "repair_soft_major",
+}
+
+
+def repair_step_for_qa_type(qa_type: str) -> str:
+    """Map CLI qa_type values to runtime routing steps."""
+    return QA_TYPE_TO_STEP.get(qa_type, f"repair_{qa_type}")
+
 def load_repair_config(path: str = "config/repair_config.yaml") -> dict:
     """加载修复配置"""
     if os.path.exists(path):
@@ -113,6 +124,7 @@ class RepairLoop:
         self.max_rounds = self.config.get("max_rounds", 3)
         self.rounds_config = self.config.get("rounds", {})
         self.qa_type = qa_type
+        self.route_step = repair_step_for_qa_type(qa_type)
 
         # 统计
         self.stats = {
@@ -139,6 +151,8 @@ class RepairLoop:
         print(f"   Total tasks: {len(tasks)}")
         print(f"   Max rounds: {self.max_rounds}")
         sys.stdout.flush()
+
+        os.makedirs(output_dir, exist_ok=True)
 
         # 写入心跳文件
         self._write_heartbeat(output_dir, "starting")
@@ -178,7 +192,7 @@ class RepairLoop:
                     result = client.chat(
                         system=prompt["system"],
                         user=prompt["user"],
-                        metadata={"step": f"repair_{self.qa_type}", "round": round_num}
+                        metadata={"step": self.route_step, "round": round_num, "qa_type": self.qa_type}
                     )
 
                     # 解析结果
@@ -449,18 +463,36 @@ def generate_escalation_report(escalations: List[dict], output_path: str):
     print(f"📋 Escalation report generated: {output_path}")
     print(f"   Total escalated: {len(escalations)}")
 
-def main():
+def build_parser():
     import argparse
 
-    parser = argparse.ArgumentParser(description="Repair Loop v2.0")
+    parser = argparse.ArgumentParser(description="Repair Loop v2.0 (flags-only CLI)")
     parser.add_argument("--input", required=True, help="Input CSV with translations")
-    parser.add_argument("--tasks", required=True, help="Repair tasks JSONL")
+    parser.add_argument(
+        "--tasks",
+        required=True,
+        help="Repair work items: qa_hard report JSON or soft QA JSONL",
+    )
     parser.add_argument("--output", required=True, help="Output repaired CSV")
-    parser.add_argument("--output-dir", required=True, help="Output directory for reports")
-    parser.add_argument("--qa-type", choices=["hard", "soft"], default="soft")
+    parser.add_argument(
+        "--output-dir",
+        required=True,
+        help="Directory for repair artifacts (checkpoint snapshot, heartbeat, stats, escalation CSV)",
+    )
+    parser.add_argument(
+        "--qa-type",
+        choices=["hard", "soft"],
+        default="soft",
+        help="Repair mode: hard -> repair_hard, soft -> repair_soft_major",
+    )
     parser.add_argument("--config", default="config/repair_config.yaml")
+    return parser
 
+
+def main():
+    parser = build_parser()
     args = parser.parse_args()
+    os.makedirs(args.output_dir, exist_ok=True)
 
     # 加载配置
     config = load_repair_config(args.config)
