@@ -1,6 +1,6 @@
 {
   "type": "script_authority_report",
-  "timestamp": "2026-03-19T05:27:11.750802+00:00",
+  "timestamp": "2026-03-19T08:28:49.369988+00:00",
   "status": "warn",
   "authority_root": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\main_worktree\\scripts",
   "compat_root": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\src\\scripts",
