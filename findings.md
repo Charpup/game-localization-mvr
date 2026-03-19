@@ -92,3 +92,27 @@
   reclassified as `blocked` until the rule/inventory/recovery contracts are explicitly retired.
 - `repair_loop.py`, `run_validation.py`, and `build_validation_set.py` remain frozen:
   this batch does not change their status or interfaces.
+
+## 2026-03-19 Deep Cleanup Batch 6
+- `repair_loop_v2.py` is no longer described as an active repair path in the rules or the
+  root inventory. It is now explicitly documented as a historical candidate pending archive.
+- `repair_checkpoint_gaps.py` no longer owns the supported `translate_checkpoint.json`
+  recovery story. The retained recovery entrypoint is `scripts/rebuild_checkpoint.py`;
+  `repair_checkpoint_gaps.py` now survives only as a historical helper.
+- `workflow/batch4_frozen_zone_inventory.json` now classifies both
+  `repair_loop_v2.py` and `repair_checkpoint_gaps.py` as `archive-candidate`, not `blocked`.
+- The Metrics subsystem still existed in code before Batch 6, but it had become detached
+  from smoke orchestration. `scripts/run_smoke_pipeline.py` now runs
+  `scripts/metrics_aggregator.py` as a non-blocking stage before verify.
+- Metrics writes are now attached to the run manifest through
+  `artifacts.metrics_report`, `artifacts.metrics_report_json`, and stage artifacts for the
+  log and two report files.
+- `scripts/metrics_aggregator.py` now supports token fallback from trace char counts when
+  usage blocks are missing, which restores a stable metrics summary for mixed trace quality.
+- Batch 6 keeps the smoke gate unchanged:
+  metrics failures are warning-only (`P2`) and must not flip an otherwise healthy smoke run to failed.
+- New Batch 6 test surface lives in `tests/test_batch6_repair_metrics_contract.py`.
+- Full Batch 6 regression is green at `63 passed`.
+- Authority drift remains at the accepted level:
+  only `runtime_adapter.py` is alert-only drift after re-syncing the required
+  `src/scripts/run_smoke_pipeline.py` mirror.

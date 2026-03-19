@@ -1,18 +1,18 @@
 delta_version: 0.3.0
-change_id: deep-cleanup-main-batch5
-change_type: batch5-archive-audit-and-fallback
+change_id: deep-cleanup-main-batch6
+change_type: repair-contract-retirement-and-metrics-rewire
 status: in_progress
 intent:
   summary: >
-    Recheck the lowest-risk repair-side archive candidates, characterize their contracts,
-    and only archive them if no hidden dependency remains. Current Batch 5 outcome is
-    fallback-to-blocked because hidden rule and recovery-contract dependencies were found.
+    Retire the repair-side governance contracts that kept two historical utilities blocked,
+    and restore Metrics as a manifest-visible optional observability stage inside the smoke
+    pipeline without changing the keep-chain pass/fail semantics.
   non_goals:
-    - Rewriting run_smoke_pipeline.py
-    - Altering the keep-chain runtime contract
-    - Modifying repair_loop.py, run_validation.py, or build_validation_set.py
+    - Reworking repair_loop.py, run_validation.py, or build_validation_set.py
+    - Making Metrics a blocking smoke gate
+    - Physically archiving repair_loop_v2.py or repair_checkpoint_gaps.py in this batch
     - Physically cleaning repo-root src/scripts
-    - Reworking repair-side historical scripts into supported tools
+    - Altering the keep-chain runtime contract
 assertions:
   authority_zone: main_worktree/scripts
   compat_zone: src/scripts
@@ -33,29 +33,28 @@ assertions:
     - tests/test_qa_hard.py
     - tests/test_normalize_segmentation.py
 planned_controls:
-  - Recheck references for repair_loop_v2.py and repair_checkpoint_gaps.py before archiving.
-  - Add characterization tests that preserve CLI and recovery expectations.
-  - Revert to inventory-only status if any hidden dependency appears.
-  - Update frozen-zone inventory and Batch 5 report so the fallback decision remains auditable.
+  - Retire active rule, inventory, and workflow references that still described repair_loop_v2.py and repair_checkpoint_gaps.py as current tools.
+  - Add characterization tests for repair-side governance and optional metrics wiring before changing implementation.
+  - Restore metrics only as a warning-capable optional stage whose artifacts are written into the run manifest.
+  - Keep authority drift at WARN(runtime_adapter only) and keep M4 decision logic unchanged.
 status_map:
-  repair_loop_v2.py: blocked after fallback
-  repair_checkpoint_gaps.py: blocked after fallback
+  repair_loop_v2.py: archive-candidate after contract retirement
+  repair_checkpoint_gaps.py: archive-candidate after contract retirement
   repair_loop.py: blocked
   run_validation.py: blocked
   build_validation_set.py: blocked
   runtime_adapter.py: must-keep core
+  metrics_aggregator.py: optional observability surface
 blocked_zones:
   - scripts/repair_loop.py
-  - scripts/repair_loop_v2.py
-  - scripts/repair_checkpoint_gaps.py
   - scripts/run_validation.py
   - scripts/build_validation_set.py
   - gate/**
   - stress/**
   - ../src/scripts/**
 risk_controls:
-  - Keep-chain scripts and blocked repair/validation surfaces remain untouched.
-  - Archive actions must be rolled back immediately if hidden dependencies are discovered.
-  - Governance artifacts must explain why the two candidates remain blocked after fallback.
+  - Keep-chain scripts and blocked repair/validation surfaces remain untouched except for non-blocking metrics wiring in the orchestrator.
+  - Metrics failures must only emit P2 warnings and must not change the smoke pipeline exit code on an otherwise healthy run.
+  - Governance artifacts must explain that the two repair-side scripts are historical candidates pending later archive, not restored active tools.
   - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.
   - M4 decision logic and smoke evidence generation remain unchanged.

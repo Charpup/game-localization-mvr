@@ -22,7 +22,6 @@ trigger: always_on
 12) **Docker 容器强制执行**：所有调用 LLM API 的脚本必须在 gate_v2 容器内运行。禁止在宿主机直接执行以下脚本：
     - scripts/translate_llm.py
     - scripts/soft_qa_llm.py
-    - scripts/repair_loop_v2.py
     - scripts/glossary_autopromote.py
     容器启动模板：
 
@@ -33,6 +32,8 @@ trigger: always_on
     ```
 
     例外：纯工具脚本(metrics_aggregator.py / qa_hard.py)可本地运行。
+13) `repair_loop.py` 是当前保留的 repair authority。`repair_loop_v2.py` 只作为历史候选保留，
+    不属于当前主线运行或容器强制执行清单。
 
 ## LLM 调用规则 (12-14)
 

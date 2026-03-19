@@ -37,8 +37,8 @@
     },
     {
       "path": "scripts/repair_loop_v2.py",
-      "status": "blocked",
-      "why_not_touching": "Batch 5 archive attempt was rolled back after hidden-dependency review: the script still appears in active rules and root-level inventory, so it cannot exit mainline scripts until those contracts are explicitly retired.",
+      "status": "archive-candidate",
+      "why_not_touching": "Batch 6 retired active rule and root-inventory references, so this script is now a historical candidate pending archive rather than a current runtime tool.",
       "direct_references": [
         ".agent/rules/localization-mvr-rules.md",
         "reports/m4_mainsmoke_core_obsolete_20260318.md",
@@ -51,19 +51,18 @@
       ],
       "test_gaps": [
         "No main_worktree fixture coverage",
-        "No decision record for v1 vs v2 ownership",
-        "No cleanup-safe rule and inventory retirement plan"
+        "No physical archive execution test yet",
+        "No decision record for v1 vs v2 ownership beyond retained-v1 governance"
       ],
       "unfreeze_conditions": [
-        "Rule and inventory references retired or rewritten",
-        "Deterministic fixture tests added",
-        "Explicit v1 vs v2 ownership decision approved"
+        "Archive location and restore note prepared",
+        "Deterministic fixture tests remain green after physical move"
       ]
     },
     {
       "path": "scripts/repair_checkpoint_gaps.py",
-      "status": "blocked",
-      "why_not_touching": "Batch 5 archive attempt was rolled back after hidden-dependency review showed translate_checkpoint recovery is still part of the documented recovery contract.",
+      "status": "archive-candidate",
+      "why_not_touching": "Batch 6 rewrote the supported checkpoint recovery contract around rebuild_checkpoint.py, so this script is now historical rather than current recovery tooling.",
       "direct_references": [
         "reports/m4_mainsmoke_core_obsolete_20260318.md",
         "reports/cleanup_batch5_archive_20260319.md",
@@ -77,12 +76,11 @@
       "test_gaps": [
         "No fixture tests",
         "Hard-coded local paths not abstracted",
-        "No recovery-contract retirement plan for translate_checkpoint.json"
+        "No physical archive execution test yet"
       ],
       "unfreeze_conditions": [
-        "translate_checkpoint recovery contract explicitly replaced or retired",
-        "Fixture-based recovery test added",
-        "Operator runbook updated to remove or replace this utility"
+        "Archive location and restore note prepared",
+        "Fixture-based recovery test remains green after physical move"
       ]
     },
     {

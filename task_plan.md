@@ -104,4 +104,28 @@ active runtime or current repair authority path.
 - [complete] Phase 1: Add Batch 5 characterization tests for archived CLI/recovery contracts.
 - [complete] Phase 2: Roll back archive action after hidden dependency review; keep both targets in `scripts/` and reclassify them as blocked for now.
 - [complete] Phase 3: Run Batch 5 regression suite, authority gate, and M4 evidence gate.
-- [in_progress] Phase 4: Prepare commit scope and report the new roadmap position.
+- [complete] Phase 4: Prepare commit scope and report the new roadmap position.
+
+## 2026-03-19 Deep Cleanup Batch 6
+
+### Goal
+Retire the remaining governance contracts around `repair_loop_v2.py` and
+`repair_checkpoint_gaps.py`, restore Metrics as a visible but non-blocking smoke stage,
+and keep the keep-chain and M4 evidence logic unchanged.
+
+### Scope
+- Work in rules, workflow docs, root inventory, metrics wiring, Batch 6 tests, and
+  TriadDev control files only.
+- Reclassify `repair_loop_v2.py` and `repair_checkpoint_gaps.py` from `blocked` back to
+  `archive-candidate` without physically archiving them in this batch.
+- Reconnect `scripts/metrics_aggregator.py` to `scripts/run_smoke_pipeline.py` as an
+  optional observability stage.
+- Keep `repair_loop.py`, `run_validation.py`, `build_validation_set.py`, and repo-root
+  `src/scripts` frozen.
+
+### Phases
+- [complete] Phase 0: Collect Batch 6 evidence from repair contracts, metrics workflow, and existing smoke wiring.
+- [complete] Phase 1: Add RED tests for repair-side governance retirement and optional metrics behavior.
+- [complete] Phase 2: Retire repair-side rules/inventory/workflow references and downgrade both scripts to `archive-candidate`.
+- [complete] Phase 3: Rewire Metrics into the smoke manifest as a warning-only optional stage and add token fallback support.
+- [complete] Phase 4: Run Batch 6 full regression + evidence gate and prepare commit scope.

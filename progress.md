@@ -53,3 +53,21 @@
 - Batch 5 regression and evidence gate are green:
   `56 passed`, authority is back to `WARN` on `runtime_adapter.py` only after required
   compat mirrors were resynced, and `M4_4_decision.jsonl` remains `KEEP=6`.
+- Started Batch 6 on branch `codex/deep-cleanup-batch6` to retire repair-side governance
+  contracts before any future archive attempt and to restore smoke metrics as optional observability.
+- Rewrote the active rules, root inventory, and translate workflow so
+  `repair_loop_v2.py` and `repair_checkpoint_gaps.py` are no longer presented as current tools.
+- Downgraded both repair-side targets from `blocked` back to `archive-candidate` in
+  `workflow/batch4_frozen_zone_inventory.json`; Batch 6 still does not physically archive them.
+- Reconnected `scripts/metrics_aggregator.py` inside `scripts/run_smoke_pipeline.py` as a
+  non-blocking Metrics stage that writes manifest-visible report artifacts before verify.
+- Extended `scripts/metrics_aggregator.py` with usage fallback based on trace token fields
+  and char-count estimation so sparse traces still produce stable totals and cost estimates.
+- Added `tests/test_batch6_repair_metrics_contract.py` and turned the initial RED surface green:
+  `7 passed`.
+- Ran the full Batch 6 regression suite plus evidence gate successfully:
+  `63 passed`, `scripts/check_script_authority.py` returned `WARN` on `runtime_adapter.py`
+  only, and `scripts/m4_4_decision.py` still reports `KEEP=6`.
+- Re-synced `src/scripts/run_smoke_pipeline.py` from the authority copy after the new
+  Metrics stage introduced required-mirror drift; authority returned to the expected
+  non-blocking state immediately afterward.

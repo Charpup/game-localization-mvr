@@ -3,9 +3,9 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "batch5_verified_ready_for_commit",
-  "branch": "codex/deep-cleanup-batch5",
-  "change_id": "deep-cleanup-main-batch5",
+  "status": "batch6_verified_ready_for_commit",
+  "branch": "codex/deep-cleanup-batch6",
+  "change_id": "deep-cleanup-main-batch6",
   "authority_zone": "main_worktree/scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
@@ -44,7 +44,7 @@
   },
   "value_gate": {
     "status": "GO",
-    "reason": "Batch 5 remains GO as an audit-and-fallback step: hidden dependencies were found, so the archive action was rolled back and the targets stay blocked without changing keep-chain behavior."
+    "reason": "Batch 6 remains GO because repair-side contract retirement now happens through docs/inventory/workflow governance only, while Metrics is restored as a non-blocking observability stage that does not change keep-chain semantics."
   },
   "last_updated": "2026-03-19"
 }

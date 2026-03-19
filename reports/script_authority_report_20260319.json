@@ -1,6 +1,6 @@
 {
   "type": "script_authority_report",
-  "timestamp": "2026-03-19T09:13:51.685442+00:00",
+  "timestamp": "2026-03-19T09:53:36.042030+00:00",
   "status": "warn",
   "authority_root": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\main_worktree\\scripts",
   "compat_root": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\src\\scripts",
@@ -19,8 +19,8 @@
   ],
   "summary": {
     "common": 91,
-    "same": 10,
-    "diff": 81,
+    "same": 11,
+    "diff": 80,
     "only_main": 15,
     "only_src": 9
   },
@@ -31,6 +31,7 @@
     "normalize_guard.py",
     "qa_hard.py",
     "rehydrate_export.py",
+    "repair_loop_v2.py",
     "run_smoke_pipeline.py",
     "smoke_issue_logger.py",
     "smoke_verify.py",
@@ -92,7 +93,6 @@
     "rebuild_checkpoint.py",
     "repair_checkpoint_gaps.py",
     "repair_loop.py",
-    "repair_loop_v2.py",
     "run_destructive_batch_v1.py",
     "run_destructive_batch_v2.py",
     "run_destructive_batch_v3.py",
