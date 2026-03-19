@@ -1,16 +1,17 @@
 delta_version: 0.3.0
-change_id: deep-cleanup-main-batch7
-change_type: production-dev-recovery-validation-and-repair-authority
+change_id: deep-cleanup-main-batch8
+change_type: historical-repair-archive-closeout
 status: in_progress
 intent:
   summary: >
-    Restore the retained validation baseline and repair authority surfaces so the repo
-    can return to sustainable production development, while keeping keep-chain, M4,
-    authority drift, and optional Metrics semantics unchanged.
+    Physically archive the two historical repair-side utilities that were already
+    downgraded to archive-candidate, while preserving retained production-dev baselines,
+    keep-chain, M4, authority drift, and optional Metrics semantics unchanged.
   non_goals:
-    - Reworking repair_loop_v2.py or repair_checkpoint_gaps.py
-    - Implementing true repair resume support in this batch
+    - Reworking repair_loop.py, run_validation.py, or build_validation_set.py
+    - Implementing true repair resume support
     - Making Metrics a blocking smoke gate
+    - Adding wrappers or alias entrypoints for archived utilities
     - Physically cleaning repo-root src/scripts
     - Altering the keep-chain runtime contract
 assertions:
@@ -33,13 +34,13 @@ assertions:
     - tests/test_qa_hard.py
     - tests/test_normalize_segmentation.py
 planned_controls:
-  - Add deterministic validation tests for sampling, metadata schema, scoring, parse fallback, and explicit CLI paths before promoting the validation pair to must-keep.
-  - Add deterministic repair tests for flags-only CLI, supported task formats, passthrough behavior, artifact output, and routing metadata before promoting repair_loop.py to must-keep.
-  - Align runbooks and rules to the real script contracts rather than expanding scripts to fit stale docs.
+  - Move repair_loop_v2.py and repair_checkpoint_gaps.py from scripts/ into _obsolete/repair_archive/ without retaining wrappers.
+  - Add/adjust characterization tests so the current state asserts archive-complete rather than runtime presence.
+  - Add a repair archive README plus a Batch 8 report that explains retained mainline paths and restore basis.
   - Keep authority drift at WARN(runtime_adapter only), keep Metrics optional, and keep M4 decision logic unchanged.
 status_map:
-  repair_loop_v2.py: archive-candidate pending Batch 8 archive closeout
-  repair_checkpoint_gaps.py: archive-candidate pending Batch 8 archive closeout
+  repair_loop_v2.py: archive-complete historical archived utility
+  repair_checkpoint_gaps.py: archive-complete historical archived utility
   repair_loop.py: must-keep retained repair authority
   run_validation.py: must-keep retained validation baseline
   build_validation_set.py: must-keep retained validation baseline generator
@@ -51,8 +52,7 @@ blocked_zones:
   - ../src/scripts/**
 risk_controls:
   - Keep-chain scripts remain untouched except for already-established optional Metrics wiring.
-  - Validation scoring, report schema, and artifact paths may only change with deterministic fixture updates and runbook alignment.
-  - Repair docs must stop promising true resume support unless a later batch actually implements it.
-  - Governance artifacts must explain that repair_loop_v2.py and repair_checkpoint_gaps.py remain archive-candidates pending Batch 8 physical closeout.
+  - Retained validation and repair authority surfaces must not be modified beyond report/inventory references.
+  - Governance artifacts must explain that repair_loop_v2.py and repair_checkpoint_gaps.py are archived historical utilities, not current tools.
   - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.
   - M4 decision logic and smoke evidence generation remain unchanged.

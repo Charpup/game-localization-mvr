@@ -49,7 +49,8 @@ python scripts/translate_llm.py `
 python scripts/rebuild_checkpoint.py
 ```
 
-`repair_checkpoint_gaps.py` 仅作为历史问题处理脚本保留，不属于当前支持的恢复流程。
+`repair_checkpoint_gaps.py` 已归档到 `_obsolete/repair_archive/repair_checkpoint_gaps.py`，
+仅作为历史问题处理脚本保留，不属于当前支持的恢复流程。
 
 ### 3. 查看结果
 

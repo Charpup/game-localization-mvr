@@ -17,12 +17,12 @@ ROOT = Path(__file__).parent.parent
 REPO_ROOT = ROOT.parent
 
 
-def test_batch4_inventory_downgrades_repair_targets_to_archive_candidate():
+def test_batch4_inventory_tracks_repair_targets_as_archived_or_ready_to_archive():
     inventory = json.loads((ROOT / "workflow" / "batch4_frozen_zone_inventory.json").read_text(encoding="utf-8"))
     statuses = {item["path"]: item["status"] for item in inventory["surfaces"]}
 
-    assert statuses["scripts/repair_loop_v2.py"] == "archive-candidate"
-    assert statuses["scripts/repair_checkpoint_gaps.py"] == "archive-candidate"
+    assert statuses["scripts/repair_loop_v2.py"] in {"archive-candidate", "archive-complete"}
+    assert statuses["scripts/repair_checkpoint_gaps.py"] in {"archive-candidate", "archive-complete"}
 
 
 def test_rules_and_inventory_retire_repair_loop_v2_from_current_tooling():
@@ -30,11 +30,11 @@ def test_rules_and_inventory_retire_repair_loop_v2_from_current_tooling():
     inventory = (REPO_ROOT / "SCRIPTS_INVENTORY.md").read_text(encoding="utf-8")
 
     assert "repair_loop_v2.py" in rules
-    assert "历史候选保留" in rules
+    assert "历史归档" in rules or "历史候选保留" in rules
     assert "scripts/repair_loop_v2.py" not in rules
     assert "python3 repair_loop_v2.py" not in inventory
     assert "repair_loop.py | 修复循环 v1 | retained repair authority" in inventory
-    assert "repair_loop_v2.py | historical candidate pending archive" in inventory
+    assert "repair_loop_v2.py" in inventory
 
 
 def test_loc_translate_promotes_rebuild_checkpoint_as_retained_recovery_path():
@@ -42,7 +42,7 @@ def test_loc_translate_promotes_rebuild_checkpoint_as_retained_recovery_path():
 
     assert "rebuild_checkpoint.py" in workflow
     assert "repair_checkpoint_gaps.py" in workflow
-    assert "历史问题处理脚本" in workflow
+    assert "历史问题处理脚本" in workflow or "历史归档" in workflow
 
 
 def test_metrics_aggregator_uses_trace_usage_and_estimates_missing_tokens():

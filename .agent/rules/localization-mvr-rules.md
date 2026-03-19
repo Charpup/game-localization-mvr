@@ -33,8 +33,8 @@ trigger: always_on
     ```
 
     例外：纯工具脚本(metrics_aggregator.py / qa_hard.py)可本地运行。
-13) `repair_loop.py` 是当前保留的 repair authority。`repair_loop_v2.py` 只作为历史候选保留，
-    不属于当前主线运行或容器强制执行清单。
+13) `repair_loop.py` 是当前保留的 repair authority。`repair_loop_v2.py` 已作为历史归档脚本移入
+    `_obsolete/repair_archive/`，不属于当前主线运行或容器强制执行清单。
 
 ## LLM 调用规则 (12-14)
 

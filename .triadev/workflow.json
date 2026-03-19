@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "deep-cleanup-main-batch7",
+  "change_id": "deep-cleanup-main-batch8",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -50,60 +50,42 @@
       ]
     },
     {
-      "id": "batch7-contract-mapping",
-      "name": "Batch 7 Contract Mapping",
+      "id": "batch8-contract-mapping",
+      "name": "Batch 8 Contract Mapping",
       "status": "completed",
       "outputs": [
-        "docs/repro_baseline.md",
-        ".agent/workflows/loc-repair-loop.md",
-        ".agent/workflows/loc-pipeline-full.md",
-        "docs/localization_pipeline_workflow.md",
-        "docs/WORKSPACE_RULES.md",
+        "_obsolete/repair_archive/README.md",
+        "../SCRIPTS_INVENTORY.md",
         "workflow/batch4_frozen_zone_inventory.json"
       ]
     },
     {
-      "id": "batch7-red-tests",
-      "name": "Batch 7 RED Tests",
+      "id": "batch8-red-tests",
+      "name": "Batch 8 RED Tests",
       "status": "completed",
       "outputs": [
-        "tests/test_validation_contract.py",
-        "tests/test_repair_loop_contract.py"
+        "tests/test_batch8_repair_archive_closeout.py",
+        "tests/test_batch5_archive_candidates.py"
       ]
     },
     {
-      "id": "batch7-validation-baseline",
-      "name": "Batch 7 Validation Baseline Recovery",
+      "id": "batch8-archive-closeout",
+      "name": "Batch 8 Repair Archive Closeout",
       "status": "completed",
       "outputs": [
-        "scripts/build_validation_set.py",
-        "scripts/run_validation.py",
-        "docs/repro_baseline.md",
-        "tests/test_validation_contract.py",
+        "_obsolete/repair_archive/repair_loop_v2.py",
+        "_obsolete/repair_archive/repair_checkpoint_gaps.py",
+        "_obsolete/repair_archive/README.md",
+        "../SCRIPTS_INVENTORY.md",
         "workflow/batch4_frozen_zone_inventory.json"
       ]
     },
     {
-      "id": "batch7-repair-authority",
-      "name": "Batch 7 Repair Authority Recovery",
+      "id": "batch8-regression-evidence",
+      "name": "Batch 8 Regression And Evidence",
       "status": "completed",
       "outputs": [
-        "scripts/repair_loop.py",
-        ".agent/rules/localization-mvr-rules.md",
-        ".agent/workflows/loc-repair-loop.md",
-        ".agent/workflows/loc-pipeline-full.md",
-        "docs/localization_pipeline_workflow.md",
-        "docs/WORKSPACE_RULES.md",
-        "tests/test_repair_loop_contract.py",
-        "workflow/batch4_frozen_zone_inventory.json"
-      ]
-    },
-    {
-      "id": "batch7-regression-evidence",
-      "name": "Batch 7 Regression And Evidence",
-      "status": "completed",
-      "outputs": [
-        "reports/cleanup_batch7_production_dev_recovery_20260319.md",
+        "reports/cleanup_batch8_repair_archive_closeout_20260319.md",
         "reports/script_authority_report_20260319.json",
         "data/smoke_runs/M4_4_decision.jsonl"
       ]
@@ -112,8 +94,8 @@
   "notes": [
     "Authority stays on main_worktree/scripts.",
     "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists.",
-    "Batch 7 restores the retained validation baseline and repair authority as must-keep surfaces through contract tests and doc alignment.",
-    "Batch 7 does not physically archive repair_loop_v2.py or repair_checkpoint_gaps.py; they remain archive-candidates for a later closeout batch.",
+    "Batch 7 already restored the retained validation baseline and repair authority as must-keep surfaces.",
+    "Batch 8 physically removes repair_loop_v2.py and repair_checkpoint_gaps.py from scripts after the earlier governance retirement steps proved they are no longer active tools.",
     "Metrics stays optional and non-blocking exactly as established in Batch 6.",
     "Control plane changes remain descriptive and must not alter keep-chain behavior."
   ]

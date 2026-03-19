@@ -137,3 +137,19 @@
   suite now passes at `77 passed`.
 - Authority remains at the accepted level (`WARN`) with `runtime_adapter.py` as the only
   alert-only drift, and `M4_4_decision.jsonl` still reports `KEEP=6`.
+
+## 2026-03-19 Deep Cleanup Batch 8
+- `repair_loop_v2.py` and `repair_checkpoint_gaps.py` no longer have retained active-path
+- status after Batch 6/7; their remaining references are historical evidence, cleanup
+  reports, inventory state, and translate-recovery documentation that already points to
+  `scripts/rebuild_checkpoint.py` as the retained path.
+- `_obsolete/repair_archive/` exists but is not yet a real archive surface; before Batch 8
+  it only contains stray `__pycache__` output and no audit README.
+- Root inventory still describes `repair_loop_v2.py` as pending archive, so Batch 8 needs
+  to convert that wording to archived historical utility rather than current candidate.
+- Batch 8 archive closeout is now in place: both historical repair-side utilities live
+  under `_obsolete/repair_archive/` and no longer occupy the active `scripts/` surface.
+- Batch 8 focused archive tests and full regression are green; total suite is now
+  `81 passed`.
+- Authority remains at the accepted level (`WARN`) with `runtime_adapter.py` as the only
+  alert-only drift, and `M4_4_decision.jsonl` still reports `KEEP=6`.

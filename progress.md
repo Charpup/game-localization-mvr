@@ -99,3 +99,19 @@
   and `scripts/m4_4_decision.py` still reports `KEEP=6`.
 - Committed Batch 7 as `ddd14e2` (`cleanup(batch7): recover production dev baselines`)
   and pushed branch `origin/codex/deep-cleanup-batch7` for PR review.
+- Started Batch 8 on branch `codex/deep-cleanup-batch8`.
+- Confirmed the retained mainline paths remain `scripts/repair_loop.py` and
+  `scripts/rebuild_checkpoint.py`, while `repair_loop_v2.py` and
+  `repair_checkpoint_gaps.py` are only historical archive targets now.
+- Added Batch 8 characterization coverage for physical archive closeout and relaxed
+  Batch 5/6 tests so they continue to validate historical evidence after the move.
+- Physically moved `repair_loop_v2.py` and `repair_checkpoint_gaps.py` into
+  `_obsolete/repair_archive/` and added an audit README plus Batch 8 closeout report.
+- Ran focused Batch 8 archive-closeout coverage successfully:
+  `17 passed`.
+- Ran the full Batch 8 regression suite successfully:
+  `81 passed`.
+- Re-ran the evidence gate successfully:
+  `scripts/check_script_authority.py` remains `WARN` on `runtime_adapter.py` only,
+  `scripts/m4_3_collect_coverage.py` reports `0` issue hotspots,
+  and `scripts/m4_4_decision.py` still reports `KEEP=6`.

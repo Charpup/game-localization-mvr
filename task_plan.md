@@ -152,3 +152,26 @@ development can continue on top of a tested, documented mainline.
 - [complete] Phase 2: Align docs, rules, and frozen-zone inventory to the retained validation and repair authority contracts.
 - [complete] Phase 3: Run Batch 7 regression suite plus evidence gate.
 - [complete] Phase 4: Prepare commit, push branch, and write the Batch 7 report.
+
+## 2026-03-19 Deep Cleanup Batch 8
+
+### Goal
+Complete the physical archive closeout for the two historical repair-side utilities so
+they leave the active `scripts/` surface without changing retained development baselines
+or smoke-chain semantics.
+
+### Scope
+- Move `repair_loop_v2.py` and `repair_checkpoint_gaps.py` from `scripts/` into
+  `_obsolete/repair_archive/`.
+- Add a repair-archive README plus a Batch 8 closeout report.
+- Promote both surfaces from `archive-candidate` to `archive-complete` in
+  `workflow/batch4_frozen_zone_inventory.json`.
+- Preserve `repair_loop.py`, `run_validation.py`, `build_validation_set.py`,
+  `rebuild_checkpoint.py`, keep-chain, M4, authority drift policy, and optional Metrics.
+
+### Phases
+- [complete] Phase 0: Reconfirm that both repair-side targets have no retained active caller and only historical references remain.
+- [complete] Phase 1: Add/archive-adjust characterization tests for physical closeout.
+- [complete] Phase 2: Move both files into `_obsolete/repair_archive/` and sync README/inventory/reporting.
+- [complete] Phase 3: Run Batch 8 regression suite plus evidence gate.
+- [in_progress] Phase 4: Prepare commit, push branch, and open the Batch 8 PR.

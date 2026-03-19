@@ -3,9 +3,9 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "batch7_pushed_for_review",
-  "branch": "codex/deep-cleanup-batch7",
-  "change_id": "deep-cleanup-main-batch7",
+  "status": "batch8_verified_ready_for_commit",
+  "branch": "codex/deep-cleanup-batch8",
+  "change_id": "deep-cleanup-main-batch8",
   "authority_zone": "main_worktree/scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
@@ -16,8 +16,9 @@
       "value-review.md"
     ],
     "protected_first_wave": [
-      "scripts/repair_loop_v2.py",
-      "scripts/repair_checkpoint_gaps.py",
+      "scripts/repair_loop.py",
+      "scripts/run_validation.py",
+      "scripts/build_validation_set.py",
       "gate/**",
       "stress/**",
       "skill-v1.4.0/**",
@@ -43,7 +44,7 @@
   },
   "value_gate": {
     "status": "GO",
-    "reason": "Batch 7 remains GO because it restores the retained validation and repair authority surfaces through deterministic contract tests and runbook alignment only, without changing keep-chain, M4, authority, or optional Metrics semantics."
+    "reason": "Batch 8 remains GO because the two repair-side targets have already been downgraded to historical archive-candidates, so physically moving them out of scripts reduces active surface area without changing keep-chain, M4, authority, retained repair authority, retained validation baselines, or optional Metrics semantics."
   },
   "last_updated": "2026-03-19"
 }
