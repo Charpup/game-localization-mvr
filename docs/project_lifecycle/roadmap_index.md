@@ -43,13 +43,11 @@
 ## 里程碑 B（实时状态）
 
 - `run_id`：`plc_run_b_202603211300`
-- `status`：`blocked`
-- `evidence_ready`：`false`
-- `blocker`：
-  - triadev value-gate 已通过（GO，23/30，High）
-  - 实现阶段受 `pytest` 运行器 `ValueError: I/O operation on closed file` 阻塞
+- `status`：`done`
+- `evidence_ready`：`true`
+- `blocker`：`无`
 - `next_owner`：`Codex`
-- `next_scope`：`milestone_B_execute`
+- `next_scope`：`milestone_C_execute`
 
 ## 里程碑 A（12h）细化计划（可直接执行）
 
