@@ -1,50 +1,24 @@
 {
-  "version": 1,
-  "project": "game-localization-mvr",
-  "mode": "brownfield",
   "route": "extended",
-  "status": "batch10_complete",
-  "branch": "codex/deep-cleanup-batch10",
-  "change_id": "deep-cleanup-main-batch10",
-  "authority_zone": "main_worktree/scripts",
-  "compat_zone": "src/scripts",
-  "control_plane_scope": {
-    "allowed_write_paths": [
-      ".triadev/*",
-      "SPEC.yaml",
-      "SPEC-delta.yaml",
-      "value-review.md"
-    ],
-    "protected_first_wave": [
-      "scripts/repair_loop.py",
-      "scripts/run_validation.py",
-      "scripts/build_validation_set.py",
-      "../src/scripts/**",
-      "scripts/stress_test_3k_run.sh",
-      "skill-v1.4.0/**",
-      "packaging/**"
-    ]
-  },
-  "brownfield": {
-    "authority_root_exists": true,
-    "compat_root_exists": true,
-    "base_spec_generated": true,
-    "compat_mirror_expected": true
-  },
-  "pipeline": {
-    "keep_chain": [
-      "llm_ping",
-      "normalize_guard",
-      "translate_llm",
-      "qa_hard",
-      "rehydrate_export",
-      "smoke_verify"
-    ],
-    "orchestrator": "scripts/run_smoke_pipeline.py"
-  },
+  "phase": "implement",
   "value_gate": {
-    "status": "GO",
-    "reason": "Batch 10 remains GO because it closes the roadmap with a governance decision for src/scripts without changing keep-chain, M4, authority, retained repair authority, retained validation baselines, packaging behavior, or optional Metrics semantics."
+    "state": "passed",
+    "verdict": "GO",
+    "score": 23,
+    "confidence": "High",
+    "reviewed_at": "2026-03-21T01:34:36.429608",
+    "review_file": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\main_worktree\\value-review.md",
+    "attempts": 4
   },
-  "last_updated": "2026-03-19"
+  "implemented_tasks": [],
+  "workflow_built_at": "2026-03-21T01:31:58.988961",
+  "last_phase": "implement",
+  "artifact_stage": "tasks",
+  "brownfield": {
+    "source_path": "D:\\Dev_Env\\GPT_Codex_Workspace\\game-localization-mvr\\main_worktree",
+    "base_spec_generated": true
+  },
+  "active_change_id": "milestone-b-normalize-fixture-coverage-20260321013041",
+  "artifact_change_id": "b-coverage-hardening",
+  "updated_at": "2026-03-21T01:35:27.767013"
 }

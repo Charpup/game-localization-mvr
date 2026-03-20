@@ -1,57 +1,120 @@
-spec_version: 0.1.0
-project:
-  name: game-localization-mvr
-  type: brownfield
-  branch: codex/deep-cleanup-r3
-  authority_zone: main_worktree/scripts
-  compat_zone: src/scripts
-system:
-  summary: >
-    Brownfield game localization pipeline whose active execution authority lives under
-    main_worktree/scripts, with repo-root src/scripts retained as a compatibility mirror.
-  orchestrator:
-    path: scripts/run_smoke_pipeline.py
-    purpose: Preserves the smoke path from connectivity check through final verification.
-  stable_chain:
-    - llm_ping
-    - normalize_guard
-    - translate_llm
-    - qa_hard
-    - rehydrate_export
-    - smoke_verify
-  chain_contract:
-    llm_ping: Connectivity and routing preflight for LLM access.
-    normalize_guard: Input normalization and placeholder map generation.
-    translate_llm: Main translation execution against normalized assets.
-    qa_hard: Hard QA validation before export.
-    rehydrate_export: Placeholder and formatting restoration into exportable CSV.
-    smoke_verify: Final smoke verification over manifest/report outputs.
-ownership:
-  authority:
-    root: main_worktree/scripts
-    rule: New truth for deep-cleanup-r3 is authored here first.
-  compatibility:
-    root: src/scripts
-    rule: Keep behavior-compatible mirror semantics; do not treat as the primary change surface.
-constraints:
-  first_wave_do_not_touch:
-    - scripts/repair_loop.py
-    - scripts/run_validation.py
-    - gate/**
-    - stress/**
-    - skill-v1.4.0/**
-    - packaging/**
-  editing_scope:
-    - .triadev/*
-    - SPEC.yaml
-    - SPEC-delta.yaml
-    - value-review.md
-verification_evidence:
-  branch_checked: codex/deep-cleanup-r3
-  chain_sources:
-    - scripts/run_smoke_pipeline.py
-    - scripts/m4_3_collect_coverage.py
-    - scripts/m4_4_decision.py
-  topology_sources:
-    - main_worktree/scripts
-    - src/scripts
+name: game-localization-mvr
+mode: brownfield
+generated_at: '2026-03-21T01:30:39.806354'
+features:
+- file_type: .apache
+  count: 3
+- file_type: .b_0
+  count: 18
+- file_type: .bat
+  count: 4
+- file_type: .bsd
+  count: 3
+- file_type: .build
+  count: 6
+- file_type: .c
+  count: 12
+- file_type: .cfg
+  count: 4
+- file_type: .cpp
+  count: 2
+- file_type: .csv
+  count: 267
+- file_type: .dic
+  count: 4
+- file_type: .dll
+  count: 6
+- file_type: .example
+  count: 1
+- file_type: .exe
+  count: 31
+- file_type: .f
+  count: 48
+- file_type: .f90
+  count: 122
+- file_type: .f95
+  count: 2
+- file_type: .fits
+  count: 2
+- file_type: .gate
+  count: 1
+- file_type: .gz
+  count: 8
+- file_type: .h
+  count: 54
+- file_type: .inc
+  count: 2
+- file_type: .ini
+  count: 6
+- file_type: .js
+  count: 2
+- file_type: .json
+  count: 549
+- file_type: .jsonl
+  count: 128
+- file_type: .lib
+  count: 132
+- file_type: .log
+  count: 408
+- file_type: .md
+  count: 139
+- file_type: .noext
+  count: 1443
+- file_type: .npy
+  count: 10
+- file_type: .npz
+  count: 4
+- file_type: .p
+  count: 14
+- file_type: .pc
+  count: 2
+- file_type: .pem
+  count: 4
+- file_type: .pkl
+  count: 2
+- file_type: .ps1
+  count: 5
+- file_type: .pxd
+  count: 14
+- file_type: .py
+  count: 5762
+- file_type: .pyd
+  count: 136
+- file_type: .pyf
+  count: 14
+- file_type: .pyi
+  count: 608
+- file_type: .python
+  count: 2
+- file_type: .pyx
+  count: 8
+- file_type: .rst
+  count: 7
+- file_type: .sh
+  count: 8
+- file_type: .tab
+  count: 8
+- file_type: .tag
+  count: 1
+- file_type: .template
+  count: 2
+- file_type: .toml
+  count: 2
+- file_type: .tpl
+  count: 16
+- file_type: .txt
+  count: 84
+- file_type: .typed
+  count: 41
+- file_type: .w_0
+  count: 18
+- file_type: .yaml
+  count: 28
+- file_type: .yml
+  count: 1
+- file_type: .zi
+  count: 2
+changes: []
+artifacts:
+- type: spec
+  file: artifacts\specs\proposal-spec.yaml

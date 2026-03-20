@@ -1,0 +1,21 @@
+{
+  "run_id": "plc_run_b_202603211300",
+  "run_scope": "milestone_B_execute",
+  "started_at": "2026-03-21T13:00:00+08:00",
+  "owner": "Codex",
+  "input_files": [
+    "task_plan.md",
+    "docs/HANDOFF_MAINLINE_GUARDRAILS.md",
+    "docs/project_lifecycle/continuity_protocol.md",
+    "docs/project_lifecycle/roadmap_index.md",
+    "docs/project_lifecycle/milestone_state_template.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-21/session_start_202603211300.md",
+    "artifacts/proposal.md",
+    "artifacts/specs/proposal-spec.yaml",
+    "artifacts/design.md",
+    "artifacts/tasks.md",
+    "SPEC.yaml",
+    "SPEC-delta.yaml"
+  ],
+  "notes": "B 里程碑收口前的 triadev 文档与规划链产物输入清单。当前 value-gate 已通过（23/30），阻塞点位于 pytest I/O 基础设施。"
+}

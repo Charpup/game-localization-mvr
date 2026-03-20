@@ -1,57 +1,9 @@
-delta_version: 0.3.0
-change_id: deep-cleanup-main-batch10
-change_type: compat-mirror-closeout-decision
-status: in_progress
-intent:
-  summary: >
-    Close the current cleanup roadmap by fixing a final governance decision for
-    repo-root src/scripts as an operationally retained, exit-planned compatibility
-    mirror while preserving retained production-dev baselines, keep-chain, M4,
-    authority drift, and optional Metrics semantics unchanged.
-  non_goals:
-    - Reworking retained authority scripts or packaging behavior
-    - Physically deleting or migrating src/scripts in this batch
-    - Making Metrics a blocking smoke gate
-    - Altering the keep-chain runtime contract
-assertions:
-  authority_zone: main_worktree/scripts
-  compat_zone: src/scripts
-  keep_chain:
-    - llm_ping
-    - normalize_guard
-    - translate_llm
-    - qa_hard
-    - rehydrate_export
-    - smoke_verify
-  minimal_irreversible_core:
-    - scripts/run_smoke_pipeline.py
-    - scripts/runtime_adapter.py
-    - scripts/smoke_issue_logger.py
-    - scripts/m4_3_collect_coverage.py
-    - scripts/m4_4_decision.py
-    - tests/test_smoke_verify.py
-    - tests/test_qa_hard.py
-    - tests/test_normalize_segmentation.py
-planned_controls:
-  - Keep ../src/scripts/** operationally present but explicitly mark it as closeout_decision=separate-exit-program.
-  - Freeze the mirror_required list and describe future shrinkage as separate compat migration work.
-  - Remove non-real blocked placeholders from the frozen-zone inventory so closeout criteria reflect only real surfaces.
-  - Add Batch 10 closeout governance tests and a closeout report.
-  - Keep authority drift at WARN(runtime_adapter only), keep Metrics optional, and keep M4 decision logic unchanged.
-status_map:
-  ../src/scripts/**: compat-keep managed compatibility liability with closeout_decision separate-exit-program
-  stress_test_3k_run.sh: must-keep canonical stress shell authority
-  repair_loop.py: must-keep retained repair authority
-  run_validation.py: must-keep retained validation baseline
-  build_validation_set.py: must-keep retained validation baseline generator
-  runtime_adapter.py: must-keep core
-  metrics_aggregator.py: optional observability surface
-blocked_zones:
-  []
-risk_controls:
-  - Keep-chain scripts remain untouched except for already-established optional Metrics wiring.
-  - Retained validation and repair authority surfaces must not be modified.
-  - Governance artifacts must explain that src/scripts is not the authority root and remains only as an exit-planned compatibility liability.
-  - package_v1.3.0.sh and package_v140.sh behavior must remain unchanged in this batch.
-  - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.
-  - M4 decision logic and smoke evidence generation remain unchanged.
+changes:
+- id: milestone-b-normalize-fixture-coverage-20260321013041
+  project: game-localization-mvr
+  created_at: '2026-03-21T01:30:41.039232'
+  add: []
+  modify:
+  - milestone-B normalize fixture coverage
+  remove: []
+  merged: false

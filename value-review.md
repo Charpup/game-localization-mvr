@@ -1,45 +1,82 @@
-# Value Review: deep-cleanup-main-batch10
+# value-review.md
 
-## Decision
+## 1) Decision Summary
+- **Proposal:** TriadDev execution of current plan
+- **Date:** 2026-03-21
+- **Owner:** codex
+- **Verdict:** `GO`
+- **Total Score (0-30):** 23
+- **Confidence:** `High`
 
-GO
+## 2) Problem Framing
+### 2.1 One-line Decision Object
+- **Problem / User / Outcome / Time Horizon:**
 
-## Why this is worth doing
+### 2.2 Baseline and Opportunity Cost
+- **Current baseline:**
+- **Opportunity cost of doing this now:**
 
-Batch 9 already reduced the remaining active cleanup surface to a final governance decision
-around `src/scripts`. That makes Batch 10 worth doing because it finishes the roadmap
-without pretending the compatibility mirror can be removed before packaging, tests, and
-docs are detached from it.
+### 2.3 Constraints
+- **Team/Capacity:**
+- **Technical constraints:**
+- **Budget/compliance/deadline constraints:**
 
-This batch creates closure by turning `src/scripts` from a vague long-tail concern into an
-explicitly managed compatibility liability with a fixed exit program. That lets the cleanup
-roadmap end cleanly while still preserving the current packaging and governance truth.
+## 3) First-Principles Check
+### 3.1 Claim Classification
+| Claim | Type (`Fact` / `Inference` / `Assumption`) | Evidence / Note |
+|---|---|---|
+|  |  |  |
 
-## Evidence captured
+### 3.2 Fundamental Questions
+1. **Real problem vs proxy problem:**
+2. **If we do nothing for 30/60/90 days:**
+3. **Simplest 80% value intervention:**
+4. **True required dependencies vs habitual dependencies:**
+5. **Fast falsification metric:**
 
-- The active keep chain remains
-  `llm_ping -> normalize_guard -> translate_llm -> qa_hard -> rehydrate_export -> smoke_verify`.
-- Batch 9 moved the roadmap into closeout readiness and left `src/scripts` as the only
-  meaningful unresolved governance decision.
-- `src/scripts` is still operationally bound by packaging (`package_v1.3.0.sh`), authority
-  tests, and legacy inventory/docs.
-- The authority manifest already encodes the correct reduction gate: no physical reduction
-  until packaging/tests/docs are detached and required mirror gaps remain zero.
-- Current authority evidence remains stable at `WARN(runtime_adapter only)`.
+## 4) Value Scoring Rubric
+| Criterion | Score (0-5) | Evidence | Notes |
+|---|---:|---|---|
+| User Impact |  |  |  |
+| Strategic Fit |  |  |  |
+| Urgency |  |  |  |
+| Evidence Strength |  |  |  |
+| Effort Efficiency |  |  |  |
+| Risk Controllability |  |  |  |
+| **Total** | **/30** |  |  |
 
-## Scope guardrails
+## 5) Risk and Anti-Patterns
+### 5.1 Top Risks and Mitigations
+| Risk | Severity (L/M/H) | Mitigation | Residual Risk |
+|---|---|---|---|
+|  |  |  |  |
 
-- Batch 10 does not change keep-chain, M4, authority drift policy, or Metrics optionality.
-- Batch 10 does not modify retained repair, validation, or stress authority surfaces.
-- Batch 10 does not physically remove or migrate `src/scripts`.
-- Batch 10 does not change packaging behavior.
+### 5.2 Anti-Patterns Check
+- [ ] Solution-first bias
+- [ ] Metric theater
+- [ ] Roadmap cargo-cult
+- [ ] Unpriced complexity
+- [ ] Single-stakeholder capture
+- [ ] Evidence laundering
 
-## Exit condition for this step
+If 2+ checked and unresolved, default to `REVISE` or `NO-GO`.
 
-This step is complete when:
+## 6) Go/No-Go Rationale
+### 6.1 Top 3 Reasons for Verdict
+1.
+2.
+3.
 
-- `../src/scripts/**` remains present but is explicitly marked as `closeout_decision: separate-exit-program`,
-- the frozen-zone inventory no longer contains any real blocked surface,
-- the authority manifest records the exit blockers and frozen mirror policy,
-- the regression suite and evidence gate remain green,
-- and the Batch 10 report states that the current cleanup roadmap is complete.
+### 6.2 Preconditions to Change Verdict
+- **What must become true to upgrade/downgrade decision:**
+
+## 7) Next Action (48h)
+- **Immediate action:**
+- **Owner:** codex
+- **Expected measurable signal:**
+- **Re-evaluation date:**
+
+## 8) Hand-off
+- If `GO`: Define scope boundaries, success metrics, and risk controls for TDD/SDD hand-off.
+- If `REVISE`: Define smallest validation experiment and rerun gate after evidence is collected.
+- If `NO-GO`: List 1-2 higher-value alternatives.
