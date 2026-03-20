@@ -1,0 +1,4 @@
+"target_text","module_tag","tokenized_zh","source_zh","string_id","max_length_target","target_ru"
+"Завершите副本任务","ui_button","完成 副本 挑战","完成副本挑战","v1","10",""
+"Перейдите в деревня_树叶","ui_button","前往 木叶 接受 任务","前往木叶接受任务","v2","20",""
+"Очень длинное предупреждение","ui_label","系统 提示","系统提示","v3","4",""

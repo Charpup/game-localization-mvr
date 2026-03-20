@@ -1,0 +1,31 @@
+{
+  "run_id": "plc_run_c_202603212000",
+  "run_scope": "milestone_C_execute",
+  "started_at": "2026-03-21T20:00:00+08:00",
+  "owner": "Codex",
+  "input_files": [
+    "task_plan.md",
+    "docs/HANDOFF_MAINLINE_GUARDRAILS.md",
+    "docs/project_lifecycle/continuity_protocol.md",
+    "docs/project_lifecycle/roadmap_index.md",
+    ".agent/workflows/loc-extract-terms.md",
+    ".agent/workflows/loc-build-glossary.md",
+    ".agent/workflows/loc-glossary-autopromote.md",
+    ".agent/workflows/loc-translate.md",
+    ".agent/workflows/loc-soft-qa.md",
+    ".agent/workflows/loc-pipeline-full.md",
+    ".agent/workflows/style-guide.md",
+    "scripts/segmenter_factory.py",
+    "scripts/extract_terms.py",
+    "scripts/style_guide_bootstrap.py",
+    "scripts/style_sync_check.py",
+    "scripts/translate_llm.py",
+    "scripts/soft_qa_llm.py",
+    "workflow/style_guide_questionnaire.md",
+    "workflow/style_guide.md",
+    "workflow/style_guide.generated.md",
+    "workflow/soft_qa_rubric.yaml",
+    "data/style_profile.yaml"
+  ],
+  "notes": "C 里程碑以不改 DB/存储为前提，优先落地脚本与工作流可追溯闭环。"
+}

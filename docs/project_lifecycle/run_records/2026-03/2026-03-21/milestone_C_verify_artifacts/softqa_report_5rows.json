@@ -1,0 +1,17 @@
+{
+  "version": "2.2",
+  "mode": "batch",
+  "has_findings": true,
+  "summary": {
+    "major": 0,
+    "minor": 2,
+    "total_tasks": 2
+  },
+  "outputs": {
+    "repair_tasks_jsonl": "docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/softqa_tasks_5rows.jsonl"
+  },
+  "metadata": {
+    "generated_at": "2026-03-21T04:30:58",
+    "dry_run": true
+  }
+}

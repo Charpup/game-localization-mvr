@@ -1,0 +1,5764 @@
+version: '2.1'
+extraction_mode: segmented
+generated_at: '2026-03-21T04:31:33.071075'
+language_pair:
+  source: zh-CN
+  target: ru-RU
+seg_backend: jieba
+domain_hint: ui
+style_profile: data/style_profile.yaml
+statistics:
+  total_strings: 200
+  unique_terms: 155
+  total_occurrences: 605.0
+  critical: 0
+  proposed: 1
+  low_confidence: 154
+candidates:
+- &id001
+  term_zh: 元素
+  score: 59.0
+  frequency: 59
+  status: proposed
+  tier: proposed
+  approval_hint: proposed
+  term_fingerprint: eeb2c63ecd
+  metrics:
+    stability_score: 1.0
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303098'
+      line: 37
+      module_tag: misc
+      context: 购买可获得大量元素养成道具
+    - string_id: '10560001'
+      line: 144
+      module_tag: misc
+      context: 初级水弑元素
+    - string_id: '10560002'
+      line: 145
+      module_tag: misc
+      context: 初级水佑元素
+    - string_id: '10560003'
+      line: 146
+      module_tag: misc
+      context: 中级水弑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id002
+  term_zh: 忍者
+  score: 21.0
+  frequency: 21
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e0d5366267
+  metrics:
+    stability_score: 0.356
+    context_score: 0.6
+    boundary_score: 0.6
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id003
+  term_zh: 卡卡
+  score: 17.0
+  frequency: 17
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 09a98230c9
+  metrics:
+    stability_score: 0.288
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id004
+  term_zh: 带土
+  score: 15.0
+  frequency: 15
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 3b709c5c99
+  metrics:
+    stability_score: 0.254
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040002'
+      line: 110
+      module_tag: misc
+      context: 你果然是…带土！可这怎么可能？
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id005
+  term_zh: 高级
+  score: 12.0
+  frequency: 12
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: dfac151de7
+  metrics:
+    stability_score: 0.203
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '16'
+      line: 17
+      module_tag: misc
+      context: 高级招募每次十连必出5星忍者，并有概率出多位5星忍者
+    - string_id: '303113'
+      line: 52
+      module_tag: misc
+      context: 高级设置
+    - string_id: '10560005'
+      line: 148
+      module_tag: misc
+      context: 高级水弑元素
+    - string_id: '10560006'
+      line: 149
+      module_tag: misc
+      context: 高级水佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id006
+  term_zh: 属性
+  score: 10.0
+  frequency: 10
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 24d67862f8
+  metrics:
+    stability_score: 0.169
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '3'
+      line: 4
+      module_tag: misc
+      context: 除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。
+    - string_id: '3'
+      line: 4
+      module_tag: misc
+      context: 除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id007
+  term_zh: 初级
+  score: 10.0
+  frequency: 10
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 66846af9f7
+  metrics:
+    stability_score: 0.169
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560001'
+      line: 144
+      module_tag: misc
+      context: 初级水弑元素
+    - string_id: '10560002'
+      line: 145
+      module_tag: misc
+      context: 初级水佑元素
+    - string_id: '10560013'
+      line: 156
+      module_tag: misc
+      context: 初级风弑元素
+    - string_id: '10560014'
+      line: 157
+      module_tag: misc
+      context: 初级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id008
+  term_zh: 中级
+  score: 10.0
+  frequency: 10
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 99c8f454e1
+  metrics:
+    stability_score: 0.169
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560003'
+      line: 146
+      module_tag: misc
+      context: 中级水弑元素
+    - string_id: '10560004'
+      line: 147
+      module_tag: misc
+      context: 中级水佑元素
+    - string_id: '10560015'
+      line: 158
+      module_tag: misc
+      context: 中级风弑元素
+    - string_id: '10560016'
+      line: 159
+      module_tag: misc
+      context: 中级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id009
+  term_zh: 超级
+  score: 10.0
+  frequency: 10
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: f42f9f42e9
+  metrics:
+    stability_score: 0.169
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560007'
+      line: 150
+      module_tag: misc
+      context: 超级水弑元素
+    - string_id: '10560008'
+      line: 151
+      module_tag: misc
+      context: 超级水佑元素
+    - string_id: '10560019'
+      line: 162
+      module_tag: misc
+      context: 超级风弑元素
+    - string_id: '10560020'
+      line: 163
+      module_tag: misc
+      context: 超级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id010
+  term_zh: 消耗
+  score: 9.0
+  frequency: 9
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 4ab855fbc4
+  metrics:
+    stability_score: 0.153
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id011
+  term_zh: 购买
+  score: 8.0
+  frequency: 8
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: bdc336339c
+  metrics:
+    stability_score: 0.136
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303094'
+      line: 33
+      module_tag: misc
+      context: 是否购买【{0}】
+    - string_id: '303095'
+      line: 34
+      module_tag: misc
+      context: 确定购买此物品吗
+    - string_id: '303096'
+      line: 35
+      module_tag: misc
+      context: 购买可获得大量铜币
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id012
+  term_zh: 神级
+  score: 8.0
+  frequency: 8
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 09233bbda6
+  metrics:
+    stability_score: 0.136
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560011'
+      line: 154
+      module_tag: misc
+      context: 神级水弑元素
+    - string_id: '10560012'
+      line: 155
+      module_tag: misc
+      context: 神级水佑元素
+    - string_id: '10560023'
+      line: 166
+      module_tag: misc
+      context: 神级风弑元素
+    - string_id: '10560024'
+      line: 167
+      module_tag: misc
+      context: 神级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id013
+  term_zh: 还有
+  score: 7.0
+  frequency: 7
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 8a5139fcfd
+  metrics:
+    stability_score: 0.119
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '3'
+      line: 4
+      module_tag: misc
+      context: 除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040019'
+      line: 127
+      module_tag: misc
+      context: 可恶，敌人到底还有多少！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id014
+  term_zh: 技能
+  score: 7.0
+  frequency: 7
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 699143b15a
+  metrics:
+    stability_score: 0.119
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id015
+  term_zh: 咒印
+  score: 7.0
+  frequency: 7
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 813a2c90e6
+  metrics:
+    stability_score: 0.119
+    context_score: 0.6
+    boundary_score: 0.6
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305835'
+      line: 83
+      module_tag: misc
+      context: 咒印传承
+    - string_id: '305841'
+      line: 89
+      module_tag: misc
+      context: 一键合成将消耗背包中全部绿色咒印及蓝色咒印
+    - string_id: '305842'
+      line: 90
+      module_tag: misc
+      context: <color=#1A202B>（启动条件：橙色咒印总强化等级</c><color={0}>{1}</c><color=#1A202B>/{2}）</c>
+    - string_id: '305843'
+      line: 91
+      module_tag: misc
+      context: 请选择装备咒印
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id016
+  term_zh: 进化
+  score: 7.0
+  frequency: 7
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 811e6aa6e7
+  metrics:
+    stability_score: 0.119
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305850'
+      line: 98
+      module_tag: misc
+      context: 请选择遗传的进化
+    - string_id: '305851'
+      line: 99
+      module_tag: misc
+      context: 空进化
+    - string_id: '305852'
+      line: 100
+      module_tag: misc
+      context: 不能有两条相同类型进化
+    - string_id: '305853'
+      line: 101
+      module_tag: misc
+      context: 不能传承空进化
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id017
+  term_zh: 究极
+  score: 7.0
+  frequency: 7
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: c3c8226042
+  metrics:
+    stability_score: 0.119
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560010'
+      line: 153
+      module_tag: misc
+      context: 究极水佑元素
+    - string_id: '10560022'
+      line: 165
+      module_tag: misc
+      context: 究极风佑元素
+    - string_id: '10560034'
+      line: 177
+      module_tag: misc
+      context: 究极火佑元素
+    - string_id: '10560045'
+      line: 188
+      module_tag: misc
+      context: 究极仙弑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id018
+  term_zh: 选择
+  score: 6.0
+  frequency: 6
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 153fa67a7f
+  metrics:
+    stability_score: 0.102
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '305833'
+      line: 81
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>新增</color><color=#ffffff>的属性</c>
+    - string_id: '305834'
+      line: 82
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>被替换</color><color=#ffffff>的属性</c>
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id019
+  term_zh: 获得
+  score: 6.0
+  frequency: 6
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 02574cf1bf
+  metrics:
+    stability_score: 0.102
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303096'
+      line: 35
+      module_tag: misc
+      context: 购买可获得大量铜币
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id020
+  term_zh: 不能
+  score: 6.0
+  frequency: 6
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 38f9286be2
+  metrics:
+    stability_score: 0.102
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305852'
+      line: 100
+      module_tag: misc
+      context: 不能有两条相同类型进化
+    - string_id: '305853'
+      line: 101
+      module_tag: misc
+      context: 不能传承空进化
+    - string_id: '305854'
+      line: 102
+      module_tag: misc
+      context: 替换后的进化值低于原进化值，不能遗传
+    - string_id: '305856'
+      line: 104
+      module_tag: misc
+      context: 不能装备两个相同类型咒印
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id021
+  term_zh: 力量
+  score: 6.0
+  frequency: 6
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: f7520954ca
+  metrics:
+    stability_score: 0.102
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040013'
+      line: 121
+      module_tag: misc
+      context: 噢噢！干得好鸣人！卡卡西你专心恢复力量，在那之前我会和忍者联军的大伙拖住带土那小子的！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id022
+  term_zh: 水佑
+  score: 6.0
+  frequency: 6
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 684a71c832
+  metrics:
+    stability_score: 0.102
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560002'
+      line: 145
+      module_tag: misc
+      context: 初级水佑元素
+    - string_id: '10560004'
+      line: 147
+      module_tag: misc
+      context: 中级水佑元素
+    - string_id: '10560006'
+      line: 149
+      module_tag: misc
+      context: 高级水佑元素
+    - string_id: '10560008'
+      line: 151
+      module_tag: misc
+      context: 超级水佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id023
+  term_zh: 风佑
+  score: 6.0
+  frequency: 6
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 22ca6e8158
+  metrics:
+    stability_score: 0.102
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560014'
+      line: 157
+      module_tag: misc
+      context: 初级风佑元素
+    - string_id: '10560016'
+      line: 159
+      module_tag: misc
+      context: 中级风佑元素
+    - string_id: '10560018'
+      line: 161
+      module_tag: misc
+      context: 高级风佑元素
+    - string_id: '10560020'
+      line: 163
+      module_tag: misc
+      context: 超级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id024
+  term_zh: 火佑
+  score: 6.0
+  frequency: 6
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 07c0a04d43
+  metrics:
+    stability_score: 0.102
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560026'
+      line: 169
+      module_tag: misc
+      context: 初级火佑元素
+    - string_id: '10560028'
+      line: 171
+      module_tag: misc
+      context: 中级火佑元素
+    - string_id: '10560030'
+      line: 173
+      module_tag: misc
+      context: 高级火佑元素
+    - string_id: '10560032'
+      line: 175
+      module_tag: misc
+      context: 超级火佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id025
+  term_zh: 仙佑
+  score: 6.0
+  frequency: 6
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 244411b038
+  metrics:
+    stability_score: 0.102
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560038'
+      line: 181
+      module_tag: misc
+      context: 初级仙佑元素
+    - string_id: '10560040'
+      line: 183
+      module_tag: misc
+      context: 中级仙佑元素
+    - string_id: '10560042'
+      line: 185
+      module_tag: misc
+      context: 高级仙佑元素
+    - string_id: '10560044'
+      line: 187
+      module_tag: misc
+      context: 超级仙佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id026
+  term_zh: 道具
+  score: 5.0
+  frequency: 5
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: de24bfb740
+  metrics:
+    stability_score: 0.085
+    context_score: 0.6
+    boundary_score: 0.6
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '13'
+      line: 14
+      module_tag: misc
+      context: 仙人试炼每2天重置1次，所累积的复活币道具不清空
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303097'
+      line: 36
+      module_tag: misc
+      context: 购买可获得大量尾兽强化道具
+    - string_id: '303098'
+      line: 37
+      module_tag: misc
+      context: 购买可获得大量元素养成道具
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id027
+  term_zh: 任务
+  score: 5.0
+  frequency: 5
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 0e46d8d6b7
+  metrics:
+    stability_score: 0.085
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303076'
+      line: 21
+      module_tag: misc
+      context: 不符合任务条件
+    - string_id: '303111'
+      line: 50
+      module_tag: misc
+      context: 任务质量
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    - string_id: '303123'
+      line: 55
+      module_tag: misc
+      context: 可前往悬赏界面接取任务以消耗情报
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id028
+  term_zh: 竟然
+  score: 5.0
+  frequency: 5
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 777a75ce36
+  metrics:
+    stability_score: 0.085
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040006'
+      line: 114
+      module_tag: misc
+      context: 没错…只是没想到我和他竟然会以这种方式再次见面。
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id029
+  term_zh: 老师
+  score: 5.0
+  frequency: 5
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 295af37e05
+  metrics:
+    stability_score: 0.085
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    - string_id: '9040011'
+      line: 119
+      module_tag: misc
+      context: 卡卡西老师，现在还没到放弃的时候！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id030
+  term_zh: 空间
+  score: 5.0
+  frequency: 5
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 1a1d03f3dc
+  metrics:
+    stability_score: 0.085
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id031
+  term_zh: 魔佑
+  score: 5.0
+  frequency: 5
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 1aa72e5826
+  metrics:
+    stability_score: 0.085
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10560050'
+      line: 193
+      module_tag: misc
+      context: 初级魔佑元素
+    - string_id: '10560052'
+      line: 195
+      module_tag: misc
+      context: 中级魔佑元素
+    - string_id: '10560054'
+      line: 197
+      module_tag: misc
+      context: 高级魔佑元素
+    - string_id: '10560056'
+      line: 199
+      module_tag: misc
+      context: 超级魔佑元素
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id032
+  term_zh: 等级
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 95e0d70d18
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    - string_id: '303141'
+      line: 68
+      module_tag: misc
+      context: 未达到开启等级
+    - string_id: '305842'
+      line: 90
+      module_tag: misc
+      context: <color=#1A202B>（启动条件：橙色咒印总强化等级</c><color={0}>{1}</c><color=#1A202B>/{2}）</c>
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id033
+  term_zh: 进行
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 5fb0d006b2
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '305846'
+      line: 94
+      module_tag: misc
+      context: <color=#1A202B >是否消耗</color><color=#008900 >{0}</color><img src='{1}'/><color=#1A202B
+        >购买</color><co
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id034
+  term_zh: 开始
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a3e3b88377
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '303114'
+      line: 53
+      module_tag: misc
+      context: 开始
+    - string_id: '303117'
+      line: 54
+      module_tag: misc
+      context: 开始扫荡后，可通过拖动下方摇杆操控车辆碰撞物资以积累更高积分
+    - string_id: '303133'
+      line: 60
+      module_tag: misc
+      context: 开始战斗
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id035
+  term_zh: 自动
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 3aed2c11e9
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '303075'
+      line: 20
+      module_tag: misc
+      context: 自动接取
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id036
+  term_zh: 扫荡
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: ec5555b5b6
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '303077'
+      line: 22
+      module_tag: misc
+      context: 免费扫荡
+    - string_id: '303117'
+      line: 54
+      module_tag: misc
+      context: 开始扫荡后，可通过拖动下方摇杆操控车辆碰撞物资以积累更高积分
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id037
+  term_zh: 积分
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 9f68a80798
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    - string_id: '303104'
+      line: 43
+      module_tag: misc
+      context: 积分
+    - string_id: '303117'
+      line: 54
+      module_tag: misc
+      context: 开始扫荡后，可通过拖动下方摇杆操控车辆碰撞物资以积累更高积分
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id038
+  term_zh: 达到
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 4ca6c947d5
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    - string_id: '303087'
+      line: 27
+      module_tag: misc
+      context: 未达到{0}级
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '303141'
+      line: 68
+      module_tag: misc
+      context: 未达到开启等级
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id039
+  term_zh: 大量
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 7d35a453e5
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303096'
+      line: 35
+      module_tag: misc
+      context: 购买可获得大量铜币
+    - string_id: '303097'
+      line: 36
+      module_tag: misc
+      context: 购买可获得大量尾兽强化道具
+    - string_id: '303098'
+      line: 37
+      module_tag: misc
+      context: 购买可获得大量元素养成道具
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id040
+  term_zh: 排行榜
+  score: 3.8
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 4a73195467
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.05
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303102'
+      line: 41
+      module_tag: misc
+      context: 排行榜奖励
+    - string_id: '303105'
+      line: 44
+      module_tag: misc
+      context: 深渊排行榜
+    - string_id: '303106'
+      line: 45
+      module_tag: misc
+      context: 试炼排行榜
+    - string_id: '303107'
+      line: 46
+      module_tag: misc
+      context: 组织排行榜
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id041
+  term_zh: 继续
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 27ca568be2
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id042
+  term_zh: 所属
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 3482aecc90
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305836'
+      line: 84
+      module_tag: misc
+      context: <color=#1A202B>所属忍者：</c><color=#E16900>{0}</c>
+    - string_id: '305837'
+      line: 85
+      module_tag: misc
+      context: <color=#1A202B>所属职业：</c><color=#E16900>{0}</c>
+    - string_id: '305848'
+      line: 96
+      module_tag: misc
+      context: <color=#1A202B >所属忍者：</color><color=#E16900 >{0}</color>
+    - string_id: '305849'
+      line: 97
+      module_tag: misc
+      context: <color=#1A202B >所属职业：</color><color=#1A202B >{0}</color>
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id043
+  term_zh: 这样
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 9807ef7012
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id044
+  term_zh: 这个
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 76d3280175
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id045
+  term_zh: 你们
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 247edb94d4
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id046
+  term_zh: 神威
+  score: 4.0
+  frequency: 4
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 87e16b195d
+  metrics:
+    stability_score: 0.068
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id047
+  term_zh: 升级
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e643c7197a
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '303131'
+      line: 58
+      module_tag: misc
+      context: 恭喜升级
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id048
+  term_zh: 升星
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: fc9952bbbe
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id049
+  term_zh: 分为
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: d51f321038
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id050
+  term_zh: 攻击
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 33781e805b
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '3'
+      line: 4
+      module_tag: misc
+      context: 除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id051
+  term_zh: 阻止
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: fff3f59e3a
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id052
+  term_zh: 冷却
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 6bbb9743d6
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    - string_id: '303151'
+      line: 77
+      module_tag: misc
+      context: 无冷却时间
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id053
+  term_zh: 回合
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 55899d4496
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id054
+  term_zh: 阵容
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 24728f39a8
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    - string_id: '303135'
+      line: 62
+      module_tag: misc
+      context: 阵容二
+    - string_id: '303136'
+      line: 63
+      module_tag: misc
+      context: 阵容一
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id055
+  term_zh: 每次
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e9839fc66c
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '16'
+      line: 17
+      module_tag: misc
+      context: 高级招募每次十连必出5星忍者，并有概率出多位5星忍者
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id056
+  term_zh: 奖励
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: c39a1ae0d7
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    - string_id: '303102'
+      line: 41
+      module_tag: misc
+      context: 排行榜奖励
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id057
+  term_zh: 召唤
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 368455ac81
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id058
+  term_zh: 接取
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 8c4931b792
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303075'
+      line: 20
+      module_tag: misc
+      context: 自动接取
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    - string_id: '303123'
+      line: 55
+      module_tag: misc
+      context: 可前往悬赏界面接取任务以消耗情报
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id059
+  term_zh: 是否
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: cf7ad621e1
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303094'
+      line: 33
+      module_tag: misc
+      context: 是否购买【{0}】
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '305846'
+      line: 94
+      module_tag: misc
+      context: <color=#1A202B >是否消耗</color><color=#008900 >{0}</color><img src='{1}'/><color=#1A202B
+        >购买</color><co
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id060
+  term_zh: 尾兽
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a7f0c36dc2
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303097'
+      line: 36
+      module_tag: misc
+      context: 购买可获得大量尾兽强化道具
+    - string_id: '303148'
+      line: 74
+      module_tag: misc
+      context: 请上阵尾兽
+    - string_id: '303149'
+      line: 75
+      module_tag: misc
+      context: 暂无尾兽
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id061
+  term_zh: 竞技场
+  score: 2.85
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e6f1b86efb
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.05
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303103'
+      line: 42
+      module_tag: misc
+      context: 竞技场
+    - string_id: '303132'
+      line: 59
+      module_tag: misc
+      context: 出征/竞技场
+    - string_id: '303137'
+      line: 64
+      module_tag: misc
+      context: 剧情/竞技场
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id062
+  term_zh: 暂无
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: f61f4cf6d0
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303108'
+      line: 47
+      module_tag: misc
+      context: 暂无
+    - string_id: '303143'
+      line: 70
+      module_tag: misc
+      context: 暂无修行收益，请耐心等待...
+    - string_id: '303149'
+      line: 75
+      module_tag: misc
+      context: 暂无尾兽
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id063
+  term_zh: 添加
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: b58c7549c0
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303154'
+      line: 80
+      module_tag: misc
+      context: 可添加
+    - string_id: '305844'
+      line: 92
+      module_tag: misc
+      context: 请添加咒印
+    - string_id: '305847'
+      line: 95
+      module_tag: misc
+      context: 请添加消耗材料
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id064
+  term_zh: 一条
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a68dfae9a7
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305833'
+      line: 81
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>新增</color><color=#ffffff>的属性</c>
+    - string_id: '305834'
+      line: 82
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>被替换</color><color=#ffffff>的属性</c>
+    - string_id: '9040022'
+      line: 130
+      module_tag: misc
+      context: 卡卡西独自一人作战。只有杀出一条血路，才能带上琳还有受伤的带土逃离。无论如何他都不能失败！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id065
+  term_zh: 面前
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a1f4b242e6
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id066
+  term_zh: 什么
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 736ccbe560
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040004'
+      line: 112
+      module_tag: misc
+      context: 你想叫我什么就叫什么吧，反正对我来说都没有意义。
+    - string_id: '9040004'
+      line: 112
+      module_tag: misc
+      context: 你想叫我什么就叫什么吧，反正对我来说都没有意义。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id067
+  term_zh: 就是
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 75aa8c6593
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id068
+  term_zh: 现在
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 505ccfb0e8
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040011'
+      line: 119
+      module_tag: misc
+      context: 卡卡西老师，现在还没到放弃的时候！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id069
+  term_zh: 能够
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: d5f91b1ef4
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id070
+  term_zh: 东西
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a026c722b2
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040017'
+      line: 125
+      module_tag: misc
+      context: 可我还记得，我托付给你的东西还不止这颗眼睛。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id071
+  term_zh: 办法
+  score: 3.0
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e131ab6cdb
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id072
+  term_zh: 托付给
+  score: 2.85
+  frequency: 3
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: aa514d409a
+  metrics:
+    stability_score: 0.051
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.05
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040017'
+      line: 125
+      module_tag: misc
+      context: 可我还记得，我托付给你的东西还不止这颗眼睛。
+    - string_id: '9040029'
+      line: 137
+      module_tag: misc
+      context: 临终之际，少年将自己仅剩的力量托付给了自己信任的同伴。或许在自己死后，那份力量还能替自己守护心中所爱。然而一切，却都事与愿违……
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id073
+  term_zh: 提高
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 3e2fd5a70b
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id074
+  term_zh: 只有
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: d55f9b9d86
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '9040022'
+      line: 130
+      module_tag: misc
+      context: 卡卡西独自一人作战。只有杀出一条血路，才能带上琳还有受伤的带土逃离。无论如何他都不能失败！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id075
+  term_zh: 部分
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 45274498c7
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id076
+  term_zh: 突破
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 106fc6a757
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id077
+  term_zh: 质量
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 3a7170b92e
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '4'
+      line: 5
+      module_tag: misc
+      context: 忍者初始质量从低到高为蓝、紫、橙，分别对应3-5星
+    - string_id: '303111'
+      line: 50
+      module_tag: misc
+      context: 任务质量
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id078
+  term_zh: 通过
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 23c1f39900
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '303117'
+      line: 54
+      module_tag: misc
+      context: 开始扫荡后，可通过拖动下方摇杆操控车辆碰撞物资以积累更高积分
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id079
+  term_zh: 解锁
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: fa7ffa2d21
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '303125'
+      line: 57
+      module_tag: misc
+      context: '{0} 解锁'
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id080
+  term_zh: 合成
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: c29e409780
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '305841'
+      line: 89
+      module_tag: misc
+      context: 一键合成将消耗背包中全部绿色咒印及蓝色咒印
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id081
+  term_zh: 操作
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 2b6bc0f293
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id082
+  term_zh: 之前
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 517f1e12c2
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.6
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '9040013'
+      line: 121
+      module_tag: misc
+      context: 噢噢！干得好鸣人！卡卡西你专心恢复力量，在那之前我会和忍者联军的大伙拖住带土那小子的！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id083
+  term_zh: 主动
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 65cf805260
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id084
+  term_zh: 被动
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 62cdec8e93
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '303152'
+      line: 78
+      module_tag: misc
+      context: 被动效果
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id085
+  term_zh: 时会
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: afbddf7e96
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id086
+  term_zh: 本体
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 4006db0c11
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id087
+  term_zh: 战斗力
+  score: 1.9
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 8e0301e7f7
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.05
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    - string_id: '303089'
+      line: 28
+      module_tag: misc
+      context: 战斗力
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id088
+  term_zh: 命中
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 68ea25aa39
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id089
+  term_zh: 伤害
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 537d30482b
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id090
+  term_zh: 挑战
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 590d8b17f2
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '303139'
+      line: 66
+      module_tag: misc
+      context: 组队挑战
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id091
+  term_zh: 试炼
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 4e9195f372
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '13'
+      line: 14
+      module_tag: misc
+      context: 仙人试炼每2天重置1次，所累积的复活币道具不清空
+    - string_id: '303106'
+      line: 45
+      module_tag: misc
+      context: 试炼排行榜
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id092
+  term_zh: 累积
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: b2d2d1cd13
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '13'
+      line: 14
+      module_tag: misc
+      context: 仙人试炼每2天重置1次，所累积的复活币道具不清空
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id093
+  term_zh: 抽取
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a73543501b
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id094
+  term_zh: 精英
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 805ca57c40
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id095
+  term_zh: 招募
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a9712ef99e
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '16'
+      line: 17
+      module_tag: misc
+      context: 高级招募每次十连必出5星忍者，并有概率出多位5星忍者
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id096
+  term_zh: 当前
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 48ac479789
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303074'
+      line: 19
+      module_tag: misc
+      context: 当前军粮丸不足
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id097
+  term_zh: 军粮
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 537960f564
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303074'
+      line: 19
+      module_tag: misc
+      context: 当前军粮丸不足
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id098
+  term_zh: 不足
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 7f56244b9b
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303074'
+      line: 19
+      module_tag: misc
+      context: 当前军粮丸不足
+    - string_id: '303084'
+      line: 24
+      module_tag: misc
+      context: 次数不足
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id099
+  term_zh: 条件
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 69fbb2e5fc
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303076'
+      line: 21
+      module_tag: misc
+      context: 不符合任务条件
+    - string_id: '305842'
+      line: 90
+      module_tag: misc
+      context: <color=#1A202B>（启动条件：橙色咒印总强化等级</c><color={0}>{1}</c><color=#1A202B>/{2}）</c>
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id100
+  term_zh: 免费
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: aa2c914024
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303077'
+      line: 22
+      module_tag: misc
+      context: 免费扫荡
+    - string_id: '303086'
+      line: 26
+      module_tag: misc
+      context: '免费倒计时:'
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id101
+  term_zh: 今日
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 296304f1e5
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303080'
+      line: 23
+      module_tag: misc
+      context: '今日剩余: {0}次'
+    - string_id: '305845'
+      line: 93
+      module_tag: misc
+      context: <color=#393A3B>今日次数：</c><color=#B60000>{0}</c><color=#393A3B>/{1}</c>
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id102
+  term_zh: 次数
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: f965fea308
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303084'
+      line: 24
+      module_tag: misc
+      context: 次数不足
+    - string_id: '305845'
+      line: 93
+      module_tag: misc
+      context: <color=#393A3B>今日次数：</c><color=#B60000>{0}</c><color=#393A3B>/{1}</c>
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id103
+  term_zh: 养成
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: f4655dc9fe
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303098'
+      line: 37
+      module_tag: misc
+      context: 购买可获得大量元素养成道具
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id104
+  term_zh: 确定
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 38cf16f220
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303095'
+      line: 34
+      module_tag: misc
+      context: 确定购买此物品吗
+    - string_id: '9040023'
+      line: 131
+      module_tag: misc
+      context: 琳！我已经确定好逃出的路线了。带土他的状况如何？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id105
+  term_zh: 强化
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 4c4e41e10d
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303097'
+      line: 36
+      module_tag: misc
+      context: 购买可获得大量尾兽强化道具
+    - string_id: '305842'
+      line: 90
+      module_tag: misc
+      context: <color=#1A202B>（启动条件：橙色咒印总强化等级</c><color={0}>{1}</c><color=#1A202B>/{2}）</c>
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id106
+  term_zh: 设置
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e366ccf155
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303110'
+      line: 49
+      module_tag: misc
+      context: 保存设置
+    - string_id: '303113'
+      line: 52
+      module_tag: misc
+      context: 高级设置
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id107
+  term_zh: 悬赏
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 026a09155e
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303123'
+      line: 55
+      module_tag: misc
+      context: 可前往悬赏界面接取任务以消耗情报
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id108
+  term_zh: 情报
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 8c357bf73c
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303123'
+      line: 55
+      module_tag: misc
+      context: 可前往悬赏界面接取任务以消耗情报
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id109
+  term_zh: 即将
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 2233fd8a92
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id110
+  term_zh: 可能
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: ca63dc0953
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '9040002'
+      line: 110
+      module_tag: misc
+      context: 你果然是…带土！可这怎么可能？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id111
+  term_zh: 战斗
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: da01bb1c5a
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303133'
+      line: 60
+      module_tag: misc
+      context: 开始战斗
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id112
+  term_zh: 开启
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: cc42dd3170
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '303141'
+      line: 68
+      module_tag: misc
+      context: 未达到开启等级
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id113
+  term_zh: 替换
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e22c9a05b4
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305834'
+      line: 82
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>被替换</color><color=#ffffff>的属性</c>
+    - string_id: '305854'
+      line: 102
+      module_tag: misc
+      context: 替换后的进化值低于原进化值，不能遗传
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id114
+  term_zh: 传承
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 84c70f4bbf
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305835'
+      line: 83
+      module_tag: misc
+      context: 咒印传承
+    - string_id: '305853'
+      line: 101
+      module_tag: misc
+      context: 不能传承空进化
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id115
+  term_zh: 职业
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 7379c91905
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305837'
+      line: 85
+      module_tag: misc
+      context: <color=#1A202B>所属职业：</c><color=#E16900>{0}</c>
+    - string_id: '305849'
+      line: 97
+      module_tag: misc
+      context: <color=#1A202B >所属职业：</color><color=#1A202B >{0}</color>
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id116
+  term_zh: 装备
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 642817a2d4
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305843'
+      line: 91
+      module_tag: misc
+      context: 请选择装备咒印
+    - string_id: '305856'
+      line: 104
+      module_tag: misc
+      context: 不能装备两个相同类型咒印
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id117
+  term_zh: 遗传
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 367ac90327
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305850'
+      line: 98
+      module_tag: misc
+      context: 请选择遗传的进化
+    - string_id: '305854'
+      line: 102
+      module_tag: misc
+      context: 替换后的进化值低于原进化值，不能遗传
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id118
+  term_zh: 相同
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 361339362b
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305852'
+      line: 100
+      module_tag: misc
+      context: 不能有两条相同类型进化
+    - string_id: '305856'
+      line: 104
+      module_tag: misc
+      context: 不能装备两个相同类型咒印
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id119
+  term_zh: 类型
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 226b091218
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '305852'
+      line: 100
+      module_tag: misc
+      context: 不能有两条相同类型进化
+    - string_id: '305856'
+      line: 104
+      module_tag: misc
+      context: 不能装备两个相同类型咒印
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id120
+  term_zh: 鸣人
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: b662e4a152
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id121
+  term_zh: 身上
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e8b33c634b
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id122
+  term_zh: 果然
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: d738c118da
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040002'
+      line: 110
+      module_tag: misc
+      context: 你果然是…带土！可这怎么可能？
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id123
+  term_zh: 众人
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a027936c77
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id124
+  term_zh: 心中
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 89467aac67
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040029'
+      line: 137
+      module_tag: misc
+      context: 临终之际，少年将自己仅剩的力量托付给了自己信任的同伴。或许在自己死后，那份力量还能替自己守护心中所爱。然而一切，却都事与愿违……
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id125
+  term_zh: 忍界
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 16620c06e2
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.6
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040020'
+      line: 128
+      module_tag: misc
+      context: 第三次忍界大战，卡卡西，带土还有琳三人在破坏神无毗桥的任务中遭到敌人的围困。卡卡西左眼受伤失明，带土更是为了救卡卡西而被巨石轧中，情况危急。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id126
+  term_zh: 大战
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 63153df1ca
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040020'
+      line: 128
+      module_tag: misc
+      context: 第三次忍界大战，卡卡西，带土还有琳三人在破坏神无毗桥的任务中遭到敌人的围困。卡卡西左眼受伤失明，带土更是为了救卡卡西而被巨石轧中，情况危急。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id127
+  term_zh: 宇智波
+  score: 1.9
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 4ed7241513
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.05
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id128
+  term_zh: 意义
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 3ad8289828
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040004'
+      line: 112
+      module_tag: misc
+      context: 你想叫我什么就叫什么吧，反正对我来说都没有意义。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id129
+  term_zh: 一起
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 3efffd5f35
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id130
+  term_zh: 没错
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e9899f2f2a
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040006'
+      line: 114
+      module_tag: misc
+      context: 没错…只是没想到我和他竟然会以这种方式再次见面。
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id131
+  term_zh: 事到如今
+  score: 1.9
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 1244a9a4ed
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.05
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id132
+  term_zh: 守护
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 2b5f9e8828
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040029'
+      line: 137
+      module_tag: misc
+      context: 临终之际，少年将自己仅剩的力量托付给了自己信任的同伴。或许在自己死后，那份力量还能替自己守护心中所爱。然而一切，却都事与愿违……
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id133
+  term_zh: 世界
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: c086b3008a
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id134
+  term_zh: 写轮眼
+  score: 1.9
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: c543224f49
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.6
+    length_penalty: 0.05
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id135
+  term_zh: 使用
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: ecff77a8d4
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id136
+  term_zh: 难道
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 789247a38c
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.6
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id137
+  term_zh: 使出
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 3b6d9ec1c5
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id138
+  term_zh: 喇嘛
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 7c32334802
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id139
+  term_zh: 我会
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 96ca60df27
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040013'
+      line: 121
+      module_tag: misc
+      context: 噢噢！干得好鸣人！卡卡西你专心恢复力量，在那之前我会和忍者联军的大伙拖住带土那小子的！
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id140
+  term_zh: 连接
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 30f7dd4ecd
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id141
+  term_zh: 忍术
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 695d4c4dfe
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.6
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id142
+  term_zh: 是因为
+  score: 1.9
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: '6053303796'
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.05
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040031'
+      line: 139
+      module_tag: misc
+      context: 我的生死已经无关紧要了。不过也罢，如果你非要问的话…那都是因为你对小琳的见死不救吧。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id143
+  term_zh: 这颗
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: d203716170
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040017'
+      line: 125
+      module_tag: misc
+      context: 可我还记得，我托付给你的东西还不止这颗眼睛。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id144
+  term_zh: 敌人
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 1480605b52
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040019'
+      line: 127
+      module_tag: misc
+      context: 可恶，敌人到底还有多少！
+    - string_id: '9040020'
+      line: 128
+      module_tag: misc
+      context: 第三次忍界大战，卡卡西，带土还有琳三人在破坏神无毗桥的任务中遭到敌人的围困。卡卡西左眼受伤失明，带土更是为了救卡卡西而被巨石轧中，情况危急。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id145
+  term_zh: 受伤
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: b9b5b84abb
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040020'
+      line: 128
+      module_tag: misc
+      context: 第三次忍界大战，卡卡西，带土还有琳三人在破坏神无毗桥的任务中遭到敌人的围困。卡卡西左眼受伤失明，带土更是为了救卡卡西而被巨石轧中，情况危急。
+    - string_id: '9040022'
+      line: 130
+      module_tag: misc
+      context: 卡卡西独自一人作战。只有杀出一条血路，才能带上琳还有受伤的带土逃离。无论如何他都不能失败！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id146
+  term_zh: 成为
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: c2d1398a0e
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id147
+  term_zh: 上忍
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: d20c47e550
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.6
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id148
+  term_zh: 同伴
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: e3d8a5cbb7
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    - string_id: '9040029'
+      line: 137
+      module_tag: misc
+      context: 临终之际，少年将自己仅剩的力量托付给了自己信任的同伴。或许在自己死后，那份力量还能替自己守护心中所爱。然而一切，却都事与愿违……
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id149
+  term_zh: 一定
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 6afdff6f53
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id150
+  term_zh: 不配
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 8539351f53
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040026'
+      line: 134
+      module_tag: misc
+      context: 我不配当队长！不配当上忍！
+    - string_id: '9040026'
+      line: 134
+      module_tag: misc
+      context: 我不配当队长！不配当上忍！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id151
+  term_zh: 小琳
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a570c7dd22
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    - string_id: '9040031'
+      line: 139
+      module_tag: misc
+      context: 我的生死已经无关紧要了。不过也罢，如果你非要问的话…那都是因为你对小琳的见死不救吧。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id152
+  term_zh: 不过
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: a919bf1bc8
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040031'
+      line: 139
+      module_tag: misc
+      context: 我的生死已经无关紧要了。不过也罢，如果你非要问的话…那都是因为你对小琳的见死不救吧。
+    - string_id: '9040034'
+      line: 142
+      module_tag: misc
+      context: 你这边好热闹啊，带土。不过，八尾九尾都还没回收就贸然展开计划，你太着急了啊。也罢，我想你应该也有自己的打算吧。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id153
+  term_zh: 也罢
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 95f4719030
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040031'
+      line: 139
+      module_tag: misc
+      context: 我的生死已经无关紧要了。不过也罢，如果你非要问的话…那都是因为你对小琳的见死不救吧。
+    - string_id: '9040034'
+      line: 142
+      module_tag: misc
+      context: 你这边好热闹啊，带土。不过，八尾九尾都还没回收就贸然展开计划，你太着急了啊。也罢，我想你应该也有自己的打算吧。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id154
+  term_zh: 打算
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: 19682b44b8
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040032'
+      line: 140
+      module_tag: misc
+      context: ……！那你…不打算责难我吗？
+    - string_id: '9040034'
+      line: 142
+      module_tag: misc
+      context: 你这边好热闹啊，带土。不过，八尾九尾都还没回收就贸然展开计划，你太着急了啊。也罢，我想你应该也有自己的打算吧。
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+- &id155
+  term_zh: 现实
+  score: 2.0
+  frequency: 2
+  status: banned
+  tier: low_confidence
+  approval_hint: banned
+  term_fingerprint: c668ef8a05
+  metrics:
+    stability_score: 0.034
+    context_score: 0.6
+    boundary_score: 0.4
+    length_penalty: 0.0
+    module_mix:
+      misc: 1.0
+  evidence:
+    sources:
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - jieba
+    - pkuseg
+    - thulac
+    - lac
+    - heuristic
+  policy: null
+critical: []
+proposed:
+- *id001
+low_confidence:
+- *id002
+- *id003
+- *id004
+- *id005
+- *id006
+- *id007
+- *id008
+- *id009
+- *id010
+- *id011
+- *id012
+- *id013
+- *id014
+- *id015
+- *id016
+- *id017
+- *id018
+- *id019
+- *id020
+- *id021
+- *id022
+- *id023
+- *id024
+- *id025
+- *id026
+- *id027
+- *id028
+- *id029
+- *id030
+- *id031
+- *id032
+- *id033
+- *id034
+- *id035
+- *id036
+- *id037
+- *id038
+- *id039
+- *id040
+- *id041
+- *id042
+- *id043
+- *id044
+- *id045
+- *id046
+- *id047
+- *id048
+- *id049
+- *id050
+- *id051
+- *id052
+- *id053
+- *id054
+- *id055
+- *id056
+- *id057
+- *id058
+- *id059
+- *id060
+- *id061
+- *id062
+- *id063
+- *id064
+- *id065
+- *id066
+- *id067
+- *id068
+- *id069
+- *id070
+- *id071
+- *id072
+- *id073
+- *id074
+- *id075
+- *id076
+- *id077
+- *id078
+- *id079
+- *id080
+- *id081
+- *id082
+- *id083
+- *id084
+- *id085
+- *id086
+- *id087
+- *id088
+- *id089
+- *id090
+- *id091
+- *id092
+- *id093
+- *id094
+- *id095
+- *id096
+- *id097
+- *id098
+- *id099
+- *id100
+- *id101
+- *id102
+- *id103
+- *id104
+- *id105
+- *id106
+- *id107
+- *id108
+- *id109
+- *id110
+- *id111
+- *id112
+- *id113
+- *id114
+- *id115
+- *id116
+- *id117
+- *id118
+- *id119
+- *id120
+- *id121
+- *id122
+- *id123
+- *id124
+- *id125
+- *id126
+- *id127
+- *id128
+- *id129
+- *id130
+- *id131
+- *id132
+- *id133
+- *id134
+- *id135
+- *id136
+- *id137
+- *id138
+- *id139
+- *id140
+- *id141
+- *id142
+- *id143
+- *id144
+- *id145
+- *id146
+- *id147
+- *id148
+- *id149
+- *id150
+- *id151
+- *id152
+- *id153
+- *id154
+- *id155

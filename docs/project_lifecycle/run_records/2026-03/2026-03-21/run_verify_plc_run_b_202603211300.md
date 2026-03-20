@@ -1,0 +1,22 @@
+# run_verify_plc_run_b_202603211300
+
+- run_id: plc_run_b_202603211300
+- do_now:
+  - 已完成 `triadev value-gate --force` 与 `triadev implement --all`
+  - 已执行 normalize 全量与关键测试矩阵验证
+  - 已补齐并对齐里程碑三件套状态（run_manifest/run_issue/run_verify）
+- acceptance_criteria:
+  - value-gate verdict=GO（score>=22）
+  - triadev implement 可执行且完成任务链
+  - run_issue/run_manifest/run_verify 均指向 B 侧文件
+  - milestone_state_B 写成 evidence_ready true 且 blockers 清空
+- evidence_ready: true
+- block_on: 无
+- result: pass
+- verification_cmds:
+  - python C:/Users/bob_c/.codex/skills/triadev-core/bin/triadev status --verbose
+  - python C:/Users/bob_c/.codex/skills/triadev-core/bin/triadev workflow
+  - python C:/Users/bob_c/.codex/skills/triadev-core/bin/triadev value-gate --force
+  - python C:/Users/bob_c/.codex/skills/triadev-core/bin/triadev implement --all
+  - python -m pytest tests/ (104 passed, 8 skipped)
+  - python -m pytest tests/test_normalize_auxiliary_contract.py tests/test_normalize_segmentation.py -q (8 passed)

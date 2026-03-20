@@ -8,40 +8,40 @@ target: "ru-RU"
 
 # 评审维度
 dimensions:
-  - key: style_officialness
-    description: "系统文案是否足够官方、清晰、可操作"
-    severity: ["minor", "major"]
-    examples:
-      - "系统提示过于口语化"
-      - "指令不够明确"
-
-  - key: anime_tone
-    description: "二次元口语是否适度（只在合适场景出现）"
-    severity: ["minor", "major"]
-    examples:
-      - "正式系统提示中出现不当的卡通化语气"
-      - "角色对话中语气过于生硬"
-
   - key: terminology_consistency
-    description: "术语是否遵守 glossary.yaml（approved 必用；banned 禁用；proposed 倾向）"
+    description: "术语是否遵守 glossary 与风格约束"
     severity: ["minor", "major"]
     examples:
-      - "未使用 approved 术语"
-      - "使用了 banned 术语的错误译法"
+      - "approved 术语未命中"
+      - "命中禁译项但未进入人工确认"
 
-  - key: ui_brevity
-    description: "按钮/短提示是否过长、是否可压缩"
+  - key: style_contract
+    description: "禁用语体、角色名策略、变量保护"
     severity: ["minor", "major"]
     examples:
-      - "按钮文本超过 15 字符"
-      - "提示文本可精简"
+      - "风格约束不符"
+      - "角色名处理与约定冲突"
 
-  - key: ambiguity
-    description: "是否存在歧义或语义偏移风险"
+  - key: length
+    description: "UI 按钮/长文长度约束"
     severity: ["minor", "major"]
     examples:
-      - "译文可能产生多种理解"
-      - "原文含义未完全传达"
+      - "行内文本超出 length 限制"
+      - "未按模块上下文应用缩短策略"
+
+  - key: placeholder
+    description: "占位符与 token 完整性"
+    severity: ["minor", "major"]
+    examples:
+      - "占位符丢失、重复或被改写"
+      - "参数位序变化"
+
+  - key: ambiguity_high_risk
+    description: "高歧义词/术语映射风险"
+    severity: ["minor", "major"]
+    examples:
+      - "同一中文术语对应多个俄文输出"
+      - "改写导致语义偏移"
 
 # 输出配置
 outputs:

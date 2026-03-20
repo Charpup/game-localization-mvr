@@ -19,6 +19,7 @@ python scripts/soft_qa_llm.py \
   workflow/style_guide.md \
   data/glossary.yaml \
   workflow/soft_qa_rubric.yaml \
+  --style-profile data/style_profile.yaml \
   --batch_size 40 \
   --out_report data/qa_soft_report.json \
   --out_tasks data/repair_tasks.jsonl
@@ -36,17 +37,18 @@ python scripts/soft_qa_llm.py \
 
 ## 评审维度
 
-- `style_officialness` - 系统文案是否官方、清晰
-- `anime_tone` - 二次元口语是否适度
-- `terminology_consistency` - 术语是否遵守 glossary
-- `ui_brevity` - 按钮/短提示是否过长
-- `ambiguity` - 是否存在歧义风险
+- `terminology_consistency` - 术语是否遵守 glossary（含风格优先级映射）
+- `style_contract` - 术语优先法、角色名策略、变量与禁译项
+- `length` - 按钮/长文长度约束（含 per-row 上限）
+- `placeholder` - 占位符与变量完整性
+- `ambiguity_high_risk` - 同源语义可能歧义点
+- `punctuation` - 标点/引号/标签语义风险
 
 ## 要求
 
 - **不阻断流水线**：即使有 major issues，也不停止后续步骤
 - **必须落盘输出**：report 和 tasks 必须写入文件
-- **驱动 Repair Loop**：输出用于下一步自动修复
+- **驱动 Repair Loop**：输出用于下一步自动修复（建议先处理 major）
 
 ## 后续步骤
 

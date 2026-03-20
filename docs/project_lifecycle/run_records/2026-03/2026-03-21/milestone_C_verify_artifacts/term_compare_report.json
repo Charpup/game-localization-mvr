@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-03-21T21:45:00+08:00",
+  "datasets": {
+    "chain": "term_candidates_c_chain_verify.yaml",
+    "jieba": "term_candidates_jieba_verify.yaml"
+  },
+  "statistics": {
+    "chain_unique": 155,
+    "jieba_unique": 155,
+    "intersection_unique": 155,
+    "union_unique": 155,
+    "chain_only_count": 0,
+    "jieba_only_count": 0,
+    "recall_like": 100.0,
+    "precision_like": 100.0,
+    "noise_proxy_percent": 99.35
+  },
+  "style_profile_in_chain_output": true,
+  "chain_only_terms": [],
+  "jieba_only_terms": [],
+  "top10_overlap": {
+    "chain_top10": [
+      "元素",
+      "忍者",
+      "卡卡",
+      "带土",
+      "高级",
+      "属性",
+      "初级",
+      "中级",
+      "超级",
+      "消耗"
+    ],
+    "jieba_top10": [
+      "元素",
+      "忍者",
+      "卡卡",
+      "带土",
+      "高级",
+      "属性",
+      "初级",
+      "中级",
+      "超级",
+      "消耗"
+    ]
+  },
+  "chain_stats": {
+    "total_strings": 200,
+    "unique_terms": 155,
+    "total_occurrences": 605.0,
+    "critical": 0,
+    "proposed": 1,
+    "low_confidence": 154
+  },
+  "jieba_stats": {
+    "total_strings": 200,
+    "unique_terms": 155,
+    "total_occurrences": 605.0,
+    "critical": 0,
+    "proposed": 1,
+    "low_confidence": 154
+  },
+  "notes": [
+    "Chain/Jieba 语料对照在 200 条样本上 top 155 一致。",
+    "verify 产物已写入 style_profile 字段（值为路径名），便于风格约束链路追踪。"
+  ]
+}

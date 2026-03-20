@@ -1,8 +1,4 @@
----
-description: Full 14-step localization pipeline with dual repair loops
----
-
-# Localization Pipeline v2.0 - Full Workflow
+# Localization Pipeline v2.1 - Full Workflow (with Style Contract Bootstrap)
 
 ## Prerequisites
 
@@ -14,52 +10,71 @@ description: Full 14-step localization pipeline with dual repair loops
 
 ### Phase 1: Preparation
 
-// turbo
-0. **Style Guide Sync Check**
+0. **Style Guide Bootstrap**（项目启动）
+
+```bash
+python scripts/style_guide_bootstrap.py \
+  --questionnaire workflow/style_guide_questionnaire.md \
+  --guide-output workflow/style_guide.generated.md \
+  --profile-output data/style_profile.yaml
+```
+
+0.5 **Style Guide Sync Check**（硬门禁）
 
 ```bash
 python scripts/style_sync_check.py
 ```
 
-// turbo
+> 门禁失败（退出码非 0）时停止后续翻译链路。未通过前先补齐：
+> - `workflow/style_guide.md`
+> - `workflow/style_guide.generated.md`
+> - `data/style_profile.yaml`
 
-1. **Normalize** - Freeze placeholders
-
-```bash
-python scripts/normalize_guard.py data/input.csv data/draft.csv data/placeholder_map.json workflow/placeholder_schema.yaml
-```
-
-1. **Check Glossary** - Verify compiled.yaml exists with matching scope
+1. **Normalize** - 冻结占位符并生成 draft.csv
 
 ```bash
-# If glossary/compiled.lock.json exists and matches language_pair+genre+franchise, skip Step 3
+python scripts/normalize_ingest.py --input data/input.csv --output data/source_raw.csv
+python scripts/normalize_tagger.py --input data/source_raw.csv --output data/normalized.csv
+python scripts/normalize_guard.py data/normalized.csv data/draft.csv data/placeholder_map.json workflow/placeholder_schema.yaml
 ```
 
-1. **Extract & Translate Glossary** (if needed)
+1. **Extract Terms with Style Context**
 
 ```bash
-python scripts/extract_terms.py data/draft.csv --out data/term_candidates.yaml
-# Then manually translate or use LLM, then compile
-python scripts/glossary_compile.py --approved glossary/approved.yaml
+python scripts/extract_terms.py data/draft.csv data/term_candidates.yaml \
+  --mode segmented \
+  --seg-backend pkuseg,thulac,lac,jieba,heuristic \
+  --style-profile data/style_profile.yaml \
+  --domain-hint "ui"
 ```
 
-1. **Check Style Guide** - Verify workflow/style_guide.md
+2. **Review Term Candidates**
 
-### Phase 2: Translation (Loop A - Hard Gate)
+手动审核 `data/term_candidates.yaml` 的 `critical/proposed/low_confidence`，按审批策略转为 glossary。
 
-1. **Translate**
+### Phase 2: Glossary and Translation
+
+1. **Translate Glossary**（if needed）
 
 ```bash
-python scripts/translate_llm.py data/draft.csv data/translated.csv workflow/style_guide.md data/glossary.yaml --target ru-RU
+python scripts/glossary_compile.py --approved data/glossary.yaml --language_pair zh-CN->ru-RU
 ```
 
-1. **QA Hard**
+2. **Translate**（加载 style contract）
+
+```bash
+python scripts/translate_llm.py --input data/draft.csv --output data/translated.csv \
+  --style workflow/style_guide.md --glossary data/glossary.yaml \
+  --style-profile data/style_profile.yaml --target-lang ru-RU
+```
+
+3. **QA Hard**
 
 ```bash
 python scripts/qa_hard.py data/translated.csv data/placeholder_map.json workflow/placeholder_schema.yaml workflow/forbidden_patterns.txt data/qa_hard_report.json
 ```
 
-1. **Repair Loop Hard** (if qa_hard fails, max 3 attempts)
+4. **Repair Loop Hard**（如需）
 
 ```bash
 python scripts/repair_loop.py \
@@ -68,18 +83,21 @@ python scripts/repair_loop.py \
   --output data/repaired.csv \
   --output-dir data/repair_reports/hard \
   --qa-type hard
-# Then repeat Step 6
 ```
 
-### Phase 3: Soft QA (Loop B - Safety)
+### Phase 3: Soft QA and Repair
 
 1. **Soft QA**
 
 ```bash
-python scripts/soft_qa_llm.py data/translated.csv workflow/style_guide.md data/glossary.yaml workflow/soft_qa_rubric.yaml
+python scripts/soft_qa_llm.py data/translated.csv \
+  workflow/style_guide.md \
+  data/glossary.yaml \
+  workflow/soft_qa_rubric.yaml \
+  --style-profile data/style_profile.yaml
 ```
 
-1. **Repair Loop Soft**
+2. **Repair Loop Soft**（仅 major）
 
 ```bash
 python scripts/repair_loop.py \
@@ -90,58 +108,44 @@ python scripts/repair_loop.py \
   --qa-type soft
 ```
 
-`--qa-type soft` is the CLI contract; runtime routing still records this phase as `repair_soft_major`.
-
-6b. **QA Hard Recheck** (verify soft repair didn't break hard constraints)
+3. **QA Hard Recheck**
 
 ```bash
 python scripts/qa_hard.py data/repaired.csv data/placeholder_map.json workflow/placeholder_schema.yaml workflow/forbidden_patterns.txt data/qa_recheck_report.json
 ```
 
-7b. **Repair Loop Hard Post-Soft** (if 6b fails, max 2 attempts, minimal changes)
+### Phase 4: Export and Glossary Lifecycle
 
-### Phase 4: Export & Metrics
-
-// turbo
-10. **Export** - Rehydrate placeholders
+1. **Export** - 还原占位符
 
 ```bash
 python scripts/rehydrate_export.py data/repaired.csv data/placeholder_map.json data/final.csv
 ```
 
-// turbo
-11. **Metrics** - Aggregate LLM costs
+2. **Glossary Autopromote**
 
 ```bash
-python scripts/metrics_aggregator.py
+python scripts/glossary_autopromote.py \
+  --before data/translated.csv \
+  --after data/repaired.csv \
+  --style workflow/style_guide.md \
+  --style-profile data/style_profile.yaml \
+  --glossary data/glossary.yaml \
+  --language_pair "zh-CN->ru-RU" \
+  --scope "project_default"
 ```
 
-### Phase 5: Glossary Lifecycle
+3. **Review proposals & Compile**
 
-1. **Glossary Autopromote** - Generate proposals
-
-```bash
-python scripts/glossary_autopromote.py --before data/translated.csv --after data/repaired.csv --style workflow/style_guide.md --glossary data/glossary.yaml
-```
-
-1. **Review Proposals** - User fills decision in CSV
-
-```bash
-python scripts/glossary_make_review_queue.py --proposals data/glossary_proposals.yaml --out_csv data/glossary_review_queue.csv
-# User edits CSV: approve/reject/edit
-python scripts/glossary_apply_review.py --review_csv data/glossary_review_queue.csv
-```
-
-1. **Publish Glossary** - Compile for next round
-
-```bash
-python scripts/glossary_compile.py --approved glossary/approved.yaml --language_pair zh-CN->ru-RU
-```
+- `python scripts/glossary_make_review_queue.py --proposals data/glossary_proposals.yaml --out_csv data/glossary_review_queue.csv`
+- 用户编辑 `data/glossary_review_queue.csv`（approve/reject/edit）
+- `python scripts/glossary_apply_review.py --review_csv data/glossary_review_queue.csv`
+- `python scripts/glossary_compile.py --approved data/glossary.yaml --language_pair zh-CN->ru-RU`
 
 ## Loop Thresholds
 
 | Loop | Max Attempts | On Exceed |
-|------|-------------|-----------|
+|---|---|---|
 | Loop A (Hard Gate) | `HARD_LOOP_MAX=3` | Escalation |
 | Loop B (Post-Soft) | `POST_SOFT_HARD_LOOP_MAX=2` | Escalation |
 

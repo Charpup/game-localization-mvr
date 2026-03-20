@@ -1,65 +1,72 @@
 ---
-description: 翻译风格指导 (Consolidated Version)
+description: 项目级风格指南（由 `style_guide_bootstrap.py` 生成）
 ---
 
-# RU Localization Style Guide (Consolidated)
+# Project Style Guide (Generated)
 
-> [!NOTE]
-> Source: `.agent/workflows/style-guide.md` (Naruto-themed project context)
-> Last Sync: 2026-01-24
+- Source: zh-CN -> ru-RU
+- Project: naruto_localization_demo / 火影忍者 / Наруто
 
-## 1. Register and Tone (语域与口吻)
+## 1. Tone
 
-### 1.1 Official System Content (官方系统文案 - 默认)
+- Official ratio target: 70%
+- Anime ratio target: 30%
+- Register: neutral_formal
+- 禁止过度本地化: 是
+- 禁止过度直译: 是
+- 系统文案、错误提示、支付/计费文案避免梗化与口语化
 
-- **Style**: Clear, direct, and actionable.
-- **Tone**: Professional and friendly.
-- **Preference**: Short imperative sentences and standard UI terminology.
-- **Examples**:
-  - "Confirm" → "ОК" / "Подтвердить"
-  - "Cancel" → "Отмена"
-  - "Network error" → "Ошибка сети"
-  - "Please try again later" → "Повторите попытку позже."
+## 2. Terminology
 
-### 1.2 Anime/Themed Style (二次元口语 - 少量使用)
+- 禁用词/禁译项:
+  - 奶妈
+  - 副本
+  - 攻略
+  - bug
+  - issue
+- 优先译法:
+  - 木叶 -> Коноха
+  - 忍术 -> Ниндзюцу
+  - 忍者 -> ниндзя
+- 命名实体处理:
+  - 角色名/地名默认保留可读音译
+  - 无法确定译法时保守不改
+- 禁止项命中时降级：输出建议进入人工确认
 
-- **Applicability**: Event titles, lightweight tips, character dialogue.
-- **Restriction**: Forbidden in system critical tips, errors, or payment-related strings.
-- **Allowed**: Short exclamations like "Ну что, вперёд!" / "Поехали!"
-- **Forbidden**: Excessive slang or ephemeral internet memes.
+## 3. Length
 
-## 2. Terminology Consistency (术语一致性)
+- 按钮: ≤ 18 字符
+- 对话/长文: ≤ 120 字符
+- 允许扩展上限: 30%
+- 允许单行按钮；多行按钮需手工评审
 
-- **Glossary First**: Approved terms in `glossary.yaml` (status: approved) are **mandatory**.
-- **Missing Terms**: Use literal and conservative translations; do not invent aliases.
-- **Proper Nouns**: Do not translate character names or specific location names unless they have established localized forms (e.g., Hidden Leaf Village).
+## 4. Placeholder
 
-## 3. Formatting and Placeholders (格式与占位符)
+- 保护 token: `⟦PH_xx⟧`、`⟦TAG_xx⟧`、`{0}`、`%s`、`%d`
+- 保护 markup: `<color>`、`\n`、XML/custom tags，位置和数量不可改动
+- 禁止改写/删减变量语义
 
-- **Placeholder Guard (CRITICAL)**: Always preserve placeholders (`{0}`, `%s`, `⟦PH_xx⟧`, `⟦TAG_xx⟧`, etc.) exactly as they appear in the tokenized source.
-- **Variable Semantics**: Do not change the meaning of units (e.g., "%d seconds" must not become "%d minutes").
-- **Tags**: Keep `<color=...>`, `\n`, and other markup intact.
+## 5. Content and Style Constraints
 
-## 4. Punctuation and Typography (标点与排版)
+- 文本体裁映射:
+  - UI/System: 简洁、官方语气、术语优先
+  - Dialogue/Narrative: 可允许适度角色化措辞
+- 名称与文化位点:
+  - 保留关键固有名词，避免强行本地化
+- 错误避让:
+  - 幽默/双关只在剧情对话允许，不能改变变量含义
+  - 遇到风险译法时建议保守输出与原义一致方案
 
-- **Quotes**: Prefer Russian "Guillemets": « »
-- **Ellipsis**: Use the single character `…` or maintain system consistency with `...`.
-- **Spacing**: Ensure a space after colons and commas: `:`
-- **Symbols**: Avoid Chinese brackets 【 】; use `« »` or list format `X: ...` in Russian.
+## 6. Terminology Consistency & Priority
 
-## 5. UI and Length Constraints (UI 与长度限制)
+- Approved glossary: 强制使用
+- Proposed glossary: 参考并优先建议
+- Banned terminology: 不得使用，若命中降级到人工确认
 
-| Element Type | Target Length (Characters) | Strategy |
-| :--- | :--- | :--- |
-| **Buttons/Tabs** | ≤ 14–18 | Use concise words; prioritize readability. |
-| **System Tips** | Fit in one screen | Avoid complex subordinate clauses. |
-| **Text Overflow** | Respect `max_length` | Prioritize information accuracy, then compress. |
+## 7. Quality Checklist
 
-## 6. Quality Checklist
-
-- [ ] All placeholders and tags preserved exactly.
-- [ ] Terminology matched with approved glossary entries.
-- [ ] No Chinese brackets 【 】 or leftover CJK characters.
-- [ ] Russian punctuation (quotes, spacing) followed.
-- [ ] Tone appropriate for the content type (System vs Dialogue).
-- [ ] Length constraints respected.
+- [ ] Approved glossary 全覆盖且无违背
+- [ ] 禁用/禁译词命中检测通过
+- [ ] `style_profile`/`style_guide.generated.md` 与文档保持一致
+- [ ] 占位符与标签完整保留
+- [ ] UI 文案长度与模块约束通过

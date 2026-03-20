@@ -1,0 +1,19 @@
+{
+  "run_id": "plc_run_d_prepare",
+  "run_scope": "milestone_D_prepare",
+  "started_at": "2026-03-21T21:40:00+08:00",
+  "owner": "Codex",
+  "input_files": [
+    "docs/HANDOFF_MAINLINE_GUARDRAILS.md",
+    "task_plan.md",
+    "docs/project_lifecycle/roadmap_index.md",
+    "docs/project_lifecycle/continuity_protocol.md",
+    "workflow/style_guide.md",
+    "workflow/soft_qa_rubric.yaml",
+    "scripts/style_sync_check.py",
+    "workflow/style_guide_questionnaire.md",
+    "workflow/style_guide.generated.md",
+    "data/style_profile.yaml"
+  ],
+  "notes": "里程碑 D 准备阶段目标：落地 checksum 对账与翻译漂移复测基线。"
+}

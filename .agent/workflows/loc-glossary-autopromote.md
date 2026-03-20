@@ -1,135 +1,101 @@
 ---
-description: Glossary autopromote flywheel - extract term candidates from production evidence
+description: 用生产 evidence 自动提取术语提案（含 style profile 风险降级）
 ---
 
-# Glossary Autopromote Workflow
+# /loc-glossary-autopromote 工作流
 
-This workflow extracts term candidates from production evidence (repair diffs, soft QA issues) and generates proposals for human review.
+根据 `data/translated.csv` 与 `data/repaired.csv` 的修订差异，输出可复用术语提案。
 
-## Overview
+该流程已接入 `data/style_profile.yaml`，命中禁译/偏好规则时会自动打标，送人工确认。
 
-The autopromote flywheel does three things:
-1. **Extract** term candidates from before/after diffs and terminology issues
-2. **Aggregate** by (term_zh, term_ru), detect conflicts with existing approved terms
-3. **Output** proposals + patch for human review (never auto-approve)
+## 执行命令
 
-## Glossary Directory Structure
-
-```
-glossary/
-├── global.yaml                    # Universal terms (all languages)
-└── zhCN_ruRU/
-    ├── base.yaml                  # Core game terms
-    ├── genre_card.yaml            # Card game specific
-    ├── ip_naruto.yaml             # Naruto IP terms
-    └── project_naruto_mobile_v1.yaml  # Project specific
-```
-
-## Entry Format
-
-```yaml
-entries:
-  - term_zh: "木叶"
-    term_ru: "Коноха"
-    status: "approved"       # approved | proposed | rejected
-    tags: ["ip", "location"]
-    confidence: 0.99
-    evidence:
-      - type: "manual"
-        note: "已与官方译名对齐"
-```
-
-## Run Autopromote
-
-### Basic Usage
+### 基础流程
 
 ```bash
 python scripts/glossary_autopromote.py \
   --before data/translated.csv \
   --after data/repaired.csv \
   --style workflow/style_guide.md \
-  --glossary glossary/zhCN_ruRU/base.yaml \
+  --style-profile data/style_profile.yaml \
+  --glossary data/glossary.yaml \
   --language_pair "zh-CN->ru-RU" \
   --scope "project_default"
 ```
 
-### With Soft QA Tasks
+### 含 soft QA 任务
 
 ```bash
 python scripts/glossary_autopromote.py \
   --before data/translated.csv \
   --after data/repaired.csv \
   --style workflow/style_guide.md \
-  --glossary glossary/zhCN_ruRU/base.yaml \
+  --style-profile data/style_profile.yaml \
+  --glossary data/glossary.yaml \
   --soft_tasks data/repair_tasks.jsonl \
   --language_pair "zh-CN->ru-RU" \
   --scope "ip_naruto" \
   --min_support 3 \
+  --max_rows 500 \
   --out_proposals data/glossary_proposals.yaml \
   --out_patch data/glossary_patch.yaml
 ```
 
-### Parameters
+### 参数要点
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| --before | required | Before CSV (translated.csv) |
-| --after | required | After CSV (repaired.csv) |
-| --style | required | Style guide markdown |
-| --glossary | required | Existing glossary YAML |
-| --soft_tasks | None | Soft QA tasks JSONL |
-| --language_pair | zh-CN->ru-RU | Language pair |
-| --scope | project_default | Scope tag |
-| --min_support | 5 | Min occurrences to propose |
-| --max_rows | 500 | Max rows to process |
+| 参数 | 说明 |
+|---|---|
+| `--before` | 修订前 CSV（通常为 `translated.csv`） |
+| `--after` | 修订后 CSV（通常为 `repaired.csv`） |
+| `--style` | 风格指南（markdown） |
+| `--style-profile` | 项目风格策略文件，驱动禁译/偏好降级 |
+| `--glossary` | 当前生效 glossary |
+| `--soft_tasks` | 可选，术语方向提示任务 |
+| `--min_support` | 提案支持次数阈值 |
+| `--max_rows` | 防护上限 |
 
-## Outputs
+## 输出
 
 ### glossary_proposals.yaml
 
-Human-readable proposals with evidence:
+示例：
 
 ```yaml
 meta:
-  version: 1
+  version: 2
   language_pair: "zh-CN->ru-RU"
   scope: "ip_naruto"
-  min_support: 5
 proposals:
   - term_zh: "忍术"
     term_ru: "Ниндзюцу"
     status: "proposed"
     confidence: 0.92
     support: 12
-    evidence:
-      examples:
-        - string_id: "skill_001"
-          before_ru: "Техника"
-          after_ru: "Ниндзюцу"
+    style_profile:
+      requires_manual_confirmation: true
+      notes:
+        - preferred translation mismatch
 ```
 
 ### glossary_patch.yaml
 
-Machine-applicable patch:
-
 ```yaml
 op: "append_entries"
-target_glossary: "glossary/zhCN_ruRU/base.yaml"
+target_glossary: "data/glossary.yaml"
 entries:
   - term_zh: "忍术"
     term_ru: "Ниндзюцу"
     status: "proposed"
     confidence: 0.92
     notes: "autopromote support=12 scope=ip_naruto"
+    requires_manual_confirmation: false
 ```
 
-## Review Process
+## 复核与应用
 
-1. **Review proposals** in `data/glossary_proposals.yaml`
-2. **Edit patch** if needed:
-   - Change `status` to `approved` for confirmed terms
-   - Remove entries you don't want to add
-3. **Apply patch**:
+1. 打开 `data/glossary_proposals.yaml`
+2. 核验 `style_profile.requires_manual_confirmation` 为 true 的项
+3. 确认后运行：
 
 ```bash
 python scripts/glossary_apply_patch.py \
@@ -137,24 +103,7 @@ python scripts/glossary_apply_patch.py \
   --backup
 ```
 
-## Conflict Handling
+## 冲突处理
 
-- If a proposed term_zh already has an `approved` term_ru that differs, it's flagged as a conflict
-- Conflicts are NOT included in proposals (require manual review)
-- To override an approved term, update the glossary directly
-
-## Integration with Workflow
-
-```mermaid
-graph LR
-    A[translated.csv] --> B[repair_loop.py]
-    B --> C[repaired.csv]
-    A --> D[glossary_autopromote.py]
-    C --> D
-    D --> E[proposals.yaml]
-    D --> F[patch.yaml]
-    E --> G[Human Review]
-    G --> H[glossary_apply_patch.py]
-    H --> I[Updated Glossary]
-    I --> J[Next Translation Batch]
-```
+- 与 `approved` 术语冲突的提案会被排除到 `conflicts`
+- 触发风格降级项（禁译/偏好不一致）不允许自动上链，必须人工确认

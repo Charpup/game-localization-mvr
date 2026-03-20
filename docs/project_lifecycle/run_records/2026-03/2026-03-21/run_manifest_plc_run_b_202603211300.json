@@ -1,0 +1,33 @@
+{
+  "run_id": "plc_run_b_202603211300",
+  "run_scope": "milestone_B_execute",
+  "status": "done",
+  "started_at": "2026-03-21T13:00:00+08:00",
+  "finished_at": "2026-03-21T18:30:00+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-03/2026-03-21/input_manifest_plc_run_b_202603211300.json",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_b_202603211300.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_b_202603211300.md",
+  "artifacts": [
+    "docs/project_lifecycle/continuity_protocol.md",
+    "docs/project_lifecycle/roadmap_index.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-21/session_start_202603211300.md",
+    "artifacts/proposal.md",
+    "artifacts/specs/proposal-spec.yaml",
+    "artifacts/design.md",
+    "artifacts/tasks.md",
+    "SPEC.yaml",
+    "SPEC-delta.yaml",
+    "value-review.md",
+    "triadev-project.json",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_B_normalize_matrix.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_B_error_taxonomy.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_B_fixture_report.md"
+  ],
+  "blockers": [],
+  "decision_refs": [
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "next_step_owner": "Codex",
+  "next_step_scope": "milestone_C_execute"
+}
