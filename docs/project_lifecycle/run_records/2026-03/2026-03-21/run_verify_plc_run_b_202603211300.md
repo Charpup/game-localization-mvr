@@ -1,0 +1,21 @@
+# run_verify_plc_run_b_202603211300
+
+- run_id: plc_run_b_202603211300
+- do_now:
+  - 复用同目录里程碑 B 证据链文件名与路径，保持 B 与 A 路径隔离
+  - triadev value-gate --force（已通过）
+  - triadev implement --all（等待 pytest 基础设施恢复后）
+  - 复核并落盘 normalize 用例矩阵、错误归类字典、fixture 报表
+- acceptance_criteria:
+  - value-gate verdict=GO（score>=22）
+  - triadev route 可继续执行 implement 或 run --from implement
+  - run_issue/run_manifest/run_verify 均指向 B 侧文件
+  - milestone_state_B 写成 evidence_ready true or 明确 blocker 与复测计划
+- evidence_ready: false
+- block_on: pytest runtime error `ValueError: I/O operation on closed file` during implement attempt
+- result: blocked
+- verification_cmds:
+  - triadev status --verbose
+  - python -m triadev value-gate --force
+  - python -m triadev implement --all（infra 可用后）
+  - python -m pytest tests/test_normalize_auxiliary_contract.py（inbox 窗口）

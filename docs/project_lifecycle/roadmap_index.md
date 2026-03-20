@@ -40,6 +40,17 @@
 | R | 48 | Q | 298-346 | 交互式质检入口、报表面板 |
 | S | 12 + 16/18 | A,N,O,P,Q,R | 346-358 + 分支 | ADR-000x；`skill` 与 `no-skill` 双路径行动清单 |
 
+## 里程碑 B（实时状态）
+
+- `run_id`：`plc_run_b_202603211300`
+- `status`：`blocked`
+- `evidence_ready`：`false`
+- `blocker`：
+  - triadev value-gate 已通过（GO，23/30，High）
+  - 实现阶段受 `pytest` 运行器 `ValueError: I/O operation on closed file` 阻塞
+- `next_owner`：`Codex`
+- `next_scope`：`milestone_B_execute`
+
 ## 里程碑 A（12h）细化计划（可直接执行）
 
 ### A0 预检与基线（0.5h）

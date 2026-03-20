@@ -3,7 +3,7 @@
 > Scope note: this file remains the historical execution ledger only.  
 > The forward-looking A→S governance roadmap is tracked in:
 > - `docs/project_lifecycle/roadmap_index.md`
-> - `docs/PROJECT_LIFECYCLE_CONTINUITY_FRAMEWORK.md`
+> - `docs/project_lifecycle/continuity_protocol.md`
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
@@ -38,6 +38,25 @@ Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layer
 ## 里程碑 B 预热启动会话
 
 - session_start：`docs/project_lifecycle/run_records/2026-03/2026-03-21/session_start_202603211300.md`
+- 目标：在 24 小时内完成里程碑 B 的 normalize 全覆盖准备（用例矩阵、错误归类字典、fixture 报表）与可执行治理闭环。
+- 当前状态：`session_start` 已建立，`run_id` `plc_run_b_202603211300`。
+- 约束与治理结论：
+  - triadev value-gate 已通过：`GO`（23/30，High）。
+  - `triadev implement --all` 在当前工作站 `pytest` 全量执行阶段出现运行器环境异常（`I/O operation on closed file`），不能进入代码实现交付。
+  - 里程碑 B 当前 `blocked`，阻塞理由为可恢复 infra 问题，等待恢复环境后继续实现。
+- 下一步（当前 owner）：
+  - 完成 B 的错误码字典与 fixture 报表落盘；
+  - 补齐 `run_issue`/`run_verify` 中 `B` 里程碑 blockers 的可执行 next_action；
+  - 在 `docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_B_normalize_matrix.md`、`.../milestone_B_error_taxonomy.md`、`.../milestone_B_fixture_report.md` 落档；
+  - 在 triadev 复测通过后继续 `implement` 并推进验收。
+- 里程碑运行记录：
+  - session_start：`docs/project_lifecycle/run_records/2026-03/2026-03-21/session_start_202603211300.md`
+  - run_manifest：`docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_b_202603211300.json`
+  - run_issue：`docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_b_202603211300.md`
+  - run_verify：`docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_b_202603211300.md`
+  - input_manifest：`docs/project_lifecycle/run_records/2026-03/2026-03-21/input_manifest_plc_run_b_202603211300.json`
+  - session_end：`docs/project_lifecycle/run_records/2026-03/2026-03-21/session_end_202603211300.md`
+- next_owner/next_scope（下文已写）: `Codex` / `milestone_B_execute`
 
 ## Notes
 - Do not change implementation unless a blocking issue requires it.
