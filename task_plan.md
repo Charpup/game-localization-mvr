@@ -1,5 +1,10 @@
 # Task Plan
 
+> Scope note: this file remains the historical execution ledger only.  
+> The forward-looking A→S governance roadmap is tracked in:
+> - `docs/project_lifecycle/roadmap_index.md`
+> - `docs/PROJECT_LIFECYCLE_CONTINUITY_FRAMEWORK.md`
+
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
 
@@ -8,11 +13,31 @@ Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layer
 - Record `run_id`, manifest path, issue report path, verify report path, and any row/placeholder/tag mismatches.
 - Focus on `string_id=305833`, translate row counts, and `row_checks`.
 
+## 2026-03-21 A→S Governance Cycle（里程碑 A）
+
+- 当前目标：启动里程碑 A（合规交付稳定化基线）并按 `plc` 进行文档化治理。
+- 触发：`plc`（Project Lifecycle Control）
+- 入口：`session_start_202603211000.md` / `milestone_state_A.md`
+- run_id：`plc_run_a_20260321_1000`
+- 当前状态：done
+- 下一步 scope：完成 A6 收官验收，进入里程碑 B 的 `session_start_202603211300.md` 预检窗口
+
 ## Phases
 - [complete] Phase 1: Initialize plan files and inspect run entrypoints.
 - [complete] Phase 2: Run `llm_ping` and preflight.
 - [complete] Phase 3: Run full.
-- [in_progress] Phase 4: Summarize outputs and block points.
+- [complete] Phase 4: Summarize outputs and block points.
+
+### Gate status
+- session_end：`docs/project_lifecycle/run_records/2026-03/2026-03-21/session_end_202603211200.md`
+- evidence_ready：true
+
+## 2026-03-21 里程碑 A Run-ID 追加
+- `plc_run_a_20260321_1000`（治理 run）
+
+## 里程碑 B 预热启动会话
+
+- session_start：`docs/project_lifecycle/run_records/2026-03/2026-03-21/session_start_202603211300.md`
 
 ## Notes
 - Do not change implementation unless a blocking issue requires it.

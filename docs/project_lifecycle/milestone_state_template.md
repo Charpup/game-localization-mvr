@@ -1,0 +1,22 @@
+# 里程碑状态模板（milestone_state_<A-S>.md）
+
+- id: <A|B|...|S>
+- status: <todo|in_progress|blocked|done|shelved>
+- owner: <owner_id>
+- next_owner: <next_owner>
+- progress_pct: 0
+- evidence_ready: false
+- blockers: []
+- dependencies: [<id>]
+- decision_ref: <docs/decisions/ADR-####-xxx.md or null>
+- eta_hours: <hours_left>
+- notes: <执行备注>
+- evidence:
+  - run_id: <run_id>
+  - run_manifest: <path>
+  - run_issue: <path>
+  - run_verify: <path>
+- handoff:
+  - next_owner: <owner_id>
+  - next_scope: <scope>
+
