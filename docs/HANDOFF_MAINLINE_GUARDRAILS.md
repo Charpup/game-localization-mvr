@@ -8,6 +8,8 @@ Use it together with
 
 - `task_plan.md` is the historical cleanup ledger
 - this file is the forward-looking development guardrail
+- governance execution protocols are centralized at `docs/project_lifecycle/*`
+- for session handoff and milestone continuity, use `skill/plc` (alias: `plc`, full alias: `skill/project_lifecycle_governance`)
 
 If the two ever drift, treat current scripts plus contract tests as authoritative, then
 update the docs in the same change.
