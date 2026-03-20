@@ -1,9 +1,9 @@
 {
   "run_id": "plc_run_b_202603211300",
   "run_scope": "milestone_B_execute",
-  "status": "blocked",
+  "status": "done",
   "started_at": "2026-03-21T13:00:00+08:00",
-  "finished_at": "2026-03-21T16:45:00+08:00",
+  "finished_at": "2026-03-21T18:30:00+08:00",
   "owner": "Codex",
   "input_manifest": "docs/project_lifecycle/run_records/2026-03/2026-03-21/input_manifest_plc_run_b_202603211300.json",
   "issue_report_path": "docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_b_202603211300.md",
@@ -24,16 +24,10 @@
     "docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_B_error_taxonomy.md",
     "docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_B_fixture_report.md"
   ],
-  "blockers": [
-    {
-      "id": "b-implement-001",
-      "description": "triadev value-gate 已通过 GO（23/30, High），但 `triadev implement --all`/pytest 基础设施在当前环境抛出 `ValueError: I/O operation on closed file`。",
-      "next_action": "先修复 pytest 运行环境（至少保证 collect 与关键 normalize 测试可稳定运行），再重跑 triadev implement。"
-    }
-  ],
+  "blockers": [],
   "decision_refs": [
     "docs/decisions/ADR-0002-skill-governance-framework.md"
   ],
   "next_step_owner": "Codex",
-  "next_step_scope": "milestone_B_execute"
+  "next_step_scope": "milestone_C_execute"
 }

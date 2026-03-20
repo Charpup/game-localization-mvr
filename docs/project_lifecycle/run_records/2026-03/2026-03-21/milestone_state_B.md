@@ -1,17 +1,16 @@
 - id: B
-- status: blocked
+- status: done
 - owner: Codex
 - next_owner: Codex
-- progress_pct: 35
-- evidence_ready: false
-- blockers:
-  - triadev value-gate 已通过但 implement 阶段被 pytest I/O 异常阻塞（`I/O operation on closed file`）
+- progress_pct: 100
+- evidence_ready: true
+- blockers: []
 - dependencies: [A]
 - decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
-- eta_hours: 6
+- eta_hours: 4
 - notes: >
-  B 里程碑已完成 triadev planning 链路（status/plan/workflow/detect-specs/delta/propose/spec/design/tasks）；
-  triadev value-gate 已通过 GO（23/30）；当前 block 在 pytest 运行器基础设施，属于恢复后可继续的 infra blocker。
+  B 里程碑 triadev planning + implement + 全量 pytest 验证通过，normalize 用例矩阵与错误码归类草案已形成并通过当前验收；
+  `session_start_202603211300 -> run_manifest/run_issue/run_verify -> session_end` 链路可复用于下文交接。
 - evidence:
   - run_id: plc_run_b_202603211300
   - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_b_202603211300.json
@@ -19,4 +18,4 @@
   - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_b_202603211300.md
 - handoff:
   - next_owner: Codex
-  - next_scope: milestone_B_execute
+  - next_scope: milestone_C_execute

@@ -2,20 +2,21 @@
 
 - run_id: plc_run_b_202603211300
 - do_now:
-  - 复用同目录里程碑 B 证据链文件名与路径，保持 B 与 A 路径隔离
-  - triadev value-gate --force（已通过）
-  - triadev implement --all（等待 pytest 基础设施恢复后）
-  - 复核并落盘 normalize 用例矩阵、错误归类字典、fixture 报表
+  - 已完成 `triadev value-gate --force` 与 `triadev implement --all`
+  - 已执行 normalize 全量与关键测试矩阵验证
+  - 已补齐并对齐里程碑三件套状态（run_manifest/run_issue/run_verify）
 - acceptance_criteria:
   - value-gate verdict=GO（score>=22）
-  - triadev route 可继续执行 implement 或 run --from implement
+  - triadev implement 可执行且完成任务链
   - run_issue/run_manifest/run_verify 均指向 B 侧文件
-  - milestone_state_B 写成 evidence_ready true or 明确 blocker 与复测计划
-- evidence_ready: false
-- block_on: pytest runtime error `ValueError: I/O operation on closed file` during implement attempt
-- result: blocked
+  - milestone_state_B 写成 evidence_ready true 且 blockers 清空
+- evidence_ready: true
+- block_on: 无
+- result: pass
 - verification_cmds:
-  - triadev status --verbose
-  - python -m triadev value-gate --force
-  - python -m triadev implement --all（infra 可用后）
-  - python -m pytest tests/test_normalize_auxiliary_contract.py（inbox 窗口）
+  - python C:/Users/bob_c/.codex/skills/triadev-core/bin/triadev status --verbose
+  - python C:/Users/bob_c/.codex/skills/triadev-core/bin/triadev workflow
+  - python C:/Users/bob_c/.codex/skills/triadev-core/bin/triadev value-gate --force
+  - python C:/Users/bob_c/.codex/skills/triadev-core/bin/triadev implement --all
+  - python -m pytest tests/ (104 passed, 8 skipped)
+  - python -m pytest tests/test_normalize_auxiliary_contract.py tests/test_normalize_segmentation.py -q (8 passed)

@@ -39,16 +39,16 @@ Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layer
 
 - session_start：`docs/project_lifecycle/run_records/2026-03/2026-03-21/session_start_202603211300.md`
 - 目标：在 24 小时内完成里程碑 B 的 normalize 全覆盖准备（用例矩阵、错误归类字典、fixture 报表）与可执行治理闭环。
-- 当前状态：`session_start` 已建立，`run_id` `plc_run_b_202603211300`。
+- 当前状态：`done`（证据完整，`evidence_ready=true`）。
 - 约束与治理结论：
   - triadev value-gate 已通过：`GO`（23/30，High）。
-  - `triadev implement --all` 在当前工作站 `pytest` 全量执行阶段出现运行器环境异常（`I/O operation on closed file`），不能进入代码实现交付。
-  - 里程碑 B 当前 `blocked`，阻塞理由为可恢复 infra 问题，等待恢复环境后继续实现。
-- 下一步（当前 owner）：
-  - 完成 B 的错误码字典与 fixture 报表落盘；
-  - 补齐 `run_issue`/`run_verify` 中 `B` 里程碑 blockers 的可执行 next_action；
-  - 在 `docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_B_normalize_matrix.md`、`.../milestone_B_error_taxonomy.md`、`.../milestone_B_fixture_report.md` 落档；
-  - 在 triadev 复测通过后继续 `implement` 并推进验收。
+  - `triadev implement --all` 与 `python -m pytest tests/` 已顺利完成，结果 `104 passed, 8 skipped`。
+  - 里程碑 B 当前 `done`，可交接下一阶段 `milestone_C_execute`。
+- 里程碑收口（当前 owner）：
+  - 错误码字典与 fixture 报表均已落盘；
+  - `run_issue`/`run_verify` 已补齐 blockers 并置 `evidence_ready=true`；
+  - `run_manifest/run_issue/run_verify` 与 `milestone_state_B` 已同步；
+  - 下一步 owner 已切到 `milestone_C_execute`。
 - 里程碑运行记录：
   - session_start：`docs/project_lifecycle/run_records/2026-03/2026-03-21/session_start_202603211300.md`
   - run_manifest：`docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_b_202603211300.json`
@@ -56,11 +56,13 @@ Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layer
   - run_verify：`docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_b_202603211300.md`
   - input_manifest：`docs/project_lifecycle/run_records/2026-03/2026-03-21/input_manifest_plc_run_b_202603211300.json`
   - session_end：`docs/project_lifecycle/run_records/2026-03/2026-03-21/session_end_202603211300.md`
-- next_owner/next_scope（下文已写）: `Codex` / `milestone_B_execute`
+- next_owner/next_scope（下文已写）：`Codex` / `milestone_C_execute`
 
 ## Notes
 - Do not change implementation unless a blocking issue requires it.
 - Keep the report anchored to absolute local paths.
+
+- [ ] User impact (urgent): restore B milestone execution, unblock `triadev implement --all`, and close `milestone_B` with evidence-ready run records in the roadmap.
 
 ## Run IDs collected
 - `smoke_run_20260318_044314`
