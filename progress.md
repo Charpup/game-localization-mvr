@@ -22,7 +22,9 @@
   - `tests/test_soft_qa_contract.py`: `7 passed`
   - `tests/test_translate_style_contract.py`: `1 passed`
   - `tests/test_plc_docs_contract.py`: `2 passed`
-- Current state: integration patch set is merge-ready; milestone E should still wait until this lands on clean `main`.
+- Merged PR #9 into `main` as `fdc253f`.
+- Closed PR #7 and PR #8 as superseded by PR #9.
+- Current state: mainline integration phase is complete; milestone E can now start from clean `main`.
 
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.

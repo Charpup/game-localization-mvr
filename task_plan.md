@@ -34,7 +34,7 @@ Stabilize the C/D milestone branch into one mergeable mainline PR, clear outstan
 - [complete] Phase 1: Land the minimum code fixes required by PR #9 review.
 - [complete] Phase 2: Land the minimum PLC contract fixes required for schema/ledger consistency.
 - [complete] Phase 3: Run targeted regression and document merge readiness.
-- [pending] Phase 4: Merge/hand off to clean `main`, then open milestone E from updated trunk.
+- [complete] Phase 4: Merge/hand off to clean `main`, then open milestone E from updated trunk.
 
 ### Exit Criteria
 - PR #9 remains the single active mainline PR candidate.
@@ -60,8 +60,12 @@ Stabilize the C/D milestone branch into one mergeable mainline PR, clear outstan
   - `python -m pytest tests/test_translate_style_contract.py -q`
   - `python -m pytest tests/test_plc_docs_contract.py -q`
 - Remaining action:
-  - merge or update PR #9 with this patch set
-  - then cut milestone E from refreshed `main`
+  - start `milestone_E_prepare` from refreshed `main`
+
+### Merge Result
+- PR #9 merged into `main` as `fdc253f`.
+- PR #7 and PR #8 were marked superseded by PR #9 and closed.
+- mainline integration phase is complete; the next active scope is `milestone_E_prepare`.
 
 ## Phases
 - [complete] Phase 1: Initialize plan files and inspect run entrypoints.
