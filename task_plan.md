@@ -1,5 +1,9 @@
 # Task Plan
 
+> Historical ledger note:
+> The legacy M4 goal/phases below remain for traceability only.
+> The current active mainline work is the `PLC + TriadDev Integration Priority` section until PR #9 is merged, after which the next active scope is `milestone_E_prepare`.
+
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
 

@@ -7,7 +7,7 @@
 - blockers:
 - 无
 - dependencies: [C]
-- decision_ref: milestone_D
+- decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
 - eta_hours: 16
 - notes: >
   里程碑 D 已完成复核漂移基线与复测门禁闭环，三次 run（prepare/full/verify）均 pass，样本签名可复现；
