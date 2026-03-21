@@ -1,5 +1,9 @@
 # Task Plan
 
+> Historical ledger note:
+> The legacy M4 goal/phases below remain for traceability only.
+> The current active mainline work is the `PLC + TriadDev Integration Priority` section until PR #9 is merged, after which the next active scope is `milestone_E_prepare`.
+
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
 
@@ -7,6 +11,57 @@ Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layer
 - Use `main_worktree` only.
 - Record `run_id`, manifest path, issue report path, verify report path, and any row/placeholder/tag mismatches.
 - Focus on `string_id=305833`, translate row counts, and `row_checks`.
+
+## 2026-03-21 PLC + TriadDev Integration Priority
+
+### Goal
+Stabilize the C/D milestone branch into one mergeable mainline PR, clear outstanding review feedback, and only then open milestone E from a clean `main`.
+
+### Route
+- `plc`: use `docs/project_lifecycle/continuity_protocol.md`, `docs/project_lifecycle/roadmap_index.md`, and dated `run_records` as the governance source of truth.
+- `triadev`: stay on the Extended route with the already-passed value gate; this step is implementation hardening and integration cleanup, not new feature expansion.
+
+### Scope
+- Treat `codex/plc-c-verify` as the only active integration branch for GitHub.
+- Pull only the minimum necessary fixes into that branch:
+  - PR #9 code review fixes in `scripts/soft_qa_llm.py` and `scripts/translate_llm.py`
+  - PLC ledger/schema corrections needed to keep milestone B/C/D evidence internally consistent
+- Do not implement milestone E functionality in this step.
+- Do not broaden the cleanup roadmap or reopen archived Batch 1-10 surfaces.
+
+### Integration Phases
+- [complete] Phase 0: Reconcile PLC roadmap state vs GitHub PR topology and choose a single mainline PR.
+- [complete] Phase 1: Land the minimum code fixes required by PR #9 review.
+- [complete] Phase 2: Land the minimum PLC contract fixes required for schema/ledger consistency.
+- [complete] Phase 3: Run targeted regression and document merge readiness.
+- [pending] Phase 4: Merge/hand off to clean `main`, then open milestone E from updated trunk.
+
+### Exit Criteria
+- PR #9 remains the single active mainline PR candidate.
+- `soft_qa_llm` no longer drops higher-severity placeholder findings behind lower-severity length findings.
+- `translate_llm` and `soft_qa_llm` both surface prohibited alias / banned term constraints from the style profile.
+- milestone B run manifest uses a schema-valid run status.
+- the stale milestone-B blocker is removed from the active ledger.
+- milestone E remains `next_scope` only, with no E implementation mixed into this integration branch.
+
+### Current Result
+- Integration branch remains `codex/plc-c-verify`.
+- Completed code fixes:
+  - `scripts/soft_qa_llm.py`
+  - `scripts/translate_llm.py`
+- Completed governance fixes:
+  - `docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_b_202603211300.json`
+  - `docs/decisions/ADR-0001-project-continuity-framework.md`
+  - `docs/decisions/ADR-0002-skill-governance-framework.md`
+  - `docs/decisions/README.md`
+  - `docs/decisions/index.md`
+- Completed regression:
+  - `python -m pytest tests/test_soft_qa_contract.py -q`
+  - `python -m pytest tests/test_translate_style_contract.py -q`
+  - `python -m pytest tests/test_plc_docs_contract.py -q`
+- Remaining action:
+  - merge or update PR #9 with this patch set
+  - then cut milestone E from refreshed `main`
 
 ## Phases
 - [complete] Phase 1: Initialize plan files and inspect run entrypoints.
@@ -222,3 +277,23 @@ physical removal as part of this batch's final roadmap closeout.
 - [complete] Phase 2: Update authority manifest, frozen-zone inventory, root inventory, and closeout report with the fixed compat mirror decision.
 - [complete] Phase 3: Run Batch 10 regression suite plus authority/M4 evidence gate.
 - [complete] Phase 4: Prepare stacked closeout branch output and declare the cleanup roadmap closed after Batch 10, with any future compat mirror retirement handled as a separate migration program.
+
+## 2026-03-21 Milestone D 收口与里程碑 E 续接
+
+### Goal
+Complete milestone D baseline/d drift-control hard-gate closure and register evidence for the next milestone.
+
+### Scope
+- Run `baseline_drift_control` preset for `plc_run_d_prepare` / `plc_run_d_full` / `plc_run_d_verify` with可复现参数.
+- 补齐并校验 `run_manifest` / `run_issue` / `run_verify` 与 `milestone_state_D`、`roadmap_index` 闭环。
+- 触发 `milestone_E_prepare` 的 handoff 准备。
+
+### Results
+- `plc_run_d_prepare` / `plc_run_d_full` / `plc_run_d_verify` 均 pass，`evidence_ready=true`，`run_id=plc_run_d_verify`。
+- evidence:
+  - `docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_d_verify.json`
+  - `docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_d_verify.md`
+  - `docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_d_verify.md`
+
+### Next Owner
+- `Codex`，`next_scope=milestone_E_prepare`

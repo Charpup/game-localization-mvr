@@ -1,0 +1,5 @@
+{"string_id": "v1", "type": "length", "severity": "major", "note": "target length exceeds limit", "problem": "长度超限", "suggestion": "缩短翻译", "suggested_fix": "Завершите副本任务"}
+{"string_id": "v1", "type": "style_contract", "severity": "major", "note": "forbidden term 副本", "problem": "命中禁译项", "suggestion": "使用替代术语", "suggested_fix": "Завершите副本任务"}
+{"string_id": "v2", "type": "length", "severity": "major", "note": "target length exceeds limit", "problem": "长度超限", "suggestion": "缩短翻译", "suggested_fix": "Перейдите в деревня_树叶"}
+{"string_id": "v2", "type": "style_contract", "severity": "minor", "note": "preferred form mismatch for 木叶", "problem": "与风格偏好译法不一致", "suggestion": "优先使用 Коноха", "suggested_fix": "Перейдите в деревня_树叶"}
+{"string_id": "v3", "type": "length", "severity": "major", "note": "target length exceeds limit", "problem": "长度超限", "suggestion": "缩短翻译", "suggested_fix": "Очень длинное предупреждение"}

@@ -193,3 +193,69 @@ def test_soft_qa_emits_tasks_without_becoming_a_blocking_gate(monkeypatch, tmp_p
     task = json.loads(task_lines[0])
     assert task["string_id"] == "id1"
     assert task["severity"] == "major"
+
+
+def test_merge_tasks_prefers_placeholder_over_lower_priority_length():
+    merged = soft_qa_llm.merge_tasks(
+        pref=[
+            {"string_id": "id1", "type": "length", "severity": "minor"},
+            {"string_id": "id1", "type": "placeholder", "severity": "major"},
+        ],
+        llm_tasks=[],
+        cap_per_row=1,
+    )
+
+    assert len(merged) == 1
+    assert merged[0]["type"] == "placeholder"
+    assert merged[0]["severity"] == "major"
+
+
+def test_preflight_tasks_flags_prohibited_aliases_and_banned_terms():
+    tasks = soft_qa_llm.preflight_tasks(
+        rows=[
+            {
+                "string_id": "id1",
+                "source_zh": "问候",
+                "target_text": "Запретный вариант",
+                "tokenized_zh": "",
+            },
+            {
+                "string_id": "id2",
+                "source_zh": "奖励",
+                "target_text": "Нежелательный термин",
+                "tokenized_zh": "",
+            },
+        ],
+        style_profile={
+            "terminology": {
+                "prohibited_aliases": ["问候 -> Запретный вариант"],
+                "banned_terms": ["Нежелательный термин"],
+            }
+        },
+        glossary_entries=[],
+    )
+
+    notes = {task["string_id"]: task["note"] for task in tasks}
+    assert notes["id1"] == "prohibited alias Запретный вариант"
+    assert notes["id2"] == "blocked term Нежелательный термин"
+
+
+def test_style_contract_block_lists_aliases_and_banned_terms():
+    block = soft_qa_llm.build_style_contract_block(
+        {
+            "project": {"source_language": "zh-CN", "target_language": "ru-RU"},
+            "style_contract": {
+                "language_policy": {},
+                "placeholder_protection": {},
+                "style_guard": {},
+            },
+            "ui": {"length_constraints": {}},
+            "terminology": {
+                "banned_terms": ["Нежелательный термин"],
+                "prohibited_aliases": ["问候 -> Запретный вариант"],
+            },
+        }
+    )
+
+    assert "- Banned term: Нежелательный термин" in block
+    assert "- Prohibited alias: Запретный вариант" in block

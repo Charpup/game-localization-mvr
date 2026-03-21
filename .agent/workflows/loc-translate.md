@@ -13,6 +13,7 @@ description: AI 初翻：使用 LLM 翻译 tokenized 文本
    - `approved` 必用
    - `banned` 禁用
    - `proposed` 仅参考
+3. `data/style_profile.yaml` 存在时参与硬性风格约束校验
 3. 环境变量必须已配置：
 
 ```powershell
@@ -32,6 +33,7 @@ python scripts/translate_llm.py `
   data/translated.csv `
   workflow/style_guide.md `
   data/glossary.yaml `
+  --style-profile data/style_profile.yaml `
   --target ru-RU `
   --batch_size 50 `
   --max_retries 4

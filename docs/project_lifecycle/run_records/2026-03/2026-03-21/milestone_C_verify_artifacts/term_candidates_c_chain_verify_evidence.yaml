@@ -1,0 +1,3423 @@
+generated_at: '2026-03-21T04:31:33.102588'
+output: docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/term_candidates_c_chain_verify.yaml
+evidence:
+- term: 元素
+  tier: proposed
+  evidence:
+    sources:
+    - string_id: '303098'
+      line: 37
+      module_tag: misc
+      context: 购买可获得大量元素养成道具
+    - string_id: '10560001'
+      line: 144
+      module_tag: misc
+      context: 初级水弑元素
+    - string_id: '10560002'
+      line: 145
+      module_tag: misc
+      context: 初级水佑元素
+    - string_id: '10560003'
+      line: 146
+      module_tag: misc
+      context: 中级水弑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 忍者
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 卡卡
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 带土
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040002'
+      line: 110
+      module_tag: misc
+      context: 你果然是…带土！可这怎么可能？
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 高级
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '16'
+      line: 17
+      module_tag: misc
+      context: 高级招募每次十连必出5星忍者，并有概率出多位5星忍者
+    - string_id: '303113'
+      line: 52
+      module_tag: misc
+      context: 高级设置
+    - string_id: '10560005'
+      line: 148
+      module_tag: misc
+      context: 高级水弑元素
+    - string_id: '10560006'
+      line: 149
+      module_tag: misc
+      context: 高级水佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 属性
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '3'
+      line: 4
+      module_tag: misc
+      context: 除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。
+    - string_id: '3'
+      line: 4
+      module_tag: misc
+      context: 除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 初级
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560001'
+      line: 144
+      module_tag: misc
+      context: 初级水弑元素
+    - string_id: '10560002'
+      line: 145
+      module_tag: misc
+      context: 初级水佑元素
+    - string_id: '10560013'
+      line: 156
+      module_tag: misc
+      context: 初级风弑元素
+    - string_id: '10560014'
+      line: 157
+      module_tag: misc
+      context: 初级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 中级
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560003'
+      line: 146
+      module_tag: misc
+      context: 中级水弑元素
+    - string_id: '10560004'
+      line: 147
+      module_tag: misc
+      context: 中级水佑元素
+    - string_id: '10560015'
+      line: 158
+      module_tag: misc
+      context: 中级风弑元素
+    - string_id: '10560016'
+      line: 159
+      module_tag: misc
+      context: 中级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 超级
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560007'
+      line: 150
+      module_tag: misc
+      context: 超级水弑元素
+    - string_id: '10560008'
+      line: 151
+      module_tag: misc
+      context: 超级水佑元素
+    - string_id: '10560019'
+      line: 162
+      module_tag: misc
+      context: 超级风弑元素
+    - string_id: '10560020'
+      line: 163
+      module_tag: misc
+      context: 超级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 消耗
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 购买
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303094'
+      line: 33
+      module_tag: misc
+      context: 是否购买【{0}】
+    - string_id: '303095'
+      line: 34
+      module_tag: misc
+      context: 确定购买此物品吗
+    - string_id: '303096'
+      line: 35
+      module_tag: misc
+      context: 购买可获得大量铜币
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 神级
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560011'
+      line: 154
+      module_tag: misc
+      context: 神级水弑元素
+    - string_id: '10560012'
+      line: 155
+      module_tag: misc
+      context: 神级水佑元素
+    - string_id: '10560023'
+      line: 166
+      module_tag: misc
+      context: 神级风弑元素
+    - string_id: '10560024'
+      line: 167
+      module_tag: misc
+      context: 神级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 还有
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '3'
+      line: 4
+      module_tag: misc
+      context: 除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040019'
+      line: 127
+      module_tag: misc
+      context: 可恶，敌人到底还有多少！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 技能
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 咒印
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305835'
+      line: 83
+      module_tag: misc
+      context: 咒印传承
+    - string_id: '305841'
+      line: 89
+      module_tag: misc
+      context: 一键合成将消耗背包中全部绿色咒印及蓝色咒印
+    - string_id: '305842'
+      line: 90
+      module_tag: misc
+      context: <color=#1A202B>（启动条件：橙色咒印总强化等级</c><color={0}>{1}</c><color=#1A202B>/{2}）</c>
+    - string_id: '305843'
+      line: 91
+      module_tag: misc
+      context: 请选择装备咒印
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 进化
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305850'
+      line: 98
+      module_tag: misc
+      context: 请选择遗传的进化
+    - string_id: '305851'
+      line: 99
+      module_tag: misc
+      context: 空进化
+    - string_id: '305852'
+      line: 100
+      module_tag: misc
+      context: 不能有两条相同类型进化
+    - string_id: '305853'
+      line: 101
+      module_tag: misc
+      context: 不能传承空进化
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 究极
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560010'
+      line: 153
+      module_tag: misc
+      context: 究极水佑元素
+    - string_id: '10560022'
+      line: 165
+      module_tag: misc
+      context: 究极风佑元素
+    - string_id: '10560034'
+      line: 177
+      module_tag: misc
+      context: 究极火佑元素
+    - string_id: '10560045'
+      line: 188
+      module_tag: misc
+      context: 究极仙弑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 选择
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '305833'
+      line: 81
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>新增</color><color=#ffffff>的属性</c>
+    - string_id: '305834'
+      line: 82
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>被替换</color><color=#ffffff>的属性</c>
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 获得
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303096'
+      line: 35
+      module_tag: misc
+      context: 购买可获得大量铜币
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 不能
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305852'
+      line: 100
+      module_tag: misc
+      context: 不能有两条相同类型进化
+    - string_id: '305853'
+      line: 101
+      module_tag: misc
+      context: 不能传承空进化
+    - string_id: '305854'
+      line: 102
+      module_tag: misc
+      context: 替换后的进化值低于原进化值，不能遗传
+    - string_id: '305856'
+      line: 104
+      module_tag: misc
+      context: 不能装备两个相同类型咒印
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 力量
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040013'
+      line: 121
+      module_tag: misc
+      context: 噢噢！干得好鸣人！卡卡西你专心恢复力量，在那之前我会和忍者联军的大伙拖住带土那小子的！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 水佑
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560002'
+      line: 145
+      module_tag: misc
+      context: 初级水佑元素
+    - string_id: '10560004'
+      line: 147
+      module_tag: misc
+      context: 中级水佑元素
+    - string_id: '10560006'
+      line: 149
+      module_tag: misc
+      context: 高级水佑元素
+    - string_id: '10560008'
+      line: 151
+      module_tag: misc
+      context: 超级水佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 风佑
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560014'
+      line: 157
+      module_tag: misc
+      context: 初级风佑元素
+    - string_id: '10560016'
+      line: 159
+      module_tag: misc
+      context: 中级风佑元素
+    - string_id: '10560018'
+      line: 161
+      module_tag: misc
+      context: 高级风佑元素
+    - string_id: '10560020'
+      line: 163
+      module_tag: misc
+      context: 超级风佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 火佑
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560026'
+      line: 169
+      module_tag: misc
+      context: 初级火佑元素
+    - string_id: '10560028'
+      line: 171
+      module_tag: misc
+      context: 中级火佑元素
+    - string_id: '10560030'
+      line: 173
+      module_tag: misc
+      context: 高级火佑元素
+    - string_id: '10560032'
+      line: 175
+      module_tag: misc
+      context: 超级火佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 仙佑
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560038'
+      line: 181
+      module_tag: misc
+      context: 初级仙佑元素
+    - string_id: '10560040'
+      line: 183
+      module_tag: misc
+      context: 中级仙佑元素
+    - string_id: '10560042'
+      line: 185
+      module_tag: misc
+      context: 高级仙佑元素
+    - string_id: '10560044'
+      line: 187
+      module_tag: misc
+      context: 超级仙佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 道具
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '13'
+      line: 14
+      module_tag: misc
+      context: 仙人试炼每2天重置1次，所累积的复活币道具不清空
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303097'
+      line: 36
+      module_tag: misc
+      context: 购买可获得大量尾兽强化道具
+    - string_id: '303098'
+      line: 37
+      module_tag: misc
+      context: 购买可获得大量元素养成道具
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 任务
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303076'
+      line: 21
+      module_tag: misc
+      context: 不符合任务条件
+    - string_id: '303111'
+      line: 50
+      module_tag: misc
+      context: 任务质量
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    - string_id: '303123'
+      line: 55
+      module_tag: misc
+      context: 可前往悬赏界面接取任务以消耗情报
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 竟然
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040006'
+      line: 114
+      module_tag: misc
+      context: 没错…只是没想到我和他竟然会以这种方式再次见面。
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 老师
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    - string_id: '9040011'
+      line: 119
+      module_tag: misc
+      context: 卡卡西老师，现在还没到放弃的时候！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 空间
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 魔佑
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10560050'
+      line: 193
+      module_tag: misc
+      context: 初级魔佑元素
+    - string_id: '10560052'
+      line: 195
+      module_tag: misc
+      context: 中级魔佑元素
+    - string_id: '10560054'
+      line: 197
+      module_tag: misc
+      context: 高级魔佑元素
+    - string_id: '10560056'
+      line: 199
+      module_tag: misc
+      context: 超级魔佑元素
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 等级
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    - string_id: '303141'
+      line: 68
+      module_tag: misc
+      context: 未达到开启等级
+    - string_id: '305842'
+      line: 90
+      module_tag: misc
+      context: <color=#1A202B>（启动条件：橙色咒印总强化等级</c><color={0}>{1}</c><color=#1A202B>/{2}）</c>
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 进行
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '305846'
+      line: 94
+      module_tag: misc
+      context: <color=#1A202B >是否消耗</color><color=#008900 >{0}</color><img src='{1}'/><color=#1A202B
+        >购买</color><co
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 开始
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '303114'
+      line: 53
+      module_tag: misc
+      context: 开始
+    - string_id: '303117'
+      line: 54
+      module_tag: misc
+      context: 开始扫荡后，可通过拖动下方摇杆操控车辆碰撞物资以积累更高积分
+    - string_id: '303133'
+      line: 60
+      module_tag: misc
+      context: 开始战斗
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 自动
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '303075'
+      line: 20
+      module_tag: misc
+      context: 自动接取
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 扫荡
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    - string_id: '303077'
+      line: 22
+      module_tag: misc
+      context: 免费扫荡
+    - string_id: '303117'
+      line: 54
+      module_tag: misc
+      context: 开始扫荡后，可通过拖动下方摇杆操控车辆碰撞物资以积累更高积分
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 积分
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    - string_id: '303104'
+      line: 43
+      module_tag: misc
+      context: 积分
+    - string_id: '303117'
+      line: 54
+      module_tag: misc
+      context: 开始扫荡后，可通过拖动下方摇杆操控车辆碰撞物资以积累更高积分
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 达到
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    - string_id: '303087'
+      line: 27
+      module_tag: misc
+      context: 未达到{0}级
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '303141'
+      line: 68
+      module_tag: misc
+      context: 未达到开启等级
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 大量
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303096'
+      line: 35
+      module_tag: misc
+      context: 购买可获得大量铜币
+    - string_id: '303097'
+      line: 36
+      module_tag: misc
+      context: 购买可获得大量尾兽强化道具
+    - string_id: '303098'
+      line: 37
+      module_tag: misc
+      context: 购买可获得大量元素养成道具
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 排行榜
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303102'
+      line: 41
+      module_tag: misc
+      context: 排行榜奖励
+    - string_id: '303105'
+      line: 44
+      module_tag: misc
+      context: 深渊排行榜
+    - string_id: '303106'
+      line: 45
+      module_tag: misc
+      context: 试炼排行榜
+    - string_id: '303107'
+      line: 46
+      module_tag: misc
+      context: 组织排行榜
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 继续
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 所属
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305836'
+      line: 84
+      module_tag: misc
+      context: <color=#1A202B>所属忍者：</c><color=#E16900>{0}</c>
+    - string_id: '305837'
+      line: 85
+      module_tag: misc
+      context: <color=#1A202B>所属职业：</c><color=#E16900>{0}</c>
+    - string_id: '305848'
+      line: 96
+      module_tag: misc
+      context: <color=#1A202B >所属忍者：</color><color=#E16900 >{0}</color>
+    - string_id: '305849'
+      line: 97
+      module_tag: misc
+      context: <color=#1A202B >所属职业：</color><color=#1A202B >{0}</color>
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 这样
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 这个
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 你们
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 神威
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 升级
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '303131'
+      line: 58
+      module_tag: misc
+      context: 恭喜升级
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 升星
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 分为
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 攻击
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '3'
+      line: 4
+      module_tag: misc
+      context: 除血量、攻击、防御、速度4大基本属性外，还有16个特殊属性。
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 阻止
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 冷却
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    - string_id: '303151'
+      line: 77
+      module_tag: misc
+      context: 无冷却时间
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 回合
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    - string_id: '9'
+      line: 10
+      module_tag: misc
+      context: 忍者技能冷却分为2回合与4回合，4回合冷却的技能更加强力
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 阵容
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    - string_id: '303135'
+      line: 62
+      module_tag: misc
+      context: 阵容二
+    - string_id: '303136'
+      line: 63
+      module_tag: misc
+      context: 阵容一
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 每次
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '16'
+      line: 17
+      module_tag: misc
+      context: 高级招募每次十连必出5星忍者，并有概率出多位5星忍者
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 奖励
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    - string_id: '303102'
+      line: 41
+      module_tag: misc
+      context: 排行榜奖励
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 召唤
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 接取
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303075'
+      line: 20
+      module_tag: misc
+      context: 自动接取
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    - string_id: '303123'
+      line: 55
+      module_tag: misc
+      context: 可前往悬赏界面接取任务以消耗情报
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 是否
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303094'
+      line: 33
+      module_tag: misc
+      context: 是否购买【{0}】
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '305846'
+      line: 94
+      module_tag: misc
+      context: <color=#1A202B >是否消耗</color><color=#008900 >{0}</color><img src='{1}'/><color=#1A202B
+        >购买</color><co
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 尾兽
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303097'
+      line: 36
+      module_tag: misc
+      context: 购买可获得大量尾兽强化道具
+    - string_id: '303148'
+      line: 74
+      module_tag: misc
+      context: 请上阵尾兽
+    - string_id: '303149'
+      line: 75
+      module_tag: misc
+      context: 暂无尾兽
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 竞技场
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303103'
+      line: 42
+      module_tag: misc
+      context: 竞技场
+    - string_id: '303132'
+      line: 59
+      module_tag: misc
+      context: 出征/竞技场
+    - string_id: '303137'
+      line: 64
+      module_tag: misc
+      context: 剧情/竞技场
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 暂无
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303108'
+      line: 47
+      module_tag: misc
+      context: 暂无
+    - string_id: '303143'
+      line: 70
+      module_tag: misc
+      context: 暂无修行收益，请耐心等待...
+    - string_id: '303149'
+      line: 75
+      module_tag: misc
+      context: 暂无尾兽
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 添加
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303154'
+      line: 80
+      module_tag: misc
+      context: 可添加
+    - string_id: '305844'
+      line: 92
+      module_tag: misc
+      context: 请添加咒印
+    - string_id: '305847'
+      line: 95
+      module_tag: misc
+      context: 请添加消耗材料
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 一条
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305833'
+      line: 81
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>新增</color><color=#ffffff>的属性</c>
+    - string_id: '305834'
+      line: 82
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>被替换</color><color=#ffffff>的属性</c>
+    - string_id: '9040022'
+      line: 130
+      module_tag: misc
+      context: 卡卡西独自一人作战。只有杀出一条血路，才能带上琳还有受伤的带土逃离。无论如何他都不能失败！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 面前
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 什么
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040004'
+      line: 112
+      module_tag: misc
+      context: 你想叫我什么就叫什么吧，反正对我来说都没有意义。
+    - string_id: '9040004'
+      line: 112
+      module_tag: misc
+      context: 你想叫我什么就叫什么吧，反正对我来说都没有意义。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 就是
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 现在
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040007'
+      line: 115
+      module_tag: misc
+      context: 这家伙竟然是卡卡西老师的同学？可不管怎么说，我们现在也必须阻止他才行。卡卡西老师你要振作啊！
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040011'
+      line: 119
+      module_tag: misc
+      context: 卡卡西老师，现在还没到放弃的时候！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 能够
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 东西
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040017'
+      line: 125
+      module_tag: misc
+      context: 可我还记得，我托付给你的东西还不止这颗眼睛。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 办法
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 托付给
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040017'
+      line: 125
+      module_tag: misc
+      context: 可我还记得，我托付给你的东西还不止这颗眼睛。
+    - string_id: '9040029'
+      line: 137
+      module_tag: misc
+      context: 临终之际，少年将自己仅剩的力量托付给了自己信任的同伴。或许在自己死后，那份力量还能替自己守护心中所爱。然而一切，却都事与愿违……
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 提高
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '1'
+      line: 2
+      module_tag: misc
+      context: 忍者升级、升星可大幅度提高忍者属性成长，升级属性加成提高。
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 只有
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '9040022'
+      line: 130
+      module_tag: misc
+      context: 卡卡西独自一人作战。只有杀出一条血路，才能带上琳还有受伤的带土逃离。无论如何他都不能失败！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 部分
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 突破
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '2'
+      line: 3
+      module_tag: misc
+      context: 忍者共分为13个星级，只有部分忍者可以突破到13星。
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 质量
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '4'
+      line: 5
+      module_tag: misc
+      context: 忍者初始质量从低到高为蓝、紫、橙，分别对应3-5星
+    - string_id: '303111'
+      line: 50
+      module_tag: misc
+      context: 任务质量
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 通过
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '303117'
+      line: 54
+      module_tag: misc
+      context: 开始扫荡后，可通过拖动下方摇杆操控车辆碰撞物资以积累更高积分
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 解锁
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '5'
+      line: 6
+      module_tag: misc
+      context: 升星可让部分忍者技能等级可达3级，通过潜能激发可解锁更高等级的技能
+    - string_id: '303125'
+      line: 57
+      module_tag: misc
+      context: '{0} 解锁'
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 合成
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '305841'
+      line: 89
+      module_tag: misc
+      context: 一键合成将消耗背包中全部绿色咒印及蓝色咒印
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 操作
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 之前
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '6'
+      line: 7
+      module_tag: misc
+      context: 消耗忍者进行合成、突破等操作时，会将之前培养所消耗的资源将返还
+    - string_id: '9040013'
+      line: 121
+      module_tag: misc
+      context: 噢噢！干得好鸣人！卡卡西你专心恢复力量，在那之前我会和忍者联军的大伙拖住带土那小子的！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 主动
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 被动
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '7'
+      line: 8
+      module_tag: misc
+      context: 技能分为主动和被动。[沉默]阻止主动技能释放
+    - string_id: '303152'
+      line: 78
+      module_tag: misc
+      context: 被动效果
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 时会
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    - string_id: '11'
+      line: 12
+      module_tag: misc
+      context: 开始追讨叛忍时会自动进行扫荡，扫荡关数为昨日最高通关数-3
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 本体
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    - string_id: '8'
+      line: 9
+      module_tag: misc
+      context: 忍者升星时会消耗本体忍者，所以在游戏前期需尽量保留本体
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 战斗力
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    - string_id: '303089'
+      line: 28
+      module_tag: misc
+      context: 战斗力
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 命中
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 伤害
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '10'
+      line: 11
+      module_tag: misc
+      context: 阵容克制会极大提高忍者战斗力，具体表现为增加命中和伤害
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 挑战
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '12'
+      line: 13
+      module_tag: misc
+      context: 每次挑战守卫木叶可选择1次增益buff，如果长时间不操作则系统自动选择
+    - string_id: '303139'
+      line: 66
+      module_tag: misc
+      context: 组队挑战
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 试炼
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '13'
+      line: 14
+      module_tag: misc
+      context: 仙人试炼每2天重置1次，所累积的复活币道具不清空
+    - string_id: '303106'
+      line: 45
+      module_tag: misc
+      context: 试炼排行榜
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 累积
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '13'
+      line: 14
+      module_tag: misc
+      context: 仙人试炼每2天重置1次，所累积的复活币道具不清空
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 抽取
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '14'
+      line: 15
+      module_tag: misc
+      context: 晓·讨伐战除累积伤害奖励和排名奖励外，还有锦鲤奖抽取
+    - string_id: '17'
+      line: 18
+      module_tag: misc
+      context: VIP等级达到3以上时，可消耗召唤获得的积分直接抽取5星忍者
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 精英
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 招募
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '15'
+      line: 16
+      module_tag: misc
+      context: 精英召唤进行招募获得的精英召唤积分是稳定兑换心仪忍者的途径之一
+    - string_id: '16'
+      line: 17
+      module_tag: misc
+      context: 高级招募每次十连必出5星忍者，并有概率出多位5星忍者
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 当前
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303074'
+      line: 19
+      module_tag: misc
+      context: 当前军粮丸不足
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 军粮
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303074'
+      line: 19
+      module_tag: misc
+      context: 当前军粮丸不足
+    - string_id: '303112'
+      line: 51
+      module_tag: misc
+      context: 此处勾选，每次刷新可自动消耗军粮丸接取任务
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 不足
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303074'
+      line: 19
+      module_tag: misc
+      context: 当前军粮丸不足
+    - string_id: '303084'
+      line: 24
+      module_tag: misc
+      context: 次数不足
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 条件
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303076'
+      line: 21
+      module_tag: misc
+      context: 不符合任务条件
+    - string_id: '305842'
+      line: 90
+      module_tag: misc
+      context: <color=#1A202B>（启动条件：橙色咒印总强化等级</c><color={0}>{1}</c><color=#1A202B>/{2}）</c>
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 免费
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303077'
+      line: 22
+      module_tag: misc
+      context: 免费扫荡
+    - string_id: '303086'
+      line: 26
+      module_tag: misc
+      context: '免费倒计时:'
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 今日
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303080'
+      line: 23
+      module_tag: misc
+      context: '今日剩余: {0}次'
+    - string_id: '305845'
+      line: 93
+      module_tag: misc
+      context: <color=#393A3B>今日次数：</c><color=#B60000>{0}</c><color=#393A3B>/{1}</c>
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 次数
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303084'
+      line: 24
+      module_tag: misc
+      context: 次数不足
+    - string_id: '305845'
+      line: 93
+      module_tag: misc
+      context: <color=#393A3B>今日次数：</c><color=#B60000>{0}</c><color=#393A3B>/{1}</c>
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 养成
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303093'
+      line: 32
+      module_tag: misc
+      context: 购买可获得大量超值忍者养成道具
+    - string_id: '303098'
+      line: 37
+      module_tag: misc
+      context: 购买可获得大量元素养成道具
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 确定
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303095'
+      line: 34
+      module_tag: misc
+      context: 确定购买此物品吗
+    - string_id: '9040023'
+      line: 131
+      module_tag: misc
+      context: 琳！我已经确定好逃出的路线了。带土他的状况如何？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 强化
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303097'
+      line: 36
+      module_tag: misc
+      context: 购买可获得大量尾兽强化道具
+    - string_id: '305842'
+      line: 90
+      module_tag: misc
+      context: <color=#1A202B>（启动条件：橙色咒印总强化等级</c><color={0}>{1}</c><color=#1A202B>/{2}）</c>
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 设置
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303110'
+      line: 49
+      module_tag: misc
+      context: 保存设置
+    - string_id: '303113'
+      line: 52
+      module_tag: misc
+      context: 高级设置
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 悬赏
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303123'
+      line: 55
+      module_tag: misc
+      context: 可前往悬赏界面接取任务以消耗情报
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 情报
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303123'
+      line: 55
+      module_tag: misc
+      context: 可前往悬赏界面接取任务以消耗情报
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 即将
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 可能
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303124'
+      line: 56
+      module_tag: misc
+      context: 当前悬赏情报即将达到上限，继续可能会溢出浪费，是否继续？
+    - string_id: '9040002'
+      line: 110
+      module_tag: misc
+      context: 你果然是…带土！可这怎么可能？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 战斗
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303133'
+      line: 60
+      module_tag: misc
+      context: 开始战斗
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 开启
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '303141'
+      line: 68
+      module_tag: misc
+      context: 未达到开启等级
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 替换
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305834'
+      line: 82
+      module_tag: misc
+      context: <color=#ffffff>选择一条</c><color=#f6bd0f>被替换</color><color=#ffffff>的属性</c>
+    - string_id: '305854'
+      line: 102
+      module_tag: misc
+      context: 替换后的进化值低于原进化值，不能遗传
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 传承
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305835'
+      line: 83
+      module_tag: misc
+      context: 咒印传承
+    - string_id: '305853'
+      line: 101
+      module_tag: misc
+      context: 不能传承空进化
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 职业
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305837'
+      line: 85
+      module_tag: misc
+      context: <color=#1A202B>所属职业：</c><color=#E16900>{0}</c>
+    - string_id: '305849'
+      line: 97
+      module_tag: misc
+      context: <color=#1A202B >所属职业：</color><color=#1A202B >{0}</color>
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 装备
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305843'
+      line: 91
+      module_tag: misc
+      context: 请选择装备咒印
+    - string_id: '305856'
+      line: 104
+      module_tag: misc
+      context: 不能装备两个相同类型咒印
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 遗传
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305850'
+      line: 98
+      module_tag: misc
+      context: 请选择遗传的进化
+    - string_id: '305854'
+      line: 102
+      module_tag: misc
+      context: 替换后的进化值低于原进化值，不能遗传
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 相同
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305852'
+      line: 100
+      module_tag: misc
+      context: 不能有两条相同类型进化
+    - string_id: '305856'
+      line: 104
+      module_tag: misc
+      context: 不能装备两个相同类型咒印
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 类型
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '305852'
+      line: 100
+      module_tag: misc
+      context: 不能有两条相同类型进化
+    - string_id: '305856'
+      line: 104
+      module_tag: misc
+      context: 不能装备两个相同类型咒印
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 鸣人
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 身上
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040001'
+      line: 109
+      module_tag: misc
+      context: 在自称“斑”的男人深不可测的实力面前，卡卡西等人陷入了苦战。若不能在这里阻止他，外道魔像便会被唤醒。所幸卡卡西偶然发现了“斑”无法被命中的能力背后的秘密。鸣人的螺旋丸终于结结实实地打在了“斑”身上！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 果然
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040002'
+      line: 110
+      module_tag: misc
+      context: 你果然是…带土！可这怎么可能？
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 众人
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 心中
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040029'
+      line: 137
+      module_tag: misc
+      context: 临终之际，少年将自己仅剩的力量托付给了自己信任的同伴。或许在自己死后，那份力量还能替自己守护心中所爱。然而一切，却都事与愿违……
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 忍界
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040020'
+      line: 128
+      module_tag: misc
+      context: 第三次忍界大战，卡卡西，带土还有琳三人在破坏神无毗桥的任务中遭到敌人的围困。卡卡西左眼受伤失明，带土更是为了救卡卡西而被巨石轧中，情况危急。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 大战
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040020'
+      line: 128
+      module_tag: misc
+      context: 第三次忍界大战，卡卡西，带土还有琳三人在破坏神无毗桥的任务中遭到敌人的围困。卡卡西左眼受伤失明，带土更是为了救卡卡西而被巨石轧中，情况危急。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 宇智波
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040003'
+      line: 111
+      module_tag: misc
+      context: 白色的面具崩落，一直被掩藏其中的真相也展现在了众人面前。即便心中已经想到过了这样的可能性，但卡卡西依然不敢相信，面前这个“斑”的真实身份，竟然是自己曾经的队友，本该在上次忍界大战中牺牲了的——宇智波带
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 意义
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040004'
+      line: 112
+      module_tag: misc
+      context: 你想叫我什么就叫什么吧，反正对我来说都没有意义。
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 一起
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040005'
+      line: 113
+      module_tag: misc
+      context: 带土？我想起来了！他果然就是以前和卡卡西你还有琳一起在水门老师班里的宇智波小子吧！
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 没错
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040006'
+      line: 114
+      module_tag: misc
+      context: 没错…只是没想到我和他竟然会以这种方式再次见面。
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 事到如今
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 守护
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040029'
+      line: 137
+      module_tag: misc
+      context: 临终之际，少年将自己仅剩的力量托付给了自己信任的同伴。或许在自己死后，那份力量还能替自己守护心中所爱。然而一切，却都事与愿违……
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 世界
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040008'
+      line: 116
+      module_tag: misc
+      context: 事到如今，你们还要拼命守护这个残酷的世界吗？好，那你们就来试试看吧！
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 写轮眼
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 使用
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040009'
+      line: 117
+      module_tag: misc
+      context: 真没想到，你竟然也能够开启万花筒写轮眼。但就算是这样，使用它对你也是很大的负担吧，毕竟这本就不是属于你的东西。
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 难道
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 使出
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040010'
+      line: 118
+      module_tag: misc
+      context: 难道就到此为止了吗……（他说得没错，以我现在的状态已经没办法使出神威了。）
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 喇嘛
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    - string_id: '9040012'
+      line: 120
+      module_tag: misc
+      context: 鸣人将手搭在卡卡西的身上，一股力量马上流入了卡卡西的体内。与九喇嘛建立了羁绊的鸣人，已经可以让九喇嘛将一部分力量分与他人。只要卡卡西有足够的力量使出神威，众人的攻击就有办法击中带土！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 我会
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040013'
+      line: 121
+      module_tag: misc
+      context: 噢噢！干得好鸣人！卡卡西你专心恢复力量，在那之前我会和忍者联军的大伙拖住带土那小子的！
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 连接
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040014'
+      line: 122
+      module_tag: misc
+      context: 谢谢你鸣人，我已经可以继续战斗了。接下来我会继续用神威与带土的空间连接，这样你们的攻击就能打到他了。
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 忍术
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040015'
+      line: 123
+      module_tag: misc
+      context: 可是，为什么老师你的神威空间能够与他的连接呢？难道所有的时空间忍术创造出来的空间都是能够相连的吗？
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 是因为
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040031'
+      line: 139
+      module_tag: misc
+      context: 我的生死已经无关紧要了。不过也罢，如果你非要问的话…那都是因为你对小琳的见死不救吧。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 这颗
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040016'
+      line: 124
+      module_tag: misc
+      context: 不，是因为我所拥有的的这颗写轮眼，本就是带土托付给我的东西…我和他所使用的就是同一种时空间忍术。
+    - string_id: '9040017'
+      line: 125
+      module_tag: misc
+      context: 可我还记得，我托付给你的东西还不止这颗眼睛。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 敌人
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040019'
+      line: 127
+      module_tag: misc
+      context: 可恶，敌人到底还有多少！
+    - string_id: '9040020'
+      line: 128
+      module_tag: misc
+      context: 第三次忍界大战，卡卡西，带土还有琳三人在破坏神无毗桥的任务中遭到敌人的围困。卡卡西左眼受伤失明，带土更是为了救卡卡西而被巨石轧中，情况危急。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 受伤
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040020'
+      line: 128
+      module_tag: misc
+      context: 第三次忍界大战，卡卡西，带土还有琳三人在破坏神无毗桥的任务中遭到敌人的围困。卡卡西左眼受伤失明，带土更是为了救卡卡西而被巨石轧中，情况危急。
+    - string_id: '9040022'
+      line: 130
+      module_tag: misc
+      context: 卡卡西独自一人作战。只有杀出一条血路，才能带上琳还有受伤的带土逃离。无论如何他都不能失败！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 成为
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 上忍
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 同伴
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    - string_id: '9040029'
+      line: 137
+      module_tag: misc
+      context: 临终之际，少年将自己仅剩的力量托付给了自己信任的同伴。或许在自己死后，那份力量还能替自己守护心中所爱。然而一切，却都事与愿违……
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 一定
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    - string_id: '9040021'
+      line: 129
+      module_tag: misc
+      context: 我明明已经成为了一名上忍，却还是没能保护好同伴…我一定会想办法带大家一起逃出去！带土…你一定要坚持住！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 不配
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040026'
+      line: 134
+      module_tag: misc
+      context: 我不配当队长！不配当上忍！
+    - string_id: '9040026'
+      line: 134
+      module_tag: misc
+      context: 我不配当队长！不配当上忍！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 小琳
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040027'
+      line: 135
+      module_tag: misc
+      context: 对了，祝贺你成为上忍的礼物，我还没送你吧。我就把…这个写轮眼送给你好了。还有小琳…也交给你了。
+    - string_id: '9040031'
+      line: 139
+      module_tag: misc
+      context: 我的生死已经无关紧要了。不过也罢，如果你非要问的话…那都是因为你对小琳的见死不救吧。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 不过
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040031'
+      line: 139
+      module_tag: misc
+      context: 我的生死已经无关紧要了。不过也罢，如果你非要问的话…那都是因为你对小琳的见死不救吧。
+    - string_id: '9040034'
+      line: 142
+      module_tag: misc
+      context: 你这边好热闹啊，带土。不过，八尾九尾都还没回收就贸然展开计划，你太着急了啊。也罢，我想你应该也有自己的打算吧。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 也罢
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040031'
+      line: 139
+      module_tag: misc
+      context: 我的生死已经无关紧要了。不过也罢，如果你非要问的话…那都是因为你对小琳的见死不救吧。
+    - string_id: '9040034'
+      line: 142
+      module_tag: misc
+      context: 你这边好热闹啊，带土。不过，八尾九尾都还没回收就贸然展开计划，你太着急了啊。也罢，我想你应该也有自己的打算吧。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 打算
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040032'
+      line: 140
+      module_tag: misc
+      context: ……！那你…不打算责难我吗？
+    - string_id: '9040034'
+      line: 142
+      module_tag: misc
+      context: 你这边好热闹啊，带土。不过，八尾九尾都还没回收就贸然展开计划，你太着急了啊。也罢，我想你应该也有自己的打算吧。
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+- term: 现实
+  tier: low_confidence
+  evidence:
+    sources:
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    - string_id: '9040033'
+      line: 141
+      module_tag: misc
+      context: 事到如今，再去追究这些不堪的现实又有什么意义呢？我对这个即将消失的世界完全没有兴趣！你们就这样被现实束缚着去死吧！
+    domain_hint: ui
+    backend_chain:
+    - pkuseg
+    - thulac
+    - lac
+    - jieba
+    - heuristic
+

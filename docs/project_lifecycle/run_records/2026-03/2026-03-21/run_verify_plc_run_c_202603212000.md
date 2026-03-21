@@ -1,0 +1,28 @@
+# run_verify_plc_run_c_202603212000
+
+- run_id: plc_run_c_202603212000
+- do_now:
+  - ✅ 完成里程碑 C 需求文档与工作流闭环（C1~C8）
+  - ✅ 补齐核心脚本/配置：segmenter_factory、extract_terms、style_guide_bootstrap、style_sync_check、translate_llm、soft_qa_llm
+  - ✅ 建立 `data/style_profile.yaml` + `workflow/style_guide.generated.md`
+  - ✅ 更新 pipeline Step 0/1 与 style profile 注入链路
+  - ✅ 分词器链路与 jieba 样本对照回归执行完成（200 条样本）
+  - ✅ 风格一致性批次（5/80/120）回归完成
+  - ✅ 门禁失败场景（风格、术语、长度）解释性输出生成完成
+- acceptance_criteria:
+  - 里程碑证据链三件套：`session_start` / `run_manifest` / `run_issue` / `run_verify` / `session_end`
+  - `style_sync_check` 的关键门禁检查项不阻塞当前实现（warnings 除外）
+  - `workflow/style_guide.md` 与 `workflow/style_guide.generated.md` 可互相映射一致
+  - 关键脚本均已支持 `data/style_profile.yaml` 输入与风格约束参数
+  - `.agent/workflows/*` 与 `task_plan` / `roadmap_index` 记录路径一致
+- evidence_ready: true
+- block_on: []
+- result: pass
+- verification_cmds:
+  - 核验 `run_issue` / `session_end` 与样本产物链路完整：`session_start_202603212000.md`、`run_manifest_plc_run_c_202603212000.json`、`run_issue_plc_run_c_202603212000.md`、`run_verify_plc_run_c_202603212000.md`、`session_end_202603212130.md`。
+  - 核验分词器回归：`term_candidates_c_chain_verify.yaml` 与 `term_candidates_jieba_verify.yaml` 一致性对账（`term_compare_report.json`）；
+    - 200 条样本 recall_like=100.0, precision_like=100.0
+  - 核验风格一致性：`softqa_report_5rows.json`、`softqa_report_80rows.json`、`softqa_report_120rows.json` 与对应 `softqa_tasks_*.jsonl`。
+  - 核验失败场景可解释输出：`softqa_report_failure_rows.json` + `softqa_tasks_failure_rows.jsonl`。
+  - 核验 style guide 门禁：`python scripts/style_sync_check.py workflow/style_guide.md workflow/style_guide.generated.md --style-profile data/style_profile.yaml`（warnings 可见但未阻断）。
+  - 任务计划联动核验：`task_plan.md` 与 `docs/project_lifecycle/roadmap_index.md` 中 C 里程碑 `status/progress/evidence` 与 `run` 链一致。

@@ -19,6 +19,7 @@ python scripts/soft_qa_llm.py \
   workflow/style_guide.md \
   data/glossary.yaml \
   workflow/soft_qa_rubric.yaml \
+  --style-profile data/style_profile.yaml \
   --batch_size 40 \
   --out_report data/qa_soft_report.json \
   --out_tasks data/repair_tasks.jsonl
@@ -32,21 +33,24 @@ python scripts/soft_qa_llm.py \
 | `data/repair_tasks.jsonl` | 每行一个 JSON 任务，供 repair_loop 消费 |
 
 > [!NOTE]
-> `workflow/soft_qa_rubric.yaml` 参数是 v1.0 遗留及其，脚本 v2.0 会忽略其内容（内置了基于 style guide 的评审逻辑），但为了保持命令行兼容性，仍需在调用时提供该位置参数。
+> `workflow/soft_qa_rubric.yaml` 现在作为 hard gate 配置入口（`enabled` + `fail_on_types` + `severity_threshold`），用于 Step1 阶段的流程阻断策略。
+> `hard_gate.rule_id` 固定为 `STEP1_TERM_STYLE_DRIFT`，并要求输出 `violations` 与 `suggested_actions` 供 run_records 落盘。
 
 ## 评审维度
 
-- `style_officialness` - 系统文案是否官方、清晰
-- `anime_tone` - 二次元口语是否适度
-- `terminology_consistency` - 术语是否遵守 glossary
-- `ui_brevity` - 按钮/短提示是否过长
-- `ambiguity` - 是否存在歧义风险
+- `terminology_consistency` - 术语是否遵守 glossary（含风格优先级映射）
+- `style_contract` - 术语优先法、角色名策略、变量与禁译项
+- `length` - 按钮/长文长度约束（含 per-row 上限）
+- `placeholder` - 占位符与变量完整性
+- `ambiguity_high_risk` - 同源语义可能歧义点
+- `punctuation` - 标点/引号/标签语义风险
 
 ## 要求
 
-- **不阻断流水线**：即使有 major issues，也不停止后续步骤
+- **硬规则可阻断流水线**：`--dry-run` 或 LLM 结果命中 hard gate（`major` 且在 fail_on_types 内）时直接退出非 0，要求修复后重跑；仅 minor 问题进入可选修复任务。
+- **规则 ID 可追溯**：每条任务必须带 `rule_id` 与 `rule_version`；hard gate 汇总需保留 `STEP1_TERM_STYLE_DRIFT` 和命中的 violation 明细。
 - **必须落盘输出**：report 和 tasks 必须写入文件
-- **驱动 Repair Loop**：输出用于下一步自动修复
+- **驱动 Repair Loop**：输出用于下一步自动修复（建议先处理 major）
 
 ## 后续步骤
 
