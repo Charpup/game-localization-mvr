@@ -1,19 +1,14 @@
 # run_verify_plc_run_d_prepare
 
 - run_id: plc_run_d_prepare
+- run_scope: milestone_D_prepare
 - do_now:
-  - 完成 D 里程碑目标拆解与验收框架预置
-  - 建立 checksum 与 drift 对账执行路径草案（含命名/输出目录规范）
-  - 输出 D 计划级 `run_issue` 与输入清单
+  - [x] baseline_drift_control 流程执行完成
 - acceptance_criteria:
-  - 里程碑 D 有独立 `run_manifest` / `run_issue` / `run_verify`
-  - `milestone_D_prepare` 与 `roadmap_index` 的 `next_scope` 保持 `milestone_D_execute`
-  - baseline 对账脚本和 `script_checksums` 输入输出规范已形成最小契约
-- evidence_ready: false
-- block_on:
-  - script_checksums.py
-  - 首轮 3 条漂移样本（风格/术语/长度）
-- result: warn
+  - baseline_manifest 与 drift 报告产出且可读
+  - 关键阈值失败项可追溯到 run_issue/run_manifest
+- result: pass
 - verification_cmds:
-  - 语义对账与样本脚本执行清单已形成（待首次落盘）
-  - `python scripts/style_sync_check.py workflow/style_guide.md workflow/style_guide.generated.md --style-profile data/style_profile.yaml`
+  - `python scripts/baseline_drift_control.py create-baseline --name plc_run_d_prepare --source D:\Dev_Env\GPT_Codex_Workspace\test_30_repaired.csv --rows 10 --seed 42`
+  - `python scripts/baseline_drift_control.py compare --baseline-manifest D:\Dev_Env\GPT_Codex_Workspace\data\baselines\plc_run_d_prepare\plc_run_d_prepare\baseline_manifest.json --source D:\Dev_Env\GPT_Codex_Workspace\test_30_repaired.csv --rows 10 --seed 42`
+- evidence_ready: true

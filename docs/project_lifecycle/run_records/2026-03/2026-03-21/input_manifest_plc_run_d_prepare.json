@@ -1,19 +1,31 @@
 {
+  "manifest_version": "baseline-drift-v1",
   "run_id": "plc_run_d_prepare",
   "run_scope": "milestone_D_prepare",
-  "started_at": "2026-03-21T21:40:00+08:00",
-  "owner": "Codex",
-  "input_files": [
-    "docs/HANDOFF_MAINLINE_GUARDRAILS.md",
-    "task_plan.md",
-    "docs/project_lifecycle/roadmap_index.md",
-    "docs/project_lifecycle/continuity_protocol.md",
-    "workflow/style_guide.md",
-    "workflow/soft_qa_rubric.yaml",
-    "scripts/style_sync_check.py",
-    "workflow/style_guide_questionnaire.md",
-    "workflow/style_guide.generated.md",
-    "data/style_profile.yaml"
-  ],
-  "notes": "里程碑 D 准备阶段目标：落地 checksum 对账与翻译漂移复测基线。"
+  "command": "create-baseline",
+  "generated_at": "2026-03-21T16:02:51.457894+08:00",
+  "args": {
+    "run_manifest_dir": "docs/project_lifecycle/run_records/2026-03/2026-03-21",
+    "owner": "bob_c",
+    "command": "plc_run_d_prepare",
+    "name": "plc_run_d_prepare",
+    "source": "test_30_repaired.csv",
+    "rows": 10,
+    "seed": 42,
+    "output_dir": "data/baselines/plc_run_d_prepare",
+    "force": true,
+    "run_scope": "milestone_D_prepare",
+    "mode": "create_baseline",
+    "run_id": "plc_run_d_prepare",
+    "baseline_data_path": "D:\\Dev_Env\\GPT_Codex_Workspace\\test_30_repaired.csv",
+    "sample_limit": 10,
+    "row_limit": 10
+  },
+  "baseline_data_path": "D:\\Dev_Env\\GPT_Codex_Workspace\\test_30_repaired.csv",
+  "sample_limit": 10,
+  "evidence_contract": {
+    "requires_run_manifest": true,
+    "requires_run_issue": true,
+    "requires_run_verify": true
+  }
 }

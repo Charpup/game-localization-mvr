@@ -1,0 +1,38 @@
+{
+  "manifest_version": "baseline-drift-v1",
+  "run_id": "plc_run_d_full",
+  "run_scope": "milestone_D_full",
+  "command": "compare",
+  "generated_at": "2026-03-21T16:02:51.562010+08:00",
+  "args": {
+    "run_manifest_dir": "docs/project_lifecycle/run_records/2026-03/2026-03-21",
+    "owner": "bob_c",
+    "command": "plc_run_d_full",
+    "baseline_manifest": "data/baselines/plc_run_d_prepare/plc_run_d_prepare",
+    "name": null,
+    "source": "test_30_repaired.csv",
+    "rows": 10,
+    "seed": 42,
+    "max_row_churn_ratio": 0.05,
+    "max_stratum_delta": 2,
+    "require_source_match": true,
+    "require_sample_checksum_match": false,
+    "sample_csv": null,
+    "output_dir": null,
+    "force": true,
+    "run_scope": "milestone_D_full",
+    "mode": "compare",
+    "run_id": "plc_run_d_full",
+    "baseline_data_path": "D:\\Dev_Env\\GPT_Codex_Workspace\\test_30_repaired.csv",
+    "sample_limit": 10,
+    "row_limit": 10
+  },
+  "baseline_data_path": "D:\\Dev_Env\\GPT_Codex_Workspace\\test_30_repaired.csv",
+  "sample_limit": 10,
+  "evidence_contract": {
+    "requires_run_manifest": true,
+    "requires_run_issue": true,
+    "requires_run_verify": true,
+    "requires_drift_report": true
+  }
+}

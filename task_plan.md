@@ -222,3 +222,23 @@ physical removal as part of this batch's final roadmap closeout.
 - [complete] Phase 2: Update authority manifest, frozen-zone inventory, root inventory, and closeout report with the fixed compat mirror decision.
 - [complete] Phase 3: Run Batch 10 regression suite plus authority/M4 evidence gate.
 - [complete] Phase 4: Prepare stacked closeout branch output and declare the cleanup roadmap closed after Batch 10, with any future compat mirror retirement handled as a separate migration program.
+
+## 2026-03-21 Milestone D 收口与里程碑 E 续接
+
+### Goal
+Complete milestone D baseline/d drift-control hard-gate closure and register evidence for the next milestone.
+
+### Scope
+- Run `baseline_drift_control` preset for `plc_run_d_prepare` / `plc_run_d_full` / `plc_run_d_verify` with可复现参数.
+- 补齐并校验 `run_manifest` / `run_issue` / `run_verify` 与 `milestone_state_D`、`roadmap_index` 闭环。
+- 触发 `milestone_E_prepare` 的 handoff 准备。
+
+### Results
+- `plc_run_d_prepare` / `plc_run_d_full` / `plc_run_d_verify` 均 pass，`evidence_ready=true`，`run_id=plc_run_d_verify`。
+- evidence:
+  - `docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_d_verify.json`
+  - `docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_d_verify.md`
+  - `docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_d_verify.md`
+
+### Next Owner
+- `Codex`，`next_scope=milestone_E_prepare`

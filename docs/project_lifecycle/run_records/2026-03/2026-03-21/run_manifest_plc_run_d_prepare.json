@@ -1,30 +1,36 @@
 {
+  "manifest_version": "baseline-drift-v1",
   "run_id": "plc_run_d_prepare",
   "run_scope": "milestone_D_prepare",
-  "status": "in_progress",
-  "started_at": "2026-03-21T21:40:00+08:00",
-  "owner": "Codex",
-  "input_manifest": "docs/project_lifecycle/run_records/2026-03/2026-03-21/input_manifest_plc_run_d_prepare.json",
-  "issue_report_path": "docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_d_prepare.md",
-  "verify_report_path": "docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_d_prepare.md",
+  "status": "pass",
+  "started_at": "2026-03-21T16:02:51.435755+08:00",
+  "finished_at": "2026-03-21T16:02:51.458894+08:00",
+  "owner": "bob_c",
+  "input_manifest": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\input_manifest_plc_run_d_prepare.json",
+  "issue_report_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_issue_plc_run_d_prepare.md",
+  "verify_report_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_verify_plc_run_d_prepare.md",
   "artifacts": [
-    "docs/project_lifecycle/continuity_protocol.md",
-    "docs/project_lifecycle/roadmap_index.md",
-    "script_checksums.py",
-    "scripts/style_sync_check.py",
-    "scripts/translate_llm.py",
-    "scripts/soft_qa_llm.py",
-    "workflow/style_guide_questionnaire.md",
-    "workflow/style_guide.md",
-    "workflow/soft_qa_rubric.yaml",
-    "data/style_profile.yaml"
+    "scripts\\baseline_drift_control.py",
+    "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\baseline_manifest.json",
+    "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\baseline_report.md",
+    "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\validation_10_baseline.csv",
+    "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\validation_10_baseline.meta.json"
   ],
-  "blockers": [
-    "待补齐样本漂移与 checksum 对账基线"
-  ],
+  "blockers": [],
   "decision_refs": [
-    "docs/decisions/ADR-0002-skill-governance-framework.md"
+    "triadev:milestone_D_prepare",
+    "plc:plc_run_d_prepare",
+    "artifact:scripts/baseline_drift_control.py",
+    "signature:baseline:aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55"
   ],
-  "next_step_owner": "Codex",
-  "next_step_scope": "milestone_D_execute"
+  "evidence_ready": true,
+  "gate_result": "pass",
+  "evidence": {
+    "input_manifest_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\input_manifest_plc_run_d_prepare.json",
+    "issue_report_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_issue_plc_run_d_prepare.md",
+    "verify_report_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_verify_plc_run_d_prepare.md",
+    "artifact_count": 5
+  },
+  "next_step_owner": "bob_c",
+  "next_step_scope": "milestone_D_full"
 }

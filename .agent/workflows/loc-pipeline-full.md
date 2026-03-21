@@ -29,8 +29,11 @@ python scripts/style_sync_check.py
 > - `workflow/style_guide.md`
 > - `workflow/style_guide.generated.md`
 > - `data/style_profile.yaml`
+> - `style_sync_check` 输出中的 `suggested_actions`
 
-1. **Normalize** - 冻结占位符并生成 draft.csv
+> Step0 产物：`run_manifest_plc_run_d_prepare.json` 与 `run_issue_plc_run_d_full.md` 中需记录 style_sync_check 的阻断与建议。
+
+1 **Normalize** - 冻结占位符并生成 draft.csv
 
 ```bash
 python scripts/normalize_ingest.py --input data/input.csv --output data/source_raw.csv
@@ -38,7 +41,30 @@ python scripts/normalize_tagger.py --input data/source_raw.csv --output data/nor
 python scripts/normalize_guard.py data/normalized.csv data/draft.csv data/placeholder_map.json workflow/placeholder_schema.yaml
 ```
 
-1. **Extract Terms with Style Context**
+1.1 **D Step1 基线/漂移 + 术语风格一致性门禁**
+
+```bash
+python scripts/baseline_drift_control.py --run-manifest-dir docs/project_lifecycle/run_records/2026-03/2026-03-21 \
+  plc_run_d_full \
+  --baseline-manifest data/baselines/plc_run_d_prepare/plc_run_d_prepare \
+  --source test_30_repaired.csv \
+  --rows 10 \
+  --seed 42 \
+  --max-row-churn-ratio 0.05
+```
+
+```bash
+python scripts/soft_qa_llm.py data/translated.csv \
+  workflow/style_guide.md \
+  data/glossary.yaml \
+  workflow/soft_qa_rubric.yaml \
+  --style-profile data/style_profile.yaml \
+  --dry-run
+```
+
+> Step1 任一命令失败时，后续翻译修复与导出阶段不得静默降级，必须先修复漂移、术语冲突、风格冲突、长度超限或占位符问题。
+
+1.2 **Extract Terms with Style Context**
 
 ```bash
 python scripts/extract_terms.py data/draft.csv data/term_candidates.yaml \
@@ -96,6 +122,8 @@ python scripts/soft_qa_llm.py data/translated.csv \
   workflow/soft_qa_rubric.yaml \
   --style-profile data/style_profile.yaml
 ```
+
+> 正式 Soft QA 与 Step1 `--dry-run` 使用相同 gate 配置：`rule_id=STEP1_TERM_STYLE_DRIFT`，`severity_threshold=major`，失败类型集合必须保持一致。
 
 2. **Repair Loop Soft**（仅 major）
 

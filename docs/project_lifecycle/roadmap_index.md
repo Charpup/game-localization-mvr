@@ -60,12 +60,12 @@
 
 ## 里程碑 D（实时状态）
 
-- `run_id`：`plc_run_d_`（未启动）
-- `status`：`in_progress`
-- `evidence_ready`：`false`
-- `blocker`：`待补齐样本漂移与 checksum 对账基线`
+- `run_id`：`plc_run_d_verify`
+- `status`：`done`
+- `evidence_ready`：`true`
+- `blocker`：`无`
 - `next_owner`：`Codex`
-- `next_scope`：`milestone_D_prepare`
+- `next_scope`：`milestone_E_prepare`
 
 ## 里程碑 A（12h）细化计划（可直接执行） 
 

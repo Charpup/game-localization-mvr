@@ -1,0 +1,11 @@
+﻿string_id,source_zh,module_tag,module_confidence,max_len_target,len_tier,source_locale,placeholder_flags,status,is_empty_source,is_long_text,target_text,tokenized_zh
+10145132,白眼杀手,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Убийца Белого Глаза,白眼杀手
+10025561,小南碎片,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Фрагмент Конан,小南碎片
+10145312,少女樱普攻,misc,0.5,20,S,zh-CN,count=0,ok,False,False,Обычная атака Юной Сакуры,少女樱普攻
+10010720,每日免费礼包,misc,0.5,23,S,zh-CN,count=0,ok,False,False,Ежедневный бесплатный подарок,每日免费礼包
+10007436,中级抗暴,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Средняя защита от крита,中级抗暴
+10131220,上阵后，为我方上阵单位提升300点攻击,skill_desc,0.8,62,M,zh-CN,count=0,ok,False,False,После вступления в бой повышает атаку союзных боевых единиц на 300,上阵后，为我方上阵单位提升300点攻击
+10027310,能量波动,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Энергетическая волна,能量波动
+10009030,魔系忍者,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Ниндзя Магии,魔系忍者
+10027250,无懈可击,ui_button,0.7,19,S,zh-CN,count=0,ok,False,False,Безупречная защита,无懈可击
+10145250,释放3技能后，获得一个等同自身生命上限*15%的护盾，持续2回合，不可被驱散,skill_desc,0.8,119,M,zh-CN,count=0,ok,False,False,"После использования навыка 3 получает щит, равный 15% от максимального здоровья, действующий 2 хода и не подлежащий рассеиванию",释放3技能后，获得一个等同自身生命上限*15%的护盾，持续2回合，不可被驱散

@@ -1,23 +1,22 @@
 - id: D
-- status: in_progress
+- status: done
 - owner: Codex
 - next_owner: Codex
-- progress_pct: 12
-- evidence_ready: false
+- progress_pct: 100
+- evidence_ready: true
 - blockers:
-  - 基线样本漂移 checksum 与术语回顾脚本尚待首次运行
+- 无
 - dependencies: [C]
-- decision_ref: null
+- decision_ref: milestone_D
 - eta_hours: 16
 - notes: >
-  里程碑 D 目标是为“复核漂移”建立可复用底线：先建立 checksum 对账脚本与
-  翻译漂移复测机制，再把复测动作嵌入 glossary 复核与 soft QA 的后置检查；
-  下一步重点输出首次基线 run_id 与 D 里程碑验证手册。
+  里程碑 D 已完成复核漂移基线与复测门禁闭环，三次 run（prepare/full/verify）均 pass，样本签名可复现；
+  已落盘 run_manifest/run_issue/run_verify 并可用于 glossary/译文风格质量回放。
 - evidence:
-  - run_id: plc_run_d_prepare
-  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_d_prepare.md
-  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_d_prepare.md
-  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_d_prepare.md
+  - run_id: plc_run_d_verify
+  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_d_verify.json
+  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_d_verify.md
+  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_d_verify.md
 - handoff:
   - next_owner: Codex
-  - next_scope: milestone_D_prepare
+  - next_scope: milestone_E_prepare

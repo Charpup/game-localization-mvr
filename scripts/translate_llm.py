@@ -45,6 +45,52 @@ except ImportError:
 
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 CJK_RE = re.compile(r"[\u4e00-\u9fff]")
+RULE_VERSION = "1.0"
+
+RULE_CATALOG = {
+    "D-TL-001": {
+        "version": RULE_VERSION,
+        "message": "style_profile 缺失",
+        "suggestion": "先执行 scripts/style_guide_bootstrap.py 生成 data/style_profile.yaml。",
+    },
+    "D-TL-002": {
+        "version": RULE_VERSION,
+        "message": "style_profile schema 不完整",
+        "suggestion": "补齐 data/style_profile.yaml 的 project 与 ui.length_constraints 字段。",
+    },
+    "D-TL-003": {
+        "version": RULE_VERSION,
+        "message": "风格配置禁止词与 glossary 已批准术语冲突",
+        "suggestion": "检查 data/glossary.yaml 中 approved 项，移除与 style_profile 冲突译项或更新问卷并重跑 bootstrap。",
+    },
+    "D-TL-004": {
+        "version": RULE_VERSION,
+        "message": "glossary 文件缺失或不可读",
+        "suggestion": "确保 data/glossary.yaml 存在、可读且 YAML 合法。",
+    },
+}
+STYLE_GATE_RULES = {
+    "style_profile_presence": {
+        "id": "D-TL-001",
+        "version": "1.0",
+        "suggestion": "先运行 scripts/style_guide_bootstrap.py 生成 style_profile。",
+    },
+    "style_profile_schema": {
+        "id": "D-TL-002",
+        "version": "1.0",
+        "suggestion": "完善 style_profile.yaml 字段（project/source_target 与 ui.length_constraints）。",
+    },
+    "glossary_conflict": {
+        "id": "D-TL-003",
+        "version": "1.0",
+        "suggestion": "移除 glossary 中与禁译词冲突的 approved 条目后重试。",
+    },
+    "glossary_missing": {
+        "id": "D-TL-004",
+        "version": "1.0",
+        "suggestion": "确保 glossary.yaml 可读且 YAML 合法。",
+    },
+}
 
 
 @dataclass
@@ -88,6 +134,123 @@ def load_style_profile(path: str) -> Dict[str, Any]:
             return yaml.safe_load(f) or {}
     except Exception:
         return {}
+
+
+def validate_style_profile_for_translate(profile: Dict[str, Any]) -> List[Dict[str, str]]:
+    issues: List[Dict[str, str]] = []
+    if not profile:
+        issues.append(
+            {
+                "rule_id": "D-TL-001",
+                "rule_version": RULE_VERSION,
+                "severity": "major",
+                "detail": "style_profile missing or invalid",
+                "suggestion": RULE_CATALOG["D-TL-001"]["suggestion"],
+            }
+        )
+        return issues
+
+    project = profile.get("project", {})
+    if not isinstance(project, dict) or not project.get("source_language") or not project.get("target_language"):
+        issues.append(
+            {
+                "rule_id": "D-TL-002",
+                "rule_version": RULE_VERSION,
+                "severity": "major",
+                "detail": "project.source_language / project.target_language missing",
+                "suggestion": RULE_CATALOG["D-TL-002"]["suggestion"],
+            }
+        )
+
+    ui = profile.get("ui", {})
+    if not isinstance(ui, dict) or not ui.get("length_constraints"):
+        issues.append(
+            {
+                "rule_id": "D-TL-002",
+                "rule_version": RULE_VERSION,
+                "severity": "major",
+                "detail": "ui.length_constraints missing",
+                "suggestion": RULE_CATALOG["D-TL-002"]["suggestion"],
+            }
+        )
+
+    return issues
+
+
+def validate_glossary_profile_conflict(
+    glossary: List[GlossaryEntry],
+    profile: Dict[str, Any],
+) -> List[Dict[str, str]]:
+    terms = profile.get("terminology", {}) if isinstance(profile, dict) else {}
+    forbidden_terms = set(str(x).strip() for x in (terms.get("forbidden_terms", []) or []) if str(x).strip())
+    banned_terms = set(str(x).strip() for x in (terms.get("banned_terms", []) or []) if str(x).strip())
+    blocked = {t for t in forbidden_terms | banned_terms if t}
+    if not blocked:
+        return []
+
+    issues: List[Dict[str, str]] = []
+    for entry in glossary:
+        if entry.status != "approved":
+            continue
+        term = (entry.term_zh or "").strip()
+        if term and term in blocked:
+            issues.append(
+                {
+                    "rule_id": "D-TL-003",
+                    "rule_version": RULE_VERSION,
+                    "severity": "major",
+                    "detail": f"approved glossary term conflicts with forbidden policy: {term}",
+                    "suggestion": RULE_CATALOG["D-TL-003"]["suggestion"],
+                }
+            )
+    return issues
+
+
+def print_hard_gate_failures(issues: List[Dict[str, str]]) -> None:
+    print("❌ Translate hard gate failed:")
+    for it in issues:
+        rid = it.get("rule_id", "D-TL-000")
+        version = it.get("rule_version", RULE_VERSION)
+        detail = it.get("detail", "")
+        suggestion = it.get("suggestion", "")
+        print(f"- {rid} v{version}: {detail}")
+        if suggestion:
+            print(f"  suggestion: {suggestion}")
+
+
+def _collect_translate_gate_issues(profile: Dict[str, Any], glossary: List[GlossaryEntry], style_profile_path: str) -> List[str]:
+    issues = []
+    if not style_profile_path or not Path(style_profile_path).exists():
+        rule = STYLE_GATE_RULES["style_profile_presence"]
+        issues.append(f'[{rule["id"]} v{rule["version"]}] style profile missing: {style_profile_path} | {rule["suggestion"]}')
+        return issues
+
+    if not profile.get("project", {}).get("source_language") or not profile.get("project", {}).get("target_language"):
+        rule = STYLE_GATE_RULES["style_profile_schema"]
+        issues.append(f'[{rule["id"]} v{rule["version"]}] style_profile project language missing | {rule["suggestion"]}')
+    if not profile.get("ui", {}).get("length_constraints"):
+        rule = STYLE_GATE_RULES["style_profile_schema"]
+        issues.append(f'[{rule["id"]} v{rule["version"]}] style_profile ui.length_constraints missing | {rule["suggestion"]}')
+
+    forbidden = {str(item).strip() for item in profile.get("terminology", {}).get("forbidden_terms", []) if str(item).strip()}
+    for entry in glossary or []:
+        term = (entry.term_zh or "").strip()
+        if entry.status == "approved" and forbidden and term and term in forbidden:
+            rule = STYLE_GATE_RULES["glossary_conflict"]
+            issues.append(
+                f'[{rule["id"]} v{rule["version"]}] glossary contains forbidden conflict "{term}" | '
+                f"{rule['suggestion']}"
+            )
+
+    return issues
+
+
+def _format_gate_report(issues: List[str]) -> str:
+    if not issues:
+        return "style gate: pass"
+    lines = ["style gate: fail"]
+    lines.extend([f"🚫 {it}" for it in issues])
+    return "\n".join(lines)
 
 
 def build_glossary_summary(glossary: List[GlossaryEntry]) -> str:
@@ -362,6 +525,18 @@ def main():
     style_profile = load_style_profile(args.style_profile)
     glossary, _ = load_glossary(args.glossary)
     glossary_summary = build_glossary_summary(glossary)
+
+    style_gate_issues: List[Dict[str, str]] = []
+    style_gate_issues.extend(validate_style_profile_for_translate(style_profile))
+    style_gate_issues.extend(validate_glossary_profile_conflict(glossary, style_profile))
+    if style_gate_issues:
+        print_hard_gate_failures(style_gate_issues)
+        return 1
+    gate_issues = _collect_translate_gate_issues(style_profile, glossary, args.style_profile)
+    if gate_issues:
+        print(_format_gate_report(gate_issues))
+        print("🛑 translate_llm hard gate failed, please fix style profile / glossary first.")
+        return 1
 
     if not Path(args.input).exists():
         print(f"❌ Input not found: {args.input}")

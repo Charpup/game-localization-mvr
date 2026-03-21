@@ -1,0 +1,39 @@
+{
+  "run_id": "plc_run_d_prepare",
+  "schema": "milestone_D_snapshot_v1",
+  "created_at": "2026-03-21T16:02:51.458894+08:00",
+  "run_scope": "milestone_D_prepare",
+  "source_csv": "D:\\Dev_Env\\GPT_Codex_Workspace\\test_30_repaired.csv",
+  "source_sha256": "c509e0aaabf6f1b1491624aceb58ccb50c5e19b1aa968340d72b3f0a61d35997",
+  "sample_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\validation_10_d_plc_run_d_prepare_baseline.csv",
+  "sample_rows": 10,
+  "sample_seed": 42,
+  "sample_signature_algo": "sha256",
+  "sample_signature": "f207514e1fe517b1909bca7cff077a0280539dc8d4f2aa5ae78992b5e270631a",
+  "sample_sha256": "f13e0e1533938c1eba3445d3233cde6f92d7f0293dacec64c8c38705e296e546",
+  "snapshot_signature": "aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55",
+  "baseline_artifacts": {
+    "baseline_manifest_path": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\baseline_manifest.json",
+    "baseline_report_path": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\baseline_report.md",
+    "validation_csv_path": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\validation_10_baseline.csv",
+    "validation_meta_path": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\validation_10_baseline.meta.json"
+  },
+  "run_records": {
+    "run_manifest": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_manifest_plc_run_d_prepare.json",
+    "run_issue": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_issue_plc_run_d_prepare.md",
+    "run_verify": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_verify_plc_run_d_prepare.md"
+  },
+  "decision_refs": [
+    "triadev:milestone_D_prepare",
+    "plc:plc_run_d_prepare",
+    "artifact:scripts/baseline_drift_control.py",
+    "signature:baseline:aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55"
+  ],
+  "strata_distribution": {
+    "UI": 9,
+    "Dialogue": 0,
+    "System": 1,
+    "Placeholder": 0,
+    "Other": 0
+  }
+}

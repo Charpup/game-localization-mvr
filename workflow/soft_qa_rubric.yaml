@@ -48,12 +48,31 @@ outputs:
   report_json: "data/qa_soft_report.json"
   repair_tasks_jsonl: "data/repair_tasks.jsonl"
 
+gate:
+  enabled: true
+  rule_id: "STEP1_TERM_STYLE_DRIFT"
+  rule_version: "1.0"
+  severity_threshold: "major"
+  fail_on_types:
+    - terminology
+    - style_contract
+    - length
+    - placeholder
+    - ambiguity_high_risk
+  suggested_actions:
+    terminology: "按 approved glossary 与 preferred_terms 修正术语；禁译项进入人工确认。"
+    style_contract: "按 style_profile 的语体、专名、禁译规则修正后重跑。"
+    length: "按 UI/对话长度上限压缩译文，避免静默截断。"
+    placeholder: "恢复全部 token/标签后重跑，不允许改写变量。"
+    ambiguity_high_risk: "收敛到保守且一致的译法，并补充 glossary 备注。"
+
 # 使用说明
 usage:
   script: "soft_qa_llm.py 使用此 rubric 进行 LLM 软质量评审"
   workflow: |
     1. 读取 translated.csv
-    2. 按 batch 调用 LLM 评审
-    3. 输出 qa_soft_report.json (汇总)
-    4. 输出 repair_tasks.jsonl (逐条任务)
-  note: "Soft QA 不阻断流程，但会驱动 repair loop 自动修复"
+    2. 先做 preflight 风格/术语/长度/占位符硬门禁检查
+    3. 再按 batch 调用 LLM 评审高风险问题
+    4. 输出 qa_soft_report.json (汇总)
+    5. 输出 repair_tasks.jsonl (逐条任务)
+  note: "Soft QA 对 style/terminology drifts 执行硬门禁；命中 gate 时返回非 0，并附修复建议。"
