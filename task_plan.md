@@ -2,7 +2,7 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active mainline work is the `PLC + TriadDev Integration Priority` section until PR #9 is merged, after which the next active scope is `milestone_E_prepare`.
+> The current active scope is `milestone_E_prepare` on branch `codex/milestone-e-prepare`.
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
@@ -66,6 +66,28 @@ Stabilize the C/D milestone branch into one mergeable mainline PR, clear outstan
 - PR #9 merged into `main` as `fdc253f`.
 - PR #7 and PR #8 were marked superseded by PR #9 and closed.
 - mainline integration phase is complete; the next active scope is `milestone_E_prepare`.
+
+## 2026-03-21 Milestone E Prepare
+
+### Goal
+Prepare milestone E from clean post-merge mainline and define the implementation entry for delta tooling plus incremental retranslation task generation.
+
+### Route
+- `plc`: start from the latest merged `main` and maintain dated handoff continuity.
+- `triadev`: remain on Extended route, reuse the already-passed value gate, and stop at planning/delta/tasks readiness for E.
+
+### Scope
+- Work only from `codex/milestone-e-prepare`.
+- Define the E planning surface around:
+  - delta tool entrypoints and expected artifacts
+  - incremental retranslation task generation flow
+  - integration points with the C/D style and drift gates
+- Do not implement E runtime behavior in this kickoff step.
+
+### Mini Plan
+- [in_progress] Read merged PLC/TriadDev state from `main` and open milestone E session records.
+- [pending] Identify the minimum E planning interfaces: delta inputs, outputs, and handoff artifacts.
+- [pending] Prepare the next implementation-ready task slice for E without entering code changes beyond planning docs/state.
 
 ## Phases
 - [complete] Phase 1: Initialize plan files and inspect run entrypoints.
