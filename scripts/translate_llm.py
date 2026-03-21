@@ -276,6 +276,13 @@ def build_style_contract(profile: Dict[str, Any]) -> str:
 
     forbidden_terms = terminology.get("forbidden_terms", []) or []
     preferred_terms = terminology.get("preferred_terms", []) or []
+    prohibited_aliases = terminology.get("prohibited_aliases", []) or []
+    banned_terms = terminology.get("banned_terms", []) or []
+
+    def _string_items(items: Any) -> List[str]:
+        if not isinstance(items, list):
+            return []
+        return [str(item).strip() for item in items if str(item).strip()]
 
     lines = [
         "【Project Style Contract】",
@@ -309,6 +316,20 @@ def build_style_contract(profile: Dict[str, Any]) -> str:
                 ru = str(it.get("term_ru", "")).strip()
                 if zh and ru:
                     lines.append(f"  - {zh} -> {ru}")
+            else:
+                value = str(it).strip()
+                if value:
+                    lines.append(f"  - {value}")
+    alias_items = _string_items(prohibited_aliases)
+    if alias_items:
+        lines.append("- Prohibited aliases:")
+        for item in alias_items[:25]:
+            lines.append(f"  - {item}")
+    banned_items = _string_items(banned_terms)
+    if banned_items:
+        lines.append("- Banned terms:")
+        for item in banned_items[:25]:
+            lines.append(f"  - {item}")
 
     return "\n".join(lines)
 

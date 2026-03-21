@@ -109,6 +109,16 @@ RULE_CATALOG = {
     },
 }
 
+ISSUE_PRIORITY = {
+    "placeholder": 0,
+    "style_contract": 1,
+    "terminology": 2,
+    "ambiguity_high_risk": 3,
+    "mistranslation": 4,
+    "punctuation": 5,
+    "length": 6,
+}
+
 
 def load_text(p: str) -> str:
     with open(p, "r", encoding="utf-8") as f:
@@ -175,6 +185,17 @@ def append_jsonl(p: str, items: List[dict]) -> None:
             f.write(json.dumps(it, ensure_ascii=False) + "\n")
 
 
+def load_checkpoint(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
 def token_counts(s: str) -> Dict[str, int]:
     d = {}
     for m in TOKEN_RE.finditer(s or ""):
@@ -202,6 +223,10 @@ def build_style_contract_block(profile: dict) -> str:
     ]
     for t in terms.get("forbidden_terms", [])[:10]:
         lines.append(f"- Forbidden term: {t}")
+    for t in terms.get("banned_terms", [])[:10]:
+        lines.append(f"- Banned term: {t}")
+    for alias in _prohibited_aliases(profile)[:10]:
+        lines.append(f"- Prohibited alias: {alias}")
     return "\n".join(lines)
 
 
@@ -250,6 +275,36 @@ def build_glossary_summary(entries: List[GlossaryEntry], max_entries: int = 50) 
     return "\n".join([f"- {e.term_zh} → {e.term_ru}" for e in approved])
 
 
+def _pick_terms(seq: Any) -> List[str]:
+    if not isinstance(seq, list):
+        return []
+    return [str(item).strip() for item in seq if str(item).strip()]
+
+
+def _prohibited_aliases(profile: dict) -> List[str]:
+    aliases: List[str] = []
+    items = profile.get("terminology", {}).get("prohibited_aliases", []) or []
+    for item in items:
+        if isinstance(item, dict):
+            alias = str(item.get("alias") or item.get("term_ru") or "").strip()
+            if alias:
+                aliases.append(alias)
+            continue
+        text = str(item).strip()
+        if not text:
+            continue
+        if "->" in text:
+            text = text.split("->", 1)[1].strip()
+        aliases.append(text.strip("\"'[](){} "))
+    return [alias for alias in aliases if alias]
+
+
+def _task_sort_key(task: dict) -> tuple[int, int]:
+    severity = severity_rank(str(task.get("severity", "")).lower())
+    issue_type = str(task.get("type") or task.get("issue_type") or "")
+    return (-severity, ISSUE_PRIORITY.get(issue_type, 99))
+
+
 def preflight_tasks(rows: List[Dict[str, str]], style_profile: dict, glossary_entries: List[GlossaryEntry]) -> List[dict]:
     tasks: List[dict] = []
     seen = set()
@@ -258,7 +313,11 @@ def preflight_tasks(rows: List[Dict[str, str]], style_profile: dict, glossary_en
     limits = ui.get("length_constraints", {}) or {}
     btn_max = int(limits.get("button_max_chars", 18))
     dlg_max = int(limits.get("dialogue_max_chars", 120))
-    forbidden = set([str(t).strip() for t in style_profile.get("terminology", {}).get("forbidden_terms", []) if str(t).strip()])
+    terms = style_profile.get("terminology", {}) or {}
+    forbidden = set(_pick_terms(terms.get("forbidden_terms", [])))
+    banned = set(_pick_terms(terms.get("banned_terms", [])))
+    blocked_terms = forbidden | banned
+    prohibited_aliases = set(_prohibited_aliases(style_profile))
     preferred = style_profile.get("terminology", {}).get("preferred_terms", []) or []
     preferred_map = {str(p.get("term_zh", "")).strip(): str(p.get("term_ru", "")).strip() for p in preferred if isinstance(p, dict)}
 
@@ -329,16 +388,34 @@ def preflight_tasks(rows: List[Dict[str, str]], style_profile: dict, glossary_en
                 })
                 seen.add(key)
 
-        for t in forbidden:
-            if t and t in src and t in tgt:
-                key = (sid, "forbidden")
+        for t in blocked_terms:
+            if t and t in tgt:
+                key = (sid, "blocked_term")
                 if key not in seen:
                     tasks.append({
                         "string_id": sid,
                         "type": "style_contract",
                         "severity": "major",
-                        "note": f"forbidden term {t}",
+                        "note": f"blocked term {t}",
                         "problem": "命中禁译项",
+                        "suggestion": RULE_CATALOG["D-SQA-003"]["suggestion"],
+                        "suggested_fix": tgt,
+                        "rule_id": "D-SQA-003",
+                        "rule_version": RULE_VERSION,
+                        "remediation": RULE_CATALOG["D-SQA-003"]["suggestion"],
+                    })
+                    seen.add(key)
+
+        for alias in prohibited_aliases:
+            if alias and alias in tgt:
+                key = (sid, "prohibited_alias")
+                if key not in seen:
+                    tasks.append({
+                        "string_id": sid,
+                        "type": "style_contract",
+                        "severity": "major",
+                        "note": f"prohibited alias {alias}",
+                        "problem": "命中禁用别名",
                         "suggestion": RULE_CATALOG["D-SQA-003"]["suggestion"],
                         "suggested_fix": tgt,
                         "rule_id": "D-SQA-003",
@@ -424,7 +501,7 @@ def process_batch_results(batch_items: List[Dict]) -> List[dict]:
 def merge_tasks(pref: List[dict], llm_tasks: List[dict], cap_per_row: int = 1) -> List[dict]:
     merged = []
     seen = set()
-    for task in pref + llm_tasks:
+    for task in sorted(pref + llm_tasks, key=_task_sort_key):
         sid = task.get("string_id") or task.get("id")
         typ = task.get("type") or task.get("issue_type")
         if not sid:
@@ -508,6 +585,12 @@ def main():
     glossary_summary = build_glossary_summary(glossary_entries)
 
     rows_with_target = [r for r in rows if r.get("target_text")]
+    checkpoint_path = Path(args.out_report).parent / "soft_qa_checkpoint.json"
+    if args.resume:
+        checkpoint = load_checkpoint(checkpoint_path)
+        rows_processed = int(checkpoint.get("rows_processed", 0) or 0)
+        if rows_processed > 0:
+            rows_with_target = rows_with_target[rows_processed:]
     print(f"✅ Loaded {len(rows)} rows, target rows {len(rows_with_target)}")
 
     pre_tasks = preflight_tasks(rows_with_target, style_profile, glossary_entries)

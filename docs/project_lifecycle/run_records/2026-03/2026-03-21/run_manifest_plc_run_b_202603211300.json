@@ -1,7 +1,7 @@
 {
   "run_id": "plc_run_b_202603211300",
   "run_scope": "milestone_B_execute",
-  "status": "done",
+  "status": "pass",
   "started_at": "2026-03-21T13:00:00+08:00",
   "finished_at": "2026-03-21T18:30:00+08:00",
   "owner": "Codex",

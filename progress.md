@@ -1,5 +1,29 @@
 # Progress Log
 
+## 2026-03-21
+- Started PLC + TriadDev integration-priority pass before milestone E.
+- Confirmed the real GitHub integration branch is `codex/plc-c-verify` in `D:\Dev_Env\GPT_Codex_Workspace`, while `game-localization-mvr/main_worktree` is a nested reference worktree with half-applied fixes.
+- Confirmed PLC governance state already marks milestones C and D as `done` with `evidence_ready=true`, but GitHub `main` has not yet absorbed that state.
+- Audited open PRs and selected PR #9 as the only viable mainline integration branch; PR #7 and PR #8 are superseded in scope.
+- Extracted the current blocking review set:
+  - `soft_qa_llm.py` severity loss in `merge_tasks()`
+  - missing `prohibited_aliases` / `banned_terms` propagation in translation and soft-QA contracts
+  - PLC ledger/schema inconsistencies in milestone-B evidence
+- Chose a minimum validation plan: targeted `soft_qa` contract tests, a small translation style-contract test, and file-level PLC contract checks.
+- Updated the execution ledger with an explicit `PLC + TriadDev Integration Priority` section so this pass stays bounded to integration hardening rather than milestone E feature work.
+- Fixed PR #9 code-review gaps in the outer integration repo:
+  - `soft_qa_llm` now prioritizes higher-severity placeholder findings and surfaces `prohibited_aliases` / `banned_terms`
+  - `translate_llm` now serializes `prohibited_aliases` / `banned_terms` in the style contract output
+- Fixed PLC governance gaps in the outer integration repo:
+  - milestone B run manifest now uses schema-valid status `pass`
+  - referenced ADR files now exist under `docs/decisions/`
+  - added a PLC docs contract test to keep run-manifest schema and ADR references honest
+- Ran the targeted regression suite successfully:
+  - `tests/test_soft_qa_contract.py`: `7 passed`
+  - `tests/test_translate_style_contract.py`: `1 passed`
+  - `tests/test_plc_docs_contract.py`: `2 passed`
+- Current state: integration patch set is merge-ready; milestone E should still wait until this lands on clean `main`.
+
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.
 - Created `task_plan.md`, `findings.md`, and `progress.md`.
