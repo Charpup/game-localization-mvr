@@ -76,7 +76,7 @@ def _parse_markdown_block(lines: List[str], start: int = 0, indent: Optional[int
             key, value = body.split(":", 1)
             key = key.strip()
             value = value.strip()
-            if value:
+            if value and value not in {">", "|"}:
                 items.append({key: _strip_ticks(value)})
                 index += 1
                 continue
@@ -94,9 +94,30 @@ def _parse_markdown_block(lines: List[str], start: int = 0, indent: Optional[int
                 child_indent = next_indent
                 break
             if child_indent is None:
-                items.append({key: []})
+                items.append({key: "" if value in {">", "|"} else []})
                 index += 1
                 continue
+            child_lines: List[str] = []
+            probe = index + 1
+            while probe < len(lines):
+                next_line = lines[probe]
+                if not next_line.strip():
+                    probe += 1
+                    continue
+                next_indent = len(next_line) - len(next_line.lstrip(" "))
+                if next_indent < child_indent:
+                    break
+                child_lines.append(next_line)
+                probe += 1
+
+            first_child = next((line for line in child_lines if line.strip()), "")
+            first_child_content = first_child[child_indent:].strip() if first_child else ""
+            if value in {">", "|"} or (first_child and not first_child_content.startswith("- ")):
+                prose_lines = [line[child_indent:].strip() for line in child_lines if line.strip()]
+                items.append({key: " ".join(part for part in prose_lines if part)})
+                index = probe
+                continue
+
             child, new_index = _parse_markdown_block(lines, index + 1, child_indent)
             items.append({key: child})
             index = new_index
@@ -125,7 +146,7 @@ def parse_markdown_sections(path: Path) -> Dict[str, Any]:
             continue
         if not line.strip():
             continue
-        if current is not None and line.lstrip().startswith("-"):
+        if current is not None:
             current.append(line)
 
     parsed: Dict[str, Any] = {}

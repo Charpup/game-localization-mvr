@@ -18,7 +18,7 @@
 
 ## Acceptance
 - command: `python -m pytest tests/test_plc_docs_contract.py -q`
-- result: `6 passed`
+- result: `7 passed`
 - smoke run: `skipped by design`
 - rationale: this slice validates PLC/TriadDev governance artifacts and does not touch runtime execution paths
 

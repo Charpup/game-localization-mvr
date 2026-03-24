@@ -253,7 +253,7 @@ Open the first bounded implementation package of Phase 2 (`M/N/P`) by freezing m
 - focused acceptance is green:
   - `python -m pytest tests/test_plc_docs_contract.py -q`
   - `python scripts/plc_validate_records.py --preset representative --preset templates`
-  - result: `6 passed` and `Validated 7 PLC governance artifact(s).`
+  - result: `7 passed` and `Validated 7 PLC governance artifact(s).`
 - smoke remains intentionally skipped for this slice because no runtime pipeline entrypoint changed
 
 ## Phases

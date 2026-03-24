@@ -259,7 +259,7 @@
       "rationale": "This slice changes PLC/TriadDev governance contracts and validator code only.",
       "result": "passed",
       "acceptance_command": "python -m pytest tests/test_plc_docs_contract.py -q && python scripts/plc_validate_records.py --preset representative --preset templates",
-      "acceptance_summary": "6 passed; Validated 7 PLC governance artifact(s)."
+      "acceptance_summary": "7 passed; Validated 7 PLC governance artifact(s)."
     },
     "next_action": "open Phase 2 governance substrate PR on top of main"
   }

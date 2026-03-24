@@ -95,7 +95,7 @@
   - `milestone_state_template.md`
   - `continuity_protocol.md`
 - Focused Phase 2 acceptance is green:
-  - `python -m pytest tests/test_plc_docs_contract.py -q` -> `6 passed`
+  - `python -m pytest tests/test_plc_docs_contract.py -q` -> `7 passed`
   - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 7 PLC governance artifact(s).`
 - Smoke remains intentionally skipped for this slice because the runtime pipeline and orchestrator are untouched.
 

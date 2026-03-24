@@ -84,3 +84,39 @@ def test_validator_cli_passes_representative_and_template_presets():
     exit_code = plc_validate_records.main(["--preset", "representative", "--preset", "templates"])
 
     assert exit_code == 0
+
+
+def test_markdown_parser_preserves_multiline_folded_scalar_content(tmp_path):
+    record = tmp_path / "session_start_multiline.md"
+    record.write_text(
+        "\n".join(
+            [
+                "# Session Start",
+                "",
+                "- date: `2026-03-25`",
+                "- branch: `codex/example`",
+                "- current_scope: `milestone_M_prepare`",
+                "- route: `plc + triadev`",
+                "",
+                "## Slice",
+                "- bounded implementation target: `example`",
+                "",
+                "## Validation Decision",
+                "- validation mode: `focused-governance-tests`",
+                "- smoke run: `not required for this slice`",
+                "- rationale: >",
+                "  first line of rationale",
+                "  second line of rationale",
+                "",
+                "## Handoff",
+                "- next_owner: `Codex`",
+                "- next_scope: `next_scope`",
+                "- next_action: `do the next thing`",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    parsed = plc_validate_records.parse_markdown_sections(record)
+
+    assert parsed["Validation Decision"]["rationale"] == "first line of rationale second line of rationale"
