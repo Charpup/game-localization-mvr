@@ -1,5 +1,8 @@
 # 里程碑与 run 记录字段规范
 
+> 机器可校验的单一合同源见 `workflow/plc_governance_contract.yaml`。
+> 本文件保留为人读规范，与合同文件保持同语义。
+
 ## 1. 里程碑状态字段
 
 ```yaml
@@ -38,10 +41,55 @@ next_step_scope: string
 ## 3. 会话交接字段
 
 ```yaml
+date: date_iso8601
+branch: string
+current_scope: string
 next_owner: string
 next_scope: string
-handover_time: datetime_iso8601
 open_issues: array[string]
 next_action: string
+validation_mode: string
+smoke_required: boolean
 ```
+
+## 4. markdown 工件约定
+
+### session_start
+
+- 顶层必填字段：
+  - `date`
+  - `branch`
+  - `current_scope`
+  - `route`
+- 必填 section：
+  - `Slice`
+  - `Validation Decision`
+  - `Handoff`
+
+### session_end
+
+- 顶层必填字段：
+  - `date`
+  - `branch`
+  - `current_scope`
+  - `slice_status`
+- 必填 section：
+  - `Delivered Surface`
+  - `Acceptance`
+  - `Outcome`
+  - `Handoff`
+
+### milestone_state
+
+- 顶层必填字段：
+  - `id`
+  - `status`
+  - `owner`
+  - `next_owner`
+  - `progress_pct`
+  - `evidence_ready`
+  - `decision_ref`
+- 必填 section：
+  - `evidence`
+  - `handoff`
 

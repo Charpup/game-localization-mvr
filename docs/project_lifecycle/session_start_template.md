@@ -1,21 +1,24 @@
 # session_start 模板
 
-- started_at: 2026-03-20T10:00:00+08:00
-- owner: <owner_id>
-- next_owner: <next_owner>
-- scope: <A-S / 子任务>
-- source_docs:
-  - docs/HANDOFF_MAINLINE_GUARDRAILS.md (mtime: <ts>)
-  - task_plan.md (mtime: <ts>)
-  - docs/project_lifecycle/roadmap_index.md (mtime: <ts>)
-  - docs/project_lifecycle/continuity_protocol.md (mtime: <ts>)
-- milestone:
-  - id: <A>
-  - status: <todo|in_progress|blocked>
-  - progress_pct: <0-100>
-  - blockers: [<id>, <id>]
-- plan_1h_chunks:
-  - [<chunk_1>, <chunk_2>, <chunk_3>]
-- verification_floor: [tests, checks, run scope]
-- next_step_scope: <scope for next session>
+- date: `2026-03-25`
+- branch: `codex/<branch-name>`
+- current_scope: `<milestone / slice>`
+- route: `plc + triadev`
+- base_branch: `main`
+
+## Slice
+- bounded implementation target: `<one bounded package>`
+- non-goals:
+  - `<explicit non-goal 1>`
+  - `<explicit non-goal 2>`
+
+## Validation Decision
+- validation mode: `<focused-governance-tests|focused-runtime-tests|smoke>`
+- smoke run: `<required|not required for this slice>`
+- rationale: `<why this validation floor is enough>`
+
+## Handoff
+- next_owner: `<owner_id>`
+- next_scope: `<next bounded scope>`
+- next_action: `<one concrete next step>`
 

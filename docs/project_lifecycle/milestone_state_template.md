@@ -19,4 +19,5 @@
 - handoff:
   - next_owner: <owner_id>
   - next_scope: <scope>
+  - next_action: <one concrete next step>
 

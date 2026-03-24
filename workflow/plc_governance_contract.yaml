@@ -1,0 +1,111 @@
+version: 1
+artifacts:
+  run_manifest:
+    format: json
+    required_fields:
+      - run_id
+      - run_scope
+      - status
+      - started_at
+      - finished_at
+      - owner
+      - input_manifest
+      - issue_report_path
+      - verify_report_path
+      - artifacts
+      - blockers
+      - decision_refs
+      - evidence_ready
+      - next_step_owner
+      - next_step_scope
+    enum_fields:
+      status: [pass, warn, blocked]
+      gate_result: [pass, warn, blocked]
+    boolean_fields:
+      - evidence_ready
+  session_start:
+    format: markdown_sections
+    required_top_level:
+      - date
+      - branch
+      - current_scope
+      - route
+    required_sections:
+      Slice:
+        - bounded implementation target
+      Validation Decision:
+        - validation mode
+        - smoke run
+        - rationale
+      Handoff:
+        - next_owner
+        - next_scope
+        - next_action
+  session_end:
+    format: markdown_sections
+    required_top_level:
+      - date
+      - branch
+      - current_scope
+      - slice_status
+    enum_fields:
+      slice_status: [completed, blocked]
+    required_sections:
+      Delivered Surface: []
+      Acceptance:
+        - command
+        - result
+        - smoke run
+        - rationale
+      Outcome: []
+      Handoff:
+        - next_owner
+        - next_scope
+        - open_issues
+        - next_action
+  milestone_state:
+    format: markdown_root
+    required_top_level:
+      - id
+      - status
+      - owner
+      - next_owner
+      - progress_pct
+      - evidence_ready
+      - decision_ref
+      - eta_hours
+      - evidence
+      - handoff
+    enum_fields:
+      status: [todo, in_progress, blocked, done, shelved]
+    boolean_fields:
+      - evidence_ready
+    integer_fields:
+      - progress_pct
+      - eta_hours
+    required_nested:
+      evidence:
+        - run_id
+        - run_manifest
+        - run_issue
+        - run_verify
+      handoff:
+        - next_owner
+        - next_scope
+presets:
+  representative:
+    - artifact_type: run_manifest
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_d_verify.json
+    - artifact_type: milestone_state
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_state_D.md
+    - artifact_type: session_start
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase2_governance_substrate.md
+    - artifact_type: session_end
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase2_governance_substrate.md
+  templates:
+    - artifact_type: session_start
+      path: docs/project_lifecycle/session_start_template.md
+    - artifact_type: session_end
+      path: docs/project_lifecycle/session_end_template.md
+    - artifact_type: milestone_state
+      path: docs/project_lifecycle/milestone_state_template.md

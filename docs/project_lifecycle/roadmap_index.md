@@ -70,14 +70,14 @@
 - `next_owner`：`Codex`
 - `next_scope`：`milestone_E_prepare`
 
-## E 后续接点（2026-03-24）
+## E 后续接点（2026-03-25）
 
-- `current_scope`：`milestone_E_prepare`
-- `branch_state`：`implemented on branch / awaiting PR review`
+- `current_scope`：`milestone_M_prepare`
+- `branch_state`：`milestone E + phase 1 merged into main`
 - `evidence_ready`：`true`
 - `next_owner`：`Codex`
-- `recommended_next_scope`：`milestone_F_execute`
-- `parallel_planning_sidecar`：`milestone_M_prepare`
+- `recommended_next_scope`：`milestone_M_prepare`
+- `parallel_planning_sidecar`：`milestone_F_execute_followup`
 
 ## E 后四阶段重写（保留 F → S 映射）
 
