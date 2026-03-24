@@ -9,6 +9,7 @@
 - `workflow/plc_governance_contract.yaml`
 - `scripts/plc_validate_records.py`
 - `tests/test_plc_docs_contract.py`
+- `docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_M.md`
 - `docs/project_lifecycle/field_schema.md`
 - `docs/project_lifecycle/session_start_template.md`
 - `docs/project_lifecycle/session_end_template.md`
