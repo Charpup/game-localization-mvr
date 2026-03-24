@@ -2,7 +2,7 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `milestone_E_prepare` on branch `codex/milestone-e-prepare`.
+> The current active scope is `milestone_F_execute` on branch `codex/phase1-quality-closure`.
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
@@ -157,6 +157,59 @@ Lock the milestone E contract and execution order, then execute the first two im
 - Milestone E focused regression is green:
   - `python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py tests/test_soft_qa_contract.py tests/test_milestone_e_repro_contract.py tests/test_glossary_delta_contract.py tests/test_milestone_e_delta_contract.py tests/test_translate_style_contract.py tests/test_plc_docs_contract.py -q`
   - result: `27 passed`
+
+## 2026-03-24 Post-E Roadmap Modify Proposal
+
+### Goal
+Rewrite `F → S` into four execution phases while preserving the original milestone letters, then sync that view into PLC and TriadDev planning docs.
+
+### Proposal
+- Phase 1: `F/G/H` as quality-closure and routing hardening
+- Phase 2: `M/N/O/P` as governance substrate and continuity schema
+- Phase 3: `I/J/K/L` as language-governance plus human-review operations
+- Phase 4: `Q/R/S` as agent-first operator control plane and final operating-model decision
+
+### Recommended Post-E Order
+- Start `milestone_F_execute` as the main next scope.
+- In parallel, open `milestone_M_prepare` as the governance-substrate sidecar so future delta/task/review artifacts do not outrun their schemas.
+- Delay any GUI-heavy interpretation of `Q/R` until the agent-first operator flow is stable.
+
+## 2026-03-24 Phase 1 Quality Closure Slice
+
+### Goal
+Land the first bounded implementation slice of post-E Phase 1 by adding a unified execution-status contract inside `translate_refresh`, without expanding orchestration into the smoke pipeline yet.
+
+### Route
+- `plc`: record the transition from roadmap modify into `milestone_F_execute`, keep the next-scope recommendation explicit, and capture why this slice does not run smoke yet.
+- `triadev`: treat this as a stacked, bounded Phase 1 implementation on top of `codex/milestone-e-prepare`.
+
+### Scope
+- Work only on the incremental refresh executor surface:
+  - unify task/run status fields for `updated`, `review_handoff`, `failed`, and gate-blocked outcomes
+  - surface those statuses in manifest and review-queue artifacts
+  - keep the current `run_smoke_pipeline` untouched in this slice
+- Do not integrate `soft_qa_llm` into runtime routing yet.
+- Do not wire `repair_loop` into smoke or refresh orchestration yet.
+
+### Acceptance
+- `translate_refresh` writes explicit task-level and run-level status outcomes.
+- `qa_hard` / placeholder gate failures become explicit blocked states rather than implicit manifest interpretation.
+- focused executor/E2E tests cover success, manual-review, LLM failure, and gate-blocked outcomes.
+- no smoke run is required for this slice because orchestration entrypoints are intentionally unchanged.
+
+### Branch Strategy
+- stacked branch: `codex/phase1-quality-closure`
+- expected PR base: `codex/milestone-e-prepare`
+
+### Result
+- unified execution-status contract landed in `scripts/translate_refresh.py`
+- task artifacts now persist `execution_status`, `final_status`, and `status_reason`
+- manifest now persists `overall_status`, `task_outcomes`, and `gate_summary`
+- execution failures no longer promote staged candidate output to final `--out-csv`
+- focused acceptance is green:
+  - `python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py tests/test_plc_docs_contract.py -q`
+  - result: `10 passed`
+- smoke remains intentionally skipped for this slice because `scripts/run_smoke_pipeline.py` was not modified
 
 ## Phases
 - [complete] Phase 1: Initialize plan files and inspect run entrypoints.

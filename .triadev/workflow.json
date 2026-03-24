@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "milestone-e-prepare-20260324",
+  "change_id": "phase1-quality-closure-20260324",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -151,6 +151,82 @@
     "Control plane changes remain descriptive and must not alter keep-chain behavior.",
     "Milestone E executes gate-first: contract locally, then parallel repro and delta work, then executor integration.",
     "Milestone E is multi-market first with a compatibility layer for current ru-RU assets.",
-    "Phase 2 reviewer blockers were closed before status completion: staged candidate output, locale-grouped execution, and fail-closed glossary locale lookup."
-  ]
+    "Phase 2 reviewer blockers were closed before status completion: staged candidate output, locale-grouped execution, and fail-closed glossary locale lookup.",
+    "Post-E roadmap is now interpreted as four execution phases while preserving milestone letters F-S."
+  ],
+  "post_e_roadmap": {
+    "status": "proposed",
+    "recommended_next_scope": "milestone_F_execute",
+    "parallel_planning_sidecar": "milestone_M_prepare",
+    "execution_preference": [
+      "phase-1-quality-closure",
+      "phase-2-governance-substrate",
+      "phase-3-language-governance",
+      "phase-4-operator-control-plane"
+    ],
+    "phases": [
+      {
+        "id": "phase-1-quality-closure",
+        "milestones": [
+          "F",
+          "G",
+          "H"
+        ],
+        "goal": "Close qa/repair/review routing into one runtime-quality state machine."
+      },
+      {
+        "id": "phase-2-governance-substrate",
+        "milestones": [
+          "M",
+          "N",
+          "O",
+          "P"
+        ],
+        "goal": "Freeze run/session/evidence/milestone schemas before later operator surfaces expand."
+      },
+      {
+        "id": "phase-3-language-governance",
+        "milestones": [
+          "I",
+          "J",
+          "K",
+          "L"
+        ],
+        "goal": "Version style governance, human-review intake, feedback logging, lifecycle retirement, and KPI reporting."
+      },
+      {
+        "id": "phase-4-operator-control-plane",
+        "milestones": [
+          "Q",
+          "R",
+          "S"
+        ],
+        "goal": "Build an agent-first operator control plane, reporting surfaces, and final operating-model ADR."
+      }
+    ]
+  },
+  "active_phase1_slice": {
+    "status": "completed",
+    "scope": "translate_refresh unified execution-status contract",
+    "branch": "codex/phase1-quality-closure",
+    "bounded_surfaces": [
+      "scripts/translate_refresh.py",
+      "tests/test_translate_refresh_contract.py",
+      "tests/test_milestone_e_e2e.py"
+    ],
+    "explicit_non_goals": [
+      "run_smoke_pipeline orchestration changes",
+      "soft_qa_llm runtime integration",
+      "repair_loop runtime integration"
+    ],
+    "validation_strategy": {
+      "mode": "focused-tests-only",
+      "smoke_required": false,
+      "rationale": "This slice changes executor artifact semantics but intentionally leaves smoke orchestration untouched.",
+      "result": "passed",
+      "acceptance_command": "python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py tests/test_plc_docs_contract.py -q",
+      "acceptance_summary": "10 passed"
+    },
+    "next_action": "open stacked PR on top of codex/milestone-e-prepare"
+  }
 }

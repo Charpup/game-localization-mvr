@@ -54,6 +54,26 @@
   - pinned the executor failure artifact as `incremental_failure_breakdown.json`
 - Milestone E focused regression is green again:
   - `27 passed` across refresh/executor, repro, typed delta, soft-QA compatibility, translate style contract, and PLC docs contract tests
+- Added a post-E roadmap modify proposal to PLC/TriadDev docs:
+  - `F → S` now has an explicit four-phase interpretation while preserving the original milestone letters
+  - recommended next main scope is `milestone_F_execute`
+  - recommended governance sidecar is `milestone_M_prepare`
+- Switched to stacked branch `codex/phase1-quality-closure` to start the first Phase 1 implementation slice.
+- Locked the Phase 1 slice to `translate_refresh` unified execution-status contracts only:
+  - no `run_smoke_pipeline` orchestration changes in this round
+  - no `soft_qa` / `repair_loop` runtime wiring in this round
+- Current validation plan is focused tests, not smoke:
+  - rationale: this slice changes executor artifact semantics but intentionally leaves the smoke entrypoint untouched
+- Implemented the Phase 1 status-contract slice in `translate_refresh`:
+  - task artifacts now persist `execution_status`, `final_status`, and `status_reason`
+  - manifest artifacts now persist `overall_status`, `task_outcomes`, and `gate_summary`
+  - review queue rows now persist `review_source`
+- Closed the last Phase 1 contract gap in the main thread:
+  - execution failures now keep the staged candidate artifact and return a non-zero exit code instead of silently promoting final output
+- Phase 1 focused acceptance is green:
+  - `python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py tests/test_plc_docs_contract.py -q`
+  - result: `10 passed`
+- Smoke remains intentionally skipped for this slice because `scripts/run_smoke_pipeline.py` is unchanged and orchestration behavior is out of scope for this PR.
 
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.

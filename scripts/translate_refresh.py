@@ -76,8 +76,11 @@ REVIEW_QUEUE_FIELDS = [
     "task_type",
     "review_owner",
     "review_status",
+    "review_source",
     "queue_reason",
     "execution_status",
+    "final_status",
+    "status_reason",
     "reason_codes",
     "manual_review_reason",
     "current_target",
@@ -201,6 +204,9 @@ def normalize_task(raw: Dict[str, Any]) -> Dict[str, Any]:
     if not isinstance(target_constraints, dict):
         raise ValueError(f"Task {task.get('task_id') or task.get('string_id') or '<unknown>'} has invalid target_constraints")
     task["target_constraints"] = target_constraints
+    task["execution_status"] = str(task.get("execution_status") or "").strip()
+    task["final_status"] = str(task.get("final_status") or "").strip()
+    task["status_reason"] = str(task.get("status_reason") or "").strip()
     return task
 
 
@@ -345,24 +351,77 @@ def write_review_queue(path: str, rows: List[Dict[str, str]]) -> None:
     write_csv(path, rows, REVIEW_QUEUE_FIELDS)
 
 
+def initial_task_status(task: Dict[str, Any]) -> Tuple[str, str, str]:
+    if task["task_type"] in {"manual_review", "skip"}:
+        reason = str(task.get("manual_review_reason") or task["task_type"])
+        return "review_handoff", "review_handoff", reason
+    return "pending", "pending", "awaiting_execution"
+
+
+def apply_task_status(
+    task: Dict[str, Any],
+    execution_status: str,
+    final_status: Optional[str] = None,
+    status_reason: str = "",
+) -> None:
+    task["execution_status"] = execution_status
+    task["final_status"] = final_status or execution_status
+    task["status_reason"] = status_reason
+
+
+def initialize_task_statuses(tasks: List[Dict[str, Any]]) -> None:
+    for task in tasks:
+        execution_status, final_status, status_reason = initial_task_status(task)
+        apply_task_status(task, execution_status, final_status, status_reason)
+
+
+def infer_review_source(task: Dict[str, Any]) -> str:
+    final_status = str(task.get("final_status") or "")
+    execution_status = str(task.get("execution_status") or "")
+    if final_status == "blocked":
+        return "post_gate_blocked"
+    if execution_status == "failed":
+        return "execution_failure"
+    if final_status == "review_handoff":
+        return "initial_manual_review"
+    return ""
+
+
+def build_review_queue_entry(
+    task: Dict[str, Any],
+    queue_reason: str,
+    review_source: str,
+    current_target: str,
+) -> Dict[str, str]:
+    return {
+        "task_id": task["task_id"],
+        "string_id": task["string_id"],
+        "task_type": task["task_type"],
+        "review_owner": str(task.get("review_owner") or "human-linguist"),
+        "review_status": str(task.get("review_status") or "pending"),
+        "review_source": review_source,
+        "queue_reason": queue_reason,
+        "execution_status": str(task.get("execution_status") or ""),
+        "final_status": str(task.get("final_status") or ""),
+        "status_reason": str(task.get("status_reason") or queue_reason),
+        "reason_codes": json.dumps(task["reason_codes"], ensure_ascii=False),
+        "manual_review_reason": task.get("manual_review_reason") or "",
+        "current_target": current_target,
+    }
+
+
 def build_initial_review_queue(tasks: List[Dict[str, Any]]) -> List[Dict[str, str]]:
     rows: List[Dict[str, str]] = []
     for task in tasks:
         if not task["human_review_required"]:
             continue
         rows.append(
-            {
-                "task_id": task["task_id"],
-                "string_id": task["string_id"],
-                "task_type": task["task_type"],
-                "review_owner": task["review_owner"],
-                "review_status": task["review_status"],
-                "queue_reason": task.get("manual_review_reason") or task["task_type"],
-                "execution_status": "pending_handoff",
-                "reason_codes": json.dumps(task["reason_codes"], ensure_ascii=False),
-                "manual_review_reason": task.get("manual_review_reason") or "",
-                "current_target": task.get("current_target") or "",
-            }
+            build_review_queue_entry(
+                task=task,
+                queue_reason=task.get("manual_review_reason") or task["task_type"],
+                review_source="initial_manual_review",
+                current_target=task.get("current_target") or "",
+            )
         )
     return rows
 
@@ -540,6 +599,99 @@ def pick_row_target_text(row: Dict[str, str]) -> str:
     return ""
 
 
+def build_gate_failure_reason(
+    string_id: str,
+    row_count_gate: Dict[str, Any],
+    placeholder_failed_ids: Iterable[str],
+    qa_failed_ids: Iterable[str],
+) -> str:
+    reasons: List[str] = []
+    placeholder_failed_set = set(placeholder_failed_ids)
+    qa_failed_set = set(qa_failed_ids)
+    if not row_count_gate.get("passed", False):
+        reasons.append("row_count_integrity_failed")
+    if string_id in placeholder_failed_set:
+        reasons.append("placeholder_signature_failed")
+    if string_id in qa_failed_set:
+        reasons.append("qa_hard_failed")
+    return ";".join(reasons) or "post_gate_blocked"
+
+
+def summarize_task_outcomes(tasks: List[Dict[str, Any]]) -> Dict[str, Any]:
+    counts_by_execution_status: Dict[str, int] = {}
+    counts_by_final_status: Dict[str, int] = {}
+    items: List[Dict[str, Any]] = []
+    for task in tasks:
+        execution_status = str(task.get("execution_status") or "")
+        final_status = str(task.get("final_status") or "")
+        counts_by_execution_status[execution_status] = counts_by_execution_status.get(execution_status, 0) + 1
+        counts_by_final_status[final_status] = counts_by_final_status.get(final_status, 0) + 1
+        items.append(
+            {
+                "task_id": task["task_id"],
+                "string_id": task["string_id"],
+                "task_type": task["task_type"],
+                "execution_status": execution_status,
+                "final_status": final_status,
+                "status_reason": str(task.get("status_reason") or ""),
+                "review_source": infer_review_source(task),
+            }
+        )
+    return {
+        "counts_by_execution_status": counts_by_execution_status,
+        "counts_by_final_status": counts_by_final_status,
+        "items": items,
+    }
+
+
+def derive_overall_status(tasks: List[Dict[str, Any]]) -> str:
+    if any(str(task.get("final_status") or "") == "blocked" for task in tasks):
+        return "blocked"
+    if any(str(task.get("execution_status") or "") == "failed" for task in tasks):
+        return "failed"
+    if any(str(task.get("final_status") or "") == "review_handoff" for task in tasks):
+        return "review_handoff"
+    if any(str(task.get("final_status") or "") == "updated" for task in tasks):
+        return "updated"
+    return "pending"
+
+
+def build_gate_summary(
+    row_count_gate: Dict[str, Any],
+    placeholder_gate: Dict[str, Any],
+    qa_gate: Dict[str, Any],
+    blocked_task_ids: List[str],
+    blocked_string_ids: List[str],
+) -> Dict[str, Any]:
+    failed_gates: List[str] = []
+    if not row_count_gate.get("passed", False):
+        failed_gates.append("row_count_integrity")
+    if not placeholder_gate.get("passed", False):
+        failed_gates.append("placeholder_signature_integrity")
+    if not qa_gate.get("passed", False):
+        failed_gates.append("qa_hard")
+    return {
+        "status": "blocked" if failed_gates else "passed",
+        "failed_gates": failed_gates,
+        "blocked_task_ids": blocked_task_ids,
+        "blocked_string_ids": blocked_string_ids,
+    }
+
+
+def build_review_handoff_summary(review_queue: List[Dict[str, str]], queue_path: str) -> Dict[str, Any]:
+    by_source: Dict[str, int] = {}
+    for item in review_queue:
+        source = str(item.get("review_source") or "unknown")
+        by_source[source] = by_source.get(source, 0) + 1
+    return {
+        "queue_path": queue_path,
+        "pending_count": len(review_queue),
+        "string_ids": [item["string_id"] for item in review_queue],
+        "by_source": by_source,
+        "items": review_queue,
+    }
+
+
 def verify_placeholder_integrity(rows: List[Dict[str, str]]) -> Dict[str, Any]:
     failing_ids: List[str] = []
     checked = 0
@@ -609,8 +761,8 @@ def execute_tasks(
     rows = [dict(row) for row in translated_rows]
     rows_by_id = {str(row.get("string_id") or ""): row for row in rows}
     fieldnames = ensure_refresh_columns(rows, tasks)
+    initialize_task_statuses(tasks)
     review_queue = build_initial_review_queue(tasks)
-    execution_status: Dict[str, str] = {}
     failure_breakdown: Dict[str, str] = {}
 
     refresh_tasks = [task for task in tasks if task["task_type"] == "refresh"]
@@ -639,7 +791,12 @@ def execute_tasks(
             row["refresh_status"] = "review_handoff"
             row["refresh_task_type"] = task_type
             row["refresh_notes"] = task.get("manual_review_reason") or task_type
-            execution_status[task["task_id"]] = "review_handoff"
+            apply_task_status(
+                task,
+                execution_status="review_handoff",
+                final_status="review_handoff",
+                status_reason=task.get("manual_review_reason") or task_type,
+            )
             continue
 
         updated_text = update_map.get(task["string_id"])
@@ -647,20 +804,19 @@ def execute_tasks(
             row["refresh_status"] = "failed"
             row["refresh_task_type"] = task_type
             row["refresh_notes"] = failure_breakdown.get(task["string_id"], "execution_failed")
-            execution_status[task["task_id"]] = "failed"
+            apply_task_status(
+                task,
+                execution_status="failed",
+                final_status="review_handoff",
+                status_reason=failure_breakdown.get(task["string_id"], "execution_failed"),
+            )
             review_queue.append(
-                {
-                    "task_id": task["task_id"],
-                    "string_id": task["string_id"],
-                    "task_type": task_type,
-                    "review_owner": "human-linguist",
-                    "review_status": "pending",
-                    "queue_reason": failure_breakdown.get(task["string_id"], "execution_failed"),
-                    "execution_status": "failed",
-                    "reason_codes": json.dumps(task["reason_codes"], ensure_ascii=False),
-                    "manual_review_reason": task.get("manual_review_reason") or "",
-                    "current_target": task.get("current_target") or "",
-                }
+                build_review_queue_entry(
+                    task=task,
+                    queue_reason=failure_breakdown.get(task["string_id"], "execution_failed"),
+                    review_source="execution_failure",
+                    current_target=task.get("current_target") or "",
+                )
             )
             continue
 
@@ -671,7 +827,7 @@ def execute_tasks(
         row["refresh_status"] = "updated"
         row["refresh_task_type"] = task_type
         row["refresh_notes"] = ""
-        execution_status[task["task_id"]] = "updated"
+        apply_task_status(task, execution_status="updated", final_status="updated", status_reason="")
 
     candidate_csv = staged_candidate_path(out_csv)
     write_csv(candidate_csv, rows, fieldnames)
@@ -685,23 +841,51 @@ def execute_tasks(
             "by_string_id": failure_breakdown,
         },
     )
+    row_count_gate = {
+        "input_rows": len(translated_rows),
+        "output_rows": len(rows),
+        "passed": len(translated_rows) == len(rows),
+    }
+    placeholder_failed_ids = set(placeholder_gate["failed_string_ids"])
     qa_failed_ids = set(qa_gate["failed_string_ids"])
+    blocked_task_ids: List[str] = []
+    blocked_string_ids: List[str] = []
+    if not row_count_gate["passed"]:
+        blocked_task_ids = [task["task_id"] for task in tasks]
+        blocked_string_ids = [task["string_id"] for task in tasks]
+    else:
+        blocked_string_id_set = placeholder_failed_ids | qa_failed_ids
+        for task in tasks:
+            if task["string_id"] in blocked_string_id_set:
+                blocked_task_ids.append(task["task_id"])
+                blocked_string_ids.append(task["string_id"])
+
     for task in tasks:
-        if task["string_id"] not in qa_failed_ids:
+        if task["task_id"] not in blocked_task_ids:
             continue
+        status_reason = build_gate_failure_reason(
+            task["string_id"],
+            row_count_gate=row_count_gate,
+            placeholder_failed_ids=placeholder_failed_ids,
+            qa_failed_ids=qa_failed_ids,
+        )
+        apply_task_status(
+            task,
+            execution_status=str(task.get("execution_status") or "pending"),
+            final_status="blocked",
+            status_reason=status_reason,
+        )
+        row = rows_by_id.get(task["string_id"])
+        if row is not None:
+            row["refresh_status"] = "blocked"
+            row["refresh_notes"] = status_reason
         review_queue.append(
-            {
-                "task_id": task["task_id"],
-                "string_id": task["string_id"],
-                "task_type": task["task_type"],
-                "review_owner": "human-linguist",
-                "review_status": "pending",
-                "queue_reason": "qa_hard_failed",
-                "execution_status": execution_status.get(task["task_id"], "unknown"),
-                "reason_codes": json.dumps(task["reason_codes"], ensure_ascii=False),
-                "manual_review_reason": task.get("manual_review_reason") or "",
-                "current_target": task.get("current_target") or "",
-            }
+            build_review_queue_entry(
+                task=task,
+                queue_reason=status_reason,
+                review_source="post_gate_blocked",
+                current_target=pick_row_target_text(row) if row is not None else task.get("current_target") or "",
+            )
         )
 
     deduped: List[Dict[str, str]] = []
@@ -714,32 +898,40 @@ def execute_tasks(
         deduped.append(item)
     write_review_queue(review_queue_path, deduped)
 
-    row_count_gate = {
-        "input_rows": len(translated_rows),
-        "output_rows": len(rows),
-        "passed": len(translated_rows) == len(rows),
-    }
     gates_passed = row_count_gate["passed"] and placeholder_gate["passed"] and qa_gate["passed"]
-    if gates_passed:
+    execution_failed = any(str(task.get("execution_status") or "") == "failed" for task in tasks)
+    promotion_allowed = gates_passed and not execution_failed
+    if promotion_allowed:
         Path(candidate_csv).replace(out_csv)
 
+    task_outcomes = summarize_task_outcomes(tasks)
+    gate_summary = build_gate_summary(
+        row_count_gate=row_count_gate,
+        placeholder_gate=placeholder_gate,
+        qa_gate=qa_gate,
+        blocked_task_ids=blocked_task_ids,
+        blocked_string_ids=blocked_string_ids,
+    )
     manifest = {
         "generated_at": now_iso(),
         "mode": "execute",
+        "overall_status": derive_overall_status(tasks),
         "task_counts": {
             "total": len(tasks),
             "by_type": {task_type: len([task for task in tasks if task["task_type"] == task_type]) for task_type in TASK_TYPE_TO_SCOPE},
         },
         "execution": {
-            "updated": len([status for status in execution_status.values() if status == "updated"]),
-            "review_handoff": len([status for status in execution_status.values() if status == "review_handoff"]),
-            "failed": len([status for status in execution_status.values() if status == "failed"]),
+            "updated": len([task for task in tasks if task.get("execution_status") == "updated"]),
+            "review_handoff": len([task for task in tasks if task.get("execution_status") == "review_handoff"]),
+            "failed": len([task for task in tasks if task.get("execution_status") == "failed"]),
+            "blocked": len([task for task in tasks if task.get("final_status") == "blocked"]),
             "skipped_direct_write": len([task for task in tasks if task["task_type"] in {"manual_review", "skip"}]),
             "failure_breakdown": failure_breakdown,
         },
+        "task_outcomes": task_outcomes,
         "artifacts": {
             "input_translated_csv": translated_csv_path,
-            "candidate_output_csv": out_csv if gates_passed else candidate_csv,
+            "candidate_output_csv": out_csv if promotion_allowed else candidate_csv,
             "staged_candidate_csv": candidate_csv,
             "failure_breakdown_json": failure_breakdown_path,
             "review_queue_csv": review_queue_path,
@@ -750,40 +942,43 @@ def execute_tasks(
             "placeholder_signature_integrity": placeholder_gate,
             "qa_hard": qa_gate,
         },
-        "review_handoff": {
-            "queue_path": review_queue_path,
-            "pending_count": len(deduped),
-            "string_ids": [item["string_id"] for item in deduped],
-        },
+        "gate_summary": gate_summary,
+        "review_handoff": build_review_handoff_summary(deduped, review_queue_path),
     }
     return rows, deduped, manifest
 
 
 def build_generation_manifest(tasks: List[Dict[str, Any]], review_queue: List[Dict[str, str]]) -> Dict[str, Any]:
+    initialize_task_statuses(tasks)
     return {
         "generated_at": now_iso(),
         "mode": "generate_only",
+        "overall_status": derive_overall_status(tasks),
         "task_counts": {
             "total": len(tasks),
             "by_type": {task_type: len([task for task in tasks if task["task_type"] == task_type]) for task_type in TASK_TYPE_TO_SCOPE},
         },
         "execution": {
             "updated": 0,
-            "review_handoff": len(review_queue),
+            "review_handoff": len([task for task in tasks if task.get("execution_status") == "review_handoff"]),
             "failed": 0,
+            "blocked": 0,
             "skipped_direct_write": len([task for task in tasks if task["task_type"] in {"manual_review", "skip"}]),
             "failure_breakdown": {},
         },
+        "task_outcomes": summarize_task_outcomes(tasks),
         "post_gates": {
             "row_count_integrity": {"passed": True, "skipped": "generate_only"},
             "placeholder_signature_integrity": {"passed": True, "skipped": "generate_only"},
             "qa_hard": {"passed": True, "skipped": "generate_only"},
         },
-        "review_handoff": {
-            "queue_path": "",
-            "pending_count": len(review_queue),
-            "string_ids": [item["string_id"] for item in review_queue],
+        "gate_summary": {
+            "status": "skipped",
+            "failed_gates": [],
+            "blocked_task_ids": [],
+            "blocked_string_ids": [],
         },
+        "review_handoff": build_review_handoff_summary(review_queue, ""),
     }
 
 
@@ -847,6 +1042,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     task_locales = [str(task.get("target_locale") or args.target_locale) for task in tasks]
     _, glossary_summaries_by_locale = build_glossary_resources(args.glossary, task_locales)
 
+    initialize_task_statuses(tasks)
     write_jsonl(args.tasks_out, tasks)
     review_queue = build_initial_review_queue(tasks)
     write_review_queue(args.review_queue, review_queue)
@@ -884,6 +1080,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     manifest["review_handoff"]["queue_path"] = args.review_queue
     manifest["review_handoff"]["pending_count"] = len(review_queue_rows)
     manifest["review_handoff"]["string_ids"] = [item["string_id"] for item in review_queue_rows]
+    manifest["review_handoff"]["items"] = review_queue_rows
+    manifest["review_handoff"]["by_source"] = build_review_handoff_summary(review_queue_rows, args.review_queue)["by_source"]
+    write_jsonl(args.tasks_out, tasks)
     write_json(args.manifest, manifest)
     gates = manifest["post_gates"]
     if not gates["row_count_integrity"]["passed"]:
@@ -891,6 +1090,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not gates["placeholder_signature_integrity"]["passed"]:
         return 1
     if not gates["qa_hard"]["passed"]:
+        return 1
+    if manifest["execution"]["failed"] > 0:
         return 1
     return 0
 
