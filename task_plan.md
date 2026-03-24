@@ -85,9 +85,78 @@ Prepare milestone E from clean post-merge mainline and define the implementation
 - Do not implement E runtime behavior in this kickoff step.
 
 ### Mini Plan
-- [in_progress] Read merged PLC/TriadDev state from `main` and open milestone E session records.
-- [pending] Identify the minimum E planning interfaces: delta inputs, outputs, and handoff artifacts.
-- [pending] Prepare the next implementation-ready task slice for E without entering code changes beyond planning docs/state.
+- [complete] Read merged PLC/TriadDev state from `main` and open milestone E session records.
+- [complete] Identify the minimum E planning interfaces: delta inputs, outputs, and handoff artifacts.
+- [complete] Prepare the next implementation-ready task slice for E without entering code changes beyond planning docs/state.
+
+## 2026-03-24 Milestone E Implementation Gate
+
+### Goal
+Lock the milestone E contract and execution order, then execute the first two implementation packages with subagent-first ownership boundaries.
+
+### Route
+- `plc`: keep dated run records, `task_plan.md`, and `progress.md` aligned to the active E package.
+- `triadev`: remain on Extended route; use `workflow/milestone_e_contract.yaml` as the E gate artifact and update `.triadev/workflow.json` to the E change id before downstream implementation.
+
+### Package Order
+- [complete] E-contract: freeze locale-generic contracts, compat-layer rules, and hard-gate enums.
+- [complete] E-repro: make glossary/style inputs explicit, restore clean-worktree reproducibility, and align docs plus CLI behavior.
+- [complete] E-delta-engine: replace narrow glossary-only impact logic with typed delta propagation and operator-facing reports.
+- [complete] E-task-executor: generate incremental tasks from row impacts, execute bounded actions, and enforce post-run gates.
+- [complete] E-regression: close reviewer blockers, rerun milestone E regression, and record evidence.
+
+### Worker Ownership
+- Main thread owns `E-contract`, PLC ledger updates, and `.triadev/workflow.json` gate alignment.
+- Worker A owns `E-repro`:
+  - CLI/input authority
+  - clean-worktree reproducibility
+  - doc/arg parity
+  - soft-QA contract drift
+- Worker B owns `E-delta-engine`:
+  - typed delta logic
+  - delta artifact schemas
+  - impact classification
+- Worker C opens only after A/B integrate:
+  - incremental task generation
+  - executor split
+  - post-run manifest and gates
+
+### Exit Criteria
+- `workflow/milestone_e_contract.yaml` is the single E contract source of truth.
+- `.triadev/workflow.json` no longer points at Batch 10 and reflects `milestone-e-prepare-20260324`.
+- clean-worktree execution no longer assumes residual `data/style_profile.yaml` or `data/glossary.yaml`.
+- typed delta output explains impact by locale, content class, and rule reason rather than a bare `impact_set`.
+- incremental task artifacts exist before any executor writes candidate output.
+
+### Current Active Slice
+- Main thread completed the E gate and integrated the first parallel wave.
+- Worker A completed `E-repro`:
+  - explicit glossary/style authority resolution
+  - clean-worktree bootstrap behavior
+  - README and workflow CLI parity
+  - soft-QA contract reconciliation
+- Worker B completed `E-delta-engine`:
+  - typed delta propagation across glossary, style profile, rubric, placeholder, and rule changes
+  - locale-generic row-impact artifacts and aggregate reports
+- Worker C is now responsible for `E-task-executor`:
+  - `delta_rows.jsonl` -> `incremental_tasks.jsonl`
+  - review queue generation
+  - bounded execution and `qa_hard` post-gates
+- Reviewer blockers are now closed:
+  - executor writes to a staged candidate file before post-gates
+  - mixed-locale execution groups tasks by `target_locale`
+  - glossary loading is fail-closed for non-`ru-RU` locales
+  - E contract no longer promises an unimplemented `soft_qa` task type
+
+### Final Result
+- `E-task-executor` now stages candidate CSV output, writes an explicit `incremental_failure_breakdown.json`, and only promotes the final `--out-csv` after row-count, placeholder, and `qa_hard` gates pass.
+- `translate_refresh.py` now executes refresh / retranslate by locale group instead of one global target locale, so mixed-market tasks update the correct target columns.
+- `translate_llm.py` and `glossary_delta.py` now treat locale lookup as fail-closed:
+  - `targets.<locale>` must match the requested locale
+  - legacy `term_ru` / `target_ru` compatibility is retained only for `ru-RU`
+- Milestone E focused regression is green:
+  - `python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py tests/test_soft_qa_contract.py tests/test_milestone_e_repro_contract.py tests/test_glossary_delta_contract.py tests/test_milestone_e_delta_contract.py tests/test_translate_style_contract.py tests/test_plc_docs_contract.py -q`
+  - result: `27 passed`
 
 ## Phases
 - [complete] Phase 1: Initialize plan files and inspect run entrypoints.

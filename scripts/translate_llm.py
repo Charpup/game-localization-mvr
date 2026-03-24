@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-translate_llm.py (v6.1 - style profile aware)
+translate_llm.py (v6.2 - style profile aware + clean-worktree authority)
 Purpose:
   Translate tokenized Chinese strings using unified batch interface.
-  Adds style-contract hard rules from data/style_profile.yaml.
+  Adds style-contract hard rules from explicit or tracked style/glossary assets.
 """
 
 import argparse
@@ -99,6 +99,68 @@ class GlossaryEntry:
     term_ru: str
     status: str
     notes: str = ""
+    targets: Optional[Dict[str, str]] = None
+
+
+DEFAULT_GLOSSARY_CANDIDATES = [
+    "glossary/compiled.yaml",
+    "workflow/smoke_glossary_compiled.yaml",
+    "data/glossary.yaml",
+]
+DEFAULT_STYLE_PROFILE_CANDIDATES = [
+    "workflow/style_profile.generated.yaml",
+    "data/style_profile.yaml",
+]
+
+
+def resolve_asset_path(path: str, candidates: List[str]) -> str:
+    if path and path.strip():
+        return path
+    for candidate in candidates:
+        if Path(candidate).exists():
+            return candidate
+    return candidates[0]
+
+
+def resolve_glossary_path(path: str = "") -> str:
+    return resolve_asset_path(path, DEFAULT_GLOSSARY_CANDIDATES)
+
+
+def resolve_style_profile_path(path: str = "") -> str:
+    return resolve_asset_path(path, DEFAULT_STYLE_PROFILE_CANDIDATES)
+
+
+def _normalize_locale(locale: str) -> str:
+    value = str(locale or "").strip().replace("_", "-")
+    if not value:
+        return ""
+    parts = [part for part in value.split("-") if part]
+    if not parts:
+        return ""
+    if len(parts) == 1:
+        return parts[0].lower()
+    return "-".join([parts[0].lower(), parts[1].upper(), *parts[2:]])
+
+
+def _is_ru_locale(target_locale: str) -> bool:
+    return _normalize_locale(target_locale) == "ru-RU"
+
+
+def _entry_targets(raw: Dict[str, Any], target_locale: str) -> Tuple[Dict[str, str], str]:
+    targets: Dict[str, str] = {}
+    legacy_ru = str(raw.get("term_ru") or "").strip()
+    raw_targets = raw.get("targets") or {}
+    if isinstance(raw_targets, dict):
+        for locale, value in raw_targets.items():
+            locale_key = _normalize_locale(str(locale))
+            term_value = str(value or "").strip()
+            if locale_key and term_value:
+                targets[locale_key] = term_value
+
+    resolved = targets.get(_normalize_locale(target_locale), "")
+    if not resolved and legacy_ru and _is_ru_locale(target_locale):
+        resolved = legacy_ru
+    return targets, resolved
 
 
 def load_text(path: str) -> str:
@@ -108,22 +170,34 @@ def load_text(path: str) -> str:
         return f.read().strip()
 
 
-def load_glossary(path: str) -> Tuple[List[GlossaryEntry], Optional[str]]:
+def load_glossary(path: str, target_locale: str = "ru-RU") -> Tuple[List[GlossaryEntry], Optional[str]]:
     if not path or not Path(path).exists() or yaml is None:
         return [], None
     with open(path, "r", encoding="utf-8") as f:
         g = yaml.safe_load(f) or {}
 
+    meta = g.get("meta") or {}
+    is_compiled = str(meta.get("type") or "").strip().lower() == "compiled"
     entries = []
     for it in g.get("entries", []):
         term_zh = (it.get("term_zh") or "").strip()
-        term_ru = (it.get("term_ru") or "").strip()
+        targets, resolved_target = _entry_targets(it, target_locale)
         status = (it.get("status") or "").lower().strip()
+        if not status and is_compiled:
+            status = "approved"
         notes = (it.get("notes") or "").strip()
-        if term_zh and status in {"approved", "proposed", "banned"}:
-            entries.append(GlossaryEntry(term_zh=term_zh, term_ru=term_ru, status=status, notes=notes))
+        if term_zh and resolved_target and status in {"approved", "proposed", "banned"}:
+            entries.append(
+                GlossaryEntry(
+                    term_zh=term_zh,
+                    term_ru=resolved_target,
+                    status=status,
+                    notes=notes,
+                    targets=targets or None,
+                )
+            )
 
-    return entries, (g.get("meta") or {}).get("compiled_hash")
+    return entries, meta.get("compiled_hash")
 
 
 def load_style_profile(path: str) -> Dict[str, Any]:
@@ -534,17 +608,21 @@ def main():
     parser.add_argument("--output", required=True)
     parser.add_argument("--model", default="claude-haiku-4-5-20251001")
     parser.add_argument("--style", default="workflow/style_guide.md")
-    parser.add_argument("--glossary", default="data/glossary.yaml")
-    parser.add_argument("--style-profile", default="data/style_profile.yaml")
+    parser.add_argument("--glossary", default="", help="Glossary asset path. Defaults to tracked authority candidates.")
+    parser.add_argument("--style-profile", default="", help="Style profile path. Defaults to tracked authority candidates.")
     parser.add_argument("--target-lang", default="ru-RU")
     parser.add_argument("--target-key", default="", help="target_ru / target_en")
     parser.add_argument("--checkpoint", default="data/translate_checkpoint.json")
+    parser.add_argument("--dry-run", action="store_true", help="Validate resolved assets and gates without performing translation.")
     args = parser.parse_args()
+
+    args.glossary = resolve_glossary_path(args.glossary)
+    args.style_profile = resolve_style_profile_path(args.style_profile)
 
     print("🚀 Translate LLM v6.1 (Style Profile)")
     style_guide = load_text(args.style)
     style_profile = load_style_profile(args.style_profile)
-    glossary, _ = load_glossary(args.glossary)
+    glossary, _ = load_glossary(args.glossary, args.target_lang)
     glossary_summary = build_glossary_summary(glossary)
 
     style_gate_issues: List[Dict[str, str]] = []
@@ -558,6 +636,18 @@ def main():
         print(_format_gate_report(gate_issues))
         print("🛑 translate_llm hard gate failed, please fix style profile / glossary first.")
         return 1
+
+    if args.dry_run:
+        print(f"✅ Resolved style guide: {args.style}")
+        print(f"✅ Resolved style profile: {args.style_profile}")
+        print(f"✅ Resolved glossary: {args.glossary}")
+        if not Path(args.input).exists():
+            print(f"ℹ️ Input not found during dry-run, skipped row validation: {args.input}")
+        else:
+            print(f"✅ Input available for translation: {args.input}")
+        print(f"✅ Target locale: {args.target_lang}")
+        print("✅ Dry-run validation complete.")
+        return 0
 
     if not Path(args.input).exists():
         print(f"❌ Input not found: {args.input}")

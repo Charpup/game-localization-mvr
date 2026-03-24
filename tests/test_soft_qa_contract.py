@@ -30,6 +30,26 @@ def _write_translated_csv(path: Path) -> None:
         })
 
 
+def _write_style_profile(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "project": {"source_language": "zh-CN", "target_language": "ru-RU"},
+                "style_contract": {
+                    "language_policy": {},
+                    "placeholder_protection": {},
+                    "style_guard": {},
+                },
+                "ui": {"length_constraints": {"button_max_chars": 18, "dialogue_max_chars": 120}},
+                "terminology": {},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+
 def test_soft_qa_dry_run_uses_batch_utils_and_returns_success(monkeypatch, tmp_path):
     translated = tmp_path / "translated.csv"
     style = tmp_path / "style.md"
@@ -140,10 +160,12 @@ def test_soft_qa_optional_feature_flags_degrade_gracefully(monkeypatch, tmp_path
 def test_soft_qa_emits_tasks_without_becoming_a_blocking_gate(monkeypatch, tmp_path):
     translated = tmp_path / "translated.csv"
     style = tmp_path / "style.md"
+    style_profile = tmp_path / "style_profile.yaml"
     rubric = tmp_path / "soft_qa_rubric.yaml"
     report = tmp_path / "reports" / "qa_soft_report.json"
     tasks = tmp_path / "reports" / "repair_tasks.jsonl"
     _write_translated_csv(translated)
+    _write_style_profile(style_profile)
     style.write_text("official tone", encoding="utf-8")
     rubric.write_text("{}", encoding="utf-8")
 
@@ -177,6 +199,8 @@ def test_soft_qa_emits_tasks_without_becoming_a_blocking_gate(monkeypatch, tmp_p
             str(style),
             str(tmp_path / "missing_glossary.yaml"),
             str(rubric),
+            "--style-profile",
+            str(style_profile),
             "--out_report",
             str(report),
             "--out_tasks",
@@ -193,6 +217,7 @@ def test_soft_qa_emits_tasks_without_becoming_a_blocking_gate(monkeypatch, tmp_p
     task = json.loads(task_lines[0])
     assert task["string_id"] == "id1"
     assert task["severity"] == "major"
+
 
 
 def test_merge_tasks_prefers_placeholder_over_lower_priority_length():

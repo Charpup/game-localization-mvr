@@ -55,10 +55,14 @@ python scripts/normalize_tagger.py \
 
 ### [步骤 3] 风格指南生成 (Style Guide)
 
-如果尚未定义，根据样本或准则创建 `style_guide.md`。
+如果尚未定义，根据问卷生成 `style_guide.generated.md` 与 machine-readable `style_profile`。
 
 ```bash
-python scripts/style_guide_generate.py --output workflow/style_guide.md
+python scripts/style_guide_bootstrap.py \
+  --questionnaire workflow/style_guide_questionnaire.md \
+  --guide-output workflow/style_guide.generated.md \
+  --profile-output workflow/style_profile.generated.yaml \
+  --dry-run
 ```
 
 ### [步骤 4] 术语提取与筛选 (Term Extraction)
@@ -91,11 +95,16 @@ python scripts/glossary_compile.py \
 
 ```bash
 python scripts/translate_llm.py \
-  data/normalized.csv \
-  data/translated.csv \
+  --input data/normalized.csv \
+  --output data/translated.csv \
   --style workflow/style_guide.md \
-  --glossary glossary/compiled.yaml
+  --glossary glossary/compiled.yaml \
+  --style-profile workflow/style_profile.generated.yaml
 ```
+
+说明：当前 clean worktree 的 authority 默认是 `glossary/compiled.yaml` 与
+`workflow/style_profile.generated.yaml`。若 style profile 不存在，请先运行
+`style_guide_bootstrap.py` 生成，不再依赖未跟踪的 `data/style_profile.yaml`。
 
 ### [步骤 7] 硬规则校验 (Hard QA)
 

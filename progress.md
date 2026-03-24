@@ -29,6 +29,32 @@
 - Fast-forwarded the E worktree to include the post-merge PLC handoff commit.
 - Shifted the active planning scope to `milestone_E_prepare`; next step is E planning/delta/tasks preparation rather than more PR cleanup.
 
+## 2026-03-24
+- Started milestone E implementation from `codex/milestone-e-prepare` using the package order `E-contract -> E-repro + E-delta-engine -> E-task-executor`.
+- Confirmed the E worktree is clean, but the control plane is stale:
+  - `.triadev/state.json` already says `milestone_e_prepare`
+  - `.triadev/workflow.json` still points at the old Batch 10 closeout change
+- Confirmed the current clean worktree does not contain `data/style_profile.yaml` or `data/glossary.yaml`; this is now a first-class `E-repro` blocker rather than an implicit local-state assumption.
+- Confirmed `scripts/glossary_delta.py` and `scripts/translate_refresh.py` are present but still implement a narrow glossary-only refresh path that does not satisfy milestone E.
+- Confirmed current regression status before E implementation:
+  - `tests/test_translate_style_contract.py`: pass
+  - `tests/test_plc_docs_contract.py`: pass
+  - `tests/test_soft_qa_contract.py`: 1 failing test due to style-profile drift semantics
+- Locked the E gate artifact in `workflow/milestone_e_contract.yaml` and moved the active ledger from planning-only E to implementation-gated E.
+- Completed the first parallel implementation wave after the gate:
+  - `E-repro` now resolves glossary/style authority explicitly, supports clean-worktree bootstrap, and aligns README/workflow examples with live CLI flags.
+  - `E-delta-engine` now emits locale-generic typed delta artifacts and operator-facing aggregate reports instead of a glossary-only impact set.
+- Moved the active package to `E-task-executor`; the remaining work is to generate incremental tasks from `delta_rows.jsonl`, split execution from planning, and enforce post-run `qa_hard` gates.
+- Closed the reviewer blocker pass before phase-2 closeout:
+  - executor now stages candidate output before gates and writes an explicit failure-breakdown artifact
+  - executor now groups refresh/retranslate work by `target_locale`, so mixed-market rows update the correct locale columns
+  - glossary/style loaders now fail closed for locale mismatches instead of silently borrowing another market's term
+- Updated the E contract to match the implemented surface:
+  - removed the unimplemented `soft_qa` task type from the E task enum
+  - pinned the executor failure artifact as `incremental_failure_breakdown.json`
+- Milestone E focused regression is green again:
+  - `27 passed` across refresh/executor, repro, typed delta, soft-QA compatibility, translate style contract, and PLC docs contract tests
+
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.
 - Created `task_plan.md`, `findings.md`, and `progress.md`.

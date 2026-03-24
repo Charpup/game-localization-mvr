@@ -5,7 +5,7 @@ Style Guide Bootstrap (C-milestone)
 
 Read startup questionnaire and generate:
   - workflow/style_guide.generated.md (LLM-readable guide)
-  - data/style_profile.yaml (machine-readable profile)
+  - workflow/style_profile.generated.yaml (machine-readable profile)
 """
 
 from __future__ import annotations
@@ -116,20 +116,22 @@ def _safe_list(q: Dict[str, Any], key: str) -> List[str]:
 
 
 def build_style_profile(q: Dict[str, Any]) -> Dict[str, Any]:
+    target_locale = _qv(q, ["project_context.target_language", "project_context.target"], "ru-RU")
     preferred_terms_raw = _safe_list(q, "terminology_policy.preferred_terms")
     preferred = []
     for row in preferred_terms_raw:
         if ":" in row:
             zh, ru = [x.strip() for x in row.split(":", 1)]
             if zh and ru:
-                preferred.append({"term_zh": zh, "term_ru": ru})
+                preferred.append({"term_zh": zh, "term_ru": ru, "targets": {target_locale: ru}})
 
     return {
         "version": "1.1",
         "generated_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z") or datetime.now().isoformat(),
         "project": {
             "source_language": _qv(q, ["project_context.source_language", "project_context.source"], "zh-CN"),
-            "target_language": _qv(q, ["project_context.target_language", "project_context.target"], "ru-RU"),
+            "target_language": target_locale,
+            "target_locale": target_locale,
             "project_id": _qv(q, ["project_context.project_code", "project_context.project_id"], ""),
             "franchise": _qv(q, ["project_context.ip_name", "project_context.franchise"], ""),
             "title_zh": _qv(q, ["project_context.official_title_(zh)", "project_context.title_zh"], ""),
@@ -350,7 +352,7 @@ def main():
     ap.add_argument("--questionnaire", default="workflow/style_guide_questionnaire.md")
     ap.add_argument("--template", default="")
     ap.add_argument("--guide-output", default="workflow/style_guide.generated.md")
-    ap.add_argument("--profile-output", default="data/style_profile.yaml")
+    ap.add_argument("--profile-output", default="workflow/style_profile.generated.yaml")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -360,6 +362,7 @@ def main():
 
     if not yaml:
         raise RuntimeError("PyYAML required")
+    Path(args.profile_output).parent.mkdir(parents=True, exist_ok=True)
     with open(args.profile_output, "w", encoding="utf-8") as f:
         yaml.safe_dump(profile, f, allow_unicode=True, sort_keys=False)
 
