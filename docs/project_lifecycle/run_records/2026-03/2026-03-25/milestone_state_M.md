@@ -1,22 +1,47 @@
 - id: M
-- status: in_progress
+- status: done
 - owner: Codex
 - next_owner: Codex
-- progress_pct: 15
-- evidence_ready: false
-- blockers: []
-- dependencies: [E]
+- progress_pct: 100
+- evidence_ready: true
+- blockers:
+  - `none`
+- dependencies:
+  - E
 - decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
-- eta_hours: 10
+- eta_hours: 0
 - notes: >
-  Phase 2 governance substrate first package is active. The current slice freezes a
-  machine-checkable governance contract for run/session/milestone artifacts and adds a
-  validator plus focused regression over representative PLC records.
+  Phase 2 governance substrate closeout is complete. The machine-checkable PLC contract now
+  includes the file/evidence/ADR triplet, representative records validate against the same
+  contract, and Phase 3 is planning-ready but not implementation-started.
+- changed_files:
+  - workflow/plc_governance_contract.yaml
+  - docs/project_lifecycle/field_schema.md
+  - docs/project_lifecycle/continuity_protocol.md
+  - docs/project_lifecycle/session_start_template.md
+  - docs/project_lifecycle/session_end_template.md
+  - docs/project_lifecycle/milestone_state_template.md
+  - scripts/plc_validate_records.py
+  - tests/test_plc_docs_contract.py
+  - .triadev/state.json
+  - .triadev/workflow.json
+  - task_plan.md
+  - progress.md
+  - docs/project_lifecycle/roadmap_index.md
+- evidence_refs:
+  - command: python -m pytest tests/test_plc_docs_contract.py -q
+  - command: python scripts/plc_validate_records.py --preset representative --preset templates
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase2_governance_closeout.json
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase2_governance_closeout.md
+- adr_refs:
+  - docs/decisions/ADR-0001-project-continuity-framework.md
+  - docs/decisions/ADR-0002-skill-governance-framework.md
 - evidence:
-  - run_id: phase2_governance_20260325
-  - run_manifest: null
-  - run_issue: null
-  - run_verify: null
+  - run_id: phase2_governance_closeout
+  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase2_governance_closeout.json
+  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase2_governance_closeout.md
+  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase2_governance_closeout.md
 - handoff:
   - next_owner: Codex
-  - next_scope: phase2_governance_contract_validator
+  - next_scope: phase3_planning_ready
+  - next_action: draft the Phase 3 planning slice without opening implementation work

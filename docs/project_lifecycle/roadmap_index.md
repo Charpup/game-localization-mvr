@@ -72,12 +72,13 @@
 
 ## E 后续接点（2026-03-25）
 
-- `current_scope`：`milestone_M_prepare`
-- `branch_state`：`milestone E + phase 1 merged into main`
+- `current_scope`：`phase3_planning_ready`
+- `branch_state`：`phase 2 closeout validated on codex/phase2-governance-closeout`
 - `evidence_ready`：`true`
 - `next_owner`：`Codex`
-- `recommended_next_scope`：`milestone_M_prepare`
+- `recommended_next_scope`：`milestone_I_prepare`
 - `parallel_planning_sidecar`：`milestone_F_execute_followup`
+- `phase_2_status`：`M/N/O/P closeout validated locally; Phase 3 remains planning-only until review and later implementation start`
 
 ## E 后四阶段重写（保留 F → S 映射）
 

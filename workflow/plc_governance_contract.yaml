@@ -1,8 +1,9 @@
-version: 1
+version: 2
 artifacts:
   run_manifest:
     format: json
     required_fields:
+      - manifest_version
       - run_id
       - run_scope
       - status
@@ -14,6 +15,9 @@ artifacts:
       - verify_report_path
       - artifacts
       - blockers
+      - changed_files
+      - evidence_refs
+      - adr_refs
       - decision_refs
       - evidence_ready
       - next_step_owner
@@ -30,9 +34,14 @@ artifacts:
       - branch
       - current_scope
       - route
+      - base_branch
     required_sections:
+      Context:
+        - read_versions
+        - blockers
       Slice:
         - bounded implementation target
+        - mini plan
       Validation Decision:
         - validation mode
         - smoke run
@@ -58,10 +67,16 @@ artifacts:
         - smoke run
         - rationale
       Outcome: []
+      Governance:
+        - changed_files
+        - evidence_refs
+        - adr_refs
+        - blocker list
       Handoff:
         - next_owner
         - next_scope
         - open_issues
+        - next_hour_task
         - next_action
   milestone_state:
     format: markdown_root
@@ -72,8 +87,14 @@ artifacts:
       - next_owner
       - progress_pct
       - evidence_ready
+      - blockers
+      - dependencies
       - decision_ref
       - eta_hours
+      - notes
+      - changed_files
+      - evidence_refs
+      - adr_refs
       - evidence
       - handoff
     enum_fields:
@@ -92,16 +113,17 @@ artifacts:
       handoff:
         - next_owner
         - next_scope
+        - next_action
 presets:
   representative:
     - artifact_type: run_manifest
-      path: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_d_verify.json
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase2_governance_closeout.json
     - artifact_type: milestone_state
-      path: docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_state_D.md
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_M.md
     - artifact_type: session_start
-      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase2_governance_substrate.md
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase2_governance_closeout.md
     - artifact_type: session_end
-      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase2_governance_substrate.md
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase2_governance_closeout.md
   templates:
     - artifact_type: session_start
       path: docs/project_lifecycle/session_start_template.md

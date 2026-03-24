@@ -2,7 +2,7 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `milestone_M_prepare` on branch `codex/phase2-governance-substrate`.
+> The current active scope is `phase3_planning_ready` on branch `codex/phase2-governance-closeout`.
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
@@ -255,6 +255,51 @@ Open the first bounded implementation package of Phase 2 (`M/N/P`) by freezing m
   - `python scripts/plc_validate_records.py --preset representative --preset templates`
   - result: `7 passed` and `Validated 7 PLC governance artifact(s).`
 - smoke remains intentionally skipped for this slice because no runtime pipeline entrypoint changed
+
+## 2026-03-25 Phase 2 Governance Closeout Package
+
+### Goal
+Close the remaining `O + P` gaps of Phase 2 so the governance substrate is no longer just a first bounded package, but a phase-complete PLC/TriadDev closeout with three-point validation for files, evidence, and ADR anchors.
+
+### Route
+- `plc`: keep the active execution scope on `milestone_M_prepare` until focused acceptance passes, then close milestone M and move the roadmap to `phase3_planning_ready`.
+- `triadev`: stay on the Extended route, but keep this package governance-only and out of runtime translation behavior.
+
+### Scope
+- Extend the machine contract and templates so governance artifacts answer:
+  - which files changed
+  - where evidence lives
+  - which ADRs anchor the change
+- Align protocol, templates, validator, representative records, and milestone state to the same semantics.
+- Do not start Phase 3 implementation in this package.
+
+### Package
+- `O-closeout`: make `changed_files`, `evidence_refs`, and `adr_refs` machine-checkable.
+- `P-closeout`: align milestone/state/evidence/handoff language and close milestone M with concrete run records.
+- `phase3-ready`: mark Phase 3 as planning-ready only, not implementation-started.
+
+### Acceptance
+- focused governance tests stay green without smoke
+- representative records and templates validate against the same contract
+- milestone M evidence is complete enough to mark `evidence_ready=true`
+- roadmap and TriadDev control plane both say `Phase 3 planning-ready`
+
+### Branch Strategy
+- branch: `codex/phase2-governance-closeout`
+- PR base: `main`
+
+### Result
+- `workflow/plc_governance_contract.yaml` now closes the remaining `O + P` governance gaps with machine-checkable `changed_files`, `evidence_refs`, and `adr_refs`
+- representative closeout records now exist for:
+  - `run_manifest_phase2_governance_closeout.json`
+  - `session_start_20260325_phase2_governance_closeout.md`
+  - `session_end_20260325_phase2_governance_closeout.md`
+  - `milestone_state_M.md`
+- focused acceptance is green:
+  - `python -m pytest tests/test_plc_docs_contract.py -q`
+  - `python scripts/plc_validate_records.py --preset representative --preset templates`
+  - result: `9 passed` and `Validated 7 PLC governance artifact(s).`
+- Phase 3 is now planning-ready only; no implementation work is opened by this package
 
 ## Phases
 - [complete] Phase 1: Initialize plan files and inspect run entrypoints.

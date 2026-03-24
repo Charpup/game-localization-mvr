@@ -98,6 +98,19 @@
   - `python -m pytest tests/test_plc_docs_contract.py -q` -> `7 passed`
   - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 7 PLC governance artifact(s).`
 - Smoke remains intentionally skipped for this slice because the runtime pipeline and orchestrator are untouched.
+- Started the Phase 2 closeout package on `codex/phase2-governance-closeout` to finish the remaining `O + P` substrate work.
+- Expanded the governance target from “first bounded package” to “phase-complete closeout”:
+  - machine-checkable three-point validation for `changed_files`, `evidence_refs`, and `adr_refs`
+  - closeout-grade representative records for session, run manifest, and milestone state
+  - Phase 3 stays planning-ready only until a later implementation-start decision
+- Completed the Phase 2 closeout package:
+  - aligned `workflow/plc_governance_contract.yaml`, `field_schema.md`, `continuity_protocol.md`, and the PLC templates to the same three-point governance semantics
+  - upgraded representative PLC records so run/session/milestone artifacts all carry `changed_files`, `evidence_refs`, and `adr_refs`
+  - closed `milestone_state_M.md` with `status=done` and `evidence_ready=true`
+- Focused closeout acceptance is green:
+  - `python -m pytest tests/test_plc_docs_contract.py -q` -> `9 passed`
+  - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 7 PLC governance artifact(s).`
+- TriadDev control plane is now aligned to `phase3_planning_ready`; Phase 3 remains planning-only, not implementation-started.
 
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.

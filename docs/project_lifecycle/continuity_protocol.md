@@ -1,6 +1,6 @@
 # 项目生命周期连续性协议（统一文档主干）
 
-> 目的：把跨会话、跨上下文、跨设备的连续性，变成可执行、可验证、可恢复的“固定流程”。
+> 目的：把跨会话、跨上下文、跨设备的连续性，变成可执行、可验证、可恢复的固定流程。
 
 ## 1. 入口与单一真相源（SST，Single Source Trio）
 
@@ -20,24 +20,24 @@
 
 可复制 [session_start_template.md](docs/project_lifecycle/session_start_template.md)。
 
-若你偏好短触发词，可直接约定使用 `plc`。
-
 必须记录：
 
 - 启动时间（ISO8601 + 时区）
-- 读取版本（文件路径 + 文件 mtime）
+- 读取版本：`read_versions` 中记录 `file + mtime`
 - 当前 scope
 - 本次最小交付目标
-- `mini plan`（1-3 个 1h 子任务）
-- 阻塞项（如果有）
-- 下一步交接人（`next_owner`）
-- 下一步交接 scope（`next_scope`）
-- 下一步具体动作（`next_action`）
+- `mini plan`：1-3 个 1h 子任务
+- 阻塞项：`blockers`
+- 下一步交接人：`next_owner`
+- 下一步交接 scope：`next_scope`
+- 下一步具体动作：`next_action`
 
 ### 交接校验
 
-- 必须确认 `docs/project_lifecycle/run_records/<YYYY-MM>/<YYYY-MM-DD>/milestone_state_<A-S>.md` 中至少一个可落地项的 `status=todo|in_progress`。
+- 必须确认 `docs/project_lifecycle/run_records/<YYYY-MM>/<YYYY-MM-DD>/milestone_state_<A-S>.md`
+  中至少一个可落地项的 `status=todo|in_progress`。
 - 若里程碑依赖未满足，说明阻塞并打标 `blocked`。
+- `read_versions` 中每个文件都必须存在且可追溯到当前仓库。
 
 ## 3. 会话结束协议（session_end）
 
@@ -50,9 +50,12 @@
 
 - 完成项（含文件路径）
 - 未完成项 + 原因
-- blocker list（JSON array）
-- 证据清单（run_id、manifest、issue、verify）
-- 资源建议：下一步 1h 子任务（含 owner/owner 备份）
+- `Governance` 四元组：
+  - `changed_files`
+  - `evidence_refs`
+  - `adr_refs`
+  - `blocker list`
+- 资源建议：下一步 1h 子任务（`next_hour_task`）
 - `next_owner` 与 `next_scope`
 - `open_issues` 与 `next_action`
 
@@ -66,7 +69,8 @@
 - `issue_report`（问题分级与复现路径）
 - `verify_report`（DoD 与再现命令）
 - blocker list（含预期恢复动作、责任人、优先级）
-- 里程碑状态更新（`task_plan.md` + 本文件）
+- `changed_files / evidence_refs / adr_refs` 三点链路
+- 里程碑状态更新（`task_plan.md` + `milestone_state_<id>.md`）
 
 任何缺失字段或证据项，视为未通过里程碑收口。
 
@@ -103,11 +107,23 @@
 - 门禁、质量指标和验收标准变化
 - 是否封装 skill 的决策（里程碑 S）
 
-ADR 锚点规则：`decision_ref` 字段必须可逆向从里程碑状态映射到 `docs/decisions` 文件。
+ADR 锚点规则：
 
-## 7. 质量闸与复审节奏
+- `decision_ref` 必须可逆向从里程碑状态映射到 `docs/decisions` 文件
+- `adr_refs` 必须覆盖本次 closeout 所依赖的 ADR 路径；若无新增 ADR，显式写 `none`
+
+## 7. Phase 2 三点校验清单（O）
+
+每次治理 closeout 至少验证：
+
+1. 文件：`changed_files` 指向的路径真实存在
+2. 证据：`evidence_refs` 指向的命令或文件可复现
+3. 决策：`adr_refs` 可映射到 `docs/decisions/`
+
+这三点任一缺失，Phase 2 不得标记完成。
+
+## 8. 质量闸与复审节奏
 
 - 2 里程碑一次 mini review（看 `progress`, `evidence_ready`, `blockers`）
 - 4 里程碑一次 governance brake（必要时暂停新增范围）
 - 连续 2 次里程碑未通过 -> 冻结新增里程碑并补充回退路径
-

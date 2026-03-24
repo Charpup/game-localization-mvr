@@ -1,0 +1,62 @@
+{
+  "manifest_version": "plc-governance-closeout-v1",
+  "run_id": "phase2_governance_closeout",
+  "run_scope": "phase2_governance_closeout",
+  "status": "pass",
+  "started_at": "2026-03-25T10:30:00+08:00",
+  "finished_at": "2026-03-25T10:50:00+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase2_governance_closeout.json",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase2_governance_closeout.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase2_governance_closeout.md",
+  "artifacts": [
+    "workflow/plc_governance_contract.yaml",
+    "docs/project_lifecycle/field_schema.md",
+    "docs/project_lifecycle/continuity_protocol.md",
+    "docs/project_lifecycle/session_start_template.md",
+    "docs/project_lifecycle/session_end_template.md",
+    "docs/project_lifecycle/milestone_state_template.md",
+    "scripts/plc_validate_records.py",
+    "tests/test_plc_docs_contract.py",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase2_governance_closeout.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase2_governance_closeout.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_M.md"
+  ],
+  "blockers": [],
+  "changed_files": [
+    "workflow/plc_governance_contract.yaml",
+    "docs/project_lifecycle/field_schema.md",
+    "docs/project_lifecycle/continuity_protocol.md",
+    "docs/project_lifecycle/session_start_template.md",
+    "docs/project_lifecycle/session_end_template.md",
+    "docs/project_lifecycle/milestone_state_template.md",
+    "scripts/plc_validate_records.py",
+    "tests/test_plc_docs_contract.py",
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "task_plan.md",
+    "progress.md",
+    "docs/project_lifecycle/roadmap_index.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase2_governance_closeout.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase2_governance_closeout.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_M.md"
+  ],
+  "evidence_refs": [
+    "command:python -m pytest tests/test_plc_docs_contract.py -q",
+    "command:python scripts/plc_validate_records.py --preset representative --preset templates",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase2_governance_closeout.md"
+  ],
+  "adr_refs": [
+    "docs/decisions/ADR-0001-project-continuity-framework.md",
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "decision_refs": [
+    "triadev:phase2-governance-closeout-20260325",
+    "plc:phase2_governance_closeout",
+    "phase:phase-2-governance-substrate"
+  ],
+  "evidence_ready": true,
+  "gate_result": "pass",
+  "next_step_owner": "Codex",
+  "next_step_scope": "phase3_planning_ready"
+}

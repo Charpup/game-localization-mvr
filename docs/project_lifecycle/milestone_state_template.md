@@ -6,11 +6,20 @@
 - next_owner: <next_owner>
 - progress_pct: 0
 - evidence_ready: false
-- blockers: []
-- dependencies: [<id>]
+- blockers:
+  - <blocker or none>
+- dependencies:
+  - <id>
 - decision_ref: <docs/decisions/ADR-####-xxx.md or null>
 - eta_hours: <hours_left>
 - notes: <执行备注>
+- changed_files:
+  - <repo-relative-path>
+- evidence_refs:
+  - command: <validation command>
+  - path: <run-manifest-or-report-path>
+- adr_refs:
+  - <docs/decisions/ADR-####-xxx.md or none>
 - evidence:
   - run_id: <run_id>
   - run_manifest: <path>
@@ -20,4 +29,3 @@
   - next_owner: <owner_id>
   - next_scope: <scope>
   - next_action: <one concrete next step>
-

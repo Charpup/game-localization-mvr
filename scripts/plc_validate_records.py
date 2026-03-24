@@ -175,6 +175,150 @@ def _ensure_required(container: Dict[str, Any], required: Iterable[str], label: 
             errors.append(f"{label}: missing required field `{field}`")
 
 
+def _is_placeholder(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    candidate = value.strip()
+    return "<" in candidate or ">" in candidate or "|" in candidate
+
+
+def _coerce_list(value: Any) -> List[Any]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return value
+    return [value]
+
+
+def _path_exists(ref: str) -> bool:
+    candidate = Path(str(ref).replace("\\", "/"))
+    if candidate.is_absolute():
+        return candidate.exists()
+    return (REPO_ROOT / candidate).exists()
+
+
+def _validate_reference_list(
+    container: Dict[str, Any],
+    field: str,
+    label: str,
+    errors: List[str],
+    *,
+    kind: str,
+    allow_placeholders: bool = False,
+    allow_none: bool = False,
+) -> None:
+    if field not in container:
+        return
+
+    items = _coerce_list(container[field])
+    if not items:
+        errors.append(f"{label}: `{field}` must not be empty")
+        return
+
+    if allow_none and len(items) == 1 and str(items[0]).strip().lower() == "none":
+        return
+
+    for item in items:
+        if isinstance(item, dict):
+            if kind == "evidence" and item.get("command") is not None:
+                ref = f"command:{item.get('command')}"
+            else:
+                ref = item.get("path") or item.get("ref") or item.get("file")
+        else:
+            ref = item
+        if _is_empty(ref):
+            errors.append(f"{label}: `{field}` contains an empty reference")
+            continue
+        ref_text = str(ref).strip()
+        if allow_placeholders and _is_placeholder(ref_text):
+            continue
+        if kind == "evidence" and ref_text.startswith("command:"):
+            if not ref_text.split("command:", 1)[1].strip():
+                errors.append(f"{label}: `{field}` contains an empty command reference")
+            continue
+        if kind == "adr" and not ref_text.startswith("docs/decisions/"):
+            errors.append(f"{label}: `{field}` reference `{ref_text}` must point into `docs/decisions/`")
+            continue
+        if not _path_exists(ref_text):
+            errors.append(f"{label}: `{field}` reference `{ref_text}` does not exist")
+
+
+def _validate_text_list(
+    container: Dict[str, Any],
+    field: str,
+    label: str,
+    errors: List[str],
+    *,
+    allow_placeholders: bool = False,
+    allow_none: bool = False,
+) -> None:
+    if field not in container:
+        return
+    items = _coerce_list(container[field])
+    if not items:
+        errors.append(f"{label}: `{field}` must not be empty")
+        return
+    if allow_none and len(items) == 1 and str(items[0]).strip().lower() == "none":
+        return
+    for item in items:
+        if _is_empty(item):
+            errors.append(f"{label}: `{field}` contains an empty item")
+            continue
+        if allow_placeholders and _is_placeholder(item):
+            continue
+
+
+def _validate_read_versions(
+    container: Dict[str, Any],
+    label: str,
+    errors: List[str],
+    *,
+    allow_placeholders: bool = False,
+) -> None:
+    if "read_versions" not in container:
+        return
+    value = container["read_versions"]
+    if isinstance(value, dict):
+        if set(value.keys()) == {"file", "mtime"}:
+            items = [value]
+        else:
+            items = []
+            for file_ref, mtime in value.items():
+                file_text = str(_strip_ticks(file_ref))
+                mtime_text = str(_strip_ticks(mtime))
+                if " @ " in file_text:
+                    left, right = file_text.split(" @ ", 1)
+                    items.append({"file": left, "mtime": f"{right}:{mtime_text}" if mtime_text else right})
+                else:
+                    items.append({"file": file_text, "mtime": mtime_text})
+    else:
+        items = _coerce_list(value)
+    if not items:
+        errors.append(f"{label}: `read_versions` must not be empty")
+        return
+    for item in items:
+        if isinstance(item, str):
+            text = str(_strip_ticks(item))
+            if " @ " not in text:
+                errors.append(f"{label}: `read_versions` string entries must include `file @ <mtime>`")
+                continue
+            file_ref, mtime = text.split(" @ ", 1)
+            file_ref = _strip_ticks(file_ref)
+            mtime = _strip_ticks(mtime)
+        elif not isinstance(item, dict):
+            errors.append(f"{label}: `read_versions` entries must be mappings")
+            continue
+        else:
+            file_ref = _strip_ticks(item.get("file"))
+            mtime = _strip_ticks(item.get("mtime"))
+        if _is_empty(file_ref):
+            errors.append(f"{label}: `read_versions.file` is required")
+        elif not (allow_placeholders and _is_placeholder(file_ref)) and not _path_exists(str(file_ref)):
+            errors.append(f"{label}: `read_versions.file` reference `{file_ref}` does not exist")
+        if _is_empty(mtime) and not (allow_placeholders and _is_placeholder(mtime)):
+            errors.append(f"{label}: `read_versions.mtime` is required")
+
+
 def _ensure_enums(
     container: Dict[str, Any],
     enum_fields: Dict[str, List[str]],
@@ -221,12 +365,52 @@ def _ensure_integers(
             errors.append(f"{label}: `{field}` must be integer")
 
 
+def _validate_governance_refs(
+    container: Dict[str, Any],
+    label: str,
+    errors: List[str],
+    *,
+    allow_placeholders: bool = False,
+) -> None:
+    _validate_reference_list(
+        container,
+        "changed_files",
+        label,
+        errors,
+        kind="path",
+        allow_placeholders=allow_placeholders,
+    )
+    _validate_reference_list(
+        container,
+        "evidence_refs",
+        label,
+        errors,
+        kind="evidence",
+        allow_placeholders=allow_placeholders,
+    )
+    _validate_reference_list(
+        container,
+        "adr_refs",
+        label,
+        errors,
+        kind="adr",
+        allow_placeholders=allow_placeholders,
+        allow_none=True,
+    )
+
+
 def validate_run_manifest(path: Path, rules: Dict[str, Any]) -> List[str]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     errors: List[str] = []
     _ensure_required(payload, rules.get("required_fields", []), path.name, errors)
     _ensure_enums(payload, rules.get("enum_fields", {}), path.name, errors)
     _ensure_booleans(payload, rules.get("boolean_fields", []), path.name, errors)
+    _validate_governance_refs(payload, path.name, errors)
+    for field in ("input_manifest", "issue_report_path", "verify_report_path"):
+        value = payload.get(field)
+        if not _is_empty(value) and not _path_exists(str(value)):
+            errors.append(f"{path.name}: `{field}` path `{value}` does not exist")
+    _validate_reference_list(payload, "artifacts", path.name, errors, kind="path")
     return errors
 
 
@@ -239,6 +423,7 @@ def validate_markdown_artifact(path: Path, rules: Dict[str, Any], artifact_type:
     _ensure_enums(root, rules.get("enum_fields", {}), f"{path.name} root", errors, allow_placeholders=is_template)
     _ensure_booleans(root, rules.get("boolean_fields", []), f"{path.name} root", errors)
     _ensure_integers(root, rules.get("integer_fields", []), f"{path.name} root", errors, allow_placeholders=is_template)
+    _validate_governance_refs(root, f"{path.name} root", errors, allow_placeholders=is_template)
 
     for field, required_nested in (rules.get("required_nested", {}) or {}).items():
         value = root.get(field)
@@ -246,6 +431,7 @@ def validate_markdown_artifact(path: Path, rules: Dict[str, Any], artifact_type:
             errors.append(f"{path.name} root: `{field}` must be mapping")
             continue
         _ensure_required(value, required_nested, f"{path.name} {field}", errors)
+        _validate_governance_refs(value, f"{path.name} {field}", errors, allow_placeholders=is_template)
 
     for section, required_fields in (rules.get("required_sections", {}) or {}).items():
         value = parsed.get(section)
@@ -257,16 +443,52 @@ def validate_markdown_artifact(path: Path, rules: Dict[str, Any], artifact_type:
             continue
         if required_fields:
             _ensure_required(value, required_fields, f"{path.name} section {section}", errors)
+        if isinstance(value, dict):
+            _validate_governance_refs(value, f"{path.name} section {section}", errors, allow_placeholders=is_template)
 
     if artifact_type == "session_start":
+        context = parsed.get("Context", {})
+        slice_section = parsed.get("Slice", {})
         handoff = parsed.get("Handoff", {})
         validation = parsed.get("Validation Decision", {})
         if isinstance(validation, dict) and "smoke run" in validation:
             smoke_value = str(validation.get("smoke run") or "").strip().lower()
             if not is_template and smoke_value not in {"required", "not required for this slice"}:
                 errors.append(f"{path.name} section Validation Decision: invalid `smoke run` value `{validation.get('smoke run')}`")
+        if isinstance(context, dict):
+            _validate_read_versions(context, f"{path.name} section Context", errors, allow_placeholders=is_template)
+            _validate_text_list(
+                context,
+                "blockers",
+                f"{path.name} section Context",
+                errors,
+                allow_placeholders=is_template,
+                allow_none=True,
+            )
+        if isinstance(slice_section, dict):
+            _validate_text_list(
+                slice_section,
+                "mini plan",
+                f"{path.name} section Slice",
+                errors,
+                allow_placeholders=is_template,
+            )
         if isinstance(handoff, dict) and handoff.get("next_scope") == root.get("current_scope"):
             errors.append(f"{path.name} section Handoff: `next_scope` should advance beyond `current_scope`")
+    if artifact_type == "session_end":
+        governance = parsed.get("Governance", {})
+        handoff = parsed.get("Handoff", {})
+        if isinstance(governance, dict):
+            _validate_text_list(
+                governance,
+                "blocker list",
+                f"{path.name} section Governance",
+                errors,
+                allow_placeholders=is_template,
+                allow_none=True,
+            )
+        if isinstance(handoff, dict) and "next_hour_task" in handoff and _is_empty(handoff.get("next_hour_task")):
+            errors.append(f"{path.name} section Handoff: `next_hour_task` must not be empty")
     return errors
 
 
