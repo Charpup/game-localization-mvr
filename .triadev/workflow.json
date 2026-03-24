@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "phase1-quality-closure-20260324",
+  "change_id": "phase2-governance-substrate-20260325",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -152,7 +152,8 @@
     "Milestone E executes gate-first: contract locally, then parallel repro and delta work, then executor integration.",
     "Milestone E is multi-market first with a compatibility layer for current ru-RU assets.",
     "Phase 2 reviewer blockers were closed before status completion: staged candidate output, locale-grouped execution, and fail-closed glossary locale lookup.",
-    "Post-E roadmap is now interpreted as four execution phases while preserving milestone letters F-S."
+    "Post-E roadmap is now interpreted as four execution phases while preserving milestone letters F-S.",
+    "Phase 2 first package is governance substrate hardening for run/session/milestone contracts and validation."
   ],
   "post_e_roadmap": {
     "status": "proposed",
@@ -228,5 +229,38 @@
       "acceptance_summary": "10 passed"
     },
     "next_action": "open stacked PR on top of codex/milestone-e-prepare"
+  },
+  "active_phase2_slice": {
+    "status": "completed",
+    "scope": "governance substrate contract + validator",
+    "branch": "codex/phase2-governance-substrate",
+    "bounded_surfaces": [
+      "workflow/plc_governance_contract.yaml",
+      "scripts/plc_validate_records.py",
+      "tests/test_plc_docs_contract.py",
+      "docs/project_lifecycle/session_start_template.md",
+      "docs/project_lifecycle/session_end_template.md",
+      "docs/project_lifecycle/milestone_state_template.md",
+      "docs/project_lifecycle/field_schema.md"
+    ],
+    "mapped_milestones": [
+      "M",
+      "N",
+      "P"
+    ],
+    "explicit_non_goals": [
+      "translation runtime changes",
+      "smoke pipeline orchestration changes",
+      "GUI/operator control plane work"
+    ],
+    "validation_strategy": {
+      "mode": "focused-governance-tests",
+      "smoke_required": false,
+      "rationale": "This slice changes PLC/TriadDev governance contracts and validator code only.",
+      "result": "passed",
+      "acceptance_command": "python -m pytest tests/test_plc_docs_contract.py -q && python scripts/plc_validate_records.py --preset representative --preset templates",
+      "acceptance_summary": "7 passed; Validated 7 PLC governance artifact(s)."
+    },
+    "next_action": "open Phase 2 governance substrate PR on top of main"
   }
 }

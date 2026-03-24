@@ -5,7 +5,7 @@
 - progress_pct: 100
 - evidence_ready: true
 - blockers:
-- 无
+  - 无
 - dependencies: [C]
 - decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
 - eta_hours: 16

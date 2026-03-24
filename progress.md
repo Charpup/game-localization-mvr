@@ -75,6 +75,30 @@
   - result: `10 passed`
 - Smoke remains intentionally skipped for this slice because `scripts/run_smoke_pipeline.py` is unchanged and orchestration behavior is out of scope for this PR.
 
+## 2026-03-25
+- Confirmed PR #10 and PR #11 are merged and `origin/main` now contains both the milestone E baseline and Phase 1 quality-closure follow-up.
+- Shifted the active roadmap scope from the merged `milestone_F_execute` slice to `milestone_M_prepare` on branch `codex/phase2-governance-substrate`.
+- Chose a bounded Phase 2 first package instead of trying to execute all of `M/N/O/P` at once:
+  - freeze a machine-checkable governance contract for `run_manifest`, `session_start`, `session_end`, and `milestone_state`
+  - add a validator utility for those artifacts
+  - extend PLC docs regression to lock representative records and templates to the same contract
+- Validation plan for this slice is focused governance tests only:
+  - rationale: Phase 2 first package changes documentation contracts and validator code, not runtime translation orchestration
+- Completed the first Phase 2 governance substrate package:
+  - added `workflow/plc_governance_contract.yaml` as the machine-checkable contract source
+  - added `scripts/plc_validate_records.py` as the repo-local validator
+  - expanded `tests/test_plc_docs_contract.py` to validate templates, representative records, and preset-based validator runs
+- Synced the human-facing governance docs to the same contract language:
+  - `field_schema.md`
+  - `session_start_template.md`
+  - `session_end_template.md`
+  - `milestone_state_template.md`
+  - `continuity_protocol.md`
+- Focused Phase 2 acceptance is green:
+  - `python -m pytest tests/test_plc_docs_contract.py -q` -> `7 passed`
+  - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 7 PLC governance artifact(s).`
+- Smoke remains intentionally skipped for this slice because the runtime pipeline and orchestrator are untouched.
+
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.
 - Created `task_plan.md`, `findings.md`, and `progress.md`.

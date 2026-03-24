@@ -31,6 +31,8 @@
 - `mini plan`（1-3 个 1h 子任务）
 - 阻塞项（如果有）
 - 下一步交接人（`next_owner`）
+- 下一步交接 scope（`next_scope`）
+- 下一步具体动作（`next_action`）
 
 ### 交接校验
 
@@ -52,6 +54,7 @@
 - 证据清单（run_id、manifest、issue、verify）
 - 资源建议：下一步 1h 子任务（含 owner/owner 备份）
 - `next_owner` 与 `next_scope`
+- `open_issues` 与 `next_action`
 
 结束文件中的 `next_owner/next_scope` 与下次 `session_start` 强制一致校验。
 
@@ -83,6 +86,12 @@
 - `milestone_state_<A-S>.md`
 
 可复制 [milestone_state_template.md](docs/project_lifecycle/milestone_state_template.md)。
+
+## 5.1 机器校验合同
+
+- 合同文件：`workflow/plc_governance_contract.yaml`
+- 验证器：`scripts/plc_validate_records.py`
+- 最低要求：每次治理字段或模板调整，都需要让代表性记录通过该验证器与 `tests/test_plc_docs_contract.py`
 
 ## 6. 决策与 ADR 锚定
 

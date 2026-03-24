@@ -2,7 +2,7 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `milestone_F_execute` on branch `codex/phase1-quality-closure`.
+> The current active scope is `milestone_M_prepare` on branch `codex/phase2-governance-substrate`.
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
@@ -210,6 +210,51 @@ Land the first bounded implementation slice of post-E Phase 1 by adding a unifie
   - `python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py tests/test_plc_docs_contract.py -q`
   - result: `10 passed`
 - smoke remains intentionally skipped for this slice because `scripts/run_smoke_pipeline.py` was not modified
+
+## 2026-03-25 Phase 2 Governance Substrate Slice
+
+### Goal
+Open the first bounded implementation package of Phase 2 (`M/N/P`) by freezing machine-checkable governance contracts for `run_manifest`, `session_start`, `session_end`, and `milestone_state`.
+
+### Route
+- `plc`: move the active scope to `milestone_M_prepare`, write a fresh session record, and keep the post-E four-phase roadmap intact.
+- `triadev`: stay on the Extended route, but treat this slice as governance substrate hardening rather than runtime feature work.
+
+### Scope
+- Work only on governance substrate surfaces:
+  - codify required field contracts for PLC run/session/milestone records
+  - add a repo-local validator utility for those artifacts
+  - extend PLC doc tests so current records and templates are checked against the same contract
+- Do not modify translation/runtime orchestration in this slice.
+- Do not open GUI/operator-control work in this slice.
+
+### Package
+- `M-contract`: freeze the governance field contract in a machine-readable artifact.
+- `N-validator`: implement a validator that checks run/session/milestone records against the contract.
+- `P-regression`: extend focused PLC docs tests to lock current records, templates, and required cross-file handoff fields.
+
+### Acceptance
+- a single governance contract source of truth exists for run/session/milestone artifacts
+- current PLC templates and representative historical records validate against that contract
+- focused Phase 2 acceptance is green without requiring smoke, because no runtime pipeline entrypoint changes
+
+### Branch Strategy
+- branch: `codex/phase2-governance-substrate`
+- PR base: `main`
+
+### Result
+- `workflow/plc_governance_contract.yaml` now defines the machine-checkable Phase 2 contract for:
+  - `run_manifest`
+  - `session_start`
+  - `session_end`
+  - `milestone_state`
+- `scripts/plc_validate_records.py` now validates representative PLC artifacts and templates against that contract
+- `tests/test_plc_docs_contract.py` now locks templates, representative records, and validator preset execution
+- focused acceptance is green:
+  - `python -m pytest tests/test_plc_docs_contract.py -q`
+  - `python scripts/plc_validate_records.py --preset representative --preset templates`
+  - result: `7 passed` and `Validated 7 PLC governance artifact(s).`
+- smoke remains intentionally skipped for this slice because no runtime pipeline entrypoint changed
 
 ## Phases
 - [complete] Phase 1: Initialize plan files and inspect run entrypoints.
