@@ -184,6 +184,16 @@ def test_milestone_e_delta_to_task_execution_flow(tmp_path, monkeypatch):
 
     task_rows = translate_refresh.read_jsonl(str(tasks_out))
     assert [task["task_type"] for task in task_rows] == ["refresh", "retranslate", "manual_review"]
+    assert {task["task_id"]: task["execution_status"] for task in task_rows} == {
+        "refresh:s1": "updated",
+        "retranslate:s2": "updated",
+        "manual_review:s3": "review_handoff",
+    }
+    assert {task["task_id"]: task["final_status"] for task in task_rows} == {
+        "refresh:s1": "updated",
+        "retranslate:s2": "updated",
+        "manual_review:s3": "review_handoff",
+    }
 
     output_rows = {
         row["string_id"]: row
@@ -197,9 +207,32 @@ def test_milestone_e_delta_to_task_execution_flow(tmp_path, monkeypatch):
     review_rows = list(csv.DictReader(review_queue.open("r", encoding="utf-8-sig", newline="")))
     assert [row["string_id"] for row in review_rows] == ["s3"]
     assert review_rows[0]["task_type"] == "manual_review"
+    assert review_rows[0]["review_source"] == "initial_manual_review"
+    assert review_rows[0]["execution_status"] == "review_handoff"
+    assert review_rows[0]["final_status"] == "review_handoff"
 
     manifest_payload = json.loads(manifest.read_text(encoding="utf-8"))
+    assert manifest_payload["overall_status"] == "review_handoff"
     assert manifest_payload["execution"]["updated"] == 2
     assert manifest_payload["execution"]["review_handoff"] == 1
+    assert manifest_payload["execution"]["blocked"] == 0
     assert manifest_payload["post_gates"]["row_count_integrity"]["passed"] is True
     assert manifest_payload["post_gates"]["placeholder_signature_integrity"]["passed"] is True
+    assert manifest_payload["gate_summary"]["status"] == "passed"
+    assert manifest_payload["task_outcomes"]["counts_by_execution_status"] == {
+        "updated": 2,
+        "review_handoff": 1,
+    }
+    assert manifest_payload["task_outcomes"]["counts_by_final_status"] == {
+        "updated": 2,
+        "review_handoff": 1,
+    }
+    outcome_by_id = {
+        item["task_id"]: item
+        for item in manifest_payload["task_outcomes"]["items"]
+    }
+    assert outcome_by_id["refresh:s1"]["final_status"] == "updated"
+    assert outcome_by_id["retranslate:s2"]["final_status"] == "updated"
+    assert outcome_by_id["manual_review:s3"]["final_status"] == "review_handoff"
+    assert outcome_by_id["manual_review:s3"]["review_source"] == "initial_manual_review"
+    assert manifest_payload["review_handoff"]["by_source"] == {"initial_manual_review": 1}
