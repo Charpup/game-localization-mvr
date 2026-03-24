@@ -753,3 +753,69 @@ def test_executor_keeps_staged_candidate_and_returns_failure_when_execution_fail
     assert task_by_id["refresh:s3"]["execution_status"] == "failed"
     assert task_by_id["refresh:s3"]["final_status"] == "review_handoff"
     assert task_by_id["refresh:s3"]["status_reason"] == "missing_llm_result"
+
+
+def test_overall_status_is_blocked_when_post_gate_fails_outside_task_set(tmp_path, monkeypatch):
+    translated_csv = tmp_path / "translated.csv"
+    glossary = tmp_path / "compiled.yaml"
+    style = tmp_path / "style.md"
+    tasks_in = tmp_path / "tasks.jsonl"
+    tasks_out = tmp_path / "tasks_out.jsonl"
+    review_queue = tmp_path / "review.csv"
+    manifest = tmp_path / "manifest.json"
+    out_csv = tmp_path / "final.csv"
+
+    _write_csv(translated_csv, _sample_translated_rows())
+    _write_glossary(glossary)
+    _write_style(style)
+    _write_jsonl(
+        tasks_in,
+        [
+            _sample_task("refresh:s1", "s1", "refresh", "Старая Коноха вход", "木叶入口"),
+        ],
+    )
+
+    monkeypatch.setattr(
+        translate_refresh,
+        "batch_llm_call",
+        lambda **kwargs: [{"id": "s1", "updated_target": "Коноха вход"}],
+    )
+    monkeypatch.setattr(
+        translate_refresh,
+        "run_qa_hard_gate",
+        lambda *args, **kwargs: {
+            "passed": False,
+            "report_path": str(tmp_path / "qa_report.json"),
+            "error_total": 1,
+            "warning_total": 0,
+            "failed_string_ids": ["s4"],
+        },
+    )
+
+    exit_code = translate_refresh.main(
+        [
+            "--tasks-in",
+            str(tasks_in),
+            "--translated",
+            str(translated_csv),
+            "--glossary",
+            str(glossary),
+            "--style",
+            str(style),
+            "--tasks-out",
+            str(tasks_out),
+            "--review-queue",
+            str(review_queue),
+            "--manifest",
+            str(manifest),
+            "--out-csv",
+            str(out_csv),
+        ]
+    )
+
+    assert exit_code == 1
+    manifest_payload = json.loads(manifest.read_text(encoding="utf-8"))
+    assert manifest_payload["gate_summary"]["status"] == "blocked"
+    assert manifest_payload["gate_summary"]["failed_gates"] == ["qa_hard"]
+    assert manifest_payload["overall_status"] == "blocked"
+    assert manifest_payload["task_outcomes"]["counts_by_final_status"] == {"updated": 1}

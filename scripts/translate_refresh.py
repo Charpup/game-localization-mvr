@@ -644,7 +644,9 @@ def summarize_task_outcomes(tasks: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
-def derive_overall_status(tasks: List[Dict[str, Any]]) -> str:
+def derive_overall_status(tasks: List[Dict[str, Any]], gate_status: str = "passed") -> str:
+    if gate_status == "blocked":
+        return "blocked"
     if any(str(task.get("final_status") or "") == "blocked" for task in tasks):
         return "blocked"
     if any(str(task.get("execution_status") or "") == "failed" for task in tasks):
@@ -915,7 +917,7 @@ def execute_tasks(
     manifest = {
         "generated_at": now_iso(),
         "mode": "execute",
-        "overall_status": derive_overall_status(tasks),
+        "overall_status": derive_overall_status(tasks, gate_status=gate_summary["status"]),
         "task_counts": {
             "total": len(tasks),
             "by_type": {task_type: len([task for task in tasks if task["task_type"] == task_type]) for task_type in TASK_TYPE_TO_SCOPE},
@@ -953,7 +955,7 @@ def build_generation_manifest(tasks: List[Dict[str, Any]], review_queue: List[Di
     return {
         "generated_at": now_iso(),
         "mode": "generate_only",
-        "overall_status": derive_overall_status(tasks),
+        "overall_status": derive_overall_status(tasks, gate_status="skipped"),
         "task_counts": {
             "total": len(tasks),
             "by_type": {task_type: len([task for task in tasks if task["task_type"] == task_type]) for task_type in TASK_TYPE_TO_SCOPE},
