@@ -146,3 +146,75 @@ def test_load_compiled_does_not_fallback_to_ru_for_non_ru_locale(tmp_path):
     compiled, _, _ = glossary_delta.load_compiled(str(glossary_path), "en-US")
 
     assert compiled == {"木叶": "Konoha"}
+
+
+def test_glossary_delta_mixed_locale_rows_do_not_cross_apply_and_report_locales_correctly(monkeypatch, tmp_path):
+    old_glossary = tmp_path / "old.yaml"
+    new_glossary = tmp_path / "new.yaml"
+    csv_path = tmp_path / "translated.csv"
+    report_path = tmp_path / "delta_report.json"
+    rows_path = tmp_path / "delta_rows.jsonl"
+
+    _write_yaml(
+        old_glossary,
+        {
+            "entries": [
+                {"term_zh": "木叶", "targets": {"ru-RU": "Старая Коноха", "en-US": "Old Konoha"}},
+            ]
+        },
+    )
+    _write_yaml(
+        new_glossary,
+        {
+            "entries": [
+                {"term_zh": "木叶", "targets": {"ru-RU": "Коноха", "en-US": "Konoha"}},
+            ]
+        },
+    )
+    _write_csv(
+        csv_path,
+        [
+            {
+                "string_id": "ru1",
+                "source_zh": "木叶入口",
+                "target_text": "Старая Коноха вход",
+                "target_locale": "ru-RU",
+                "module_tag": "general",
+            },
+            {
+                "string_id": "en1",
+                "source_zh": "木叶入口",
+                "target_text": "Old Konoha Gate",
+                "target_locale": "en-US",
+                "module_tag": "general",
+            },
+        ],
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "glossary_delta.py",
+            "--old",
+            str(old_glossary),
+            "--new",
+            str(new_glossary),
+            "--source_csv",
+            str(csv_path),
+            "--out_impact",
+            str(report_path),
+            "--out_rows",
+            str(rows_path),
+            "--target-locale",
+            "ru-RU",
+        ],
+    )
+
+    assert glossary_delta.main() == 0
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    rows = [json.loads(line) for line in rows_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+    assert [row["string_id"] for row in rows] == ["ru1"]
+    assert report["impact_set"] == ["ru1"]
+    assert report["impacted_rows_by_locale"] == {"ru-RU": 1}

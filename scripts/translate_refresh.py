@@ -214,6 +214,8 @@ def validate_tasks(tasks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         task = normalize_task(raw)
         if task["task_type"] not in TASK_TYPE_TO_SCOPE:
             raise ValueError(f"Task {task['task_id']} has unsupported task_type: {task['task_type']}")
+        if task["task_type"] == "retranslate" and not str(task.get("source_text") or "").strip():
+            raise ValueError(f"Task contract violation for {task['task_id']}: retranslate tasks require source_text")
         normalized.append(task)
     return normalized
 

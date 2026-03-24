@@ -357,6 +357,7 @@ def build_row_impacts(
     preferred_changed = style_delta.get("preferred_term_changed", [])
     banned_terms = set(style_delta.get("banned_term_changed", []))
     aliases = set(style_delta.get("prohibited_alias_changed", []))
+    normalized_target_locale = _normalize_locale(target_locale)
 
     for row in rows:
         string_id = str(row.get("string_id") or "").strip()
@@ -374,18 +375,20 @@ def build_row_impacts(
             "rule_refs": [],
         }
 
+        glossary_locale_matches = _normalize_locale(row_locale) == normalized_target_locale
+
         for item in glossary_delta.get("added", []):
-            if item["term_zh"] in source_zh:
+            if glossary_locale_matches and item["term_zh"] in source_zh:
                 _append_reason(bucket, "term_added", "GLOSSARY_TERM_ADDED", f"source contains newly added glossary term {item['term_zh']}", GLOSSARY_RULE)
 
         for item in glossary_delta.get("changed", []):
             old_target = str((item.get("old_targets") or {}).get(row_locale) or "").strip()
-            if item["term_zh"] in source_zh or (old_target and old_target in current_target):
+            if glossary_locale_matches and (item["term_zh"] in source_zh or (old_target and old_target in current_target)):
                 _append_reason(bucket, "term_changed", "GLOSSARY_TERM_CHANGED", f"source depends on changed glossary term {item['term_zh']}", GLOSSARY_RULE)
 
         for item in glossary_delta.get("removed", []):
             old_target = str((item.get("old_targets") or {}).get(row_locale) or "").strip()
-            if item["term_zh"] in source_zh or (old_target and old_target in current_target):
+            if glossary_locale_matches and (item["term_zh"] in source_zh or (old_target and old_target in current_target)):
                 _append_reason(bucket, "term_removed", "GLOSSARY_TERM_REMOVED", f"row depends on removed glossary term {item['term_zh']}", GLOSSARY_RULE)
 
         for item in preferred_changed:
@@ -584,8 +587,11 @@ def main() -> int:
         args.change_events,
     )
     impacted_rows_by_content_class: Dict[str, int] = {}
+    impacted_rows_by_locale: Dict[str, int] = {}
     high_risk_queue_total = 0
     for impact in impacts:
+        impact_locale = str(impact.get("target_locale") or target_locale).strip() or target_locale
+        impacted_rows_by_locale[impact_locale] = impacted_rows_by_locale.get(impact_locale, 0) + 1
         impacted_rows_by_content_class[impact["content_class"]] = impacted_rows_by_content_class.get(impact["content_class"], 0) + 1
         if impact["risk_level"] == "high":
             high_risk_queue_total += 1
@@ -597,7 +603,7 @@ def main() -> int:
         "inputs": _build_inputs_meta(args),
         "change_counts": _change_counts(glossary_delta, style_delta, rubric_changed, placeholder_changed),
         "impacted_rows_total": len(impacts),
-        "impacted_rows_by_locale": {target_locale: len(impacts)},
+        "impacted_rows_by_locale": impacted_rows_by_locale,
         "impacted_rows_by_content_class": impacted_rows_by_content_class,
         "high_risk_queue_total": high_risk_queue_total,
         "recommended_rerun_scope": _recommended_rerun_scope(impacts),

@@ -225,6 +225,37 @@ def test_missing_required_task_field_fails_explicitly(tmp_path):
         )
 
 
+def test_retranslate_task_requires_source_text_in_tasks_in_contract(tmp_path):
+    translated_csv = tmp_path / "translated.csv"
+    glossary = tmp_path / "compiled.yaml"
+    style = tmp_path / "style.md"
+    tasks_in = tmp_path / "bad_retranslate_tasks.jsonl"
+
+    _write_csv(translated_csv, _sample_translated_rows())
+    _write_glossary(glossary)
+    _write_style(style)
+
+    bad_task = _sample_task("retranslate:s1", "s1", "retranslate", "Старая Коноха вход", "木叶入口")
+    bad_task["expected_change_scope"] = "style_plus_term"
+    del bad_task["source_text"]
+    _write_jsonl(tasks_in, [bad_task])
+
+    with pytest.raises(ValueError, match="retranslate tasks require source_text"):
+        translate_refresh.main(
+            [
+                "--tasks-in",
+                str(tasks_in),
+                "--translated",
+                str(translated_csv),
+                "--glossary",
+                str(glossary),
+                "--style",
+                str(style),
+                "--generate-only",
+            ]
+        )
+
+
 def test_executor_preserves_row_count_and_manual_review_row_is_not_overwritten(tmp_path, monkeypatch):
     translated_csv = tmp_path / "translated.csv"
     glossary = tmp_path / "compiled.yaml"
