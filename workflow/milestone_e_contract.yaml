@@ -1,0 +1,204 @@
+version: 1
+change_id: milestone-e-prepare-20260324
+route: extended
+scope:
+  milestone: E
+  mode: multi-market-first
+  migration_strategy: compat-layer
+  summary: >
+    Typed delta analysis and incremental retranslation planning for locale-generic
+    localization refresh, with a compatibility layer for current ru-RU assets.
+
+artifacts:
+  request: delta_request.json
+  report: delta_report.json
+  row_impacts: delta_rows.jsonl
+  tasks: incremental_tasks.jsonl
+  review_queue: incremental_review_queue.csv
+  state: data/delta_runs/<run_id>/state.json
+  manifest: data/delta_runs/<run_id>/run_manifest.json
+
+compatibility:
+  glossary:
+    accepted_legacy_fields:
+      - term_ru
+    canonical_targets_field: targets
+    legacy_mapping:
+      term_ru: targets.ru-RU
+  translation_rows:
+    accepted_legacy_fields:
+      - target_ru
+      - target_text
+      - target
+    canonical_locale_field: target_locale
+    canonical_target_field: current_target
+  style_profile:
+    accepted_legacy_target_language_field: project.target_language
+    canonical_locale_field: target_locale
+
+typed_delta:
+  categories:
+    - content
+    - glossary
+    - style_profile
+    - rubric
+    - rule
+  propagation_types:
+    - text_diff
+    - term_added
+    - term_changed
+    - term_removed
+    - preferred_term_changed
+    - banned_term_changed
+    - prohibited_alias_changed
+    - style_contract_changed
+    - placeholder_policy_changed
+    - risk_class_changed
+    - rubric_gate_changed
+
+row_impact_contract:
+  required_fields:
+    - string_id
+    - source_zh
+    - current_target
+    - target_locale
+    - content_class
+    - risk_level
+    - delta_types
+    - reason_codes
+    - reason_text
+    - rule_refs
+    - placeholder_locked
+    - manual_review_required
+    - manual_review_reason
+    - recommended_action
+  recommended_action_enum:
+    - auto_refresh
+    - retranslate
+    - manual_review
+    - skip
+  risk_levels:
+    - low
+    - medium
+    - high
+  content_classes:
+    - ui_button
+    - system
+    - payment
+    - dialogue
+    - narrative
+    - proper_noun
+    - live_ops
+    - general
+
+task_contract:
+  required_fields:
+    - task_id
+    - string_id
+    - task_type
+    - target_locale
+    - reason_codes
+    - trigger_change_ids
+    - depends_on_rules
+    - source_artifacts
+    - target_constraints
+    - placeholder_signature
+    - current_target
+    - expected_change_scope
+    - human_review_required
+    - review_owner
+    - review_status
+  task_type_enum:
+    - refresh
+    - retranslate
+    - manual_review
+    - skip
+  expected_change_scope_enum:
+    - term_only
+    - style_plus_term
+    - manual
+
+hard_gates:
+  block_auto_refresh_on:
+    - term_removed
+    - banned_term_changed
+    - prohibited_alias_changed
+    - style_contract_changed
+    - placeholder_policy_changed
+    - high_risk_content_class
+  high_risk_content_classes:
+    - payment
+    - system
+    - proper_noun
+    - live_ops
+    - ui_button
+
+delta_request:
+  required_fields:
+    - run_id
+    - source_csv
+    - translated_csv
+    - target_locale
+    - old_glossary
+    - new_glossary
+    - old_style_profile
+    - new_style_profile
+    - rubric
+    - placeholder_schema
+  optional_fields:
+    - current_final_csv
+    - change_events
+
+delta_report:
+  required_fields:
+    - delta_version
+    - run_id
+    - target_locale
+    - inputs
+    - change_counts
+    - impacted_rows_total
+    - impacted_rows_by_locale
+    - impacted_rows_by_content_class
+    - high_risk_queue_total
+    - recommended_rerun_scope
+    - row_impacts_path
+    - generated_at
+
+state_contract:
+  required_fields:
+    - run_id
+    - status
+    - target_locale
+    - input_hashes
+    - task_counts
+    - cursor
+    - last_error
+    - updated_at
+  status_enum:
+    - pending
+    - running
+    - blocked
+    - completed
+
+executor_contract:
+  task_input: incremental_tasks.jsonl
+  required_outputs:
+    - candidate_output_csv
+    - execution_manifest.json
+    - incremental_failure_breakdown.json
+    - review_queue.csv
+  required_post_gates:
+    - qa_hard
+    - row_count_integrity
+    - placeholder_signature_integrity
+  optional_post_gates:
+    - soft_qa_for_high_risk_rows
+
+acceptance:
+  initial_fixture_locale: ru-RU
+  invariants:
+    - no silent no-op on typed delta
+    - stable ordering for delta_rows and incremental_tasks
+    - row count preserved through executor output
+    - placeholder signatures preserved
+    - clean worktree execution does not depend on residual local data files

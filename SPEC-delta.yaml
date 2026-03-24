@@ -1,18 +1,17 @@
-delta_version: 0.3.0
-change_id: deep-cleanup-main-batch10
-change_type: compat-mirror-closeout-decision
+delta_version: 0.4.0
+change_id: milestone-e-prepare-20260324
+change_type: milestone-e-multi-market-delta-and-incremental-retranslation
 status: in_progress
 intent:
   summary: >
-    Close the current cleanup roadmap by fixing a final governance decision for
-    repo-root src/scripts as an operationally retained, exit-planned compatibility
-    mirror while preserving retained production-dev baselines, keep-chain, M4,
-    authority drift, and optional Metrics semantics unchanged.
+    Add a locale-generic typed delta engine and incremental retranslation task flow
+    for milestone E, while keeping current ru-RU assets usable through a compatibility
+    layer and preserving the existing keep-chain runtime contract.
   non_goals:
-    - Reworking retained authority scripts or packaging behavior
-    - Physically deleting or migrating src/scripts in this batch
-    - Making Metrics a blocking smoke gate
-    - Altering the keep-chain runtime contract
+    - Building a GUI or dashboard in milestone E
+    - Reopening earlier cleanup batches or changing authority-zone ownership
+    - Hard-cutting all existing ru-RU specific assets in one migration
+    - Changing smoke metrics from optional to blocking
 assertions:
   authority_zone: main_worktree/scripts
   compat_zone: src/scripts
@@ -33,11 +32,11 @@ assertions:
     - tests/test_qa_hard.py
     - tests/test_normalize_segmentation.py
 planned_controls:
-  - Keep ../src/scripts/** operationally present but explicitly mark it as closeout_decision=separate-exit-program.
-  - Freeze the mirror_required list and describe future shrinkage as separate compat migration work.
-  - Remove non-real blocked placeholders from the frozen-zone inventory so closeout criteria reflect only real surfaces.
-  - Add Batch 10 closeout governance tests and a closeout report.
-  - Keep authority drift at WARN(runtime_adapter only), keep Metrics optional, and keep M4 decision logic unchanged.
+  - Freeze a single E contract source of truth in workflow/milestone_e_contract.yaml.
+  - Standardize clean-worktree inputs for style profile and glossary authority.
+  - Replace glossary-only impact detection with typed delta propagation and locale-aware row impacts.
+  - Split refresh into task generation and task execution with post-run hard gates.
+  - Keep authority drift policy, keep-chain behavior, and optional Metrics semantics unchanged.
 status_map:
   ../src/scripts/**: compat-keep managed compatibility liability with closeout_decision separate-exit-program
   stress_test_3k_run.sh: must-keep canonical stress shell authority
@@ -49,9 +48,8 @@ status_map:
 blocked_zones:
   []
 risk_controls:
-  - Keep-chain scripts remain untouched except for already-established optional Metrics wiring.
-  - Retained validation and repair authority surfaces must not be modified.
-  - Governance artifacts must explain that src/scripts is not the authority root and remains only as an exit-planned compatibility liability.
-  - package_v1.3.0.sh and package_v140.sh behavior must remain unchanged in this batch.
-  - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.
-  - M4 decision logic and smoke evidence generation remain unchanged.
+  - Keep-chain scripts remain semantically unchanged while E adds parallel delta/task surfaces around them.
+  - Locale-generic contracts must preserve backward readability of current ru-RU assets.
+  - Executor outputs must preserve row count and placeholder signature integrity.
+  - Clean-worktree execution must not depend on residual local data files.
+  - Existing smoke evidence generation and authority policy remain intact while E adds new delta-run artifacts.

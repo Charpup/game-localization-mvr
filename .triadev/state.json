@@ -3,9 +3,9 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "batch10_complete",
-  "branch": "codex/deep-cleanup-batch10",
-  "change_id": "deep-cleanup-main-batch10",
+  "status": "milestone_e_prepare",
+  "branch": "codex/milestone-e-prepare",
+  "change_id": "milestone-e-prepare-202603212355",
   "authority_zone": "main_worktree/scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
@@ -46,5 +46,5 @@
     "status": "GO",
     "reason": "Batch 10 remains GO because it closes the roadmap with a governance decision for src/scripts without changing keep-chain, M4, authority, retained repair authority, retained validation baselines, packaging behavior, or optional Metrics semantics."
   },
-  "last_updated": "2026-03-19"
+  "last_updated": "2026-03-21"
 }

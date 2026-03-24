@@ -139,6 +139,7 @@ def _make_manifest(args: argparse.Namespace, run_id: str, input_csv: Path, run_d
         "issue_file": str(issue_file),
         "artifacts": {
             "style_guide": args.style,
+            "style_profile": args.style_profile,
             "schema": args.schema,
             "forbidden_patterns": args.forbidden,
             "glossary": args.glossary,
@@ -167,6 +168,43 @@ def _write_row_checks(manifest: dict, input_rows: int, translate_rows: int, fina
         "translate_delta": translate_rows - input_rows,
         "final_delta": final_rows - input_rows,
     }
+
+
+def _resolve_style_profile_path(path: str) -> str:
+    if path and path.strip():
+        return path
+    for candidate in ("workflow/style_profile.generated.yaml", "data/style_profile.yaml"):
+        if Path(candidate).exists():
+            return candidate
+    return "workflow/style_profile.generated.yaml"
+
+
+def _ensure_style_profile(path: str, log_path: Path) -> tuple[bool, str]:
+    style_profile_path = Path(path)
+    if style_profile_path.exists():
+        return True, str(style_profile_path)
+
+    questionnaire = Path("workflow/style_guide_questionnaire.md")
+    if not questionnaire.exists():
+        with open(log_path, "w", encoding="utf-8") as f:
+            f.write(f"style_profile_missing: {path}\n")
+            f.write(f"questionnaire_missing: {questionnaire}\n")
+        return False, str(style_profile_path)
+
+    guide_output = Path("workflow/style_guide.generated.md")
+    cmd = [
+        sys.executable,
+        "scripts/style_guide_bootstrap.py",
+        "--questionnaire",
+        str(questionnaire),
+        "--guide-output",
+        str(guide_output),
+        "--profile-output",
+        str(style_profile_path),
+        "--dry-run",
+    ]
+    result = _run_step(cmd, log_path)
+    return result.returncode == 0 and style_profile_path.exists(), str(style_profile_path)
 
 
 def _issue_row_mismatch(run_id: str, issue_file: Path, stage: str, expected: int, actual: int, note: str) -> None:
@@ -421,6 +459,26 @@ def run_pipeline(args: argparse.Namespace) -> int:
     input_row_count = _count_csv_rows(input_csv)
     manifest["row_counts"]["input"] = input_row_count
 
+    style_profile_log = run_dir / f"00a_{_safe_stage_name('style_profile_bootstrap')}.log"
+    args.style_profile = _resolve_style_profile_path(args.style_profile)
+    style_profile_ready, resolved_style_profile = _ensure_style_profile(args.style_profile, style_profile_log)
+    args.style_profile = resolved_style_profile
+    manifest["artifacts"]["style_profile"] = args.style_profile
+    _append_stage_artifact(manifest, "style_profile_log", style_profile_log)
+    _append_stage_artifact(manifest, "style_profile", Path(args.style_profile))
+    if not style_profile_ready:
+        append_issue(str(issue_file), build_issue(
+            run_id=run_id,
+            stage="style_profile_bootstrap",
+            severity="P0",
+            error_code="STYLE_PROFILE_MISSING",
+            context={"style_profile": args.style_profile, "log": str(style_profile_log)},
+            suggest="通过 scripts/style_guide_bootstrap.py 生成 style profile 后再重试。"
+        ))
+        manifest["status"] = "failed"
+        _write_manifest(run_manifest_path, manifest)
+        return 1
+
     # 0) connectivity
     ping_log = run_dir / f"00_{_safe_stage_name('connectivity')}.log"
     ping = _run_step([sys.executable, "scripts/llm_ping.py"], ping_log)
@@ -481,6 +539,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
         "--output", str(translated_csv),
         "--style", args.style,
         "--glossary", args.glossary,
+        "--style-profile", args.style_profile,
         "--target-lang", active_target,
         "--target-key", _derive_target_key(active_target),
         "--model", args.model,
@@ -510,6 +569,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             "--output", str(translated_csv),
             "--style", args.style,
             "--glossary", args.glossary,
+            "--style-profile", args.style_profile,
             "--target-lang", active_target,
             "--target-key", _derive_target_key(active_target),
             "--model", args.model,
@@ -745,7 +805,8 @@ def main():
     parser.add_argument("--verify-mode", choices=["preflight", "full"], default="full", help="Smoke verify mode")
     parser.add_argument("--model", default="claude-haiku-4-5-20251001", help="Translation model")
     parser.add_argument("--style", default="workflow/style_guide.md", help="Style guide path")
-    parser.add_argument("--glossary", default="workflow/smoke_glossary_approved.yaml", help="Glossary path")
+    parser.add_argument("--style-profile", default="", help="Style profile path. Defaults to tracked authority candidates and auto-bootstrap.")
+    parser.add_argument("--glossary", default="glossary/compiled.yaml", help="Glossary path")
     parser.add_argument("--schema", default="workflow/placeholder_schema.yaml", help="Placeholder schema path")
     parser.add_argument("--forbidden", default="workflow/forbidden_patterns.txt", help="Forbidden patterns path")
     parser.add_argument("--source-lang", default="zh-CN", help="Source language for normalization (default: zh-CN)")
