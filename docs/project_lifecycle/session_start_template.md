@@ -6,11 +6,19 @@
 - route: `plc + triadev`
 - base_branch: `main`
 
+## Context
+- read_versions:
+  - `docs/HANDOFF_MAINLINE_GUARDRAILS.md @ <YYYYMMDDTHHMMSS+ZZZZ>`
+  - `task_plan.md @ <YYYYMMDDTHHMMSS+ZZZZ>`
+  - `docs/project_lifecycle/roadmap_index.md @ <YYYYMMDDTHHMMSS+ZZZZ>`
+- blockers:
+  - `none`
+
 ## Slice
 - bounded implementation target: `<one bounded package>`
-- non-goals:
-  - `<explicit non-goal 1>`
-  - `<explicit non-goal 2>`
+- mini plan:
+  - `<1h task 1>`
+  - `<1h task 2>`
 
 ## Validation Decision
 - validation mode: `<focused-governance-tests|focused-runtime-tests|smoke>`
@@ -21,4 +29,3 @@
 - next_owner: `<owner_id>`
 - next_scope: `<next bounded scope>`
 - next_action: `<one concrete next step>`
-

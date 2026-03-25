@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "phase2-governance-substrate-20260325",
+  "change_id": "phase2-governance-closeout-20260325",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -153,12 +153,13 @@
     "Milestone E is multi-market first with a compatibility layer for current ru-RU assets.",
     "Phase 2 reviewer blockers were closed before status completion: staged candidate output, locale-grouped execution, and fail-closed glossary locale lookup.",
     "Post-E roadmap is now interpreted as four execution phases while preserving milestone letters F-S.",
-    "Phase 2 first package is governance substrate hardening for run/session/milestone contracts and validation."
+    "Phase 2 first package is governance substrate hardening for run/session/milestone contracts and validation.",
+    "Phase 2 closeout extends the substrate with machine-checkable changed_files/evidence_refs/adr_refs and leaves Phase 3 in planning-ready only."
   ],
   "post_e_roadmap": {
-    "status": "proposed",
-    "recommended_next_scope": "milestone_F_execute",
-    "parallel_planning_sidecar": "milestone_M_prepare",
+    "status": "phase-2-closeout-complete",
+    "recommended_next_scope": "phase3_planning_ready",
+    "parallel_planning_sidecar": "milestone_F_execute_followup",
     "execution_preference": [
       "phase-1-quality-closure",
       "phase-2-governance-substrate",
@@ -232,20 +233,25 @@
   },
   "active_phase2_slice": {
     "status": "completed",
-    "scope": "governance substrate contract + validator",
-    "branch": "codex/phase2-governance-substrate",
+    "scope": "phase 2 governance substrate closeout",
+    "branch": "codex/phase2-governance-closeout",
     "bounded_surfaces": [
       "workflow/plc_governance_contract.yaml",
       "scripts/plc_validate_records.py",
       "tests/test_plc_docs_contract.py",
+      "docs/project_lifecycle/continuity_protocol.md",
       "docs/project_lifecycle/session_start_template.md",
       "docs/project_lifecycle/session_end_template.md",
       "docs/project_lifecycle/milestone_state_template.md",
-      "docs/project_lifecycle/field_schema.md"
+      "docs/project_lifecycle/field_schema.md",
+      "docs/project_lifecycle/roadmap_index.md",
+      "task_plan.md",
+      "progress.md"
     ],
     "mapped_milestones": [
       "M",
       "N",
+      "O",
       "P"
     ],
     "explicit_non_goals": [
@@ -256,11 +262,16 @@
     "validation_strategy": {
       "mode": "focused-governance-tests",
       "smoke_required": false,
-      "rationale": "This slice changes PLC/TriadDev governance contracts and validator code only.",
+      "rationale": "This closeout package changes PLC/TriadDev governance contracts, validator rules, and representative lifecycle records only.",
       "result": "passed",
       "acceptance_command": "python -m pytest tests/test_plc_docs_contract.py -q && python scripts/plc_validate_records.py --preset representative --preset templates",
-      "acceptance_summary": "7 passed; Validated 7 PLC governance artifact(s)."
+      "acceptance_summary": "9 passed; Validated 7 PLC governance artifact(s)."
     },
-    "next_action": "open Phase 2 governance substrate PR on top of main"
+    "next_action": "push the closeout branch and open the Phase 2 closeout PR on top of main"
+  },
+  "phase3_readiness": {
+    "status": "planning-ready",
+    "implement_status": "not-started",
+    "rationale": "Phase 2 closes the governance substrate first; Phase 3 may be planned but must not enter runtime implementation in this package."
   }
 }

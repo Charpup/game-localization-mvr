@@ -19,10 +19,21 @@
 - `<high-signal outcome 1>`
 - `<high-signal outcome 2>`
 
+## Governance
+- changed_files:
+  - `<repo-relative-path>`
+- evidence_refs:
+  - `<command-or-report-ref>`
+  - `<report-or-artifact-path>`
+- adr_refs:
+  - `<docs/decisions/ADR-####-name.md or none>`
+- blocker list:
+  - `none`
+
 ## Handoff
 - next_owner: `<owner_id>`
 - next_scope: `<next bounded scope>`
 - open_issues:
   - `<issue or none>`
+- next_hour_task: `<one 1h follow-up task>`
 - next_action: `<one concrete next step>`
-

@@ -14,28 +14,46 @@ progress_pct: integer(0-100)
 evidence_ready: boolean
 blockers: array[string]
 dependencies: array[string]
-decision_ref: string | null
+decision_ref: path | null
 eta_hours: integer | null
 notes: string
+changed_files: array[path]
+evidence_refs: array[path | command:<shell command>]
+adr_refs: array[path in docs/decisions | none]
+evidence:
+  run_id: string
+  run_manifest: path
+  run_issue: path
+  run_verify: path
+handoff:
+  next_owner: string
+  next_scope: string
+  next_action: string
 ```
 
 ## 2. Run 清单字段（最小集）
 
 ```yaml
+manifest_version: string
 run_id: string
 run_scope: string
 status: enum[pass, warn, blocked]
 started_at: datetime_iso8601
 finished_at: datetime_iso8601
 owner: string
-input_manifest: string (path)
-issue_report_path: string (path)
-verify_report_path: string (path)
+input_manifest: path
+issue_report_path: path
+verify_report_path: path
 artifacts: array[path]
-blockers: array[object(id, description, next_action)]
-decision_refs: array[path]
+blockers: array[object | string]
+changed_files: array[path]
+evidence_refs: array[path | command:<shell command>]
+adr_refs: array[path in docs/decisions | none]
+decision_refs: array[string]
+evidence_ready: boolean
 next_step_owner: string
 next_step_scope: string
+gate_result: enum[pass, warn, blocked] | optional
 ```
 
 ## 3. 会话交接字段
@@ -44,12 +62,29 @@ next_step_scope: string
 date: date_iso8601
 branch: string
 current_scope: string
-next_owner: string
-next_scope: string
-open_issues: array[string]
-next_action: string
-validation_mode: string
-smoke_required: boolean
+route: string
+base_branch: string
+Context:
+  read_versions: array[object(file, mtime)]
+  blockers: array[string | none]
+Slice:
+  bounded_implementation_target: string
+  mini_plan: array[string]
+Validation_Decision:
+  validation_mode: string
+  smoke_run: enum[required, not required for this slice, skipped by design]
+  rationale: string
+Governance:
+  changed_files: array[path]
+  evidence_refs: array[path | command:<shell command>]
+  adr_refs: array[path in docs/decisions | none]
+  blocker_list: array[string | none]
+Handoff:
+  next_owner: string
+  next_scope: string
+  open_issues: array[string | none]
+  next_hour_task: string
+  next_action: string
 ```
 
 ## 4. markdown 工件约定
@@ -61,7 +96,9 @@ smoke_required: boolean
   - `branch`
   - `current_scope`
   - `route`
+  - `base_branch`
 - 必填 section：
+  - `Context`
   - `Slice`
   - `Validation Decision`
   - `Handoff`
@@ -77,6 +114,7 @@ smoke_required: boolean
   - `Delivered Surface`
   - `Acceptance`
   - `Outcome`
+  - `Governance`
   - `Handoff`
 
 ### milestone_state
@@ -88,8 +126,23 @@ smoke_required: boolean
   - `next_owner`
   - `progress_pct`
   - `evidence_ready`
+  - `blockers`
+  - `dependencies`
   - `decision_ref`
-- 必填 section：
+  - `eta_hours`
+  - `notes`
+  - `changed_files`
+  - `evidence_refs`
+  - `adr_refs`
   - `evidence`
   - `handoff`
 
+## 5. 三点校验定义（Phase 2 Closeout）
+
+- `changed_files`：本次交付实际变更或明确受影响的文件路径，必须存在于仓库中。
+- `evidence_refs`：测试命令、验证报告、run artifact 的可追溯引用。
+  - 文件路径必须存在。
+  - 命令引用统一使用 `command:<shell command>` 形式。
+- `adr_refs`：与本次交付相关的 ADR 路径。
+  - 若当前无新增 ADR 但需要显式说明，可写 `none`。
+  - 非 `none` 值必须落在 `docs/decisions/` 下。
