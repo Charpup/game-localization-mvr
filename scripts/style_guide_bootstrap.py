@@ -117,6 +117,9 @@ def _safe_list(q: Dict[str, Any], key: str) -> List[str]:
 
 def build_style_profile(q: Dict[str, Any]) -> Dict[str, Any]:
     target_locale = _qv(q, ["project_context.target_language", "project_context.target"], "ru-RU")
+    project_id = _qv(q, ["project_context.project_code", "project_context.project_id"], "") or "game_localization_project"
+    profile_version = "1.2"
+    style_guide_id = f"{project_id}-{target_locale}-style-v{profile_version}"
     preferred_terms_raw = _safe_list(q, "terminology_policy.preferred_terms")
     preferred = []
     for row in preferred_terms_raw:
@@ -126,13 +129,13 @@ def build_style_profile(q: Dict[str, Any]) -> Dict[str, Any]:
                 preferred.append({"term_zh": zh, "term_ru": ru, "targets": {target_locale: ru}})
 
     return {
-        "version": "1.1",
+        "version": profile_version,
         "generated_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z") or datetime.now().isoformat(),
         "project": {
             "source_language": _qv(q, ["project_context.source_language", "project_context.source"], "zh-CN"),
             "target_language": target_locale,
             "target_locale": target_locale,
-            "project_id": _qv(q, ["project_context.project_code", "project_context.project_id"], ""),
+            "project_id": project_id,
             "franchise": _qv(q, ["project_context.ip_name", "project_context.franchise"], ""),
             "title_zh": _qv(q, ["project_context.official_title_(zh)", "project_context.title_zh"], ""),
             "title_ru": _qv(q, ["project_context.official_title_(ru)", "project_context.title_ru"], ""),
@@ -199,6 +202,33 @@ def build_style_profile(q: Dict[str, Any]) -> Dict[str, Any]:
             "source_fields": ["module_tag", "max_length_target"],
             "placeholder_fields": ["source_zh", "tokenized_zh"],
         },
+        "style_governance": {
+            "style_guide_id": style_guide_id,
+            "owner": "Codex",
+            "status": "approved",
+            "approval_ref": "docs/decisions/ADR-0002-skill-governance-framework.md",
+            "adr_refs": [
+                "docs/decisions/ADR-0001-project-continuity-framework.md",
+                "docs/decisions/ADR-0002-skill-governance-framework.md",
+            ],
+            "generated_from_script": "scripts/style_guide_bootstrap.py",
+            "source_questionnaire": "workflow/style_guide_questionnaire.md",
+            "supersedes": "none",
+            "deprecated_by": "none",
+            "entry_audit": {
+                "loadable": True,
+                "approved": True,
+                "deprecated": False,
+            },
+            "lineage": {
+                "canonical_profile": "data/style_profile.yaml",
+                "generated_guide": "workflow/style_guide.generated.md",
+                "mirror_guides": [
+                    "workflow/style_guide.md",
+                    ".agent/workflows/style-guide.md",
+                ],
+            },
+        },
     }
 
 
@@ -213,9 +243,15 @@ def render_style_guide(profile: Dict[str, Any]) -> str:
 
     preferred = terms.get("preferred_terms", [])
     banned = terms.get("forbidden_terms", [])
+    governance = profile.get("style_governance", {})
     lines = [
         "# Project Style Guide (Generated)",
         "",
+        f"- Style guide ID: {governance.get('style_guide_id', 'unknown')}",
+        f"- Style contract version: {profile.get('version', 'unknown')}",
+        f"- Governance status: {governance.get('status', 'unknown')}",
+        f"- Owner: {governance.get('owner', 'unknown')}",
+        f"- Approval ref: {governance.get('approval_ref', 'none')}",
         f"- Source: {proj.get('source_language', 'zh-CN')} -> {proj.get('target_language', 'ru-RU')}",
         f"- Project: {proj.get('franchise', '')} / {proj.get('title_zh', '')} / {proj.get('title_ru', '')}",
         "",
@@ -333,6 +369,7 @@ def validate_profile(profile: Dict[str, Any]) -> List[str]:
     project = profile.get("project", {})
     ui = profile.get("ui", {})
     terms = profile.get("terminology", {})
+    governance = profile.get("style_governance", {})
     if not isinstance(project, dict):
         issues.append("project section invalid")
     else:
@@ -344,6 +381,15 @@ def validate_profile(profile: Dict[str, Any]) -> List[str]:
         issues.append("Missing ui.length_constraints")
     if not isinstance(terms, dict):
         issues.append("Missing terminology section")
+    if not isinstance(governance, dict):
+        issues.append("Missing style_governance section")
+    else:
+        if not governance.get("style_guide_id"):
+            issues.append("Missing style_governance.style_guide_id")
+        if not governance.get("status"):
+            issues.append("Missing style_governance.status")
+        if not governance.get("entry_audit"):
+            issues.append("Missing style_governance.entry_audit")
     return issues
 
 

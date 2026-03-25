@@ -18,6 +18,7 @@ STYLE_AGENT_PATH = Path(__file__).parent.parent / ".agent" / "workflows" / "styl
 STYLE_WORKFLOW_PATH = Path(__file__).parent.parent / "workflow" / "style_guide.md"
 GENERATED_PATH = Path(__file__).parent.parent / "workflow" / "style_guide.generated.md"
 STYLE_PROFILE_PATH = Path(__file__).parent.parent / "data" / "style_profile.yaml"
+STYLE_GOVERNANCE_CONTRACT_PATH = Path(__file__).parent.parent / "workflow" / "style_governance_contract.yaml"
 
 STYLE_PROFILE_CANDIDATES = [
     Path(__file__).parent.parent / "data" / "style_profile.yaml",
@@ -40,6 +41,15 @@ REQUIRED_PROFILE_FIELDS = {
     "ui.length_constraints.dialogue_max_chars": "STYLE_SYNC_E110",
     "ui.length_constraints.max_expansion_pct": "STYLE_SYNC_E111",
     "segmentation.backend_chain": "STYLE_SYNC_E112",
+}
+
+STYLE_GOVERNANCE_DEFAULT_CONTRACT = {
+    "governance": {
+        "required_fields": [],
+        "status_enum": ["draft", "approved", "deprecated"],
+        "approval_ref_prefixes": ["docs/decisions/", "docs/project_lifecycle/"],
+        "none_values": ["none", ""],
+    }
 }
 
 
@@ -80,6 +90,19 @@ def get_nested(data: dict, dotted_key: str):
             return None
         current = current.get(part)
     return current
+
+
+def load_style_governance_contract() -> dict:
+    if yaml is None or not STYLE_GOVERNANCE_CONTRACT_PATH.exists():
+        return STYLE_GOVERNANCE_DEFAULT_CONTRACT
+    try:
+        with open(STYLE_GOVERNANCE_CONTRACT_PATH, "r", encoding="utf-8") as f:
+            loaded = yaml.safe_load(f) or {}
+    except Exception:
+        return STYLE_GOVERNANCE_DEFAULT_CONTRACT
+    if not isinstance(loaded, dict):
+        return STYLE_GOVERNANCE_DEFAULT_CONTRACT
+    return loaded
 
 
 def missing_sections(content: str) -> list:
@@ -139,6 +162,68 @@ def build_gate_payload(
     }
 
 
+def validate_style_governance(profile: dict, contract: dict) -> List[str]:
+    governance_contract = (contract.get("governance", {}) or {})
+    required_fields = governance_contract.get("required_fields", []) or []
+    status_enum = set(governance_contract.get("status_enum", []) or [])
+    approval_ref_prefixes = governance_contract.get("approval_ref_prefixes", []) or []
+    none_values = set(governance_contract.get("none_values", []) or [])
+    issues: List[str] = []
+
+    for dotted_key in required_fields:
+        value = get_nested(profile, dotted_key)
+        if value in (None, "", []):
+            issues.append(f"STYLE_SYNC_E140: missing {dotted_key}")
+
+    governance = profile.get("style_governance", {}) if isinstance(profile, dict) else {}
+    if not isinstance(governance, dict):
+        return issues + ["STYLE_SYNC_E141: style_governance must be a dict"]
+
+    status = str(governance.get("status", "")).strip()
+    if status_enum and status not in status_enum:
+        issues.append(f"STYLE_SYNC_E142: invalid style_governance.status -> {status}")
+
+    entry_audit = governance.get("entry_audit", {})
+    if not isinstance(entry_audit, dict):
+        issues.append("STYLE_SYNC_E143: style_governance.entry_audit must be a dict")
+        return issues
+
+    loadable = entry_audit.get("loadable")
+    approved = entry_audit.get("approved")
+    deprecated = entry_audit.get("deprecated")
+    if status == "approved" and not (loadable is True and approved is True and deprecated is False):
+        issues.append("STYLE_SYNC_E144: approved status requires loadable=true, approved=true, deprecated=false")
+    if status == "draft" and approved is True:
+        issues.append("STYLE_SYNC_E145: draft status may not set approved=true")
+    if status == "deprecated" and not (deprecated is True and loadable is False):
+        issues.append("STYLE_SYNC_E146: deprecated status requires deprecated=true and loadable=false")
+
+    approval_ref = str(governance.get("approval_ref", "")).strip()
+    if status != "draft" and approval_ref_prefixes and not any(approval_ref.startswith(prefix) for prefix in approval_ref_prefixes):
+        issues.append(f"STYLE_SYNC_E147: approval_ref must start with one of {approval_ref_prefixes}")
+
+    adr_refs = governance.get("adr_refs", [])
+    if not isinstance(adr_refs, list):
+        issues.append("STYLE_SYNC_E148: style_governance.adr_refs must be a list")
+    else:
+        for ref in adr_refs:
+            ref_text = str(ref).strip()
+            if not ref_text or ref_text in none_values:
+                continue
+            if not (Path(__file__).parent.parent / ref_text).exists():
+                issues.append(f"STYLE_SYNC_E149: adr_ref missing -> {ref_text}")
+
+    lineage = governance.get("lineage", {})
+    if not isinstance(lineage, dict):
+        issues.append("STYLE_SYNC_E150: style_governance.lineage must be a dict")
+        return issues
+    mirror_guides = lineage.get("mirror_guides", [])
+    if mirror_guides is not None and not isinstance(mirror_guides, list):
+        issues.append("STYLE_SYNC_E151: style_governance.lineage.mirror_guides must be a list")
+
+    return issues
+
+
 def validate_style_profile(path: Path) -> Tuple[bool, List[str], str]:
     if not path.exists():
         return False, [f"{STYLE_SYNC_MISSING_PROFILE}: style profile missing: {path}"], STYLE_SYNC_VERSION
@@ -157,6 +242,7 @@ def validate_style_profile(path: Path) -> Tuple[bool, List[str], str]:
 
     version = str(profile.get("version", STYLE_SYNC_VERSION))
     issues: List[str] = []
+    contract = load_style_governance_contract()
 
     if not profile.get("version"):
         issues.append("STYLE_SYNC_E120: missing version")
@@ -203,6 +289,8 @@ def validate_style_profile(path: Path) -> Tuple[bool, List[str], str]:
         t = str(term).strip()
         if t in preferred_map:
             issues.append(f"STYLE_SYNC_E121: forbidden term conflict -> {t} appears in preferred_terms")
+
+    issues.extend(validate_style_governance(profile, contract))
 
     return (len(issues) == 0), issues, version
 

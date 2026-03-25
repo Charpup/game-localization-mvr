@@ -2,7 +2,7 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `milestone_I_prepare` on branch `codex/milestone-i-prepare`.
+> The current active scope is `milestone_I_contract_package` on branch `codex/milestone-i-contract-package`.
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
@@ -242,7 +242,7 @@ Start Phase 3 as a planning-only milestone-I slice on clean `main`, freeze the b
 - [complete] Read PLC/TriadDev post-Phase-2 state and verify Phase 3 remains planning-only.
 - [complete] Record a bounded milestone-I planning note plus fresh session/run artifacts.
 - [complete] Run focused PLC validation against the new planning records.
-- [pending] Push `codex/milestone-i-prepare` and open a planning-only PR on top of `main`.
+- [complete] Push `codex/milestone-i-prepare`, merge the planning-only PR on top of `main`, and reopen Phase 3 from clean trunk.
 
 ### Acceptance
 - `task_plan.md`, `progress.md`, `docs/project_lifecycle/roadmap_index.md`, `.triadev/state.json`, and `.triadev/workflow.json` all point to `milestone_I_prepare`.
@@ -264,6 +264,43 @@ Start Phase 3 as a planning-only milestone-I slice on clean `main`, freeze the b
   - `python scripts/plc_validate_records.py --artifact-type session_start --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_prepare.md`
   - `python scripts/plc_validate_records.py --artifact-type session_end --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_prepare.md`
   - `python scripts/plc_validate_records.py --artifact-type milestone_state --path docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md`
+
+## 2026-03-25 Milestone I Contract Package
+
+### Goal
+Land the first real Phase 3 implementation package by versioning style-governance metadata, adding entry-audit validation, and keeping the change bounded to style-governance assets only.
+
+### Route
+- `plc`: record the merge of `milestone_I_prepare`, then capture this implementation package as a new milestone-I slice on clean `main`.
+- `triadev`: stay on the Extended route for a bounded governance implementation package; keep Phase 3 runtime enforcement and broader J/K/L work out of scope.
+
+### Scope
+- Work only on style-governance assets and validators:
+  - add `workflow/style_governance_contract.yaml`
+  - add governance metadata and lineage to `data/style_profile.yaml`
+  - teach `scripts/style_guide_bootstrap.py` to emit the governance header
+  - teach `scripts/style_sync_check.py` to validate approved/loadable/deprecated entry-audit semantics
+  - update synced guide artifacts and add focused governance tests
+- Do not modify translation runtime behavior.
+- Do not start human-review intake or lifecycle retirement features beyond the style-governance header.
+
+### Acceptance
+- `style_profile.yaml` carries a machine-checkable style-governance header and lineage block.
+- `style_guide_bootstrap.py` emits the same governance header for newly generated profiles and guides.
+- `style_sync_check.py` fails closed for invalid style-governance status or entry-audit mismatches.
+- focused style-governance regression is green.
+
+### Current Result
+- The first milestone-I implementation package is complete:
+  - `workflow/style_governance_contract.yaml` defines the style-governance contract
+  - `data/style_profile.yaml` now carries versioned governance metadata, ADR refs, and lineage
+  - `scripts/style_guide_bootstrap.py` now emits governance headers
+  - `scripts/style_sync_check.py` now validates approved/loadable/deprecated entry-audit semantics
+  - synced style guide assets now expose the version/governance header
+- Focused acceptance is green:
+  - `python -m pytest tests/test_style_governance_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py -q`
+  - `python scripts/style_sync_check.py`
+- This package is an early, user-directed Phase 3 governance slice on clean `main`; broader runtime enforcement remains deferred.
 - `triadev`: stay on the Extended route, but treat this slice as governance substrate hardening rather than runtime feature work.
 
 ### Scope

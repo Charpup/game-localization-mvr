@@ -124,6 +124,16 @@
 - Focused Phase 3 planning acceptance is green:
   - `python -m pytest tests/test_plc_docs_contract.py -q`
   - record-level validation of the new run manifest, session start, session end, and milestone state under `scripts/plc_validate_records.py`
+- Merged PR #14 into `main` and reopened Phase 3 from clean trunk on `codex/milestone-i-contract-package`.
+- Completed the first milestone-I implementation package:
+  - added `workflow/style_governance_contract.yaml`
+  - added style-governance metadata and lineage to `data/style_profile.yaml`
+  - updated `scripts/style_guide_bootstrap.py` and `scripts/style_sync_check.py` to emit and validate the governance header
+  - synced the version/governance header into `workflow/style_guide.generated.md`, `workflow/style_guide.md`, and `.agent/workflows/style-guide.md`
+  - added `tests/test_style_governance_contract.py`
+- Focused milestone-I contract acceptance is green:
+  - `python -m pytest tests/test_style_governance_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py -q` -> `12 passed`
+  - `python scripts/style_sync_check.py` -> `pass`
 
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.

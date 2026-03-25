@@ -72,13 +72,13 @@
 
 ## E 后续接点（2026-03-25）
 
-- `current_scope`：`milestone_I_prepare`
-- `branch_state`：`phase 3 planning slice active on codex/milestone-i-prepare`
+- `current_scope`：`milestone_I_contract_package`
+- `branch_state`：`phase 3 first implementation slice active on codex/milestone-i-contract-package`
 - `evidence_ready`：`true`
 - `next_owner`：`Codex`
-- `recommended_next_scope`：`milestone_I_prepare`
+- `recommended_next_scope`：`milestone_I_contract_package`
 - `parallel_planning_sidecar`：`milestone_F_execute_followup`
-- `phase_2_status`：`M/N/O/P closeout merged to main; Phase 3 is now planning-active but runtime implementation remains gated until H completes`
+- `phase_2_status`：`M/N/O/P closeout merged to main; Phase 3 has entered a bounded, governance-only milestone-I implementation slice while broader runtime enforcement remains deferred`
 
 ## E 后四阶段重写（保留 F → S 映射）
 
