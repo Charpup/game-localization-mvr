@@ -189,7 +189,9 @@
   - `python scripts/llm_ping.py` failed because `LLM_BASE_URL` / `LLM_API_KEY` are missing in the current shell
   - merge acceptance therefore uses the required representative smoke gate via deterministic orchestration coverage in `tests/test_phase1_quality_runtime_contract.py`
 - Current branch status:
-  - `codex/phase3-language-governance-batch` is implementation-complete and moving into PLC/TriadDev closeout plus one PR to `main`
+  - `codex/phase3-language-governance-batch` is implementation-complete
+  - PR #17 is open: `feat(phase3): land language governance batch`
+  - the next step is review absorption and merge, not more Phase 3 implementation
 
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.

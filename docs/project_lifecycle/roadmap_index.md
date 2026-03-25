@@ -73,10 +73,10 @@
 ## E 后续接点（2026-03-25）
 
 - `current_scope`：`phase3_language_governance_batch`
-- `branch_state`：`codex/phase3-language-governance-batch is the active Phase 3 implementation branch from fresh main and is now in closeout / PR packaging`
+- `branch_state`：`codex/phase3-language-governance-batch is the active Phase 3 implementation branch from fresh main and PR #17 is now open for review`
 - `evidence_ready`：`true`
 - `next_owner`：`Codex`
-- `recommended_next_scope`：`phase3_language_governance_batch_review`
+- `recommended_next_scope`：`phase3_language_governance_batch_merge`
 - `parallel_planning_sidecar`：`phase4_operator_control_plane_planning`
 - `phase_2_status`：`M/N/O/P closeout merged to main; PR #16 closed Phase 1 on March 25, 2026, so the documented H gate is now satisfied and Phase 3 becomes the next main implementation phase`
 - `phase_3_status`：`I/J/K/L batch implementation is complete on branch; focused acceptance is green; live smoke is environment-blocked because the current shell lacks LLM credentials, so representative smoke coverage is satisfied with deterministic orchestration tests`

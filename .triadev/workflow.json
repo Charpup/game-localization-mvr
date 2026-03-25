@@ -159,7 +159,8 @@
     "Phase 1 large-batch runtime closure is now merged on main as PR #16 / commit 3a84f55.",
     "Broader Phase 3 no longer needs to stay deferred, because H is now merged and the milestone-I bridge package is already on main.",
     "Current execution focus is the single Phase 3 language-governance batch on codex/phase3-language-governance-batch.",
-    "Phase 3 implementation is complete on branch; the current shell cannot run live smoke because LLM_BASE_URL and LLM_API_KEY are missing, so representative smoke coverage is satisfied with deterministic orchestration tests while the branch moves into PR packaging."
+    "Phase 3 implementation is complete on branch; the current shell cannot run live smoke because LLM_BASE_URL and LLM_API_KEY are missing, so representative smoke coverage is satisfied with deterministic orchestration tests.",
+    "PR #17 is now open for the single Phase 3 batch and the next action is review absorption plus merge."
   ],
   "post_e_roadmap": {
     "status": "phase-3-large-batch-active",
@@ -346,7 +347,7 @@
       "acceptance_command": "python -m pytest tests/test_phase3_governance_helpers.py tests/test_phase3_runtime_governance.py tests/test_phase3_language_governance_contract.py tests/test_translate_refresh_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py tests/test_plc_docs_contract.py -q && python scripts/style_sync_check.py && python scripts/plc_validate_records.py --preset representative --preset templates && python scripts/llm_ping.py",
       "acceptance_summary": "44 passed; style_sync_check pass; PLC validator presets pass; live smoke feasibility check is environment-blocked because the current shell lacks LLM_BASE_URL and LLM_API_KEY, so the required representative smoke gate is satisfied with deterministic orchestration coverage in tests/test_phase1_quality_runtime_contract.py."
     },
-    "next_action": "record phase-boundary evidence, push codex/phase3-language-governance-batch, and open the single Phase 3 PR to main"
+    "next_action": "absorb review feedback on PR #17 and merge the single Phase 3 batch to main"
   },
   "phase3_readiness": {
     "status": "active",

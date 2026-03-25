@@ -110,9 +110,8 @@ Deliver the full `I + J + K + L` Phase 3 batch on one branch and one PR by turni
   - `python scripts/llm_ping.py` failed because `LLM_BASE_URL` and `LLM_API_KEY` are not present
   - the required representative smoke gate is therefore satisfied by pytest-backed orchestration coverage in `tests/test_phase1_quality_runtime_contract.py`
 - Remaining work on this branch is PR packaging only:
-  - sync the phase-boundary PLC/TriadDev records
-  - push the branch
-  - open one Phase 3 PR to `main`
+  - absorb review feedback on PR #17
+  - merge the single Phase 3 PR to `main`
 
 ## 2026-03-25 Phase 1 Large-Batch Runtime Closeout
 

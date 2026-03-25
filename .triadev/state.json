@@ -3,7 +3,7 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "phase3_language_governance_batch_ready_for_pr",
+  "status": "phase3_language_governance_batch_review",
   "branch": "codex/phase3-language-governance-batch",
   "change_id": "phase3-language-governance-batch-20260325",
   "authority_zone": "main_worktree/scripts",
