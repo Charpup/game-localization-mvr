@@ -1,0 +1,19 @@
+{
+  "manifest_version": "plc-phase3-planning-v1",
+  "run_id": "phase3_milestone_i_prepare",
+  "scope": "milestone_I_prepare",
+  "planning_mode": "planning-only",
+  "branch": "codex/milestone-i-prepare",
+  "objectives": [
+    "freeze the bounded style-governance planning surface",
+    "record canonical/generated/mirror asset roles",
+    "keep Phase 3 implementation closed until H completes"
+  ],
+  "source_refs": [
+    "task_plan.md",
+    "docs/project_lifecycle/roadmap_index.md",
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-25/phase3_milestone_i_prepare_note.md"
+  ]
+}

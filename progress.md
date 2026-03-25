@@ -111,6 +111,19 @@
   - `python -m pytest tests/test_plc_docs_contract.py -q` -> `9 passed`
   - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 7 PLC governance artifact(s).`
 - TriadDev control plane is now aligned to `phase3_planning_ready`; Phase 3 remains planning-only, not implementation-started.
+- Confirmed PR #13 is merged and moved the active branch to `codex/milestone-i-prepare` from clean `main`.
+- Started `milestone_I_prepare` as a planning-only Phase 3 slice:
+  - active target is a bounded style-governance contract package
+  - runtime implementation remains gated until `H` completes
+- Recorded a fresh set of Phase 3 PLC artifacts:
+  - `phase3_milestone_i_prepare_note.md`
+  - `run_manifest_phase3_milestone_i_prepare.json`
+  - `session_start_20260325_phase3_milestone_i_prepare.md`
+  - `session_end_20260325_phase3_milestone_i_prepare.md`
+  - `milestone_state_I.md`
+- Focused Phase 3 planning acceptance is green:
+  - `python -m pytest tests/test_plc_docs_contract.py -q`
+  - record-level validation of the new run manifest, session start, session end, and milestone state under `scripts/plc_validate_records.py`
 
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.
