@@ -2,18 +2,18 @@
 - status: in_progress
 - owner: Codex
 - next_owner: Codex
-- progress_pct: 15
+- progress_pct: 45
 - evidence_ready: true
 - blockers:
-  - `runtime implementation remains gated until H completes`
+  - `broader runtime enforcement remains deferred`
 - dependencies:
   - H
 - decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
 - eta_hours: 14
 - notes: >
-  Phase 3 has started as a planning-only milestone-I slice on clean main. This step freezes the
-  bounded style-governance preparation surface and explicitly keeps implementation closed until H
-  completes and the project promotes Phase 3 out of planning-only state.
+  Phase 3 has advanced from planning-only into the first bounded milestone-I implementation package.
+  This package adds the style-governance contract, version header, lineage metadata, and entry-audit
+  validation while keeping broader runtime enforcement out of scope.
 - changed_files:
   - task_plan.md
   - progress.md
@@ -27,6 +27,21 @@
   - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_prepare.md
   - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_prepare.md
   - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
+  - workflow/style_governance_contract.yaml
+  - data/style_profile.yaml
+  - workflow/style_guide.generated.md
+  - workflow/style_guide.md
+  - .agent/workflows/style-guide.md
+  - scripts/style_guide_bootstrap.py
+  - scripts/style_sync_check.py
+  - tests/test_style_governance_contract.py
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/phase3_milestone_i_contract_package_note.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase3_milestone_i_contract_package.json
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_contract_package.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_contract_package.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_contract_package.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_contract_package.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_contract_package.json
   - docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md
 - evidence_refs:
   - command: python -m pytest tests/test_plc_docs_contract.py -q
@@ -36,15 +51,19 @@
   - command: python scripts/plc_validate_records.py --artifact-type milestone_state --path docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md
   - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
   - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_prepare.md
+  - command: python -m pytest tests/test_style_governance_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py -q
+  - command: python scripts/style_sync_check.py
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_contract_package.json
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_contract_package.md
 - adr_refs:
   - docs/decisions/ADR-0001-project-continuity-framework.md
   - docs/decisions/ADR-0002-skill-governance-framework.md
 - evidence:
-  - run_id: phase3_milestone_i_prepare
-  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
-  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_prepare.md
-  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_prepare.md
+  - run_id: phase3_milestone_i_contract_package
+  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_contract_package.json
+  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_contract_package.md
+  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_contract_package.md
 - handoff:
   - next_owner: Codex
-  - next_scope: milestone_I_contract_package
-  - next_action: draft the style-governance contract package without changing runtime consumers
+  - next_scope: milestone_I_review_merge
+  - next_action: push the milestone-I contract package branch and open the implementation PR

@@ -4,6 +4,11 @@ description: 项目级风格指南（由 `style_guide_bootstrap.py` 生成）
 
 # Project Style Guide (Generated)
 
+- Style guide ID: naruto_localization_demo-ru-RU-style-v1.2
+- Style contract version: 1.2
+- Governance status: approved
+- Owner: Codex
+- Approval ref: docs/decisions/ADR-0002-skill-governance-framework.md
 - Source: zh-CN -> ru-RU
 - Project: naruto_localization_demo / 火影忍者 / Наруто
 

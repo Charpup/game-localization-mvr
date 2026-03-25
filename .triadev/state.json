@@ -3,9 +3,9 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "milestone_i_prepare",
-  "branch": "codex/milestone-i-prepare",
-  "change_id": "phase3-milestone-i-prepare-20260325",
+  "status": "milestone_i_contract_package",
+  "branch": "codex/milestone-i-contract-package",
+  "change_id": "phase3-milestone-i-contract-package-20260325",
   "authority_zone": "main_worktree/scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
@@ -47,7 +47,7 @@
     "reason": "Batch 10 remains GO because it closes the roadmap with a governance decision for src/scripts without changing keep-chain, M4, authority, retained repair authority, retained validation baselines, packaging behavior, or optional Metrics semantics."
   },
   "roadmap_focus": {
-    "post_e_main_scope": "milestone_I_prepare",
+    "post_e_main_scope": "milestone_I_contract_package",
     "post_e_sidecar_scope": "milestone_F_execute_followup",
     "planning_mode": "four-phase roadmap preserving milestone letters F-S"
   },

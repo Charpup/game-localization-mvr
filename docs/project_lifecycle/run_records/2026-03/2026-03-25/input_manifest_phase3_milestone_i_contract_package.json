@@ -1,0 +1,18 @@
+{
+  "manifest_version": "plc-phase3-style-governance-v1",
+  "run_id": "phase3_milestone_i_contract_package",
+  "scope": "milestone_I_contract_package",
+  "branch": "codex/milestone-i-contract-package",
+  "objectives": [
+    "add style governance contract metadata",
+    "validate approved/loadable/deprecated entry audit semantics",
+    "keep the package bounded to style-governance assets only"
+  ],
+  "source_refs": [
+    "task_plan.md",
+    "docs/project_lifecycle/roadmap_index.md",
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-25/phase3_milestone_i_contract_package_note.md"
+  ]
+}

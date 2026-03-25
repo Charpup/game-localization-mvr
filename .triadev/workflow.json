@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "phase3-milestone-i-prepare-20260325",
+  "change_id": "phase3-milestone-i-contract-package-20260325",
   "route": "brownfield",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -155,11 +155,12 @@
     "Post-E roadmap is now interpreted as four execution phases while preserving milestone letters F-S.",
     "Phase 2 first package is governance substrate hardening for run/session/milestone contracts and validation.",
     "Phase 2 closeout extends the substrate with machine-checkable changed_files/evidence_refs/adr_refs and leaves Phase 3 in planning-ready only.",
-    "Phase 3 now enters milestone_I_prepare as a planning-only slice centered on style-governance contract definition; runtime implementation remains gated until H completes."
+    "Phase 3 now enters milestone_I_prepare as a planning-only slice centered on style-governance contract definition; runtime implementation remains gated until H completes.",
+    "A bounded user-directed milestone-I implementation package is now active on clean main for style-governance metadata and entry-audit validation only."
   ],
   "post_e_roadmap": {
-    "status": "phase-3-planning-active",
-    "recommended_next_scope": "milestone_I_prepare",
+    "status": "phase-3-bounded-implementation-active",
+    "recommended_next_scope": "milestone_I_contract_package",
     "parallel_planning_sidecar": "milestone_F_execute_followup",
     "execution_preference": [
       "phase-1-quality-closure",
@@ -272,21 +273,29 @@
   },
   "active_phase3_slice": {
     "status": "completed",
-    "scope": "milestone I planning-only style-governance package definition",
-    "branch": "codex/milestone-i-prepare",
+    "scope": "milestone I style-governance contract package",
+    "branch": "codex/milestone-i-contract-package",
     "bounded_surfaces": [
+      "workflow/style_governance_contract.yaml",
+      "data/style_profile.yaml",
+      "workflow/style_guide.generated.md",
+      "workflow/style_guide.md",
+      ".agent/workflows/style-guide.md",
+      "scripts/style_guide_bootstrap.py",
+      "scripts/style_sync_check.py",
+      "tests/test_style_governance_contract.py",
       "task_plan.md",
       "progress.md",
       ".triadev/state.json",
       ".triadev/workflow.json",
       "docs/project_lifecycle/roadmap_index.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/phase3_milestone_i_prepare_note.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase3_milestone_i_prepare.json",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_prepare.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_prepare.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_prepare.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_prepare.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/phase3_milestone_i_contract_package_note.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase3_milestone_i_contract_package.json",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_contract_package.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_contract_package.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_contract_package.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_contract_package.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_contract_package.json",
       "docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md"
     ],
     "mapped_milestones": [
@@ -294,22 +303,22 @@
     ],
     "explicit_non_goals": [
       "translation runtime changes",
-      "style-governance runtime enforcement",
-      "Phase 3 implementation start before H completes"
+      "human-review intake or feedback logging",
+      "full style-governance runtime enforcement across the translation chain"
     ],
     "validation_strategy": {
       "mode": "focused-governance-tests",
       "smoke_required": false,
-      "rationale": "This slice only changes PLC/TriadDev planning state and governance records for milestone I.",
+      "rationale": "This slice changes style-governance metadata, sync validation, and focused tests only; translation runtime orchestration is untouched.",
       "result": "passed",
-      "acceptance_command": "python -m pytest tests/test_plc_docs_contract.py -q && python scripts/plc_validate_records.py --artifact-type run_manifest --path docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json && python scripts/plc_validate_records.py --artifact-type session_start --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_prepare.md && python scripts/plc_validate_records.py --artifact-type session_end --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_prepare.md && python scripts/plc_validate_records.py --artifact-type milestone_state --path docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md",
-      "acceptance_summary": "milestone_I_prepare planning records validated; focused PLC docs regression remains green."
+      "acceptance_command": "python -m pytest tests/test_style_governance_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py -q && python scripts/style_sync_check.py",
+      "acceptance_summary": "12 passed; style_sync_check pass."
     },
-    "next_action": "push the milestone-I planning branch and open a planning-only PR on top of main"
+    "next_action": "push the milestone-I contract branch and open the first implementation PR on top of main"
   },
   "phase3_readiness": {
-    "status": "planning-active",
-    "implement_status": "not-started",
-    "rationale": "Phase 2 is merged and Phase 3 planning is active, but runtime implementation remains gated until H completes and a later implementation-start decision is recorded."
+    "status": "bounded-implementation-active",
+    "implement_status": "started",
+    "rationale": "A user-directed early milestone-I governance slice is active on clean main; broader runtime enforcement and later Phase 3 milestones remain gated and out of scope for this package."
   }
 }
