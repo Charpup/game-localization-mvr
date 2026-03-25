@@ -22,7 +22,16 @@ def _make_args(tmp_path: Path) -> Namespace:
 
     input_csv.write_text("string_id,source_zh\n1,你好\n", encoding="utf-8")
     style.write_text("# style\n", encoding="utf-8")
-    style_profile.write_text("{}", encoding="utf-8")
+    style_profile.write_text(
+        json.dumps(
+            {
+                "project": {"source_language": "zh-CN", "target_language": "ru-RU"},
+                "ui": {"length_constraints": {"button_max_chars": 18, "dialogue_max_chars": 120}},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
     glossary.write_text("approved: []\n", encoding="utf-8")
     rubric.write_text("{}", encoding="utf-8")
     schema.write_text("patterns: []\npaired_tags: []\n", encoding="utf-8")
@@ -127,12 +136,40 @@ def test_run_pipeline_repairs_hard_qa_then_completes_with_warn_status(monkeypatc
     manifest = json.loads((Path(args.run_dir) / "run_manifest.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "warn"
     assert manifest["overall_status"] == "warn"
+    assert manifest["artifacts"]["lifecycle_registry"] == "workflow/lifecycle_registry.yaml"
     assert manifest["repair_cycles"]["hard"]["status"] == "completed"
     assert manifest["repair_cycles"]["soft"]["status"] == "skipped"
     assert manifest["delivery_decision"]["selected_candidate_stage"] == "repair_hard"
     assert manifest["review_handoff"]["pending_count"] == 0
+    assert manifest["runtime_governance"]["passed"] is True
     assert "Repair Hard" in [stage["name"] for stage in manifest["stages"]]
     assert "QA Hard Recheck" in [stage["name"] for stage in manifest["stages"]]
+    assert (Path(args.run_dir) / "smoke_review_tickets.jsonl").exists()
+    assert (Path(args.run_dir) / "smoke_review_tickets.csv").exists()
+    assert (Path(args.run_dir) / "smoke_review_feedback_log.jsonl").exists()
+    assert (Path(args.run_dir) / "smoke_language_governance_kpi.json").exists()
+    kpi_payload = json.loads((Path(args.run_dir) / "smoke_language_governance_kpi.json").read_text(encoding="utf-8"))
+    assert kpi_payload["scope"] == "smoke_pipeline"
+
+
+def test_run_pipeline_fails_closed_when_style_governance_gate_fails(monkeypatch, tmp_path):
+    args = _make_args(tmp_path)
+
+    monkeypatch.setattr(
+        smoke_pipeline,
+        "validate_style_governance_runtime",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(smoke_pipeline.GovernanceError("gate failed")),
+    )
+
+    exit_code = smoke_pipeline.run_pipeline(args)
+    assert exit_code == 1
+
+    manifest = json.loads((Path(args.run_dir) / "run_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "failed"
+    assert manifest["overall_status"] == "failed"
+    assert manifest["status_reason"] == "style_governance_gate_failed"
+    assert manifest["gate_summary"]["status"] == "failed"
+    assert manifest["gate_summary"]["failed_gates"] == ["style_governance"]
 
 
 def test_run_pipeline_marks_failed_status_when_input_is_missing(tmp_path):

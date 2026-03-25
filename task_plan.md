@@ -2,7 +2,7 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `phase1_large_batch_closeout` on branch `codex/phase1-quality-runtime-closeout`.
+> The current active scope is `phase3_language_governance_batch` on branch `codex/phase3-language-governance-batch`.
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
@@ -11,6 +11,108 @@ Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layer
 - Use `main_worktree` only.
 - Record `run_id`, manifest path, issue report path, verify report path, and any row/placeholder/tag mismatches.
 - Focus on `string_id=305833`, translate row counts, and `row_checks`.
+
+## 2026-03-25 Phase 3 Large-Batch Language Governance Plan
+
+### Goal
+Start the next phase-sized batch after Phase 1 merge by delivering the remaining `I + J + K + L` language-governance scope as one mainline PR from fresh `main`.
+
+### Value Gate
+- decision: `GO`
+- total_score: `25/30`
+- confidence: `High`
+- decision_object: `Now that H is merged on main, move from the merged style-governance bridge into the full Phase 3 batch so runtime style governance, human review intake, lifecycle retirement, and KPI reporting become operational within the next development cycle.`
+
+### Route
+- `plc`: record Phase 1 as merged history, move the active scope to Phase 3 planning, and keep the next branch boundary explicit.
+- `triadev`: stay on the Extended route; Phase 3 is now eligible for implementation because `H` is merged, but it should still ship as one phase-sized PR instead of milestone-by-milestone PRs.
+
+### Scope
+- Open one fresh-main branch for the full Phase 3 batch:
+  - `I`: wire style-governance contract loading and entry-audit checks into real runtime consumers
+  - `J`: turn review queues into persistent human-review ticket and feedback-log artifacts
+  - `K`: add lifecycle / supersede / deprecate state for style, term, and policy assets
+  - `L`: add KPI/report schemas for quality, intervention rate, rollback rate, and trend output
+- Keep Phase 4 explicitly out of scope for this branch.
+- Do not reopen Phase 1 runtime work except for regression fallout discovered during Phase 3 integration.
+
+### Planned Package Order
+- `I-runtime-consumers`
+  - teach `translate_llm.py`, `soft_qa_llm.py`, `translate_refresh.py`, and `run_smoke_pipeline.py` to consume `style_governance` entry-audit semantics, not just raw style-profile presence
+- `J-review-ingestion`
+  - define canonical human-review ticket and feedback-log schemas plus storage paths
+  - promote existing review queue outputs into durable review/task artifacts
+- `K-lifecycle-state`
+  - add supersede/deprecate semantics for style, terminology, and policy assets
+  - make loaders fail closed on deprecated or invalid lifecycle states
+- `L-kpi-reporting`
+  - derive operator-ready KPI/report artifacts from metrics, repair outcomes, and review queues
+
+### Acceptance
+- focused governance + runtime consumer tests must be green
+- `python scripts/style_sync_check.py` must stay green
+- one representative smoke path is required to prove Phase 3 metadata does not break runtime orchestration
+- the Phase 3 batch must open as one PR from fresh `main`
+
+### Current Decision
+- Phase 1 is complete and merged into `main` as `3a84f55`.
+- Phase 2 is complete and merged.
+- the milestone-I style-governance bridge is already on `main`, so the next highest-value move is the full Phase 3 batch rather than Phase 4
+- implementation has started on `codex/phase3-language-governance-batch`; the remaining work is to land the single Phase 3 batch and validate it as one PR
+
+## 2026-03-25 Phase 3 Large-Batch Language Governance Implementation
+
+### Goal
+Deliver the full `I + J + K + L` Phase 3 batch on one branch and one PR by turning the merged style-governance bridge into runtime governance, review-ticket/feedback artifacts, lifecycle enforcement, and KPI outputs.
+
+### Current Branch
+- `codex/phase3-language-governance-batch`
+
+### Frozen Shared Surfaces
+- contracts:
+  - `workflow/review_ticket_contract.yaml`
+  - `workflow/feedback_log_contract.yaml`
+  - `workflow/lifecycle_contract.yaml`
+  - `workflow/kpi_report_contract.yaml`
+  - `workflow/lifecycle_registry.yaml`
+- helpers:
+  - `scripts/style_governance_runtime.py`
+  - `scripts/review_governance.py`
+  - `scripts/review_feedback_ingest.py`
+
+### Active Package Order
+- `I-runtime-consumers`
+  - fail-closed runtime style governance in `translate_llm.py` and `soft_qa_llm.py`
+- `J-review-ingestion`
+  - review ticket artifacts and feedback-log importer / placeholder
+- `K-lifecycle-state`
+  - lifecycle registry enforcement for runtime-governed assets
+- `L-kpi-reporting`
+  - KPI/report artifacts from manifests, review queues, and metrics
+
+### Validation Target
+- focused Phase 3 helper/runtime/executor tests
+- `python scripts/style_sync_check.py`
+- one representative smoke-facing contract path
+
+### Current Result
+- Phase 3 large-batch implementation is functionally complete on `codex/phase3-language-governance-batch`:
+  - `translate_llm.py` and `soft_qa_llm.py` now fail closed on repo-managed style-governance runtime violations
+  - `translate_refresh.py` now emits governed review tickets, feedback-log placeholders, lifecycle-aware KPI artifacts, and unified manual-review handoff states
+  - `run_smoke_pipeline.py` now emits the same review-ticket / feedback-log / KPI artifacts and consumes lifecycle-aware style-governance gates
+  - `review_feedback_ingest.py`, `review_governance.py`, `style_governance_runtime.py`, and `language_governance.py` now form the shared Phase 3 governance helper surface
+  - `workflow/review_ticket_contract.yaml`, `workflow/feedback_log_contract.yaml`, `workflow/lifecycle_contract.yaml`, `workflow/lifecycle_registry.yaml`, and `workflow/kpi_report_contract.yaml` now define the phase contract layer
+- Focused Phase 3 acceptance is green:
+  - `python -m pytest tests/test_phase3_governance_helpers.py tests/test_phase3_runtime_governance.py tests/test_phase3_language_governance_contract.py tests/test_translate_refresh_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py tests/test_plc_docs_contract.py -q` -> `44 passed`
+  - `python scripts/style_sync_check.py` -> `pass`
+  - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 11 PLC governance artifact(s).`
+- Live smoke was attempted but is currently blocked by shell environment:
+  - `python scripts/llm_ping.py` failed because `LLM_BASE_URL` and `LLM_API_KEY` are not present
+  - the required representative smoke gate is therefore satisfied by pytest-backed orchestration coverage in `tests/test_phase1_quality_runtime_contract.py`
+- Remaining work on this branch is PR packaging only:
+  - sync the phase-boundary PLC/TriadDev records
+  - push the branch
+  - open one Phase 3 PR to `main`
 
 ## 2026-03-25 Phase 1 Large-Batch Runtime Closeout
 
@@ -45,7 +147,7 @@ Finish the remaining `F + G + H` runtime closure as one phase-sized batch on fre
 - PLC boundary records must validate before the branch is pushed.
 
 ### Current Result
-- PR #15 is treated as a merged bridge slice only; Phase 1 is again the active main execution lane.
+- PR #15 is treated as a merged bridge slice only; Phase 1 runtime closure is complete and merged.
 - Runtime closure is now implemented in `scripts/run_smoke_pipeline.py`:
   - hard QA can repair, recheck, and block safely when the hard gate still fails
   - soft QA can route into repair, roll back to the last hard-safe candidate, and emit a review queue
@@ -57,9 +159,10 @@ Finish the remaining `F + G + H` runtime closure as one phase-sized batch on fre
   - `run_manifest_phase1_large_batch_closeout.json`
   - `session_start_20260325_phase1_large_batch_closeout.md`
   - `session_end_20260325_phase1_large_batch_closeout.md`
-  - `milestone_state_phase1_large_batch_closeout.md`
-- Remaining branch-boundary work:
-  - push one Phase 1 PR from fresh `main`
+  - `milestone_state_H.md`
+- Merge result:
+  - PR #16 merged into `main` as `3a84f55`
+  - Phase 1 is closed; the next active scope is Phase 3 batch planning on fresh `main`
 
 ## 2026-03-21 PLC + TriadDev Integration Priority
 

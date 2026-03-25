@@ -72,13 +72,14 @@
 
 ## E 后续接点（2026-03-25）
 
-- `current_scope`：`phase1_large_batch_closeout`
-- `branch_state`：`phase 1 large-batch runtime closeout active on codex/phase1-quality-runtime-closeout from fresh main`
+- `current_scope`：`phase3_language_governance_batch`
+- `branch_state`：`codex/phase3-language-governance-batch is the active Phase 3 implementation branch from fresh main and is now in closeout / PR packaging`
 - `evidence_ready`：`true`
 - `next_owner`：`Codex`
-- `recommended_next_scope`：`phase1_large_batch_closeout_review`
-- `parallel_planning_sidecar`：`phase3_planning_only_after_H`
-- `phase_2_status`：`M/N/O/P closeout merged to main; PR #15 bridge is absorbed into main, but broader Phase 3 implementation remains deferred until Phase 1 closes F/G/H on a single phase-sized PR`
+- `recommended_next_scope`：`phase3_language_governance_batch_review`
+- `parallel_planning_sidecar`：`phase4_operator_control_plane_planning`
+- `phase_2_status`：`M/N/O/P closeout merged to main; PR #16 closed Phase 1 on March 25, 2026, so the documented H gate is now satisfied and Phase 3 becomes the next main implementation phase`
+- `phase_3_status`：`I/J/K/L batch implementation is complete on branch; focused acceptance is green; live smoke is environment-blocked because the current shell lacks LLM credentials, so representative smoke coverage is satisfied with deterministic orchestration tests`
 
 ## E 后四阶段重写（保留 F → S 映射）
 
@@ -95,6 +96,7 @@
 
 - `Phase 1` 与 `Phase 2` 在 `milestone E` 之后优先启动，其中 `Phase 2` 作为治理底座与 `Phase 1` 并行规划。
 - `Phase 3` 在 `H` 完成、治理字段模型稳定后进入主实现。
+  - as of `2026-03-25`, that gate is satisfied and Phase 3 is now the recommended next main scope.
 - `Phase 4` 明确以 `agent-first` 为先，不把传统 GUI 作为 `Q/R` 的前置硬依赖。
 
 ### Phase 1：质量闭环与路由（F / G / H）

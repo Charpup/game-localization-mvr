@@ -149,7 +149,47 @@
   - `python -m pytest tests/test_batch6_repair_metrics_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_repair_loop_contract.py tests/test_soft_qa_contract.py tests/test_smoke_verify.py -q` -> `29 passed`
   - `python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py -q` -> `10 passed`
 - PLC/TriadDev phase-boundary records now validate for the new Phase 1 run/session/milestone artifacts.
-- Next boundary step is one Phase 1 PR from fresh `main`; broader Phase 3 runtime work remains deferred until `H` closes.
+- Merged PR #16 into `main` as `3a84f55`, closing the full Phase 1 large-batch runtime scope.
+- Phase 1 review feedback is fully absorbed:
+  - early-fail smoke manifests now report `failed` correctly
+  - non-`ru-RU` review handoff rows keep current translated text
+  - representative PLC milestone records now point to `milestone_state_H.md`
+- Re-ran post-review acceptance successfully:
+  - focused runtime: `31 passed`
+  - focused executor + PLC docs: `21 passed`
+  - PLC validator presets: `Validated 11 PLC governance artifact(s).`
+- Current roadmap decision is now Phase 3, not Phase 4:
+  - Phase 2 is already complete
+  - `H` is merged, which removes the documented gate for broader `I/J/K/L`
+  - the milestone-I bridge package is already on `main` as foundation
+- Opened a new value-first gate for the next batch and scored the full Phase 3 batch `GO (25/30, High confidence)`.
+- Opened `codex/phase3-language-governance-batch` from clean `main` and moved Phase 3 from planning into implementation.
+- Frozen Phase 3 shared contracts/helpers before downstream wiring:
+  - review ticket / feedback log / lifecycle / KPI contracts
+  - `scripts/style_governance_runtime.py`
+  - `scripts/review_governance.py`
+  - `scripts/review_feedback_ingest.py`
+- Active implementation split is now:
+  - runtime style-governance enforcement in translate + soft QA
+  - review ticket / feedback / lifecycle / KPI wiring in refresh + smoke pipeline
+- Completed the shared Phase 3 governance helper layer:
+  - `scripts/style_governance_runtime.py`
+  - `scripts/review_governance.py`
+  - `scripts/review_feedback_ingest.py`
+  - `scripts/language_governance.py` as a thin compatibility wrapper over the new helper/contract surfaces
+- Completed runtime consumer integration for the Phase 3 batch:
+  - `translate_llm.py` and `soft_qa_llm.py` now fail closed on governed style-profile violations
+  - `translate_refresh.py` now emits review tickets, feedback-log placeholders, lifecycle-aware KPI artifacts, and governed review handoff
+  - `run_smoke_pipeline.py` now emits the same Phase 3 review / KPI artifacts without breaking the Phase 1 orchestration contract
+- Phase 3 focused acceptance is green:
+  - `python -m pytest tests/test_phase3_governance_helpers.py tests/test_phase3_runtime_governance.py tests/test_phase3_language_governance_contract.py tests/test_translate_refresh_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py tests/test_plc_docs_contract.py -q` -> `44 passed`
+  - `python scripts/style_sync_check.py` -> `pass`
+  - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 11 PLC governance artifact(s).`
+- Live smoke feasibility was checked and blocked by environment only:
+  - `python scripts/llm_ping.py` failed because `LLM_BASE_URL` / `LLM_API_KEY` are missing in the current shell
+  - merge acceptance therefore uses the required representative smoke gate via deterministic orchestration coverage in `tests/test_phase1_quality_runtime_contract.py`
+- Current branch status:
+  - `codex/phase3-language-governance-batch` is implementation-complete and moving into PLC/TriadDev closeout plus one PR to `main`
 
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.

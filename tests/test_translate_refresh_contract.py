@@ -172,26 +172,58 @@ def test_generate_only_writes_tasks_and_review_queue(tmp_path):
     _write_jsonl(delta_rows, _sample_delta_rows())
     _write_glossary(glossary)
     _write_style(style)
+    review_tickets = tmp_path / "review_tickets.jsonl"
+    review_tickets_csv = tmp_path / "review_tickets.csv"
+    feedback_log = tmp_path / "feedback_log.jsonl"
+    kpi_report = tmp_path / "kpi_report.json"
 
-    exit_code = translate_refresh.main(
-        [
-            "--delta-rows",
-            str(delta_rows),
-            "--translated",
-            str(translated_csv),
-            "--glossary",
-            str(glossary),
-            "--style",
-            str(style),
-            "--tasks-out",
-            str(tasks_out),
-            "--review-queue",
-            str(review_queue),
-            "--manifest",
-            str(manifest),
-            "--generate-only",
-        ]
-    )
+    runtime_governance_report = {
+        "passed": True,
+        "style_profile_path": "tmp/style_profile.yaml",
+        "asset_statuses": {
+            "workflow/style_governance_contract.yaml": {
+                "asset_id": "style-governance-contract",
+                "asset_kind": "policy",
+                "status": "approved",
+                "required_runtime_gate": True,
+            }
+        },
+        "issues": [],
+    }
+
+    translate_refresh_validate = translate_refresh.validate_style_governance_runtime
+    translate_refresh.validate_style_governance_runtime = lambda *_args, **_kwargs: ({"project": {}}, runtime_governance_report)
+
+    try:
+        exit_code = translate_refresh.main(
+            [
+                "--delta-rows",
+                str(delta_rows),
+                "--translated",
+                str(translated_csv),
+                "--glossary",
+                str(glossary),
+                "--style",
+                str(style),
+                "--tasks-out",
+                str(tasks_out),
+                "--review-queue",
+                str(review_queue),
+                "--review-tickets",
+                str(review_tickets),
+                "--review-tickets-csv",
+                str(review_tickets_csv),
+                "--feedback-log",
+                str(feedback_log),
+                "--kpi-report",
+                str(kpi_report),
+                "--manifest",
+                str(manifest),
+                "--generate-only",
+            ]
+        )
+    finally:
+        translate_refresh.validate_style_governance_runtime = translate_refresh_validate
 
     assert exit_code == 0
     task_rows = translate_refresh.read_jsonl(str(tasks_out))
@@ -211,10 +243,17 @@ def test_generate_only_writes_tasks_and_review_queue(tmp_path):
     manifest_payload = json.loads(manifest.read_text(encoding="utf-8"))
     assert manifest_payload["mode"] == "generate_only"
     assert manifest_payload["overall_status"] == "review_handoff"
+    assert manifest_payload["runtime_governance"] == runtime_governance_report
     assert manifest_payload["review_handoff"]["pending_count"] == 1
     assert manifest_payload["review_handoff"]["by_source"] == {"initial_manual_review": 1}
     assert manifest_payload["task_outcomes"]["counts_by_final_status"]["pending"] == 1
     assert manifest_payload["task_outcomes"]["counts_by_final_status"]["review_handoff"] == 1
+    assert review_tickets.exists()
+    assert review_tickets_csv.exists()
+    assert feedback_log.exists()
+    kpi_payload = json.loads(kpi_report.read_text(encoding="utf-8"))
+    assert kpi_payload["scope"] == "translate_refresh_generate_only"
+    assert kpi_payload["lifecycle_summary"]["checked_assets"] == runtime_governance_report["asset_statuses"]
 
 
 def test_missing_required_task_field_fails_explicitly(tmp_path):

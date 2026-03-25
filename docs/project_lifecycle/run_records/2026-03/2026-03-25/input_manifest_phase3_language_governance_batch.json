@@ -1,0 +1,20 @@
+{
+  "manifest_version": "plc-phase3-language-governance-v1",
+  "run_id": "phase3_language_governance_batch",
+  "scope": "phase3_language_governance_batch",
+  "branch": "codex/phase3-language-governance-batch",
+  "objectives": [
+    "wire style-governance runtime enforcement into translate, soft QA, refresh, and smoke consumers",
+    "promote review queues into governed review-ticket and feedback-log artifacts",
+    "enforce lifecycle registry semantics and emit KPI reporting for language-governance operations",
+    "ship the whole I + J + K + L Phase 3 batch as one PR from fresh main"
+  ],
+  "source_refs": [
+    "task_plan.md",
+    "progress.md",
+    "docs/project_lifecycle/roadmap_index.md",
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "value-review.md"
+  ]
+}

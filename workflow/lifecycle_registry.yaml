@@ -1,0 +1,58 @@
+version: "1.0"
+entries:
+  - asset_id: "style-profile-ru"
+    asset_kind: "style_profile"
+    asset_path: "data/style_profile.yaml"
+    target_locale: "ru-RU"
+    status: "approved"
+    approval_ref: "docs/decisions/ADR-0002-skill-governance-framework.md"
+    adr_refs:
+      - "docs/decisions/ADR-0001-project-continuity-framework.md"
+      - "docs/decisions/ADR-0002-skill-governance-framework.md"
+    supersedes: "none"
+    deprecated_by: "none"
+    required_runtime_gate: true
+  - asset_id: "glossary-compiled-ru"
+    asset_kind: "glossary"
+    asset_path: "glossary/compiled.yaml"
+    target_locale: "ru-RU"
+    status: "approved"
+    approval_ref: "docs/project_lifecycle/roadmap_index.md"
+    adr_refs:
+      - "docs/decisions/ADR-0001-project-continuity-framework.md"
+    supersedes: "none"
+    deprecated_by: "none"
+    required_runtime_gate: false
+  - asset_id: "style-governance-contract"
+    asset_kind: "policy"
+    asset_path: "workflow/style_governance_contract.yaml"
+    target_locale: "global"
+    status: "approved"
+    approval_ref: "docs/decisions/ADR-0002-skill-governance-framework.md"
+    adr_refs:
+      - "docs/decisions/ADR-0002-skill-governance-framework.md"
+    supersedes: "none"
+    deprecated_by: "none"
+    required_runtime_gate: true
+  - asset_id: "soft-qa-rubric"
+    asset_kind: "policy"
+    asset_path: "workflow/soft_qa_rubric.yaml"
+    target_locale: "global"
+    status: "approved"
+    approval_ref: "docs/project_lifecycle/roadmap_index.md"
+    adr_refs:
+      - "docs/decisions/ADR-0001-project-continuity-framework.md"
+    supersedes: "none"
+    deprecated_by: "none"
+    required_runtime_gate: false
+  - asset_id: "placeholder-schema"
+    asset_kind: "policy"
+    asset_path: "workflow/placeholder_schema.yaml"
+    target_locale: "global"
+    status: "approved"
+    approval_ref: "docs/project_lifecycle/roadmap_index.md"
+    adr_refs:
+      - "docs/decisions/ADR-0001-project-continuity-framework.md"
+    supersedes: "none"
+    deprecated_by: "none"
+    required_runtime_gate: false

@@ -2,68 +2,68 @@
 - status: in_progress
 - owner: Codex
 - next_owner: Codex
-- progress_pct: 45
+- progress_pct: 90
 - evidence_ready: true
 - blockers:
-  - `broader runtime enforcement remains deferred`
+  - `none`
 - dependencies:
   - H
 - decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
-- eta_hours: 14
+- eta_hours: 2
 - notes: >
-  Phase 3 has advanced from planning-only into the first bounded milestone-I implementation package.
-  This package adds the style-governance contract, version header, lineage metadata, and entry-audit
-  validation while keeping broader runtime enforcement out of scope.
+  Phase 3 has now advanced from the earlier milestone-I bridge into the full language-governance batch on
+  `codex/phase3-language-governance-batch`. The branch now includes runtime style-governance enforcement,
+  review-ticket and feedback-log artifact surfaces, lifecycle registry enforcement, and KPI reporting.
+  Focused acceptance is green. A live smoke attempt is currently environment-blocked in this shell because
+  `LLM_BASE_URL` and `LLM_API_KEY` are missing, so the representative smoke gate is satisfied with deterministic
+  orchestration coverage. The remaining work is PR packaging and review/merge, not more implementation.
 - changed_files:
   - task_plan.md
   - progress.md
   - .triadev/state.json
   - .triadev/workflow.json
   - docs/project_lifecycle/roadmap_index.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/phase3_milestone_i_prepare_note.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase3_milestone_i_prepare.json
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_prepare.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_prepare.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_prepare.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_prepare.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
-  - workflow/style_governance_contract.yaml
-  - data/style_profile.yaml
-  - workflow/style_guide.generated.md
-  - workflow/style_guide.md
-  - .agent/workflows/style-guide.md
-  - scripts/style_guide_bootstrap.py
-  - scripts/style_sync_check.py
-  - tests/test_style_governance_contract.py
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/phase3_milestone_i_contract_package_note.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase3_milestone_i_contract_package.json
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_contract_package.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_contract_package.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_contract_package.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_contract_package.md
-  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_contract_package.json
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase3_language_governance_batch.json
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_language_governance_batch.json
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_language_governance_batch.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_language_governance_batch.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_language_governance_batch.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_language_governance_batch.md
   - docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md
+  - scripts/translate_llm.py
+  - scripts/soft_qa_llm.py
+  - scripts/translate_refresh.py
+  - scripts/run_smoke_pipeline.py
+  - scripts/review_feedback_ingest.py
+  - scripts/review_governance.py
+  - scripts/style_governance_runtime.py
+  - scripts/language_governance.py
+  - tests/test_phase3_runtime_governance.py
+  - tests/test_phase3_governance_helpers.py
+  - tests/test_phase3_language_governance_contract.py
+  - tests/test_translate_refresh_contract.py
+  - tests/test_phase1_quality_runtime_contract.py
+  - workflow/review_ticket_contract.yaml
+  - workflow/feedback_log_contract.yaml
+  - workflow/lifecycle_contract.yaml
+  - workflow/lifecycle_registry.yaml
+  - workflow/kpi_report_contract.yaml
 - evidence_refs:
-  - command: python -m pytest tests/test_plc_docs_contract.py -q
-  - command: python scripts/plc_validate_records.py --artifact-type run_manifest --path docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
-  - command: python scripts/plc_validate_records.py --artifact-type session_start --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_prepare.md
-  - command: python scripts/plc_validate_records.py --artifact-type session_end --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_prepare.md
-  - command: python scripts/plc_validate_records.py --artifact-type milestone_state --path docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md
-  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
-  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_prepare.md
-  - command: python -m pytest tests/test_style_governance_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py -q
+  - command: python -m pytest tests/test_phase3_governance_helpers.py tests/test_phase3_runtime_governance.py tests/test_phase3_language_governance_contract.py tests/test_translate_refresh_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py tests/test_plc_docs_contract.py -q
   - command: python scripts/style_sync_check.py
-  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_contract_package.json
-  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_contract_package.md
+  - command: python scripts/plc_validate_records.py --preset representative --preset templates
+  - command: python scripts/llm_ping.py
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_language_governance_batch.json
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_language_governance_batch.md
 - adr_refs:
   - docs/decisions/ADR-0001-project-continuity-framework.md
   - docs/decisions/ADR-0002-skill-governance-framework.md
 - evidence:
-  - run_id: phase3_milestone_i_contract_package
-  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_contract_package.json
-  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_contract_package.md
-  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_contract_package.md
+  - run_id: phase3_language_governance_batch
+  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_language_governance_batch.json
+  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_language_governance_batch.md
+  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_language_governance_batch.md
 - handoff:
   - next_owner: Codex
-  - next_scope: milestone_I_review_merge
-  - next_action: push the milestone-I contract package branch and open the implementation PR
+  - next_scope: phase3_language_governance_batch_review
+  - next_action: push the phase-sized branch and open the single Phase 3 PR to main

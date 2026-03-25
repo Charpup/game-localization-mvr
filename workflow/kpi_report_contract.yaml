@@ -1,0 +1,24 @@
+version: "1.0"
+artifact: "kpi_report"
+required_sections:
+  - "generated_at"
+  - "scope"
+  - "runtime_summary"
+  - "review_summary"
+  - "lifecycle_summary"
+  - "metrics_sources"
+runtime_summary_required_fields:
+  - "overall_status"
+  - "total_tasks"
+  - "updated_count"
+  - "review_handoff_count"
+review_summary_required_fields:
+  - "total_review_tickets"
+  - "pending_review_tickets"
+  - "manual_intervention_rate"
+  - "feedback_entries"
+  - "feedback_closure_rate"
+lifecycle_summary_required_fields:
+  - "registry_path"
+  - "checked_assets"
+  - "deprecated_asset_usage_count"
