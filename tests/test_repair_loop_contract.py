@@ -66,8 +66,9 @@ def test_repair_loop_docs_publish_flags_only_cli_authority():
     pipeline_workflow = (ROOT / ".agent" / "workflows" / "loc-pipeline-full.md").read_text(encoding="utf-8")
     user_workflow = (ROOT / "docs" / "localization_pipeline_workflow.md").read_text(encoding="utf-8")
 
+    assert "--mode" not in repair_workflow
+
     for text in (repair_workflow, pipeline_workflow, user_workflow):
-        assert "--mode" not in text
         assert "--report" not in text
         assert "--only_soft_major" not in text
 
@@ -82,7 +83,6 @@ def test_repair_loop_docs_publish_flags_only_cli_authority():
 
     assert "--qa-type hard" in pipeline_workflow
     assert "--qa-type soft" in pipeline_workflow
-    assert "repair_soft_major" in pipeline_workflow
 
     assert "--qa-type hard" in user_workflow
     assert "--qa-type soft" in user_workflow

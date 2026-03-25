@@ -134,6 +134,22 @@
 - Focused milestone-I contract acceptance is green:
   - `python -m pytest tests/test_style_governance_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py -q` -> `12 passed`
   - `python scripts/style_sync_check.py` -> `pass`
+- Treated merged PR #15 as a bridge foundation only and returned the active execution lane to Phase 1 on fresh `main`.
+- Opened `codex/phase1-quality-runtime-closeout` as the single active implementation branch under the phase-sized merge-window policy.
+- Completed the remaining Phase 1 runtime closure in `scripts/run_smoke_pipeline.py`:
+  - hard QA now routes through `repair_loop` with explicit recheck and blocked-state handling
+  - soft QA now routes through bounded repair, fail-closed hard-gate review handoff, and rollback-safe promotion
+  - smoke manifests now persist `repair_cycles`, `review_handoff`, `gate_summary`, and `delivery_decision`
+- Added focused Phase 1 runtime contract coverage:
+  - `tests/test_phase1_quality_runtime_contract.py` now locks hard-repair completion, soft rollback, and soft hard-gate-without-tasks handoff
+  - `tests/test_batch6_repair_metrics_contract.py` now carries explicit style-profile and soft-QA rubric inputs for smoke orchestration tests
+  - `tests/test_repair_loop_contract.py` keeps CLI doc authority focused on the repair workflow itself
+- Phase 1 runtime acceptance is green again:
+  - `python -m py_compile scripts/run_smoke_pipeline.py`
+  - `python -m pytest tests/test_batch6_repair_metrics_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_repair_loop_contract.py tests/test_soft_qa_contract.py tests/test_smoke_verify.py -q` -> `29 passed`
+  - `python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py -q` -> `10 passed`
+- PLC/TriadDev phase-boundary records now validate for the new Phase 1 run/session/milestone artifacts.
+- Next boundary step is one Phase 1 PR from fresh `main`; broader Phase 3 runtime work remains deferred until `H` closes.
 
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.

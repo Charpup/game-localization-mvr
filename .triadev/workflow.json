@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "change_id": "phase3-milestone-i-contract-package-20260325",
-  "route": "brownfield",
+  "change_id": "phase1-large-batch-runtime-closeout-20260325",
+  "route": "extended",
   "authority": {
     "primary": "main_worktree/scripts",
     "compatibility": "src/scripts"
@@ -155,13 +155,14 @@
     "Post-E roadmap is now interpreted as four execution phases while preserving milestone letters F-S.",
     "Phase 2 first package is governance substrate hardening for run/session/milestone contracts and validation.",
     "Phase 2 closeout extends the substrate with machine-checkable changed_files/evidence_refs/adr_refs and leaves Phase 3 in planning-ready only.",
-    "Phase 3 now enters milestone_I_prepare as a planning-only slice centered on style-governance contract definition; runtime implementation remains gated until H completes.",
-    "A bounded user-directed milestone-I implementation package is now active on clean main for style-governance metadata and entry-audit validation only."
+    "The milestone-I style-governance package is now merged as a bridge foundation on main, but it does not change the primary execution order.",
+    "Current execution returns to Phase 1 as one fresh-main runtime closeout batch for F/G/H under the phase-sized merge-window policy.",
+    "Broader Phase 3 runtime enforcement remains deferred until H closes on the Phase 1 branch."
   ],
   "post_e_roadmap": {
-    "status": "phase-3-bounded-implementation-active",
-    "recommended_next_scope": "milestone_I_contract_package",
-    "parallel_planning_sidecar": "milestone_F_execute_followup",
+    "status": "phase-1-large-batch-active",
+    "recommended_next_scope": "phase1_large_batch_closeout",
+    "parallel_planning_sidecar": "phase3_planning_only_after_H",
     "execution_preference": [
       "phase-1-quality-closure",
       "phase-2-governance-substrate",
@@ -210,28 +211,46 @@
     ]
   },
   "active_phase1_slice": {
-    "status": "completed",
-    "scope": "translate_refresh unified execution-status contract",
-    "branch": "codex/phase1-quality-closure",
+    "status": "in_progress",
+    "scope": "phase 1 large-batch runtime closeout",
+    "branch": "codex/phase1-quality-runtime-closeout",
     "bounded_surfaces": [
-      "scripts/translate_refresh.py",
-      "tests/test_translate_refresh_contract.py",
-      "tests/test_milestone_e_e2e.py"
+      "scripts/run_smoke_pipeline.py",
+      "tests/test_phase1_quality_runtime_contract.py",
+      "tests/test_batch6_repair_metrics_contract.py",
+      "tests/test_repair_loop_contract.py",
+      "task_plan.md",
+      "progress.md",
+      ".triadev/state.json",
+      ".triadev/workflow.json",
+      "docs/project_lifecycle/roadmap_index.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase1_large_batch_closeout.json",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase1_large_batch_closeout.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase1_large_batch_closeout.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase1_large_batch_closeout.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase1_large_batch_closeout.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase1_large_batch_closeout.json",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_phase1_large_batch_closeout.md"
+    ],
+    "mapped_milestones": [
+      "F",
+      "G",
+      "H"
     ],
     "explicit_non_goals": [
-      "run_smoke_pipeline orchestration changes",
-      "soft_qa_llm runtime integration",
-      "repair_loop runtime integration"
+      "broader Phase 3 runtime enforcement",
+      "human-review intake and feedback logging",
+      "Phase 4 operator-control-plane work"
     ],
     "validation_strategy": {
-      "mode": "focused-tests-only",
-      "smoke_required": false,
-      "rationale": "This slice changes executor artifact semantics but intentionally leaves smoke orchestration untouched.",
+      "mode": "focused-runtime-tests-plus-representative-smoke",
+      "smoke_required": true,
+      "rationale": "This phase batch closes hard QA repair, soft routing, rollback-safe promotion, and unified status semantics in the smoke orchestrator before broader Phase 3 resumes.",
       "result": "passed",
-      "acceptance_command": "python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py tests/test_plc_docs_contract.py -q",
-      "acceptance_summary": "10 passed"
+      "acceptance_command": "python -m py_compile scripts/run_smoke_pipeline.py && python -m pytest tests/test_batch6_repair_metrics_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_repair_loop_contract.py tests/test_soft_qa_contract.py tests/test_smoke_verify.py -q && python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py -q",
+      "acceptance_summary": "run_smoke_pipeline compiles; 29 passed on focused runtime + representative smoke tests; 10 passed on milestone E executor regression."
     },
-    "next_action": "open stacked PR on top of codex/milestone-e-prepare"
+    "next_action": "push the single Phase 1 PR from fresh main, then merge it before resuming broader Phase 3 work"
   },
   "active_phase2_slice": {
     "status": "completed",
@@ -272,9 +291,9 @@
     "next_action": "phase 2 PR merged; hand off to milestone_I_prepare planning-only work on clean main"
   },
   "active_phase3_slice": {
-    "status": "completed",
-    "scope": "milestone I style-governance contract package",
-    "branch": "codex/milestone-i-contract-package",
+    "status": "merged-foundation",
+    "scope": "milestone I style-governance bridge package",
+    "branch": "main",
     "bounded_surfaces": [
       "workflow/style_governance_contract.yaml",
       "data/style_profile.yaml",
@@ -314,11 +333,11 @@
       "acceptance_command": "python -m pytest tests/test_style_governance_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py -q && python scripts/style_sync_check.py",
       "acceptance_summary": "12 passed; style_sync_check pass."
     },
-    "next_action": "push the milestone-I contract branch and open the first implementation PR on top of main"
+    "next_action": "resume the broader Phase 3 batch only after the single Phase 1 runtime PR merges"
   },
   "phase3_readiness": {
-    "status": "bounded-implementation-active",
-    "implement_status": "started",
-    "rationale": "A user-directed early milestone-I governance slice is active on clean main; broader runtime enforcement and later Phase 3 milestones remain gated and out of scope for this package."
+    "status": "bridge-merged-deferred",
+    "implement_status": "deferred",
+    "rationale": "The milestone-I bridge is merged on main as foundation only, but broader Phase 3 runtime/governance implementation is intentionally paused until Phase 1 closes H on a fresh-main batch."
   }
 }

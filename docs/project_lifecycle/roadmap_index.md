@@ -72,13 +72,13 @@
 
 ## E 后续接点（2026-03-25）
 
-- `current_scope`：`milestone_I_contract_package`
-- `branch_state`：`phase 3 first implementation slice active on codex/milestone-i-contract-package`
+- `current_scope`：`phase1_large_batch_closeout`
+- `branch_state`：`phase 1 large-batch runtime closeout active on codex/phase1-quality-runtime-closeout from fresh main`
 - `evidence_ready`：`true`
 - `next_owner`：`Codex`
-- `recommended_next_scope`：`milestone_I_contract_package`
-- `parallel_planning_sidecar`：`milestone_F_execute_followup`
-- `phase_2_status`：`M/N/O/P closeout merged to main; Phase 3 has entered a bounded, governance-only milestone-I implementation slice while broader runtime enforcement remains deferred`
+- `recommended_next_scope`：`phase1_large_batch_closeout_review`
+- `parallel_planning_sidecar`：`phase3_planning_only_after_H`
+- `phase_2_status`：`M/N/O/P closeout merged to main; PR #15 bridge is absorbed into main, but broader Phase 3 implementation remains deferred until Phase 1 closes F/G/H on a single phase-sized PR`
 
 ## E 后四阶段重写（保留 F → S 映射）
 

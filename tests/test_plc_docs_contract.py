@@ -86,6 +86,43 @@ def test_representative_session_and_milestone_records_validate_against_contract(
         assert plc_validate_records.validate_artifact(contract, artifact_type, path) == []
 
 
+def test_phase1_large_batch_records_validate_against_contract():
+    contract = plc_validate_records.load_contract(REPO_ROOT / "workflow" / "plc_governance_contract.yaml")
+    phase1_manifest = (
+        REPO_ROOT
+        / "docs"
+        / "project_lifecycle"
+        / "run_records"
+        / "2026-03"
+        / "2026-03-25"
+        / "run_manifest_phase1_large_batch_closeout.json"
+    )
+    manifest = json.loads(phase1_manifest.read_text(encoding="utf-8"))
+
+    assert plc_validate_records.validate_artifact(contract, "run_manifest", phase1_manifest) == []
+    assert manifest["status"] in {"pass", "warn", "blocked"}
+    assert manifest["next_step_owner"] == "Codex"
+    assert manifest["next_step_scope"] == "phase1_large_batch_closeout_review"
+
+    phase1_paths = [
+        (
+            "session_start",
+            REPO_ROOT / "docs" / "project_lifecycle" / "run_records" / "2026-03" / "2026-03-25" / "session_start_20260325_phase1_large_batch_closeout.md",
+        ),
+        (
+            "session_end",
+            REPO_ROOT / "docs" / "project_lifecycle" / "run_records" / "2026-03" / "2026-03-25" / "session_end_20260325_phase1_large_batch_closeout.md",
+        ),
+        (
+            "milestone_state",
+            REPO_ROOT / "docs" / "project_lifecycle" / "run_records" / "2026-03" / "2026-03-25" / "milestone_state_H.md",
+        ),
+    ]
+
+    for artifact_type, path in phase1_paths:
+        assert plc_validate_records.validate_artifact(contract, artifact_type, path) == []
+
+
 def test_validator_cli_passes_representative_and_template_presets():
     exit_code = plc_validate_records.main(["--preset", "representative", "--preset", "templates"])
 
