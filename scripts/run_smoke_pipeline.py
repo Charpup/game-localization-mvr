@@ -242,7 +242,22 @@ def _review_handoff_summary(rows: List[Dict[str, str]], queue_path: Path) -> Dic
     }
 
 
+def _extract_current_target(row: Dict[str, Any], fallback: str = "") -> str:
+    preferred_keys = ["target_text", "target", "target_ru", "target_en"]
+    dynamic_target_keys = [
+        key for key in row.keys()
+        if key.startswith("target_") and key not in preferred_keys
+    ]
+    for key in preferred_keys + sorted(dynamic_target_keys):
+        value = str(row.get(key) or "")
+        if value:
+            return value
+    return fallback
+
+
 def _derive_overall_status(stages: List[Dict[str, Any]], gate_summary: Dict[str, Any], review_queue: List[Dict[str, str]]) -> str:
+    if gate_summary.get("status") == "failed":
+        return "failed"
     if gate_summary.get("status") == "blocked":
         return "blocked"
     if any(str(stage.get("status") or "") == "fail" and bool(stage.get("required", True)) for stage in stages):
@@ -697,12 +712,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             current_target = ""
             if string_id:
                 current_row = current_rows_map.get(string_id) or {}
-                current_target = str(
-                    current_row.get("target_text")
-                    or current_row.get("target_ru")
-                    or current_row.get("target")
-                    or ""
-                )
+                current_target = _extract_current_target(current_row)
             review_queue_rows.append(
                 _build_review_queue_entry(
                     string_id=string_id,
@@ -728,12 +738,9 @@ def run_pipeline(args: argparse.Namespace) -> int:
             if not string_id:
                 continue
             current_row = current_rows_map.get(string_id) or {}
-            current_target = str(
-                current_row.get("target_text")
-                or current_row.get("target_ru")
-                or current_row.get("target")
-                or error.get("current_translation")
-                or ""
+            current_target = _extract_current_target(
+                current_row,
+                fallback=str(error.get("current_translation") or ""),
             )
             reason_codes = [str(error.get("type") or "")] if error.get("type") else []
             review_queue_rows.append(
@@ -1251,7 +1258,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
                         string_id=string_id,
                         review_source="soft_repair_execution_failure",
                         queue_reason="soft_repair_execution_failed",
-                        current_target=str(current_row.get("target_text") or current_row.get("target_ru") or current_row.get("target") or ""),
+                        current_target=_extract_current_target(current_row),
                         execution_status="failed",
                         final_status="review_handoff",
                         reason_codes=[str(task.get("type") or "")] if task.get("type") else [],
