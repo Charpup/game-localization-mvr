@@ -1,0 +1,50 @@
+- id: I
+- status: in_progress
+- owner: Codex
+- next_owner: Codex
+- progress_pct: 15
+- evidence_ready: true
+- blockers:
+  - `runtime implementation remains gated until H completes`
+- dependencies:
+  - H
+- decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
+- eta_hours: 14
+- notes: >
+  Phase 3 has started as a planning-only milestone-I slice on clean main. This step freezes the
+  bounded style-governance preparation surface and explicitly keeps implementation closed until H
+  completes and the project promotes Phase 3 out of planning-only state.
+- changed_files:
+  - task_plan.md
+  - progress.md
+  - .triadev/state.json
+  - .triadev/workflow.json
+  - docs/project_lifecycle/roadmap_index.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/phase3_milestone_i_prepare_note.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase3_milestone_i_prepare.json
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_prepare.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_prepare.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_prepare.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_prepare.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md
+- evidence_refs:
+  - command: python -m pytest tests/test_plc_docs_contract.py -q
+  - command: python scripts/plc_validate_records.py --artifact-type run_manifest --path docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
+  - command: python scripts/plc_validate_records.py --artifact-type session_start --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_prepare.md
+  - command: python scripts/plc_validate_records.py --artifact-type session_end --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_prepare.md
+  - command: python scripts/plc_validate_records.py --artifact-type milestone_state --path docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_prepare.md
+- adr_refs:
+  - docs/decisions/ADR-0001-project-continuity-framework.md
+  - docs/decisions/ADR-0002-skill-governance-framework.md
+- evidence:
+  - run_id: phase3_milestone_i_prepare
+  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json
+  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_prepare.md
+  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_prepare.md
+- handoff:
+  - next_owner: Codex
+  - next_scope: milestone_I_contract_package
+  - next_action: draft the style-governance contract package without changing runtime consumers

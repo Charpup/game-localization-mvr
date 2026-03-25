@@ -2,7 +2,7 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `phase3_planning_ready` on branch `codex/phase2-governance-closeout`.
+> The current active scope is `milestone_I_prepare` on branch `codex/milestone-i-prepare`.
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
@@ -218,6 +218,52 @@ Open the first bounded implementation package of Phase 2 (`M/N/P`) by freezing m
 
 ### Route
 - `plc`: move the active scope to `milestone_M_prepare`, write a fresh session record, and keep the post-E four-phase roadmap intact.
+
+## 2026-03-25 Milestone I Prepare Slice
+
+### Goal
+Start Phase 3 as a planning-only milestone-I slice on clean `main`, freeze the bounded style-governance object model, and keep runtime implementation explicitly out of scope until `H` completes.
+
+### Route
+- `plc`: record the transition from `phase3_planning_ready` to `milestone_I_prepare`, write dated run records, and keep the next-scope handoff explicit.
+- `triadev`: stay on the Extended route for brownfield planning artifacts only; do not open `implement` for Phase 3 in this slice.
+
+### Scope
+- Work only on Phase 3 planning and governance surfaces:
+  - define the bounded `milestone_I_prepare` target as a style-governance contract package
+  - record canonical vs generated vs mirror style assets
+  - capture the minimum audit metadata needed before any later I/J/K/L implementation work
+- Do not modify translation runtime behavior.
+- Do not start style-governance runtime enforcement yet.
+- Do not open Phase 3 implementation before `H` completes.
+
+### Mini Plan
+- [complete] Confirm PR #13 is merged and open a clean planning branch from updated `main`.
+- [complete] Read PLC/TriadDev post-Phase-2 state and verify Phase 3 remains planning-only.
+- [complete] Record a bounded milestone-I planning note plus fresh session/run artifacts.
+- [complete] Run focused PLC validation against the new planning records.
+- [pending] Push `codex/milestone-i-prepare` and open a planning-only PR on top of `main`.
+
+### Acceptance
+- `task_plan.md`, `progress.md`, `docs/project_lifecycle/roadmap_index.md`, `.triadev/state.json`, and `.triadev/workflow.json` all point to `milestone_I_prepare`.
+- The new Phase 3 planning records validate under `scripts/plc_validate_records.py`.
+- Phase 3 remains `planning-only` / `implement_status = not-started`.
+
+### Current Result
+- Bounded milestone-I planning slice is defined around a style-governance contract package:
+  - canonical asset: `data/style_profile.yaml`
+  - generated guide: `workflow/style_guide.generated.md`
+  - mirror/operator guides: `workflow/style_guide.md` and `.agent/workflows/style-guide.md`
+- The planning note records the minimum next implementation target:
+  - versioned style-governance header and audit metadata
+  - lineage from questionnaire/bootstrap inputs to `style_profile`
+  - approved/loadable/deprecated entry-audit semantics
+- Focused PLC validation for the new records is green:
+  - `python -m pytest tests/test_plc_docs_contract.py -q`
+  - `python scripts/plc_validate_records.py --artifact-type run_manifest --path docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_prepare.json`
+  - `python scripts/plc_validate_records.py --artifact-type session_start --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_prepare.md`
+  - `python scripts/plc_validate_records.py --artifact-type session_end --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_prepare.md`
+  - `python scripts/plc_validate_records.py --artifact-type milestone_state --path docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md`
 - `triadev`: stay on the Extended route, but treat this slice as governance substrate hardening rather than runtime feature work.
 
 ### Scope
