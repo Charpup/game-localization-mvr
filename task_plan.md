@@ -2,7 +2,7 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `milestone_I_contract_package` on branch `codex/milestone-i-contract-package`.
+> The current active scope is `phase1_large_batch_closeout` on branch `codex/phase1-quality-runtime-closeout`.
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.
@@ -11,6 +11,55 @@ Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layer
 - Use `main_worktree` only.
 - Record `run_id`, manifest path, issue report path, verify report path, and any row/placeholder/tag mismatches.
 - Focus on `string_id=305833`, translate row counts, and `row_checks`.
+
+## 2026-03-25 Phase 1 Large-Batch Runtime Closeout
+
+### Goal
+Finish the remaining `F + G + H` runtime closure as one phase-sized batch on fresh `main`, then ship one GitHub PR before broader Phase 3 runtime work resumes.
+
+### Route
+- `plc`: record this as a phase boundary rather than another micro-milestone, and keep run/session/milestone evidence aligned to the single Phase 1 branch.
+- `triadev`: stay on the Extended route with phase-sized merge windows; the milestone-I bridge remains merged, but broader Phase 3 runtime work stays deferred until `H` closes.
+
+### Scope
+- Work only from `codex/phase1-quality-runtime-closeout`.
+- Land the remaining runtime-quality closure in `scripts/run_smoke_pipeline.py`:
+  - `qa_hard -> repair_loop (hard) -> hard recheck`
+  - `soft_qa -> repair_loop (soft) -> post-soft hard recheck`
+  - rollback-safe candidate promotion when soft repair breaks hard gates
+  - unified `pass/fail/warn/block`-style manifest, review-handoff, and delivery-decision semantics
+- Add focused contract coverage for the orchestration edges introduced in this batch.
+- Do not reopen broader Phase 3 runtime enforcement, human-review intake, or Phase 4 control-plane work in this branch.
+
+### Batch Mapping
+- `F`: hard QA repair-loop closure with rerun safety and idempotent candidate selection
+- `G`: soft-rule routing, bounded repair, rollback-safe handling, and manual-review handoff
+- `H`: unified status/gate summary across QA, repair, review, and final delivery artifacts
+
+### Acceptance
+- Focused runtime tests plus representative smoke orchestration coverage are required for this phase batch.
+- Required commands:
+  - `python -m py_compile scripts/run_smoke_pipeline.py`
+  - `python -m pytest tests/test_batch6_repair_metrics_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_repair_loop_contract.py tests/test_soft_qa_contract.py tests/test_smoke_verify.py -q`
+  - `python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py -q`
+- PLC boundary records must validate before the branch is pushed.
+
+### Current Result
+- PR #15 is treated as a merged bridge slice only; Phase 1 is again the active main execution lane.
+- Runtime closure is now implemented in `scripts/run_smoke_pipeline.py`:
+  - hard QA can repair, recheck, and block safely when the hard gate still fails
+  - soft QA can route into repair, roll back to the last hard-safe candidate, and emit a review queue
+  - manifest output now carries `status_contract_version`, `repair_cycles`, `review_handoff`, `gate_summary`, and `delivery_decision`
+- Focused runtime acceptance is green:
+  - `python -m pytest tests/test_batch6_repair_metrics_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_repair_loop_contract.py tests/test_soft_qa_contract.py tests/test_smoke_verify.py -q` -> `29 passed`
+  - `python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py -q` -> `10 passed`
+- PLC/TriadDev phase-boundary records are now aligned and validated for:
+  - `run_manifest_phase1_large_batch_closeout.json`
+  - `session_start_20260325_phase1_large_batch_closeout.md`
+  - `session_end_20260325_phase1_large_batch_closeout.md`
+  - `milestone_state_phase1_large_batch_closeout.md`
+- Remaining branch-boundary work:
+  - push one Phase 1 PR from fresh `main`
 
 ## 2026-03-21 PLC + TriadDev Integration Priority
 

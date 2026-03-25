@@ -124,6 +124,14 @@ presets:
       path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase2_governance_closeout.md
     - artifact_type: session_end
       path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase2_governance_closeout.md
+    - artifact_type: run_manifest
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase1_large_batch_closeout.json
+    - artifact_type: milestone_state
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_H.md
+    - artifact_type: session_start
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase1_large_batch_closeout.md
+    - artifact_type: session_end
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase1_large_batch_closeout.md
   templates:
     - artifact_type: session_start
       path: docs/project_lifecycle/session_start_template.md

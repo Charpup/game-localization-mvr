@@ -1,0 +1,58 @@
+- id: H
+- status: in_progress
+- owner: Codex
+- next_owner: Codex
+- progress_pct: 90
+- evidence_ready: true
+- blockers:
+  - `none`
+- dependencies:
+  - F
+  - G
+- decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
+- eta_hours: 4
+- notes: >
+  Phase 1 has been regrouped into one phase-sized runtime closeout branch on fresh main.
+  The remaining F/G/H work is implemented as one review-ready batch that closes hard repair,
+  soft routing, rollback-safe promotion, and unified run-status semantics in the smoke orchestrator.
+  Broader Phase 3 runtime implementation remains deferred until this H gate closes and merges.
+- changed_files:
+  - scripts/run_smoke_pipeline.py
+  - tests/test_batch6_repair_metrics_contract.py
+  - tests/test_phase1_quality_runtime_contract.py
+  - tests/test_repair_loop_contract.py
+  - task_plan.md
+  - progress.md
+  - .triadev/state.json
+  - .triadev/workflow.json
+  - docs/project_lifecycle/roadmap_index.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase1_large_batch_closeout.json
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase1_large_batch_closeout.json
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase1_large_batch_closeout.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase1_large_batch_closeout.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase1_large_batch_closeout.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase1_large_batch_closeout.md
+  - docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_H.md
+- evidence_refs:
+  - command: python -m py_compile scripts/run_smoke_pipeline.py
+  - command: python -m pytest tests/test_batch6_repair_metrics_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_repair_loop_contract.py tests/test_soft_qa_contract.py tests/test_smoke_verify.py -q
+  - command: python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py -q
+  - command: python -m pytest tests/test_plc_docs_contract.py -q
+  - command: python scripts/plc_validate_records.py --artifact-type run_manifest --path docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase1_large_batch_closeout.json
+  - command: python scripts/plc_validate_records.py --artifact-type session_start --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase1_large_batch_closeout.md
+  - command: python scripts/plc_validate_records.py --artifact-type session_end --path docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase1_large_batch_closeout.md
+  - command: python scripts/plc_validate_records.py --artifact-type milestone_state --path docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_H.md
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase1_large_batch_closeout.json
+  - path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase1_large_batch_closeout.md
+- adr_refs:
+  - docs/decisions/ADR-0001-project-continuity-framework.md
+  - docs/decisions/ADR-0002-skill-governance-framework.md
+- evidence:
+  - run_id: phase1_large_batch_closeout
+  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase1_large_batch_closeout.json
+  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase1_large_batch_closeout.md
+  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase1_large_batch_closeout.md
+- handoff:
+  - next_owner: Codex
+  - next_scope: phase1_large_batch_closeout_review
+  - next_action: push the phase 1 runtime closeout branch and open one phase-sized PR on top of main
