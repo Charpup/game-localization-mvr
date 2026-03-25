@@ -219,28 +219,37 @@ def _validate_reference_list(
         return
 
     for item in items:
+        refs: List[Any]
         if isinstance(item, dict):
+            refs = []
             if kind == "evidence" and item.get("command") is not None:
-                ref = f"command:{item.get('command')}"
-            else:
-                ref = item.get("path") or item.get("ref") or item.get("file")
+                refs.append(f"command:{item.get('command')}")
+            for key in ("path", "ref", "file"):
+                if item.get(key) is not None:
+                    refs.append(item.get(key))
         else:
-            ref = item
-        if _is_empty(ref):
+            refs = [item]
+
+        if not refs:
             errors.append(f"{label}: `{field}` contains an empty reference")
             continue
-        ref_text = str(ref).strip()
-        if allow_placeholders and _is_placeholder(ref_text):
-            continue
-        if kind == "evidence" and ref_text.startswith("command:"):
-            if not ref_text.split("command:", 1)[1].strip():
-                errors.append(f"{label}: `{field}` contains an empty command reference")
-            continue
-        if kind == "adr" and not ref_text.startswith("docs/decisions/"):
-            errors.append(f"{label}: `{field}` reference `{ref_text}` must point into `docs/decisions/`")
-            continue
-        if not _path_exists(ref_text):
-            errors.append(f"{label}: `{field}` reference `{ref_text}` does not exist")
+
+        for ref in refs:
+            if _is_empty(ref):
+                errors.append(f"{label}: `{field}` contains an empty reference")
+                continue
+            ref_text = str(ref).strip()
+            if allow_placeholders and _is_placeholder(ref_text):
+                continue
+            if kind == "evidence" and ref_text.startswith("command:"):
+                if not ref_text.split("command:", 1)[1].strip():
+                    errors.append(f"{label}: `{field}` contains an empty command reference")
+                continue
+            if kind == "adr" and not ref_text.startswith("docs/decisions/"):
+                errors.append(f"{label}: `{field}` reference `{ref_text}` must point into `docs/decisions/`")
+                continue
+            if not _path_exists(ref_text):
+                errors.append(f"{label}: `{field}` reference `{ref_text}` does not exist")
 
 
 def _validate_text_list(

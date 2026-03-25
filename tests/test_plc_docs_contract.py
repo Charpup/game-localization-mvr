@@ -261,3 +261,67 @@ def test_validator_rejects_invalid_adr_and_missing_evidence_paths(tmp_path):
 
     assert any("evidence_refs" in error and "does not exist" in error for error in errors)
     assert any("adr_refs" in error and "docs/decisions" in error for error in errors)
+
+
+def test_validator_checks_path_when_evidence_mapping_contains_command_and_path(tmp_path):
+    contract = {
+        "artifacts": {
+            "run_manifest": {
+                "required_fields": [
+                    "manifest_version",
+                    "run_id",
+                    "run_scope",
+                    "status",
+                    "started_at",
+                    "finished_at",
+                    "owner",
+                    "input_manifest",
+                    "issue_report_path",
+                    "verify_report_path",
+                    "artifacts",
+                    "blockers",
+                    "changed_files",
+                    "evidence_refs",
+                    "adr_refs",
+                    "decision_refs",
+                    "evidence_ready",
+                    "next_step_owner",
+                    "next_step_scope",
+                ],
+                "enum_fields": {"status": ["pass", "warn", "blocked"]},
+                "boolean_fields": ["evidence_ready"],
+            }
+        }
+    }
+    manifest = tmp_path / "run_manifest_with_evidence_mapping.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "manifest_version": "demo-v1",
+                "run_id": "demo",
+                "run_scope": "phase2_closeout",
+                "status": "pass",
+                "started_at": "2026-03-25T10:00:00+08:00",
+                "finished_at": "2026-03-25T10:10:00+08:00",
+                "owner": "Codex",
+                "input_manifest": "docs/project_lifecycle/roadmap_index.md",
+                "issue_report_path": "docs/project_lifecycle/roadmap_index.md",
+                "verify_report_path": "docs/project_lifecycle/roadmap_index.md",
+                "artifacts": [],
+                "blockers": [],
+                "changed_files": ["docs/project_lifecycle/roadmap_index.md"],
+                "evidence_refs": [{"command": "python -m pytest tests/test_plc_docs_contract.py -q", "path": "docs/project_lifecycle/missing_verify.md"}],
+                "adr_refs": ["docs/decisions/ADR-0001-project-continuity-framework.md"],
+                "decision_refs": ["phase:demo"],
+                "evidence_ready": True,
+                "next_step_owner": "Codex",
+                "next_step_scope": "phase3_planning_ready",
+            },
+            ensure_ascii=True,
+        ),
+        encoding="utf-8",
+    )
+
+    errors = plc_validate_records.validate_run_manifest(manifest, contract["artifacts"]["run_manifest"])
+
+    assert any("evidence_refs" in error and "missing_verify.md" in error for error in errors)
