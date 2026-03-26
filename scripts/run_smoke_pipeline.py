@@ -1066,6 +1066,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
         "--style", args.style,
         "--glossary", args.glossary,
         "--style-profile", args.style_profile,
+        "--lifecycle-registry", lifecycle_registry_path,
         "--target-lang", active_target,
         "--target-key", _derive_target_key(active_target),
         "--model", args.model,
@@ -1096,6 +1097,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             "--style", args.style,
             "--glossary", args.glossary,
             "--style-profile", args.style_profile,
+            "--lifecycle-registry", lifecycle_registry_path,
             "--target-lang", active_target,
             "--target-key", _derive_target_key(active_target),
             "--model", args.model,
@@ -1338,6 +1340,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
         args.glossary,
         args.soft_qa_rubric,
         "--style-profile", args.style_profile,
+        "--lifecycle-registry", lifecycle_registry_path,
         "--out_report", str(qa_soft_report),
         "--out_tasks", str(qa_soft_tasks),
     ], soft_qa_log)
