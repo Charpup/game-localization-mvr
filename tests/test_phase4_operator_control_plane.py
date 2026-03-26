@@ -126,3 +126,20 @@ def test_operator_control_plane_inspect_returns_matching_card(tmp_path, capsys):
     assert exit_code == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["card_id"] == decision_card["card_id"]
+
+
+def test_operator_control_plane_localizes_windows_absolute_artifact_paths(tmp_path):
+    run_dir = _sample_run_dir(tmp_path, with_tickets=True, with_kpi_drift=True)
+    manifest_path = run_dir / "run_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["artifacts"]["smoke_review_tickets_jsonl"] = r"D:\archived\smoke_review_tickets.jsonl"
+    manifest["artifacts"]["smoke_feedback_log_jsonl"] = r"D:\archived\smoke_review_feedback_log.jsonl"
+    manifest["artifacts"]["smoke_governance_kpi_json"] = r"D:\archived\smoke_language_governance_kpi.json"
+    _write_json(manifest_path, manifest)
+
+    result = operator_control_plane.build_operator_artifacts(run_dir=str(run_dir))
+
+    report = result["report"]
+    assert report["open_review_workload"]["total_review_tickets"] == 1
+    assert report["artifact_refs"]["review_tickets"].endswith("smoke_review_tickets.jsonl")
+    assert any(card["card_type"] == "review_ticket" for card in result["cards"])

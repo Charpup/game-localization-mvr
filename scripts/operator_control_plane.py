@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
@@ -22,6 +23,7 @@ DEFAULT_ADR_REFS = [
     "docs/decisions/ADR-0003-operator-control-plane-operating-model.md",
 ]
 OPEN_REVIEW_STATUSES = {"pending", "acknowledged", "in_review"}
+WINDOWS_ABSOLUTE_RE = re.compile(r"^[A-Za-z]:[\\/]")
 
 
 def _now_iso() -> str:
@@ -47,10 +49,20 @@ def load_operator_card_contract() -> Dict[str, Any]:
     return _load_yaml_dict("workflow/operator_card_contract.yaml", {})
 
 
+def _looks_like_windows_absolute(path: str) -> bool:
+    return bool(WINDOWS_ABSOLUTE_RE.match(str(path or "").strip()))
+
+
 def _resolve_path(path: str, *, base: Optional[Path] = None) -> Optional[Path]:
     text = str(path or "").strip()
     if not text:
         return None
+    if _looks_like_windows_absolute(text):
+        if base is not None:
+            localized = (base / Path(text.replace("\\", "/")).name).resolve()
+            if localized.exists():
+                return localized
+        return Path(text)
     raw = Path(text)
     if raw.is_absolute():
         return raw

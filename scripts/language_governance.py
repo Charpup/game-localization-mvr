@@ -55,6 +55,16 @@ def _repo_relative(path: str) -> str:
         return resolved.as_posix()
 
 
+def _is_repo_managed(path: str) -> bool:
+    raw = Path(path)
+    resolved = raw if raw.is_absolute() else (REPO_ROOT / raw).resolve()
+    try:
+        resolved.relative_to(REPO_ROOT)
+        return True
+    except ValueError:
+        return False
+
+
 def _find_lifecycle_entry(asset_path: str, lifecycle_registry_path: str) -> Dict[str, Any]:
     registry = load_lifecycle_registry(lifecycle_registry_path)
     normalized = _repo_relative(asset_path)
@@ -109,13 +119,11 @@ def validate_governed_asset(asset_path: str, asset_type: str, *, lifecycle_regis
     effective_registry_path = lifecycle_registry_path or "workflow/lifecycle_registry.yaml"
     entry = _find_lifecycle_entry(asset_path, effective_registry_path)
     if not entry:
+        if _is_repo_managed(asset_path):
+            raise GovernanceError(f"missing lifecycle registry entry for {_repo_relative(asset_path)}")
         if asset.is_absolute():
             return {}
-        try:
-            asset.resolve().relative_to(REPO_ROOT)
-            raise GovernanceError(f"missing lifecycle registry entry for {_repo_relative(asset_path)}")
-        except ValueError:
-            return {}
+        return {}
     expected_type = "policy" if asset_type in {"policy", "rubric"} else asset_type
     actual_type = str(entry.get("asset_type") or entry.get("asset_kind") or "")
     if actual_type != expected_type:

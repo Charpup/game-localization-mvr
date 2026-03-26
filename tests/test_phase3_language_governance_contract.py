@@ -112,6 +112,19 @@ def test_validate_style_governance_runtime_fails_closed_for_explicit_incomplete_
         )
 
 
+def test_validate_governed_asset_fails_closed_for_repo_managed_absolute_path_with_missing_registry(tmp_path):
+    asset_path = Path(__file__).parent.parent / "workflow" / "soft_qa_rubric.yaml"
+    lifecycle_registry = tmp_path / "registry.yaml"
+    lifecycle_registry.write_text('version: "1.0"\nentries: []\n', encoding="utf-8")
+
+    with pytest.raises(language_governance.GovernanceError, match="missing lifecycle registry entry"):
+        language_governance.validate_governed_asset(
+            str(asset_path.resolve()),
+            "policy",
+            lifecycle_registry_path=str(lifecycle_registry),
+        )
+
+
 def test_translate_refresh_generate_only_emits_review_tickets_and_kpi(tmp_path):
     translated_csv = tmp_path / "translated.csv"
     delta_rows = tmp_path / "delta_rows.jsonl"
