@@ -62,9 +62,11 @@ except Exception:
     HAS_SEMANTIC = False
 
 from translate_llm import GlossaryEntry, load_glossary
+from style_governance_runtime import evaluate_runtime_governance, format_runtime_governance_issues
 
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 RULE_VERSION = "1.0"
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
 RULE_CATALOG = {
     "D-SQA-001": {
@@ -107,6 +109,11 @@ RULE_CATALOG = {
         "issue_type": "mistranslation",
         "suggestion": "回退到保守直译并对照 glossary/style_contract 重新翻译。",
     },
+    "D-SQA-009": {
+        "version": RULE_VERSION,
+        "issue_type": "style_contract",
+        "suggestion": "修复 style governance / lifecycle gate 后重跑软质检。",
+    },
 }
 
 ISSUE_PRIORITY = {
@@ -136,6 +143,14 @@ def load_style_profile(path: str) -> dict:
     if not path or not os.path.exists(path):
         return {}
     return load_yaml(path)
+
+
+def _is_repo_managed_path(path: str) -> bool:
+    try:
+        Path(path).resolve().relative_to(REPO_ROOT)
+        return True
+    except Exception:
+        return False
 
 
 def read_gate_config(rubric_yaml: str) -> dict:
@@ -181,6 +196,13 @@ def write_json(p: str, obj: Any) -> None:
 def append_jsonl(p: str, items: List[dict]) -> None:
     Path(p).parent.mkdir(parents=True, exist_ok=True)
     with open(p, "a", encoding="utf-8") as f:
+        for it in items:
+            f.write(json.dumps(it, ensure_ascii=False) + "\n")
+
+
+def write_jsonl(p: str, items: List[dict]) -> None:
+    Path(p).parent.mkdir(parents=True, exist_ok=True)
+    with open(p, "w", encoding="utf-8") as f:
         for it in items:
             f.write(json.dumps(it, ensure_ascii=False) + "\n")
 
@@ -539,6 +561,24 @@ def build_gate_remediation(violations: List[dict]) -> List[str]:
     return actions
 
 
+def build_governance_failure_tasks(report: Dict[str, Any]) -> List[dict]:
+    return [
+        {
+            "string_id": "system",
+            "type": "style_contract",
+            "severity": "major",
+            "note": "style_governance_blocked",
+            "problem": "Phase 3 style governance gate failed",
+            "suggestion": RULE_CATALOG["D-SQA-009"]["suggestion"],
+            "suggested_fix": "",
+            "rule_id": "D-SQA-009",
+            "rule_version": RULE_VERSION,
+            "remediation": RULE_CATALOG["D-SQA-009"]["suggestion"],
+            "governance_issues": report.get("issues", []),
+        }
+    ]
+
+
 def main():
     configure_standard_streams()
     ap = argparse.ArgumentParser(description="LLM-based soft QA (Batch Mode v2.3)")
@@ -548,6 +588,7 @@ def main():
     ap.add_argument("glossary_yaml", nargs="?", default="data/glossary.yaml", help="Glossary file")
     ap.add_argument("rubric_yaml", nargs="?", default="workflow/soft_qa_rubric.yaml", help="rubric config")
     ap.add_argument("--style-profile", default="data/style_profile.yaml", help="Style profile")
+    ap.add_argument("--lifecycle-registry", default="workflow/lifecycle_registry.yaml", help="Lifecycle registry for governed assets")
     ap.add_argument("--batch_size", type=int, default=15)
     ap.add_argument("--model", default="claude-haiku-4-5-20251001")
     ap.add_argument("--max_batch_tokens", type=int, default=4000)
@@ -577,6 +618,14 @@ def main():
     rows = read_csv(input_path)
     style = load_text(args.style_guide_md)
     style_profile = load_style_profile(args.style_profile)
+    runtime_governance = {"passed": True, "issues": [], "mode": "external_fixture"}
+    if _is_repo_managed_path(args.style_profile):
+        runtime_governance = evaluate_runtime_governance(
+            style_profile_path=args.style_profile,
+            glossary_path=args.glossary_yaml if Path(args.glossary_yaml).exists() else "",
+            policy_paths=[args.rubric_yaml, "workflow/style_governance_contract.yaml"],
+            lifecycle_registry_path=args.lifecycle_registry,
+        )
     gate = read_gate_config(args.rubric_yaml)
 
     glossary_entries = []
@@ -593,6 +642,37 @@ def main():
             rows_with_target = rows_with_target[rows_processed:]
     print(f"✅ Loaded {len(rows)} rows, target rows {len(rows_with_target)}")
 
+    if not runtime_governance["passed"]:
+        governance_tasks = build_governance_failure_tasks(runtime_governance)
+        report = {
+            "version": "2.3",
+            "mode": "batch",
+            "has_findings": True,
+            "summary": {"major": 1, "minor": 0, "total_tasks": len(governance_tasks)},
+            "outputs": {"repair_tasks_jsonl": args.out_tasks},
+            "metadata": {
+                "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                "rubric_profile_version": (style_profile.get("version") or ""),
+                "gate": gate,
+                "runtime_governance": runtime_governance,
+            },
+            "hard_gate": {
+                "enabled": True,
+                "rule_id": "PHASE3_STYLE_GOVERNANCE",
+                "rule_version": RULE_VERSION,
+                "severity_threshold": "major",
+                "fail_on_types": ["style_contract"],
+                "violations": governance_tasks,
+                "suggested_actions": [RULE_CATALOG["D-SQA-009"]["suggestion"]],
+                "status": "fail",
+                "remediation": RULE_CATALOG["D-SQA-009"]["suggestion"],
+            },
+        }
+        print(format_runtime_governance_issues(runtime_governance))
+        write_json(args.out_report, report)
+        write_jsonl(args.out_tasks, governance_tasks)
+        return 2
+
     pre_tasks = preflight_tasks(rows_with_target, style_profile, glossary_entries)
     hard_fail_pre, pre_failures = build_hard_gate(pre_tasks, gate)
 
@@ -604,7 +684,11 @@ def main():
             "has_findings": bool(pre_tasks),
             "summary": {"major": 0, "minor": 0, "total_tasks": len(pre_tasks)},
             "outputs": {"repair_tasks_jsonl": args.out_tasks},
-            "metadata": {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "dry_run": True},
+            "metadata": {
+                "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                "dry_run": True,
+                "runtime_governance": runtime_governance,
+            },
             "hard_gate": {
                 "enabled": gate.get("enabled", False),
                 "rule_id": gate.get("rule_id", "STEP1_TERM_STYLE_DRIFT"),
@@ -684,7 +768,12 @@ def main():
             "preflight_tasks": len(pre_tasks),
         },
         "outputs": {"repair_tasks_jsonl": args.out_tasks},
-        "metadata": {"generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "rubric_profile_version": (style_profile.get("version") or ""), "gate": gate},
+        "metadata": {
+            "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "rubric_profile_version": (style_profile.get("version") or ""),
+            "gate": gate,
+            "runtime_governance": runtime_governance,
+        },
         "hard_gate": {
             "enabled": gate.get("enabled", False),
             "rule_id": gate.get("rule_id", "STEP1_TERM_STYLE_DRIFT"),

@@ -22,7 +22,16 @@ def _make_args(tmp_path: Path) -> Namespace:
 
     input_csv.write_text("string_id,source_zh\n1,你好\n", encoding="utf-8")
     style.write_text("# style\n", encoding="utf-8")
-    style_profile.write_text("{}", encoding="utf-8")
+    style_profile.write_text(
+        json.dumps(
+            {
+                "project": {"source_language": "zh-CN", "target_language": "ru-RU"},
+                "ui": {"length_constraints": {"button_max_chars": 18, "dialogue_max_chars": 120}},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
     glossary.write_text("approved: []\n", encoding="utf-8")
     rubric.write_text("{}", encoding="utf-8")
     schema.write_text("patterns: []\npaired_tags: []\n", encoding="utf-8")
@@ -127,12 +136,103 @@ def test_run_pipeline_repairs_hard_qa_then_completes_with_warn_status(monkeypatc
     manifest = json.loads((Path(args.run_dir) / "run_manifest.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "warn"
     assert manifest["overall_status"] == "warn"
+    assert manifest["artifacts"]["lifecycle_registry"] == "workflow/lifecycle_registry.yaml"
     assert manifest["repair_cycles"]["hard"]["status"] == "completed"
     assert manifest["repair_cycles"]["soft"]["status"] == "skipped"
     assert manifest["delivery_decision"]["selected_candidate_stage"] == "repair_hard"
     assert manifest["review_handoff"]["pending_count"] == 0
+    assert manifest["runtime_governance"]["passed"] is True
     assert "Repair Hard" in [stage["name"] for stage in manifest["stages"]]
     assert "QA Hard Recheck" in [stage["name"] for stage in manifest["stages"]]
+    assert (Path(args.run_dir) / "smoke_review_tickets.jsonl").exists()
+    assert (Path(args.run_dir) / "smoke_review_tickets.csv").exists()
+    assert (Path(args.run_dir) / "smoke_review_feedback_log.jsonl").exists()
+    assert (Path(args.run_dir) / "smoke_language_governance_kpi.json").exists()
+    kpi_payload = json.loads((Path(args.run_dir) / "smoke_language_governance_kpi.json").read_text(encoding="utf-8"))
+    assert kpi_payload["scope"] == "smoke_pipeline"
+
+
+def test_run_pipeline_forwards_lifecycle_registry_to_translate_and_soft_qa(monkeypatch, tmp_path):
+    args = _make_args(tmp_path)
+    args.lifecycle_registry = str(tmp_path / "custom_lifecycle.yaml")
+    Path(args.lifecycle_registry).write_text("entries: []\n", encoding="utf-8")
+
+    monkeypatch.setattr(smoke_pipeline, "_timestamp", lambda: "20260326_090000")
+    monkeypatch.setattr(smoke_pipeline, "_append_symbol_regression_checks", lambda **kwargs: None)
+
+    seen = {"translate": [], "soft_qa": []}
+
+    def fake_run_step(cmd, log_path, env=None):
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_path.write_text("ok", encoding="utf-8")
+        cmd_text = " ".join(str(part) for part in cmd)
+
+        if "llm_ping.py" in cmd_text:
+            return SimpleNamespace(returncode=0, stdout="pong", stderr="")
+        if "normalize_guard.py" in cmd_text:
+            Path(cmd[3]).write_text("string_id,source_zh\n1,你好\n", encoding="utf-8")
+            Path(cmd[4]).write_text(json.dumps({"mappings": {}}), encoding="utf-8")
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        if "translate_llm.py" in cmd_text:
+            seen["translate"].append(cmd)
+            Path(cmd[cmd.index("--output") + 1]).write_text("string_id,target_ru\n1,Привет\n", encoding="utf-8")
+            (Path(args.run_dir) / "llm_trace.jsonl").write_text("{}", encoding="utf-8")
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        if "qa_hard.py" in cmd_text:
+            report_path = Path(cmd[6])
+            report_path.write_text(
+                json.dumps({"has_errors": False, "metadata": {"total_errors": 0, "total_warnings": 0}}),
+                encoding="utf-8",
+            )
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        if "soft_qa_llm.py" in cmd_text:
+            seen["soft_qa"].append(cmd)
+            Path(cmd[cmd.index("--out_report") + 1]).write_text(
+                json.dumps({"has_findings": False, "summary": {"major": 0, "minor": 0, "total_tasks": 0}, "hard_gate": {"status": "pass"}}),
+                encoding="utf-8",
+            )
+            Path(cmd[cmd.index("--out_tasks") + 1]).write_text("", encoding="utf-8")
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        if "rehydrate_export.py" in cmd_text:
+            Path(cmd[4]).write_text("string_id,rehydrated_text,target_ru\n1,Привет,Привет\n", encoding="utf-8")
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        if "metrics_aggregator.py" in cmd_text:
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        if "smoke_verify.py" in cmd_text:
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        raise AssertionError(f"Unexpected command: {cmd}")
+
+    monkeypatch.setattr(smoke_pipeline, "_run_step", fake_run_step)
+
+    exit_code = smoke_pipeline.run_pipeline(args)
+
+    assert exit_code == 0
+    assert seen["translate"]
+    assert seen["soft_qa"]
+    assert "--lifecycle-registry" in seen["translate"][0]
+    assert args.lifecycle_registry == seen["translate"][0][seen["translate"][0].index("--lifecycle-registry") + 1]
+    assert "--lifecycle-registry" in seen["soft_qa"][0]
+    assert args.lifecycle_registry == seen["soft_qa"][0][seen["soft_qa"][0].index("--lifecycle-registry") + 1]
+
+
+def test_run_pipeline_fails_closed_when_style_governance_gate_fails(monkeypatch, tmp_path):
+    args = _make_args(tmp_path)
+
+    monkeypatch.setattr(
+        smoke_pipeline,
+        "validate_style_governance_runtime",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(smoke_pipeline.GovernanceError("gate failed")),
+    )
+
+    exit_code = smoke_pipeline.run_pipeline(args)
+    assert exit_code == 1
+
+    manifest = json.loads((Path(args.run_dir) / "run_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "failed"
+    assert manifest["overall_status"] == "failed"
+    assert manifest["status_reason"] == "style_governance_gate_failed"
+    assert manifest["gate_summary"]["status"] == "failed"
+    assert manifest["gate_summary"]["failed_gates"] == ["style_governance"]
 
 
 def test_run_pipeline_marks_failed_status_when_input_is_missing(tmp_path):

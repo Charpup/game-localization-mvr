@@ -18,10 +18,145 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 try:
     from scripts.smoke_issue_logger import append_issue, build_issue
 except ImportError:  # pragma: no cover
     from smoke_issue_logger import append_issue, build_issue
+try:
+    from scripts.review_governance import (
+        build_kpi_report,
+        build_review_tickets,
+        ensure_feedback_log,
+        load_feedback_log,
+        load_lifecycle_registry,
+        load_review_ticket_contract,
+        write_json as governance_write_json,
+        write_jsonl as governance_write_jsonl,
+    )
+except ImportError:  # pragma: no cover
+    from review_governance import (
+        build_kpi_report,
+        build_review_tickets,
+        ensure_feedback_log,
+        load_feedback_log,
+        load_lifecycle_registry,
+        load_review_ticket_contract,
+        write_json as governance_write_json,
+        write_jsonl as governance_write_jsonl,
+    )
+try:
+    from scripts.style_governance_runtime import evaluate_runtime_governance, format_runtime_governance_issues
+except ImportError:  # pragma: no cover
+    from style_governance_runtime import evaluate_runtime_governance, format_runtime_governance_issues
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+class GovernanceError(RuntimeError):
+    pass
+
+
+def _repo_relative(path: str) -> str:
+    raw = Path(path)
+    resolved = raw if raw.is_absolute() else (REPO_ROOT / raw).resolve()
+    try:
+        return resolved.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
+def _is_repo_managed(path: str) -> bool:
+    try:
+        (Path(path) if Path(path).is_absolute() else (REPO_ROOT / path).resolve()).relative_to(REPO_ROOT)
+        return True
+    except ValueError:
+        return False
+
+
+def _find_lifecycle_entry(asset_path: str, lifecycle_registry_path: str) -> Dict[str, Any]:
+    registry = load_lifecycle_registry(lifecycle_registry_path)
+    normalized = _repo_relative(asset_path)
+    for entry in registry.get("entries", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        if _repo_relative(str(entry.get("asset_path") or "")) == normalized:
+            return entry
+    return {}
+
+
+def validate_governed_asset(asset_path: str, asset_kind: str, *, lifecycle_registry_path: str) -> Dict[str, Any]:
+    if not Path(asset_path).exists():
+        raise GovernanceError(f"missing governed asset: {asset_path}")
+    if not _is_repo_managed(asset_path):
+        return {}
+    entry = _find_lifecycle_entry(asset_path, lifecycle_registry_path)
+    if not entry:
+        raise GovernanceError(f"missing lifecycle registry entry for {_repo_relative(asset_path)}")
+    expected_kind = "policy" if asset_kind in {"policy", "rubric"} else asset_kind
+    actual_kind = str(entry.get("asset_kind") or "")
+    if actual_kind != expected_kind:
+        raise GovernanceError(
+            f"lifecycle asset kind mismatch for {_repo_relative(asset_path)}: expected {expected_kind}, got {actual_kind}"
+        )
+    if str(entry.get("status") or "") != "approved":
+        raise GovernanceError(f"governed asset is not approved: {_repo_relative(asset_path)}")
+    return entry
+
+
+def validate_style_governance_runtime(style_profile_path: str, *, lifecycle_registry_path: str) -> Dict[str, Any]:
+    if not Path(style_profile_path).exists():
+        raise GovernanceError(f"style profile missing or invalid: {style_profile_path}")
+    if not _is_repo_managed(style_profile_path):
+        return {
+            "passed": True,
+            "style_profile_path": str(style_profile_path),
+            "asset_statuses": {},
+            "issues": [],
+        }
+    report = evaluate_runtime_governance(
+        style_profile_path=style_profile_path,
+        lifecycle_registry_path=lifecycle_registry_path,
+        policy_paths=["workflow/style_governance_contract.yaml"],
+    )
+    if not report["passed"]:
+        raise GovernanceError(format_runtime_governance_issues(report))
+    return report
+
+
+def _review_ticket_fieldnames(tickets: List[Dict[str, Any]]) -> List[str]:
+    required = list(load_review_ticket_contract().get("required_fields", []) or [])
+    extras: List[str] = []
+    for ticket in tickets:
+        for key in ticket.keys():
+            if key not in required and key not in extras:
+                extras.append(key)
+    return [*required, *extras]
+
+
+def write_review_tickets(jsonl_path: str, csv_path: str, tickets: List[Dict[str, Any]]) -> None:
+    governance_write_jsonl(jsonl_path, tickets)
+    fieldnames = _review_ticket_fieldnames(tickets)
+    rows: List[Dict[str, str]] = []
+    for ticket in tickets:
+        row: Dict[str, str] = {}
+        for field in fieldnames:
+            value = ticket.get(field)
+            if isinstance(value, (list, dict)):
+                row[field] = json.dumps(value, ensure_ascii=False)
+            else:
+                row[field] = "" if value is None else str(value)
+        rows.append(row)
+    if not rows:
+        rows = []
+    with open(csv_path, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 REVIEW_QUEUE_FIELDS = [
@@ -242,6 +377,54 @@ def _review_handoff_summary(rows: List[Dict[str, str]], queue_path: Path) -> Dic
     }
 
 
+def _normalize_review_ticket_queue_rows(rows: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    normalized: List[Dict[str, str]] = []
+    for row in rows:
+        item = dict(row)
+        task_id = str(item.get("task_id") or "")
+        review_source = str(item.get("review_source") or "manual_review")
+        if not task_id:
+            task_id = f"manual_review:{item.get('string_id') or review_source}"
+            item["task_id"] = task_id
+        if not str(item.get("string_id") or ""):
+            item["string_id"] = str(task_id.split(":", 1)[-1] or review_source)
+        if not str(item.get("review_status") or "") or str(item.get("review_status") or "") == "not_required":
+            item["review_status"] = "pending"
+        if not str(item.get("current_target") or ""):
+            item["current_target"] = "[manual review required]"
+        reason_codes = item.get("reason_codes")
+        if isinstance(reason_codes, str):
+            stripped = reason_codes.strip()
+            if stripped in {"", "[]"}:
+                item["reason_codes"] = json.dumps([review_source.upper()], ensure_ascii=False)
+        elif not reason_codes:
+            item["reason_codes"] = json.dumps([review_source.upper()], ensure_ascii=False)
+        normalized.append(item)
+    return normalized
+
+
+def _build_review_ticket_task_lookup(rows: List[Dict[str, str]], target_locale: str) -> Dict[str, Dict[str, Any]]:
+    lookup: Dict[str, Dict[str, Any]] = {}
+    high_risk_sources = {"post_gate_blocked", "execution_failure", "soft_qa_hard_gate", "soft_repair_rollback"}
+    for row in rows:
+        task_id = str(row.get("task_id") or "")
+        if not task_id:
+            continue
+        review_source = str(row.get("review_source") or "")
+        risk_level = "high" if review_source in high_risk_sources else "medium"
+        lookup[task_id] = {
+            "task_id": task_id,
+            "target_locale": target_locale,
+            "content_class": "general",
+            "risk_level": risk_level,
+            "target_constraints": {
+                "content_class": "general",
+                "risk_level": risk_level,
+            },
+        }
+    return lookup
+
+
 def _extract_current_target(row: Dict[str, Any], fallback: str = "") -> str:
     preferred_keys = ["target_text", "target", "target_ru", "target_en"]
     dynamic_target_keys = [
@@ -303,6 +486,7 @@ def _make_manifest(args: argparse.Namespace, run_id: str, input_csv: Path, run_d
         "artifacts": {
             "style_guide": args.style,
             "style_profile": args.style_profile,
+            "lifecycle_registry": getattr(args, "lifecycle_registry", "workflow/lifecycle_registry.yaml"),
             "schema": args.schema,
             "forbidden_patterns": args.forbidden,
             "glossary": args.glossary,
@@ -637,6 +821,8 @@ def _finalize_manifest(
 def run_pipeline(args: argparse.Namespace) -> int:
     if not getattr(args, "soft_qa_rubric", ""):
         args.soft_qa_rubric = "workflow/soft_qa_rubric.yaml"
+    if not getattr(args, "lifecycle_registry", ""):
+        args.lifecycle_registry = "workflow/lifecycle_registry.yaml"
     run_id = f"smoke_run_{_timestamp()}"
     run_dir = Path(args.run_dir or Path("data") / run_id)
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -655,15 +841,29 @@ def run_pipeline(args: argparse.Namespace) -> int:
     repaired_soft_csv = run_dir / "smoke_repaired_soft.csv"
     qa_hard_post_soft_report = run_dir / "smoke_qa_hard_post_soft_report.json"
     review_queue_path = run_dir / "smoke_review_queue.csv"
+    review_tickets_jsonl = run_dir / "smoke_review_tickets.jsonl"
+    review_tickets_csv = run_dir / "smoke_review_tickets.csv"
+    feedback_log_jsonl = run_dir / "smoke_review_feedback_log.jsonl"
+    kpi_report_json = run_dir / "smoke_language_governance_kpi.json"
     final_csv = run_dir / "smoke_final_export.csv"
     run_manifest_path = run_dir / "run_manifest.json"
 
     manifest = _make_manifest(args, run_id, input_csv, run_dir, issue_file)
     manifest["review_handoff"]["queue_path"] = str(review_queue_path)
     _append_artifact(manifest, "smoke_review_queue", review_queue_path)
+    _append_artifact(manifest, "smoke_review_tickets_jsonl", review_tickets_jsonl)
+    _append_artifact(manifest, "smoke_review_tickets_csv", review_tickets_csv)
+    _append_artifact(manifest, "smoke_feedback_log_jsonl", feedback_log_jsonl)
+    _append_artifact(manifest, "smoke_governance_kpi_json", kpi_report_json)
     review_queue_rows: List[Dict[str, str]] = []
     candidate_csv: Optional[Path] = None
     candidate_stage = ""
+    runtime_governance: Dict[str, Any] = {
+        "passed": True,
+        "style_profile_path": str(args.style_profile or ""),
+        "asset_statuses": {},
+        "issues": [],
+    }
 
     def finish_failed(stage_name: str, reason: str, *, failed_gate: str = "", code: int = 1) -> int:
         manifest["delivery_decision"]["selected_candidate_csv"] = str(candidate_csv) if candidate_csv else ""
@@ -788,6 +988,26 @@ def run_pipeline(args: argparse.Namespace) -> int:
             suggest="通过 scripts/style_guide_bootstrap.py 生成 style profile 后再重试。"
         ))
         return finish_failed("style_profile_bootstrap", "style_profile_missing", failed_gate="style_profile")
+    try:
+        lifecycle_registry_path = getattr(args, "lifecycle_registry", "workflow/lifecycle_registry.yaml")
+        runtime_governance = validate_style_governance_runtime(
+            args.style_profile,
+            lifecycle_registry_path=lifecycle_registry_path,
+        )
+        validate_governed_asset(args.glossary, "glossary", lifecycle_registry_path=lifecycle_registry_path)
+        validate_governed_asset(args.soft_qa_rubric, "rubric", lifecycle_registry_path=lifecycle_registry_path)
+        validate_governed_asset(args.schema, "policy", lifecycle_registry_path=lifecycle_registry_path)
+    except GovernanceError as exc:
+        append_issue(str(issue_file), build_issue(
+            run_id=run_id,
+            stage="style_governance_gate",
+            severity="P0",
+            error_code="STYLE_GOVERNANCE_GATE_FAIL",
+            context={"style_profile": args.style_profile, "error": str(exc)},
+            suggest="修复 style governance / lifecycle registry 后重试。",
+        ))
+        return finish_failed("style_governance_gate", "style_governance_gate_failed", failed_gate="style_governance")
+    manifest["runtime_governance"] = runtime_governance
 
     # 0) connectivity
     ping_log = run_dir / f"00_{_safe_stage_name('connectivity')}.log"
@@ -846,6 +1066,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
         "--style", args.style,
         "--glossary", args.glossary,
         "--style-profile", args.style_profile,
+        "--lifecycle-registry", lifecycle_registry_path,
         "--target-lang", active_target,
         "--target-key", _derive_target_key(active_target),
         "--model", args.model,
@@ -876,6 +1097,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             "--style", args.style,
             "--glossary", args.glossary,
             "--style-profile", args.style_profile,
+            "--lifecycle-registry", lifecycle_registry_path,
             "--target-lang", active_target,
             "--target-key", _derive_target_key(active_target),
             "--model", args.model,
@@ -997,6 +1219,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             "--output", str(repaired_hard_csv),
             "--output-dir", str(repair_hard_dir),
             "--qa-type", "hard",
+            "--target-lang", active_target,
         ], repair_hard_log)
         hard_stats_path = repair_hard_dir / "repair_hard_stats.json"
         hard_escalation_path = repair_hard_dir / "escalated_hard_qa.csv"
@@ -1117,6 +1340,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
         args.glossary,
         args.soft_qa_rubric,
         "--style-profile", args.style_profile,
+        "--lifecycle-registry", lifecycle_registry_path,
         "--out_report", str(qa_soft_report),
         "--out_tasks", str(qa_soft_tasks),
     ], soft_qa_log)
@@ -1207,6 +1431,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             "--output", str(repaired_soft_csv),
             "--output-dir", str(repair_soft_dir),
             "--qa-type", "soft",
+            "--target-lang", active_target,
         ], repair_soft_log)
         soft_stats_path = repair_soft_dir / "repair_soft_stats.json"
         soft_escalation_path = repair_soft_dir / "escalated_soft_qa.csv"
@@ -1438,7 +1663,46 @@ def run_pipeline(args: argparse.Namespace) -> int:
     _append_stage_artifact(manifest, "verify_input", final_csv)
     _append_artifact(manifest, "smoke_manifest", run_manifest_path)
     _append_artifact(manifest, "smoke_verify_log", verify_log)
-    _write_review_queue(review_queue_path, _dedupe_review_queue(review_queue_rows))
+    deduped_review_queue = _normalize_review_ticket_queue_rows(_dedupe_review_queue(review_queue_rows))
+    _write_review_queue(review_queue_path, deduped_review_queue)
+    ensure_feedback_log(str(feedback_log_jsonl))
+    feedback_logs = load_feedback_log(str(feedback_log_jsonl))
+    review_tickets = build_review_tickets(
+        deduped_review_queue,
+        task_lookup=_build_review_ticket_task_lookup(deduped_review_queue, active_target),
+        source_artifacts={
+            "run_manifest": str(run_manifest_path),
+            "review_queue": str(review_queue_path),
+            "style_profile": args.style_profile,
+        },
+        default_locale=active_target,
+    )
+    write_review_tickets(str(review_tickets_jsonl), str(review_tickets_csv), review_tickets)
+    governance_write_json(
+        str(kpi_report_json),
+        build_kpi_report(
+            scope="smoke_pipeline",
+            manifest=manifest,
+            review_tickets=review_tickets,
+            feedback_logs=feedback_logs,
+            runtime_governance=runtime_governance,
+            lifecycle_registry=load_lifecycle_registry(getattr(args, "lifecycle_registry", "workflow/lifecycle_registry.yaml")),
+            metrics_payload=_read_json(run_dir / "smoke_metrics_report.json"),
+            extra_sources={
+                "run_manifest": str(run_manifest_path),
+                "review_queue": str(review_queue_path),
+                "review_tickets": str(review_tickets_jsonl),
+                "feedback_log": str(feedback_log_jsonl),
+                "metrics_report_json": str(run_dir / "smoke_metrics_report.json"),
+                "lifecycle_registry_path": getattr(args, "lifecycle_registry", "workflow/lifecycle_registry.yaml"),
+            },
+        ),
+    )
+    manifest.setdefault("artifacts", {})
+    manifest["artifacts"]["smoke_review_tickets_jsonl"] = str(review_tickets_jsonl)
+    manifest["artifacts"]["smoke_review_tickets_csv"] = str(review_tickets_csv)
+    manifest["artifacts"]["smoke_feedback_log_jsonl"] = str(feedback_log_jsonl)
+    manifest["artifacts"]["smoke_governance_kpi_json"] = str(kpi_report_json)
     _write_manifest(run_manifest_path, manifest)
 
     verify = _run_step([
@@ -1493,6 +1757,7 @@ def main():
     parser.add_argument("--model", default="claude-haiku-4-5-20251001", help="Translation model")
     parser.add_argument("--style", default="workflow/style_guide.md", help="Style guide path")
     parser.add_argument("--style-profile", default="", help="Style profile path. Defaults to tracked authority candidates and auto-bootstrap.")
+    parser.add_argument("--lifecycle-registry", default="workflow/lifecycle_registry.yaml", help="Lifecycle registry for governed assets.")
     parser.add_argument("--glossary", default="glossary/compiled.yaml", help="Glossary path")
     parser.add_argument("--soft-qa-rubric", default="workflow/soft_qa_rubric.yaml", help="Soft QA rubric path")
     parser.add_argument("--schema", default="workflow/placeholder_schema.yaml", help="Placeholder schema path")

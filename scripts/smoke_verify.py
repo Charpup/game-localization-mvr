@@ -299,15 +299,37 @@ def _collect_stage_issues(stages: List[Dict[str, Any]], manifest: Dict[str, Any]
     return stage_issues
 
 
-def _find_qa_reports(stages: List[Dict[str, Any]]) -> List[Tuple[str, str]]:
+def _find_qa_reports(stages: List[Dict[str, Any]], manifest: Optional[Dict[str, Any]] = None) -> List[Tuple[str, str]]:
     reports = []
+    seen_paths = set()
+    selected_labels = set()
+    stage_artifacts = manifest.get("stage_artifacts", {}) if isinstance(manifest, dict) else {}
+    if isinstance(stage_artifacts, dict):
+        for key in ("qa_hard_post_soft_report", "qa_hard_recheck_report", "qa_hard_report"):
+            path = stage_artifacts.get(key)
+            if isinstance(path, str) and path and path not in seen_paths:
+                reports.append(("Hard QA", path))
+                seen_paths.add(path)
+                selected_labels.add("Hard QA")
+                break
+        for key in ("soft_qa_report", "qa_soft_report"):
+            path = stage_artifacts.get(key)
+            if isinstance(path, str) and path and path not in seen_paths:
+                reports.append(("Soft QA", path))
+                seen_paths.add(path)
+                selected_labels.add("Soft QA")
+                break
+
     for stage in stages:
         for item in stage.get("files", []):
             path = _coerce_file_entry(item)["path"]
             lower = path.lower()
-            if lower.endswith(".json") and "qa" in lower:
+            if lower.endswith(".json") and "qa" in lower and path not in seen_paths:
                 label = "Soft QA" if "soft" in lower else "Hard QA"
+                if label in selected_labels:
+                    continue
                 reports.append((label, path))
+                seen_paths.add(path)
     return reports
 
 
@@ -463,11 +485,12 @@ def print_summary(
         print(f"\n--- {stage['name']} ---")
         stage_pass = True
         for item in stage.get("files", []):
-            path = _coerce_file_entry(item)["path"]
+            file_entry = _coerce_file_entry(item)
+            path = file_entry["path"]
             exists = os.path.exists(_resolve_path(path))
             status = "✅" if exists else "❌"
             print(f"  {status} {path}")
-            if stage.get("required", True) and not exists:
+            if stage.get("required", True) and file_entry.get("required", True) and not exists:
                 stage_pass = False
                 all_pass = False
         if len(stage.get("files", [])) > 0:
@@ -506,7 +529,7 @@ def print_summary(
             print("未提供最终文件路径，跳过翻译统计。")
 
         print("\n--- QA 统计 ---")
-        qa_reports = _find_qa_reports(stages)
+        qa_reports = _find_qa_reports(stages, manifest)
         _, qa_rows, qa_issues = _verify_qa_reports(manifest.get("run_id", ""), qa_reports, "")
         for row in qa_rows:
             print(row)
@@ -545,7 +568,7 @@ def run_verify(manifest_path: str, mode: str, issue_file: str = "") -> bool:
     issues = _collect_stage_issues(stages, manifest, run_id)
 
     # QA issue 归类（硬 QA 失败作为阻断）
-    qa_reports = _find_qa_reports(stages)
+    qa_reports = _find_qa_reports(stages, manifest)
     _, qa_rows, qa_issues = _verify_qa_reports(run_id, qa_reports, issue_file)
     issues.extend(qa_issues)
 

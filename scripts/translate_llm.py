@@ -42,6 +42,8 @@ except ImportError:
     print("ERROR: scripts/runtime_adapter.py not found.")
     sys.exit(1)
 
+from style_governance_runtime import evaluate_runtime_governance, format_runtime_governance_issues
+
 
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
 CJK_RE = re.compile(r"[\u4e00-\u9fff]")
@@ -111,6 +113,7 @@ DEFAULT_STYLE_PROFILE_CANDIDATES = [
     "workflow/style_profile.generated.yaml",
     "data/style_profile.yaml",
 ]
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def resolve_asset_path(path: str, candidates: List[str]) -> str:
@@ -128,6 +131,14 @@ def resolve_glossary_path(path: str = "") -> str:
 
 def resolve_style_profile_path(path: str = "") -> str:
     return resolve_asset_path(path, DEFAULT_STYLE_PROFILE_CANDIDATES)
+
+
+def _is_repo_managed_path(path: str) -> bool:
+    try:
+        Path(path).resolve().relative_to(REPO_ROOT)
+        return True
+    except Exception:
+        return False
 
 
 def _normalize_locale(locale: str) -> str:
@@ -610,6 +621,7 @@ def main():
     parser.add_argument("--style", default="workflow/style_guide.md")
     parser.add_argument("--glossary", default="", help="Glossary asset path. Defaults to tracked authority candidates.")
     parser.add_argument("--style-profile", default="", help="Style profile path. Defaults to tracked authority candidates.")
+    parser.add_argument("--lifecycle-registry", default="workflow/lifecycle_registry.yaml", help="Lifecycle registry for governed assets.")
     parser.add_argument("--target-lang", default="ru-RU")
     parser.add_argument("--target-key", default="", help="target_ru / target_en")
     parser.add_argument("--checkpoint", default="data/translate_checkpoint.json")
@@ -624,6 +636,18 @@ def main():
     style_profile = load_style_profile(args.style_profile)
     glossary, _ = load_glossary(args.glossary, args.target_lang)
     glossary_summary = build_glossary_summary(glossary)
+
+    runtime_governance = {"passed": True, "issues": [], "mode": "external_fixture"}
+    if _is_repo_managed_path(args.style_profile):
+        runtime_governance = evaluate_runtime_governance(
+            style_profile_path=args.style_profile,
+            glossary_path=args.glossary,
+            policy_paths=["workflow/style_governance_contract.yaml"],
+            lifecycle_registry_path=args.lifecycle_registry,
+        )
+    if not runtime_governance["passed"]:
+        print(format_runtime_governance_issues(runtime_governance))
+        return 1
 
     style_gate_issues: List[Dict[str, str]] = []
     style_gate_issues.extend(validate_style_profile_for_translate(style_profile))

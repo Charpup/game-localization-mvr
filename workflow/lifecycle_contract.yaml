@@ -1,0 +1,22 @@
+version: "1.0"
+artifact: "lifecycle_registry"
+required_fields:
+  - "asset_id"
+  - "asset_kind"
+  - "asset_path"
+  - "status"
+  - "approval_ref"
+  - "required_runtime_gate"
+asset_kind_enum:
+  - "style_profile"
+  - "glossary"
+  - "policy"
+  - "report"
+status_enum:
+  - "draft"
+  - "approved"
+  - "deprecated"
+  - "superseded"
+none_values:
+  - "none"
+  - ""

@@ -376,11 +376,6 @@ entries:
   confidence: 0.98
   reason: Игровой магазин для покупок | noun
   context: null
-- term_zh: 副本
-  term_ru: Подземелье
-  confidence: 0.95
-  reason: Миссия, уровень с врагами | noun
-  context: null
 - term_zh: 好好
   term_ru: Хорошо
   confidence: 0.8

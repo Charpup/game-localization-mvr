@@ -21,8 +21,20 @@ from translate_llm import (
     build_user_prompt,
     derive_target_key,
     load_glossary,
+    load_style_profile as load_translate_style_profile,
     tokens_signature,
 )
+from review_governance import (
+    build_kpi_report,
+    build_review_tickets,
+    ensure_feedback_log,
+    load_feedback_log,
+    load_lifecycle_registry,
+    load_review_ticket_contract,
+    write_json as governance_write_json,
+    write_jsonl as governance_write_jsonl,
+)
+from style_governance_runtime import evaluate_runtime_governance, format_runtime_governance_issues
 
 
 TASK_REQUIRED_FIELDS = [
@@ -85,6 +97,105 @@ REVIEW_QUEUE_FIELDS = [
     "manual_review_reason",
     "current_target",
 ]
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+class GovernanceError(RuntimeError):
+    pass
+
+
+def _repo_relative(path: str) -> str:
+    raw = Path(path)
+    resolved = raw if raw.is_absolute() else (REPO_ROOT / raw).resolve()
+    try:
+        return resolved.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
+def _is_repo_managed(path: str) -> bool:
+    try:
+        (Path(path) if Path(path).is_absolute() else (REPO_ROOT / path).resolve()).relative_to(REPO_ROOT)
+        return True
+    except ValueError:
+        return False
+
+
+def _find_lifecycle_entry(asset_path: str, lifecycle_registry_path: str) -> Dict[str, Any]:
+    registry = load_lifecycle_registry(lifecycle_registry_path)
+    normalized = _repo_relative(asset_path)
+    for entry in registry.get("entries", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        if _repo_relative(str(entry.get("asset_path") or "")) == normalized:
+            return entry
+    return {}
+
+
+def validate_governed_asset(asset_path: str, asset_kind: str, *, lifecycle_registry_path: str) -> Dict[str, Any]:
+    if not Path(asset_path).exists():
+        raise GovernanceError(f"missing governed asset: {asset_path}")
+    if not _is_repo_managed(asset_path):
+        return {}
+    entry = _find_lifecycle_entry(asset_path, lifecycle_registry_path)
+    if not entry:
+        raise GovernanceError(f"missing lifecycle registry entry for {_repo_relative(asset_path)}")
+    expected_kind = "policy" if asset_kind in {"policy", "rubric"} else asset_kind
+    actual_kind = str(entry.get("asset_kind") or "")
+    if actual_kind != expected_kind:
+        raise GovernanceError(
+            f"lifecycle asset kind mismatch for {_repo_relative(asset_path)}: expected {expected_kind}, got {actual_kind}"
+        )
+    if str(entry.get("status") or "") != "approved":
+        raise GovernanceError(f"governed asset is not approved: {_repo_relative(asset_path)}")
+    return entry
+
+
+def validate_style_governance_runtime(style_profile_path: str, *, lifecycle_registry_path: str) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    style_profile = load_translate_style_profile(style_profile_path)
+    if not style_profile:
+        raise GovernanceError(f"style profile missing or invalid: {style_profile_path}")
+    if not _is_repo_managed(style_profile_path):
+        return style_profile, {
+            "passed": True,
+            "style_profile_path": str(style_profile_path),
+            "asset_statuses": {},
+            "issues": [],
+        }
+    report = evaluate_runtime_governance(
+        style_profile_path=style_profile_path,
+        lifecycle_registry_path=lifecycle_registry_path,
+        policy_paths=["workflow/style_governance_contract.yaml"],
+    )
+    if not report["passed"]:
+        raise GovernanceError(format_runtime_governance_issues(report))
+    return style_profile, report
+
+
+def _review_ticket_fieldnames(tickets: List[Dict[str, Any]]) -> List[str]:
+    required = list(load_review_ticket_contract().get("required_fields", []) or [])
+    extras: List[str] = []
+    for ticket in tickets:
+        for key in ticket.keys():
+            if key not in required and key not in extras:
+                extras.append(key)
+    return [*required, *extras]
+
+
+def write_review_tickets(jsonl_path: str, csv_path: str, tickets: List[Dict[str, Any]]) -> None:
+    governance_write_jsonl(jsonl_path, tickets)
+    csv_rows: List[Dict[str, str]] = []
+    fieldnames = _review_ticket_fieldnames(tickets)
+    for ticket in tickets:
+        row: Dict[str, str] = {}
+        for field in fieldnames:
+            value = ticket.get(field)
+            if isinstance(value, (list, dict)):
+                row[field] = json.dumps(value, ensure_ascii=False)
+            else:
+                row[field] = "" if value is None else str(value)
+        csv_rows.append(row)
+    write_csv(csv_path, csv_rows, fieldnames)
 
 
 def configure_standard_streams() -> None:
@@ -393,12 +504,15 @@ def build_review_queue_entry(
     review_source: str,
     current_target: str,
 ) -> Dict[str, str]:
+    review_status = str(task.get("review_status") or "pending")
+    if review_status == "not_required":
+        review_status = "pending"
     return {
         "task_id": task["task_id"],
         "string_id": task["string_id"],
         "task_type": task["task_type"],
         "review_owner": str(task.get("review_owner") or "human-linguist"),
-        "review_status": str(task.get("review_status") or "pending"),
+        "review_status": review_status,
         "review_source": review_source,
         "queue_reason": queue_reason,
         "execution_status": str(task.get("execution_status") or ""),
@@ -521,6 +635,7 @@ def run_retranslate_llm(
     model: str,
     style_text: str,
     glossary_summaries_by_locale: Dict[str, str],
+    style_profile: Optional[Dict[str, Any]],
 ) -> Tuple[Dict[str, str], Dict[str, str]]:
     if not tasks:
         return {}, {}
@@ -532,7 +647,7 @@ def run_retranslate_llm(
         system_prompt_builder = build_system_prompt_factory(
             style_guide=style_text,
             glossary_summary=glossary_summaries_by_locale.get(locale, ""),
-            style_profile=None,
+            style_profile=style_profile,
             target_lang=locale,
             target_key=target_key,
         )
@@ -753,6 +868,7 @@ def execute_tasks(
     model: str,
     style_text: str,
     glossary_summaries_by_locale: Dict[str, str],
+    style_profile: Optional[Dict[str, Any]],
     review_queue_path: str,
     failure_breakdown_path: str,
     placeholder_map: str,
@@ -776,6 +892,7 @@ def execute_tasks(
         model,
         style_text,
         glossary_summaries_by_locale,
+        style_profile,
     )
 
     for string_id, reason in {**refresh_failures, **retranslate_failures}.items():
@@ -996,9 +1113,15 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser.add_argument("--translated", required=True, help="Current translated CSV")
     parser.add_argument("--glossary", default="glossary/compiled.yaml")
     parser.add_argument("--style", required=True, help="Style guide markdown")
+    parser.add_argument("--style-profile", default="data/style_profile.yaml", help="Governed style profile path")
+    parser.add_argument("--lifecycle-registry", default="workflow/lifecycle_registry.yaml", help="Lifecycle registry for governed assets")
     parser.add_argument("--target-locale", default="ru-RU")
     parser.add_argument("--tasks-out", default="data/incremental_tasks.jsonl")
     parser.add_argument("--review-queue", default="data/incremental_review_queue.csv")
+    parser.add_argument("--review-tickets", default="data/review_tickets.jsonl")
+    parser.add_argument("--review-tickets-csv", default="data/review_tickets.csv")
+    parser.add_argument("--feedback-log", default="data/review_feedback_log.jsonl")
+    parser.add_argument("--kpi-report", default="data/language_governance_kpi.json")
     parser.add_argument("--manifest", default="data/incremental_refresh_manifest.json")
     parser.add_argument("--failure-breakdown", default="data/incremental_failure_breakdown.json")
     parser.add_argument("--out-csv", "--out_csv", dest="out_csv", default="data/refreshed.csv")
@@ -1024,6 +1147,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not translated_rows:
         raise ValueError(f"Translated CSV is empty: {args.translated}")
 
+    try:
+        style_profile, runtime_governance = validate_style_governance_runtime(
+            args.style_profile,
+            lifecycle_registry_path=args.lifecycle_registry,
+        )
+        validate_governed_asset(args.glossary, "glossary", lifecycle_registry_path=args.lifecycle_registry)
+        validate_governed_asset(args.schema, "policy", lifecycle_registry_path=args.lifecycle_registry)
+    except GovernanceError as exc:
+        raise ValueError(f"Phase 3 governance gate failed: {exc}") from exc
+
     style_text = read_style_text(args.style)
 
     if args.tasks_in:
@@ -1038,6 +1171,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "translated_csv": args.translated,
             "glossary": args.glossary,
             "style": args.style,
+            "style_profile": args.style_profile,
+            "lifecycle_registry": args.lifecycle_registry,
         }
         tasks = generate_tasks(delta_rows, translated_rows, source_artifacts, glossary_maps_by_locale)
 
@@ -1048,10 +1183,50 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     write_jsonl(args.tasks_out, tasks)
     review_queue = build_initial_review_queue(tasks)
     write_review_queue(args.review_queue, review_queue)
+    ticket_source_artifacts = {
+        "tasks_out": args.tasks_out,
+        "review_queue": args.review_queue,
+        "manifest": args.manifest,
+        "style_profile": args.style_profile,
+    }
+    review_tickets = build_review_tickets(
+        review_queue,
+        task_lookup={str(task.get("task_id") or ""): task for task in tasks},
+        source_artifacts=ticket_source_artifacts,
+        default_locale=args.target_locale,
+    )
+    write_review_tickets(args.review_tickets, args.review_tickets_csv, review_tickets)
+    ensure_feedback_log(args.feedback_log)
+    feedback_logs = load_feedback_log(args.feedback_log)
 
     if args.generate_only:
         manifest = build_generation_manifest(tasks, review_queue)
         manifest["review_handoff"]["queue_path"] = args.review_queue
+        manifest["runtime_governance"] = runtime_governance
+        manifest["artifacts"] = {
+            "review_tickets_jsonl": args.review_tickets,
+            "review_tickets_csv": args.review_tickets_csv,
+            "feedback_log_jsonl": args.feedback_log,
+            "kpi_report_json": args.kpi_report,
+        }
+        governance_write_json(
+            args.kpi_report,
+            build_kpi_report(
+                scope="translate_refresh_generate_only",
+                manifest=manifest,
+                review_tickets=review_tickets,
+                feedback_logs=feedback_logs,
+                runtime_governance=runtime_governance,
+                lifecycle_registry=load_lifecycle_registry(args.lifecycle_registry),
+                extra_sources={
+                    "tasks_out": args.tasks_out,
+                    "review_queue": args.review_queue,
+                    "review_tickets": args.review_tickets,
+                    "feedback_log": args.feedback_log,
+                    "lifecycle_registry_path": args.lifecycle_registry,
+                },
+            ),
+        )
         write_json(args.manifest, manifest)
         return 0
 
@@ -1063,6 +1238,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         model=args.model,
         style_text=style_text,
         glossary_summaries_by_locale=glossary_summaries_by_locale,
+        style_profile=style_profile,
         review_queue_path=args.review_queue,
         failure_breakdown_path=args.failure_breakdown,
         placeholder_map=args.placeholder_map,
@@ -1077,13 +1253,55 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "delta_report": delta_report_path,
         "glossary": args.glossary,
         "style": args.style,
+        "style_profile": args.style_profile,
+        "lifecycle_registry": args.lifecycle_registry,
         "failure_breakdown": args.failure_breakdown,
     }
+    manifest["runtime_governance"] = runtime_governance
     manifest["review_handoff"]["queue_path"] = args.review_queue
     manifest["review_handoff"]["pending_count"] = len(review_queue_rows)
     manifest["review_handoff"]["string_ids"] = [item["string_id"] for item in review_queue_rows]
     manifest["review_handoff"]["items"] = review_queue_rows
     manifest["review_handoff"]["by_source"] = build_review_handoff_summary(review_queue_rows, args.review_queue)["by_source"]
+    review_tickets = build_review_tickets(
+        review_queue_rows,
+        task_lookup={str(task.get("task_id") or ""): task for task in tasks},
+        source_artifacts={
+            "translated_csv": args.translated,
+            "tasks_out": args.tasks_out,
+            "review_queue": args.review_queue,
+            "manifest": args.manifest,
+            "style_profile": args.style_profile,
+        },
+        default_locale=args.target_locale,
+    )
+    write_review_tickets(args.review_tickets, args.review_tickets_csv, review_tickets)
+    ensure_feedback_log(args.feedback_log)
+    feedback_logs = load_feedback_log(args.feedback_log)
+    governance_write_json(
+        args.kpi_report,
+        build_kpi_report(
+            scope="translate_refresh_execute",
+            manifest=manifest,
+            review_tickets=review_tickets,
+            feedback_logs=feedback_logs,
+            runtime_governance=runtime_governance,
+            lifecycle_registry=load_lifecycle_registry(args.lifecycle_registry),
+            extra_sources={
+                "translated_csv": args.translated,
+                "tasks_out": args.tasks_out,
+                "review_queue": args.review_queue,
+                "review_tickets": args.review_tickets,
+                "feedback_log": args.feedback_log,
+                "lifecycle_registry_path": args.lifecycle_registry,
+            },
+        ),
+    )
+    manifest.setdefault("artifacts", {})
+    manifest["artifacts"]["review_tickets_jsonl"] = args.review_tickets
+    manifest["artifacts"]["review_tickets_csv"] = args.review_tickets_csv
+    manifest["artifacts"]["feedback_log_jsonl"] = args.feedback_log
+    manifest["artifacts"]["kpi_report_json"] = args.kpi_report
     write_jsonl(args.tasks_out, tasks)
     write_json(args.manifest, manifest)
     gates = manifest["post_gates"]
