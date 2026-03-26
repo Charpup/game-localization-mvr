@@ -1217,6 +1217,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             "--output", str(repaired_hard_csv),
             "--output-dir", str(repair_hard_dir),
             "--qa-type", "hard",
+            "--target-lang", active_target,
         ], repair_hard_log)
         hard_stats_path = repair_hard_dir / "repair_hard_stats.json"
         hard_escalation_path = repair_hard_dir / "escalated_hard_qa.csv"
@@ -1427,6 +1428,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             "--output", str(repaired_soft_csv),
             "--output-dir", str(repair_soft_dir),
             "--qa-type", "soft",
+            "--target-lang", active_target,
         ], repair_soft_log)
         soft_stats_path = repair_soft_dir / "repair_soft_stats.json"
         soft_escalation_path = repair_soft_dir / "escalated_soft_qa.csv"

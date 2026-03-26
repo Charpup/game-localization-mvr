@@ -1,6 +1,6 @@
 meta:
   type: compiled
-  entry_count: 493
+  entry_count: 492
   note: Runtime read-only. Do not edit directly.
 entries:
 - term_zh: 忍者
@@ -224,9 +224,6 @@ entries:
   scope: base
 - term_zh: 商城
   term_ru: Магазин
-  scope: base
-- term_zh: 副本
-  term_ru: Подземелье
   scope: base
 - term_zh: 好好
   term_ru: Хорошо

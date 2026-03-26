@@ -149,3 +149,48 @@ def test_preflight_blocks_on_hard_qa_issue(tmp_path):
 
     issue_file = tmp_path / "smoke_issues.json"
     assert sv.run_verify(str(manifest), "preflight", str(issue_file)) is False
+
+
+def test_find_qa_reports_prefers_terminal_hard_report_from_manifest(tmp_path):
+    hard_initial = tmp_path / "smoke_qa_hard_report.json"
+    hard_recheck = tmp_path / "smoke_qa_hard_recheck_report.json"
+    soft_report = tmp_path / "smoke_qa_soft_report.json"
+    for path in (hard_initial, hard_recheck, soft_report):
+        path.write_text("{}", encoding="utf-8")
+
+    manifest = {
+        "stage_artifacts": {
+            "qa_hard_report": str(hard_initial),
+            "qa_hard_recheck_report": str(hard_recheck),
+            "qa_soft_report": str(soft_report),
+        },
+        "stages": [
+            {"name": "QA Hard", "files": [{"path": str(hard_initial), "required": True}]},
+            {"name": "QA Hard Recheck", "files": [{"path": str(hard_recheck), "required": True}]},
+            {"name": "Soft QA", "files": [{"path": str(soft_report), "required": False}]},
+        ],
+    }
+
+    reports = sv._find_qa_reports(sv._normalize_stages(manifest), manifest)
+
+    assert reports[0] == ("Hard QA", str(hard_recheck))
+    assert reports[1] == ("Soft QA", str(soft_report))
+    assert str(hard_initial) not in [path for _, path in reports]
+
+
+def test_print_summary_ignores_missing_optional_stage_files(tmp_path):
+    required_file = tmp_path / "required.log"
+    required_file.write_text("ok", encoding="utf-8")
+
+    stages = [
+        {
+            "name": "Repair Hard",
+            "required": True,
+            "files": [
+                {"path": str(required_file), "required": True},
+                {"path": str(tmp_path / "optional.csv"), "required": False},
+            ],
+        }
+    ]
+
+    assert sv.print_summary(stages, "", {}, "preflight", issues=[]) is True
