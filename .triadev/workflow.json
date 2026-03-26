@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "phase3-language-governance-batch-20260325",
+  "change_id": "phase4-operator-control-plane-batch-20260326",
   "route": "extended",
   "authority": {
     "primary": "main_worktree/scripts",
@@ -158,14 +158,14 @@
     "The milestone-I style-governance package is now merged as a bridge foundation on main, but it does not change the primary execution order.",
     "Phase 1 large-batch runtime closure is now merged on main as PR #16 / commit 3a84f55.",
     "Broader Phase 3 no longer needs to stay deferred, because H is now merged and the milestone-I bridge package is already on main.",
-    "Current execution focus is the single Phase 3 language-governance batch on codex/phase3-language-governance-batch.",
-    "Phase 3 implementation is complete on branch; the current shell cannot run live smoke because LLM_BASE_URL and LLM_API_KEY are missing, so representative smoke coverage is satisfied with deterministic orchestration tests.",
-    "PR #17 is now open for the single Phase 3 batch and the next action is review absorption plus merge."
+    "Phase 3 language governance is now merged on main as the last completed post-E batch.",
+    "Current execution focus is the single Phase 4 operator-control-plane batch on codex/phase4-operator-control-plane-batch.",
+    "Phase 4 starts with bridge hardening on repair-loop target-column detection and explicit lifecycle-registry fail-closed behavior before the operator aggregation/report surfaces land."
   ],
   "post_e_roadmap": {
-    "status": "phase-3-large-batch-active",
-    "recommended_next_scope": "phase3_language_governance_batch",
-    "parallel_planning_sidecar": "phase4_operator_control_plane_planning",
+    "status": "phase-4-large-batch-active",
+    "recommended_next_scope": "phase4_operator_control_plane_batch",
+    "parallel_planning_sidecar": "none",
     "execution_preference": [
       "phase-1-quality-closure",
       "phase-2-governance-substrate",
@@ -294,9 +294,9 @@
     "next_action": "phase 2 PR merged; hand off to milestone_I_prepare planning-only work on clean main"
   },
   "active_phase3_slice": {
-    "status": "ready_for_pr",
+    "status": "completed",
     "scope": "phase 3 language governance batch",
-    "branch": "codex/phase3-language-governance-batch",
+    "branch": "main",
     "bounded_surfaces": [
       "workflow/style_governance_contract.yaml",
       "data/style_profile.yaml",
@@ -347,11 +347,42 @@
       "acceptance_command": "python -m pytest tests/test_phase3_governance_helpers.py tests/test_phase3_runtime_governance.py tests/test_phase3_language_governance_contract.py tests/test_translate_refresh_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py tests/test_plc_docs_contract.py -q && python scripts/style_sync_check.py && python scripts/plc_validate_records.py --preset representative --preset templates && python scripts/llm_ping.py",
       "acceptance_summary": "44 passed; style_sync_check pass; PLC validator presets pass; live smoke feasibility check is environment-blocked because the current shell lacks LLM_BASE_URL and LLM_API_KEY, so the required representative smoke gate is satisfied with deterministic orchestration coverage in tests/test_phase1_quality_runtime_contract.py."
     },
-    "next_action": "absorb review feedback on PR #17 and merge the single Phase 3 batch to main"
+    "next_action": "keep Phase 3 as merged history only and move the active main scope to the Phase 4 operator-control-plane batch"
   },
-  "phase3_readiness": {
+  "active_phase4_slice": {
     "status": "active",
     "implement_status": "started",
-    "rationale": "Phase 1 and Phase 2 are merged, H is closed on main, and the milestone-I bridge package already provides the style-governance foundation needed to start the full Phase 3 batch."
+    "scope": "phase 4 operator control plane batch",
+    "branch": "codex/phase4-operator-control-plane-batch",
+    "bounded_surfaces": [
+      "scripts/repair_loop.py",
+      "scripts/language_governance.py",
+      "scripts/operator_control_plane.py",
+      "workflow/operator_card_contract.yaml",
+      "docs/decisions/ADR-0003-operator-control-plane-operating-model.md",
+      "task_plan.md",
+      "progress.md",
+      "value-review.md",
+      ".triadev/state.json",
+      ".triadev/workflow.json",
+      "docs/project_lifecycle/roadmap_index.md",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-26/"
+    ],
+    "mapped_milestones": [
+      "Q",
+      "R",
+      "S"
+    ],
+    "explicit_non_goals": [
+      "polished end-user GUI",
+      "reopening merged Phase 3 feature scope",
+      "replacing existing runtime/governance artifact contracts"
+    ],
+    "validation_strategy": {
+      "mode": "focused-operator-governance-tests-plus-representative-artifact-walkthrough",
+      "smoke_required": false,
+      "rationale": "Phase 4 aggregates existing artifacts into operator cards and reports; representative artifact-to-decision evidence is required, while live smoke is only needed if smoke orchestration semantics change again."
+    },
+    "next_action": "finish bridge hardening, materialize operator cards/reports from the representative Phase 3 run, and open the single Phase 4 PR"
   }
 }

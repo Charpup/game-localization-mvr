@@ -77,73 +77,37 @@ def load_style_profile(path: str) -> Dict[str, Any]:
 
 
 def load_lifecycle_registry(path: str = "workflow/lifecycle_registry.yaml") -> Dict[str, Any]:
-    registry_path = Path(path)
-    if not registry_path.is_absolute():
-        registry_path = REPO_ROOT / registry_path
-    if not registry_path.exists():
-        fallback = REPO_ROOT / "workflow" / "lifecycle_registry.yaml"
-        if fallback.exists():
-            return load_lifecycle_registry_v2(str(fallback))
     return load_lifecycle_registry_v2(path)
-
-
-def _resolved_lifecycle_registry_path(path: str) -> str:
-    registry_path = Path(path)
-    if not registry_path.is_absolute():
-        registry_path = REPO_ROOT / registry_path
-    if registry_path.exists():
-        return str(registry_path)
-    fallback = REPO_ROOT / "workflow" / "lifecycle_registry.yaml"
-    return str(fallback if fallback.exists() else registry_path)
-
-
-def _workflow_lifecycle_registry_path() -> str:
-    return str(REPO_ROOT / "workflow" / "lifecycle_registry.yaml")
 
 
 def validate_style_governance_runtime(
     style_profile_path: str,
     *,
-    lifecycle_registry_path: str = "workflow/lifecycle_registry.yaml",
+    lifecycle_registry_path: Optional[str] = None,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     profile = load_style_profile(style_profile_path)
     if not profile:
         raise GovernanceError(f"style profile missing or invalid: {style_profile_path}")
-    registry_path = _resolved_lifecycle_registry_path(lifecycle_registry_path)
+    effective_registry_path = lifecycle_registry_path or "workflow/lifecycle_registry.yaml"
     report = evaluate_runtime_governance(
         style_profile_path=style_profile_path,
-        lifecycle_registry_path=registry_path,
+        lifecycle_registry_path=effective_registry_path,
         policy_paths=["workflow/style_governance_contract.yaml"],
     )
-    workflow_registry_path = _workflow_lifecycle_registry_path()
-    if (
-        not report.get("passed")
-        and registry_path != workflow_registry_path
-        and any("missing lifecycle entry" in str(issue) for issue in report.get("issues", []) or [])
-        and Path(workflow_registry_path).exists()
-    ):
-        fallback_report = evaluate_runtime_governance(
-            style_profile_path=style_profile_path,
-            lifecycle_registry_path=workflow_registry_path,
-            policy_paths=["workflow/style_governance_contract.yaml"],
-        )
-        if fallback_report.get("passed"):
-            report = fallback_report
-            registry_path = workflow_registry_path
     if not report.get("passed"):
         raise GovernanceError(format_runtime_governance_issues(report))
-    return profile, _find_lifecycle_entry(style_profile_path, registry_path)
+    lifecycle_entry = _find_lifecycle_entry(style_profile_path, effective_registry_path)
+    if lifecycle_registry_path and not lifecycle_entry:
+        raise GovernanceError(f"missing lifecycle entry for {_repo_relative(style_profile_path)}")
+    return profile, lifecycle_entry
 
 
-def validate_governed_asset(asset_path: str, asset_type: str, *, lifecycle_registry_path: str = "workflow/lifecycle_registry.yaml") -> Dict[str, Any]:
+def validate_governed_asset(asset_path: str, asset_type: str, *, lifecycle_registry_path: Optional[str] = None) -> Dict[str, Any]:
     asset = Path(asset_path)
     if not asset.exists():
         raise GovernanceError(f"missing governed asset: {asset_path}")
-    registry_path = _resolved_lifecycle_registry_path(lifecycle_registry_path)
-    entry = _find_lifecycle_entry(asset_path, registry_path)
-    workflow_registry_path = _workflow_lifecycle_registry_path()
-    if not entry and registry_path != workflow_registry_path and Path(workflow_registry_path).exists():
-        entry = _find_lifecycle_entry(asset_path, workflow_registry_path)
+    effective_registry_path = lifecycle_registry_path or "workflow/lifecycle_registry.yaml"
+    entry = _find_lifecycle_entry(asset_path, effective_registry_path)
     if not entry:
         if asset.is_absolute():
             return {}

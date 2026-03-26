@@ -2,7 +2,37 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `phase3_language_governance_batch` on branch `codex/phase3-language-governance-batch`.
+> The current active scope is `phase4_operator_control_plane_batch` on branch `codex/phase4-operator-control-plane-batch`.
+
+## 2026-03-26 Phase 4 Operator Control Plane Batch
+
+### Goal
+Deliver the full `Q + R + S` Phase 4 batch on one branch and one PR by turning Phase 1-3 runtime/governance artifacts into an agent-first operator control plane, inspection/report surface, and final operating-model ADR.
+
+### Scope
+- `Bridge hardening`
+  - tighten `repair_loop` target-column detection so locale metadata is never rewritten as translated text
+  - make `language_governance` fail closed when callers provide an incomplete lifecycle registry
+- `Q`
+  - freeze `workflow/operator_card_contract.yaml`
+  - add `scripts/operator_control_plane.py` to aggregate run artifacts into operator cards
+- `R`
+  - emit operator summary JSON/Markdown artifacts
+  - support `summarize`, `cards`, and `inspect` CLI surfaces
+- `S`
+  - accept the final operating model in `docs/decisions/ADR-0003-operator-control-plane-operating-model.md`
+- keep polished GUI explicitly out of scope for this branch
+
+### Planned Validation
+- focused bridge + operator control plane tests
+- `python scripts/style_sync_check.py`
+- `python scripts/plc_validate_records.py --preset representative --preset templates`
+- one representative artifact-to-decision walkthrough using an existing Phase 3 smoke run
+
+### Current Result
+- implementation is active on `codex/phase4-operator-control-plane-batch`
+- bridge hardening and operator-control-plane core surfaces are in progress
+- the next boundary is one Phase 4 PR from fresh `main`, not another milestone-level PR
 
 ## Goal
 Run M4 preflight and full on `data/smoke_runs/inputs/test_input_1000_smoke_layered.csv`, then capture run paths, manifests, issues, and blocking points for mainline cleanup.

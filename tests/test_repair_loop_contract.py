@@ -62,6 +62,35 @@ def test_repair_loop_soft_repairs_route_to_repair_soft_major_and_create_output_d
     assert escalations == []
 
 
+def test_repair_loop_target_value_columns_exclude_locale_metadata():
+    columns = ["string_id", "target_ru", "target_text", "target_locale", "target_language", "max_length_target"]
+
+    result = repair_loop._target_value_columns(columns)
+
+    assert "target_ru" in result
+    assert "target_text" in result
+    assert "target_locale" not in result
+    assert "target_language" not in result
+
+
+def test_hydrate_task_from_frame_ignores_target_locale_metadata():
+    df = pd.DataFrame(
+        [
+            {
+                "string_id": "1",
+                "source_zh": "source text",
+                "target_locale": "ru-RU",
+                "target_ru": "actual translation",
+            }
+        ]
+    )
+    task = repair_loop.RepairTask({"string_id": "1"})
+
+    repair_loop.hydrate_task_from_frame(task, df)
+
+    assert task.current_translation == "actual translation"
+
+
 def test_repair_loop_docs_publish_flags_only_cli_authority():
     repair_workflow = (ROOT / ".agent" / "workflows" / "loc-repair-loop.md").read_text(encoding="utf-8")
     pipeline_workflow = (ROOT / ".agent" / "workflows" / "loc-pipeline-full.md").read_text(encoding="utf-8")

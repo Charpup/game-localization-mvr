@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 import language_governance
@@ -55,7 +57,7 @@ def _write_style(path: Path) -> None:
 def test_validate_style_governance_runtime_accepts_repo_profile():
     profile, lifecycle_entry = language_governance.validate_style_governance_runtime(
         str(Path(__file__).parent.parent / "data" / "style_profile.yaml"),
-        lifecycle_registry_path=str(Path(__file__).parent.parent / "data" / "lifecycle_registry.yaml"),
+        lifecycle_registry_path=str(Path(__file__).parent.parent / "workflow" / "lifecycle_registry.yaml"),
     )
 
     assert profile["style_governance"]["status"] == "approved"
@@ -79,6 +81,35 @@ def test_external_style_profile_uses_minimal_runtime_validation(tmp_path):
 
     assert profile["project"]["target_language"] == "ru-RU"
     assert lifecycle_entry == {}
+
+
+def test_validate_style_governance_runtime_fails_closed_for_explicit_incomplete_registry(tmp_path):
+    profile_path = tmp_path / "style_profile.yaml"
+    profile_path.write_text(
+        json.dumps(
+            {
+                "version": "1.0",
+                "project": {"source_language": "zh-CN", "target_language": "ru-RU"},
+                "ui": {"length_constraints": {"button_max_chars": 18, "dialogue_max_chars": 120}},
+                "style_governance": {
+                    "status": "approved",
+                    "style_guide_id": "guide-v1",
+                    "approval_ref": "docs/decisions/ADR-0002-skill-governance-framework.md",
+                    "entry_audit": {"loadable": True, "approved": True, "deprecated": False},
+                },
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    lifecycle_registry = tmp_path / "registry.yaml"
+    lifecycle_registry.write_text('version: "1.0"\nentries: []\n', encoding="utf-8")
+
+    with pytest.raises(language_governance.GovernanceError, match="missing lifecycle entry"):
+        language_governance.validate_style_governance_runtime(
+            str(profile_path),
+            lifecycle_registry_path=str(lifecycle_registry),
+        )
 
 
 def test_translate_refresh_generate_only_emits_review_tickets_and_kpi(tmp_path):

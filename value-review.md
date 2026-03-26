@@ -1,25 +1,25 @@
 # value-review.md
 
 ## 1) Decision Summary
-- **Proposal:** Start the full Phase 3 language-governance batch (`I + J + K + L`) from fresh `main` now that PR #16 has merged.
-- **Date:** `2026-03-25`
+- **Proposal:** Start the full Phase 4 operator-control-plane batch (`Q + R + S`) from fresh `main` now that PR #17 has merged and Phase 3 is on trunk.
+- **Date:** `2026-03-26`
 - **Owner:** `Codex`
 - **Verdict:** `GO`
-- **Total Score (0-30):** `25/30`
+- **Total Score (0-30):** `26/30`
 - **Confidence:** `High`
 
 ## 2) Problem Framing
 ### 2.1 One-line Decision Object
-- **Problem / User / Outcome / Time Horizon:** The project has already merged Phase 1 and Phase 2, but the operational language-governance layer is still incomplete; internal operators and future reviewers need runtime style governance, review/feedback persistence, lifecycle control, and KPI artifacts so the system can become sustainable over the next development cycle.
+- **Problem / User / Outcome / Time Horizon:** The project has already merged Phase 1-3, but internal operators still need to manually read multiple runtime/governance artifacts to decide what to do next; the next development cycle should turn those artifacts into an operator control plane and fixed operating model.
 
 ### 2.2 Baseline and Opportunity Cost
-- **Current baseline:** `main` now contains milestone E, the Phase 2 governance substrate, the milestone-I style-governance bridge, and the merged Phase 1 runtime closure. Review queues and metrics exist, but they are not yet promoted into a full Phase 3 operating layer.
-- **Opportunity cost of doing this now:** Delaying Phase 3 leaves the project with a stronger pipeline but still no durable human-review intake, no lifecycle retirement semantics, and no KPI/report layer. Starting Phase 4 first would build operator surfaces on an incomplete governance model.
+- **Current baseline:** `main` now contains milestone E, the merged Phase 1 runtime closure, the merged Phase 2 governance substrate, and the merged Phase 3 language-governance batch. Review tickets, feedback logs, lifecycle data, and KPI artifacts already exist, but there is no unified operator task/card or inspection surface.
+- **Opportunity cost of doing this now:** Delaying Phase 4 leaves the project with the right artifacts but no usable operator layer. Continuing to work artifact-by-artifact raises operator overhead and weakens the long-term operating model.
 
 ### 2.3 Constraints
 - **Team/Capacity:** Single active main thread with phase-sized PR policy; avoid reopening micro-milestone PR churn.
-- **Technical constraints:** Keep-chain and smoke orchestrator must remain stable; style-governance bridge is already merged and should be extended rather than replaced.
-- **Budget/compliance/deadline constraints:** No external GUI requirement yet; prefer artifact-first changes with reproducible tests and one representative smoke path.
+- **Technical constraints:** Keep-chain and smoke orchestrator must remain stable; Phase 4 should aggregate existing artifacts instead of recomputing runtime logic. Known bridge hardening on `repair_loop` and `language_governance` should be absorbed at the start of the batch.
+- **Budget/compliance/deadline constraints:** No external GUI requirement yet; prefer CLI/report surfaces with reproducible tests and one representative artifact-to-decision walkthrough.
 
 ## 3) First-Principles Check
 ### 3.1 Claim Classification

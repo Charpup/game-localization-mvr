@@ -193,6 +193,26 @@
   - PR #17 is open: `feat(phase3): land language governance batch`
   - the next step is review absorption and merge, not more Phase 3 implementation
 
+## 2026-03-26
+- Confirmed PR #17 is merged into `main` as `88e9dba`; Phase 3 is now closed history, not the active execution lane.
+- Opened `codex/phase4-operator-control-plane-batch` from clean `main`.
+- Started Phase 4 as one phase-sized batch with bridge hardening included:
+  - `repair_loop` target-column detection now excludes locale/language metadata columns
+  - `language_governance` no longer falls back to the default lifecycle registry when an explicit caller registry is incomplete
+- Added the Phase 4 operator control plane surface:
+  - `workflow/operator_card_contract.yaml`
+  - `scripts/operator_control_plane.py`
+  - `tests/test_phase4_operator_control_plane.py`
+- Accepted the operating-model ADR:
+  - `docs/decisions/ADR-0003-operator-control-plane-operating-model.md`
+- Focused bridge/operator acceptance is green:
+  - `python -m pytest tests/test_repair_loop_contract.py tests/test_phase3_language_governance_contract.py tests/test_phase4_operator_control_plane.py -q` -> `22 passed`
+  - `python -m py_compile scripts/operator_control_plane.py scripts/repair_loop.py scripts/language_governance.py`
+- Remaining work in this phase is to:
+  - sync PLC/TriadDev control-plane state to Phase 4
+  - materialize the representative operator cards/report walkthrough from an existing run
+  - run full focused acceptance and open one Phase 4 PR
+
 ## 2026-03-18
 - Started M4 execution task for the 1000-row layered smoke input.
 - Created `task_plan.md`, `findings.md`, and `progress.md`.
