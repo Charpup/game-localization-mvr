@@ -76,10 +76,19 @@ def _first_present(row: Dict[str, object], candidates: List[str]) -> str:
 
 def _target_value_columns(columns: List[str]) -> List[str]:
     result: List[str] = []
+    excluded_exact = {
+        "target_locale",
+        "target_lang",
+        "target_language",
+        "target_key",
+        "target_column",
+    }
     for column in columns:
         lower = column.lower()
         if lower in {"target", "target_text", "translated_text"} or lower.startswith("target_"):
             if "length" in lower or lower.startswith("max_"):
+                continue
+            if lower in excluded_exact or lower.endswith("_locale") or lower.endswith("_language"):
                 continue
             result.append(column)
     return result

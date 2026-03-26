@@ -3,9 +3,9 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "phase3_language_governance_batch_review",
-  "branch": "codex/phase3-language-governance-batch",
-  "change_id": "phase3-language-governance-batch-20260325",
+  "status": "phase4_operator_control_plane_batch_execute",
+  "branch": "codex/phase4-operator-control-plane-batch",
+  "change_id": "phase4-operator-control-plane-batch-20260326",
   "authority_zone": "main_worktree/scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
@@ -44,12 +44,12 @@
   },
   "value_gate": {
     "status": "GO",
-    "reason": "Phase 3 is now GO because Phase 1 (H) is merged, Phase 2 governance substrate is already complete, and the milestone-I bridge package is already on main as a low-risk foundation."
+    "reason": "Phase 4 is now GO because Phase 1-3 are merged on main, the operator-facing artifacts already exist, and the remaining value is to aggregate them into one operator control plane rather than continue manual artifact inspection."
   },
   "roadmap_focus": {
-    "post_e_main_scope": "phase3_language_governance_batch",
-    "post_e_sidecar_scope": "phase4_operator_control_plane_planning",
+    "post_e_main_scope": "phase4_operator_control_plane_batch",
+    "post_e_sidecar_scope": "none",
     "planning_mode": "four-phase roadmap preserving milestone letters F-S with phase-sized merge windows"
   },
-  "last_updated": "2026-03-25"
+  "last_updated": "2026-03-26"
 }
