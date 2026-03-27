@@ -390,3 +390,8 @@
   the UI/API exposed `7` stages,
   `verify` returned `PASS`,
   and `smoke_verify_log` preview was available through the artifact endpoint.
+- Added two follow-up review fixes after the first PR-closeout pass:
+  the acceptance gate now creates a repo-local launch input fixture,
+  and `/api/runs?limit=` now fails closed with a structured `400`.
+- Pushed Phase 5 closeout commits to `codex/phase5-frontend-runtime-shell`, resolved all six review threads on PR #19, and merged PR #19 into `main`.
+- GitHub reports PR `#19` merged at `2026-03-27T05:52:44Z` with merge commit `48fd027f40b44dfe0b48888af03731f37b9cac02`.

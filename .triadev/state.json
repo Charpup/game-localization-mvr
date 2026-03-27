@@ -3,7 +3,7 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "phase5_pr_merge_ready",
+  "status": "phase5_merged_closeout_complete",
   "branch": "codex/phase5-frontend-runtime-shell",
   "change_id": "phase5-frontend-runtime-shell",
   "authority_zone": "scripts",

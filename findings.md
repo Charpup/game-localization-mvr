@@ -201,3 +201,6 @@
 - The frontend regressions survived the first implementation pass because API tests were green while no test pinned the JavaScript field names against the backend contract.
 - A real online representative run through the local UI shell now proves the Phase 5 surface is end-to-end viable:
   launch, run discovery, run detail, stage timeline, verify summary, issue summary, and allow-list artifact preview all work over live HTTP.
+- The last two PR review findings after the first push were both real but low-radius:
+  one test-portability defect in the acceptance gate and one malformed-query handling defect in the server.
+- Phase 5 is now both accepted and merged; remaining work moves forward to Phase 6 design rather than any further Phase 5 remediation.

@@ -798,7 +798,7 @@ evidence chain.
 - [complete] Phase 1: Land local fixes for frontend contract drift and launcher run-id uniqueness.
 - [complete] Phase 2: Re-run the full Phase 5 regression floor.
 - [complete] Phase 3: Run a real online representative `preflight` smoke launch through the local operator UI server.
-- [in_progress] Phase 4: Write acceptance closeout + PR closeout records, update TriadDev state, and push/merge PR #19.
+- [complete] Phase 4: Write acceptance closeout + PR closeout records, update TriadDev state, push PR #19, and complete merge closeout recording.
 
 ## 2026-03-21 Milestone D 收口与里程碑 E 续接
 
