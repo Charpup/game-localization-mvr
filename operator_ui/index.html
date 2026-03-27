@@ -3,26 +3,127 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Runtime Shell</title>
+  <title>Operator Workspace Dashboard</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <div class="shell">
     <header class="hero">
       <div>
-        <p class="eyebrow">Phase 5 Frontend Runtime Shell</p>
-        <h1>Operator Runtime Surface</h1>
+        <p class="eyebrow">Phase 6 Operator Workspace Dashboard</p>
+        <h1>Operator Workspace And Runtime Shell</h1>
         <p class="hero-copy">
-          Launch one representative smoke run, inspect lifecycle artifacts, and keep the CLI runtime as the source of truth.
+          Follow operator cards, review workload, KPI signals, and governance drift without giving up the artifact-first runtime lane.
         </p>
       </div>
-      <div class="hero-status" id="hero-status">
-        <span class="status-dot status-unknown"></span>
-        <span>Waiting for run data</span>
+      <div class="hero-side">
+        <div class="hero-status" id="hero-status">
+          <span class="status-dot status-unknown"></span>
+          <span>Waiting for workspace data</span>
+        </div>
+        <div class="mode-switch" role="tablist" aria-label="Operator surface mode">
+          <button type="button" id="mode-workspace" class="mode-button active">Operator Workspace</button>
+          <button type="button" id="mode-runtime" class="mode-button">Runtime Shell</button>
+        </div>
       </div>
     </header>
 
-    <main class="layout">
+    <main id="workspace-view" class="mode-view">
+      <section class="panel panel-overview">
+        <div class="panel-heading">
+          <div>
+            <p class="panel-kicker">Operator Workspace</p>
+            <h2>Overview Ribbon</h2>
+          </div>
+          <p class="panel-note" id="workspace-feedback">Workspace is waiting for operator data.</p>
+        </div>
+        <div id="overview-ribbon" class="overview-ribbon">
+          <div class="empty-state">No workspace overview loaded yet.</div>
+        </div>
+      </section>
+
+      <section class="workspace-layout">
+        <section class="panel panel-inbox">
+          <div class="panel-heading">
+            <div>
+              <p class="panel-kicker">Operator Inbox</p>
+              <h2>Cross-Run Cards</h2>
+            </div>
+            <button type="button" class="ghost-button" id="workspace-refresh-button">Refresh</button>
+          </div>
+          <form id="workspace-filters" class="filter-grid">
+            <label>
+              <span>Status</span>
+              <select id="card-status-filter" name="status">
+                <option value="open" selected>open</option>
+                <option value="all">all</option>
+                <option value="closed">closed</option>
+              </select>
+            </label>
+            <label>
+              <span>Card Type</span>
+              <select id="card-type-filter" name="card_type">
+                <option value="">all</option>
+                <option value="review_ticket">review_ticket</option>
+                <option value="runtime_alert">runtime_alert</option>
+                <option value="governance_drift">governance_drift</option>
+                <option value="kpi_watch">kpi_watch</option>
+                <option value="decision_required">decision_required</option>
+              </select>
+            </label>
+            <label>
+              <span>Priority</span>
+              <select id="card-priority-filter" name="priority">
+                <option value="">all</option>
+                <option value="P0">P0</option>
+                <option value="P1">P1</option>
+                <option value="P2">P2</option>
+              </select>
+            </label>
+            <label>
+              <span>Target Locale</span>
+              <input type="text" id="card-locale-filter" name="target_locale" placeholder="en-US">
+            </label>
+          </form>
+          <div id="workspace-cards" class="workspace-cards">
+            <div class="empty-state">No operator cards loaded yet.</div>
+          </div>
+        </section>
+
+        <section class="panel panel-workspace-detail">
+          <div class="panel-heading">
+            <div>
+              <p class="panel-kicker">Selected Card</p>
+              <h2 id="workspace-run-title">No operator card selected</h2>
+            </div>
+            <div class="workspace-actions">
+              <p class="panel-note" id="workspace-run-meta">Select an operator card to inspect decision context.</p>
+              <button type="button" class="ghost-button" id="open-runtime-button">Open Runtime Lane</button>
+            </div>
+          </div>
+          <div class="workspace-detail-grid">
+            <article class="detail-card">
+              <h3>Decision Context</h3>
+              <div id="decision-context" class="detail-body empty-state">No decision context loaded.</div>
+            </article>
+            <article class="detail-card">
+              <h3>Review Workload</h3>
+              <div id="review-workload" class="detail-body empty-state">No review workload loaded.</div>
+            </article>
+            <article class="detail-card">
+              <h3>KPI Snapshot</h3>
+              <div id="kpi-snapshot" class="detail-body empty-state">No KPI snapshot loaded.</div>
+            </article>
+            <article class="detail-card">
+              <h3>Governance Drift</h3>
+              <div id="governance-drift" class="detail-body empty-state">No governance drift loaded.</div>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <main id="runtime-view" class="layout mode-view hidden">
       <section class="panel panel-launcher">
         <div class="panel-heading">
           <div>

@@ -18,7 +18,19 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.operator_ui_launcher import LauncherError, OperatorUILaunchError, OperatorUILauncher, PendingRunView
-from scripts.operator_ui_models import ArtifactRecord, build_pending_run_detail, find_run_manifest, load_run_detail, load_run_summaries
+from scripts.operator_ui_models import (
+    ArtifactRecord,
+    WORKSPACE_CARD_PRIORITIES,
+    WORKSPACE_CARD_STATUSES,
+    WORKSPACE_CARD_TYPES,
+    build_pending_run_detail,
+    find_run_manifest,
+    load_run_detail,
+    load_run_summaries,
+    load_workspace_cards,
+    load_workspace_overview,
+    load_workspace_run_detail,
+)
 
 
 class OperatorUIApp:
@@ -66,6 +78,39 @@ class OperatorUIApp:
         if artifact is None or artifact_key not in detail.allowed_artifact_keys:
             raise KeyError(artifact_key)
         return {"artifact": self._preview_artifact(artifact)}
+
+    def get_workspace_overview(self, limit_runs: int = 10) -> Dict[str, Any]:
+        overview = load_workspace_overview(self.repo_root, limit_runs=limit_runs)
+        payload = overview.to_dict()
+        payload["recent_runs"] = self.list_runs(limit=limit_runs)
+        return payload
+
+    def list_workspace_cards(
+        self,
+        *,
+        status: str = "open",
+        card_type: str = "",
+        priority: str = "",
+        target_locale: str = "",
+        limit: int = 50,
+    ) -> list[dict[str, Any]]:
+        return [
+            card.to_dict()
+            for card in load_workspace_cards(
+            self.repo_root,
+            status=status,
+            card_type=card_type,
+            priority=priority,
+            target_locale=target_locale,
+            limit=limit,
+        )
+        ]
+
+    def get_workspace_run_detail(self, run_id: str) -> Dict[str, Any]:
+        try:
+            return load_workspace_run_detail(self.repo_root, run_id).to_dict()
+        except FileNotFoundError:
+            raise KeyError(run_id) from None
 
     def _preview_artifact(self, artifact: ArtifactRecord) -> Dict[str, Any]:
         payload = artifact.to_dict()
@@ -156,6 +201,57 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
         def _handle_api_get(self, parsed) -> None:
             segments = [segment for segment in parsed.path.strip("/").split("/") if segment]
             query = parse_qs(parsed.query)
+            if segments == ["api", "workspace", "overview"]:
+                try:
+                    limit_runs = int(query.get("limit_runs", ["10"])[0])
+                except (TypeError, ValueError):
+                    self._write_json({"error": "bad_request", "detail": "limit_runs must be an integer"}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                self._write_json({"overview": app.get_workspace_overview(limit_runs=limit_runs)})
+                return
+
+            if segments == ["api", "workspace", "cards"]:
+                status = str(query.get("status", ["open"])[0] or "open")
+                card_type = str(query.get("card_type", [""])[0] or "")
+                priority = str(query.get("priority", [""])[0] or "").upper()
+                target_locale = str(query.get("target_locale", [""])[0] or "")
+                try:
+                    limit = int(query.get("limit", ["50"])[0])
+                except (TypeError, ValueError):
+                    self._write_json({"error": "bad_request", "detail": "limit must be an integer"}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                if status not in WORKSPACE_CARD_STATUSES:
+                    self._write_json({"error": "bad_request", "detail": "status must be one of all/open/closed"}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                if card_type and card_type not in WORKSPACE_CARD_TYPES:
+                    self._write_json({"error": "bad_request", "detail": "unsupported card_type"}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                if priority and priority not in WORKSPACE_CARD_PRIORITIES:
+                    self._write_json({"error": "bad_request", "detail": "unsupported priority"}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                self._write_json(
+                    {
+                        "cards": app.list_workspace_cards(
+                            status=status,
+                            card_type=card_type,
+                            priority=priority,
+                            target_locale=target_locale,
+                            limit=limit,
+                        )
+                    }
+                )
+                return
+
+            if len(segments) == 4 and segments[:3] == ["api", "workspace", "runs"]:
+                run_id = segments[3]
+                try:
+                    workspace = app.get_workspace_run_detail(run_id)
+                except KeyError:
+                    self._write_json({"error": "run_not_found"}, status=HTTPStatus.NOT_FOUND)
+                    return
+                self._write_json({"workspace": workspace})
+                return
+
             if segments == ["api", "runs"]:
                 try:
                     limit = int(query.get("limit", ["10"])[0])

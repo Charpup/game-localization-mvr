@@ -143,3 +143,26 @@ def test_operator_control_plane_localizes_windows_absolute_artifact_paths(tmp_pa
     assert report["open_review_workload"]["total_review_tickets"] == 1
     assert report["artifact_refs"]["review_tickets"].endswith("smoke_review_tickets.jsonl")
     assert any(card["card_type"] == "review_ticket" for card in result["cards"])
+
+
+def test_operator_control_plane_can_derive_without_persisting_operator_artifacts(tmp_path):
+    run_dir = _sample_run_dir(tmp_path, with_tickets=True, with_kpi_drift=True)
+    expected_cards_path = operator_control_plane.REPO_ROOT / "data" / "operator_cards" / "smoke_run_demo" / "operator_cards.jsonl"
+    expected_summary_path = operator_control_plane.REPO_ROOT / "data" / "operator_reports" / "smoke_run_demo" / "operator_summary.json"
+    cards_exists_before = expected_cards_path.exists()
+    summary_exists_before = expected_summary_path.exists()
+    cards_mtime_before = expected_cards_path.stat().st_mtime if cards_exists_before else None
+    summary_mtime_before = expected_summary_path.stat().st_mtime if summary_exists_before else None
+
+    result = operator_control_plane.derive_operator_artifacts(run_dir=str(run_dir))
+
+    assert any(card["card_type"] == "review_ticket" for card in result["cards"])
+    assert result["report"]["open_operator_cards"] >= 1
+    assert Path(result["cards_path"]) == expected_cards_path
+    assert Path(result["summary_json_path"]) == expected_summary_path
+    assert expected_cards_path.exists() is cards_exists_before
+    assert expected_summary_path.exists() is summary_exists_before
+    if cards_exists_before:
+        assert expected_cards_path.stat().st_mtime == cards_mtime_before
+    if summary_exists_before:
+        assert expected_summary_path.stat().st_mtime == summary_mtime_before

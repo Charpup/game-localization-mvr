@@ -231,7 +231,7 @@ def _summary_md(report: Dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def build_operator_artifacts(
+def derive_operator_artifacts(
     *,
     run_dir: str,
     owner: str = "Codex",
@@ -371,9 +371,6 @@ def build_operator_artifacts(
             }
         )
 
-    validate_operator_cards(cards)
-    write_jsonl(str(cards_path), cards)
-
     report = {
         "generated_at": _now_iso(),
         "run_id": run_id,
@@ -403,9 +400,7 @@ def build_operator_artifacts(
         "evidence_refs": evidence_refs,
         "adr_refs": effective_adr_refs,
     }
-    write_json(str(summary_json_path), report)
-    summary_md_path.parent.mkdir(parents=True, exist_ok=True)
-    summary_md_path.write_text(_summary_md(report), encoding="utf-8")
+    validate_operator_cards(cards)
 
     return {
         "run_id": run_id,
@@ -416,6 +411,25 @@ def build_operator_artifacts(
         "report": report,
         "cards": cards,
     }
+
+
+def build_operator_artifacts(
+    *,
+    run_dir: str,
+    owner: str = "Codex",
+    adr_refs: Optional[List[str]] = None,
+) -> Dict[str, Any]:
+    result = derive_operator_artifacts(run_dir=run_dir, owner=owner, adr_refs=adr_refs)
+    return persist_operator_artifacts(result)
+
+
+def persist_operator_artifacts(result: Dict[str, Any]) -> Dict[str, Any]:
+    write_jsonl(str(result["cards_path"]), result["cards"])
+    write_json(str(result["summary_json_path"]), result["report"])
+    summary_md_path = Path(result["summary_md_path"])
+    summary_md_path.parent.mkdir(parents=True, exist_ok=True)
+    summary_md_path.write_text(_summary_md(result["report"]), encoding="utf-8")
+    return result
 
 
 def _cards_by_status(cards: List[Dict[str, Any]], status: str) -> List[Dict[str, Any]]:

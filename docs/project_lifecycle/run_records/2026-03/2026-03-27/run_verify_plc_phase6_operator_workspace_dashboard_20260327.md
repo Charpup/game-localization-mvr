@@ -1,0 +1,21 @@
+# run_verify
+
+- run_id: `plc_phase6_operator_workspace_dashboard_20260327`
+- scope: `phase6_operator_workspace_dashboard`
+- verification_result: `pass`
+- design_freeze_result: `pass`
+- workspace_model_result: `pass`
+- workspace_api_result: `pass`
+- frontend_result: `pass`
+- plc_validation_result: `pass`
+- decision: `IMPLEMENTED_PENDING_ACCEPTANCE`
+- verified:
+  - `python -m pytest tests/test_operator_ui_workspace_models.py tests/test_operator_ui_workspace_server.py tests/test_phase6_operator_workspace_dashboard.py -q` -> `6 passed`
+  - `python -m pytest tests/test_phase4_operator_control_plane.py tests/test_operator_ui_models.py tests/test_operator_ui_workspace_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_operator_ui_workspace_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase6_operator_workspace_dashboard.py tests/test_phase5_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py tests/test_plc_docs_contract.py -q` -> `78 passed`
+  - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 11 PLC governance artifact(s).`
+- not_yet_verified:
+  - representative operator acceptance on a real Phase 3/4 run with persisted `operator_cards/operator_summary`
+  - GitHub PR review and merge
+- residual_risks:
+  - workspace drilldown currently routes by matching evidence ref paths back to runtime artifact records; if future cards reference non-previewable files, the runtime fallback will open the run detail without a direct preview
+  - Phase 6 still intentionally excludes operator writeback actions such as ack/close/feedback submission

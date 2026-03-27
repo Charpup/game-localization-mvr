@@ -2,7 +2,61 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `phase4_operator_control_plane_batch` on branch `codex/phase4-operator-control-plane-batch`.
+> The current active scope is `phase6_operator_workspace_dashboard` on branch `codex/phase6-operator-workspace-dashboard`.
+
+## 2026-03-28 Phase 6 Operator Workspace Dashboard Acceptance
+
+### Goal
+Accept Phase 6 as the completed read-mostly operator workspace over the accepted Phase 5 runtime shell,
+and reduce the remaining roadmap work to PR review absorption and merge only.
+
+### Scope
+- add a real Phase 6 acceptance gate on the documented `python scripts/operator_ui_server.py` entrypoint
+- verify live workspace HTTP contracts, drilldown, and runtime/workspace mode surfaces
+- prove derived workspace reads stay side-effect free while persisted operator artifacts are still honored
+- update PLC/TriadDev state and acceptance closeout records without reopening Phase 6 implementation scope
+
+### Planned Validation
+- `python -m pytest tests/test_phase6_acceptance_gate.py -q`
+- `python -m pytest tests/test_phase4_operator_control_plane.py tests/test_operator_ui_models.py tests/test_operator_ui_workspace_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_operator_ui_workspace_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase5_acceptance_gate.py tests/test_phase6_operator_workspace_dashboard.py tests/test_phase6_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py tests/test_plc_docs_contract.py -q`
+- `python scripts/plc_validate_records.py --preset representative --preset templates`
+
+### Current Result
+- the real entrypoint acceptance gate is now implemented in `tests/test_phase6_acceptance_gate.py`
+- live workspace acceptance confirms:
+  - `Runtime Shell` and `Operator Workspace` render from `/`
+  - `/api/workspace/overview`, `/api/workspace/cards`, and `/api/workspace/runs/{run_id}` succeed on fixture-backed runs
+  - derived workspace reads do not create `data/operator_cards/<run_id>` or `data/operator_reports/<run_id>`
+  - persisted operator artifacts are still preferred when present
+  - runtime drilldown and artifact preview remain intact through `/api/runs*`
+- current acceptance result is `79 passed` plus PLC validator presets green
+- the remaining boundary after acceptance is PR review/merge, not more Phase 6 product work
+
+## 2026-03-27 Phase 6 Operator Workspace Dashboard
+
+### Goal
+Extend the accepted Phase 5 runtime shell into a read-mostly operator workspace that aggregates
+operator cards, review workload, KPI snapshot, drift signals, and ADR-backed decision context
+without changing runtime truth sources or adding UI-side writeback.
+
+### Scope
+- keep the existing Phase 5 `/api/runs*` contracts unchanged
+- split `operator_control_plane` into pure derivation plus write-on-demand summarize behavior
+- add workspace read models and `/api/workspace/*` endpoints
+- add runtime/workspace mode switching and six dashboard panels in the local UI shell
+- freeze Phase 6 PLC/TriadDev design and evidence on this branch
+
+### Planned Validation
+- focused workspace model/API/frontend tests
+- retained Phase 4 + Phase 5 + governance regression floor
+- `python scripts/plc_validate_records.py --preset representative --preset templates`
+
+### Current Result
+- pure derivation and persisted-artifact preference now coexist in `operator_control_plane`
+- workspace read models and three read-only workspace endpoints are implemented
+- the local UI now supports `Runtime Shell` and `Operator Workspace` modes in one page
+- current validation result is `79 passed` plus PLC validator presets green
+- this implementation slice is now accepted; the next boundary is PR closeout / merge
 
 ## 2026-03-26 Phase 4 Operator Control Plane Batch
 

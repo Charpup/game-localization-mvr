@@ -1,19 +1,18 @@
-delta_version: 0.4.0
-change_id: milestone-e-prepare-20260324
-change_type: milestone-e-multi-market-delta-and-incremental-retranslation
+delta_version: 0.6.0
+change_id: phase6-operator-workspace-dashboard
+change_type: read-mostly-operator-workspace-over-phase5-runtime-shell
 status: in_progress
 intent:
   summary: >
-    Add a locale-generic typed delta engine and incremental retranslation task flow
-    for milestone E, while keeping current ru-RU assets usable through a compatibility
-    layer and preserving the existing keep-chain runtime contract.
+    Add a read-mostly operator workspace dashboard on top of the accepted Phase 5 runtime shell
+    by aggregating operator_control_plane artifacts and run truth sources into normalized workspace
+    read models, local HTTP APIs, and dashboard panels.
   non_goals:
-    - Building a GUI or dashboard in milestone E
-    - Reopening earlier cleanup batches or changing authority-zone ownership
-    - Hard-cutting all existing ru-RU specific assets in one migration
-    - Changing smoke metrics from optional to blocking
+    - Writing back review-ticket, feedback-log, or card status from the UI
+    - Replacing the artifact-first runtime model or keep-chain orchestration
+    - Introducing a frontend build chain or framework migration
 assertions:
-  authority_zone: main_worktree/scripts
+  authority_zone: scripts
   compat_zone: src/scripts
   keep_chain:
     - llm_ping
@@ -22,34 +21,30 @@ assertions:
     - qa_hard
     - rehydrate_export
     - smoke_verify
-  minimal_irreversible_core:
-    - scripts/run_smoke_pipeline.py
-    - scripts/runtime_adapter.py
-    - scripts/smoke_issue_logger.py
-    - scripts/m4_3_collect_coverage.py
-    - scripts/m4_4_decision.py
-    - tests/test_smoke_verify.py
-    - tests/test_qa_hard.py
-    - tests/test_normalize_segmentation.py
+  truth_sources:
+    - run_manifest
+    - smoke_verify
+    - smoke_issues
+    - review_ticket
+    - feedback_log
+    - kpi_report
+    - operator_card
+    - operator_summary
 planned_controls:
-  - Freeze a single E contract source of truth in workflow/milestone_e_contract.yaml.
-  - Standardize clean-worktree inputs for style profile and glossary authority.
-  - Replace glossary-only impact detection with typed delta propagation and locale-aware row impacts.
-  - Split refresh into task generation and task execution with post-run hard gates.
-  - Keep authority drift policy, keep-chain behavior, and optional Metrics semantics unchanged.
+  - Preserve all existing /api/runs* contracts and artifact allow-list behavior.
+  - Split operator_control_plane into a pure derivation path and a write-on-demand summarize path.
+  - Add normalized workspace read models and read-only /api/workspace/* endpoints.
+  - Keep pending runs in the runtime lane only until manifest-backed operator context exists.
+  - Freeze Phase 6 design, tasks, and PLC evidence in the same branch as the implementation slice.
 status_map:
-  ../src/scripts/**: compat-keep managed compatibility liability with closeout_decision separate-exit-program
-  stress_test_3k_run.sh: must-keep canonical stress shell authority
-  repair_loop.py: must-keep retained repair authority
-  run_validation.py: must-keep retained validation baseline
-  build_validation_set.py: must-keep retained validation baseline generator
-  runtime_adapter.py: must-keep core
-  metrics_aggregator.py: optional observability surface
-blocked_zones:
-  []
+  scripts/operator_control_plane.py: must-keep operator aggregation authority with pure-derivation extension
+  scripts/operator_ui_models.py: must-keep runtime and workspace view-model authority
+  scripts/operator_ui_server.py: must-keep local HTTP adapter authority
+  operator_ui/*: must-keep local operator shell surface
+  ../src/scripts/**: compat-keep managed compatibility liability with separate exit program
+blocked_zones: []
 risk_controls:
-  - Keep-chain scripts remain semantically unchanged while E adds parallel delta/task surfaces around them.
-  - Locale-generic contracts must preserve backward readability of current ru-RU assets.
-  - Executor outputs must preserve row count and placeholder signature integrity.
-  - Clean-worktree execution must not depend on residual local data files.
-  - Existing smoke evidence generation and authority policy remain intact while E adds new delta-run artifacts.
+  - Workspace GET paths must remain side-effect free and must not write operator artifacts implicitly.
+  - Dashboard drilldown must reuse manifest-scoped artifact preview rather than arbitrary path browsing.
+  - Existing Phase 5 runtime launcher and inspection behavior must remain intact while workspace panels are added.
+  - Validation must cover derived vs persisted operator artifact parity, filter failure modes, and runtime/workspace mode switching.

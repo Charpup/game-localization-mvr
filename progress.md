@@ -1,5 +1,23 @@
 # Progress Log
 
+## 2026-03-28
+- Started the bounded Phase 6 acceptance pass instead of extending implementation scope.
+- Added `tests/test_phase6_acceptance_gate.py` to exercise the documented `python scripts/operator_ui_server.py` entrypoint with live HTTP rather than import-only checks.
+- The new acceptance gate verifies:
+  - `/` renders both `Runtime Shell` and `Operator Workspace`
+  - `/api/workspace/overview`, `/api/workspace/cards`, and `/api/workspace/runs/{run_id}` work against fixture-backed runs
+  - derived workspace reads stay side-effect free and do not create persisted operator artifacts
+  - persisted `operator_cards/operator_summary` are still honored when present
+  - runtime drilldown and manifest-scoped artifact preview still work through `/api/runs*`
+- Re-ran the retained Phase 4/5/6 + governance regression floor successfully:
+  - `python -m pytest tests/test_phase4_operator_control_plane.py tests/test_operator_ui_models.py tests/test_operator_ui_workspace_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_operator_ui_workspace_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase5_acceptance_gate.py tests/test_phase6_operator_workspace_dashboard.py tests/test_phase6_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py tests/test_plc_docs_contract.py -q` -> `79 passed`
+- Re-ran PLC governance validation successfully:
+  - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 11 PLC governance artifact(s).`
+- Shifted `.triadev/state.json` and `.triadev/workflow.json` from `validation_pending` to `accepted_pending_pr_closeout`.
+- Current roadmap distance is now one closeout step:
+  - product acceptance is complete
+  - remaining work is GitHub PR review absorption and merge for PR #20
+
 ## 2026-03-21
 - Started PLC + TriadDev integration-priority pass before milestone E.
 - Confirmed the real GitHub integration branch is `codex/plc-c-verify` in `D:\Dev_Env\GPT_Codex_Workspace`, while `game-localization-mvr/main_worktree` is a nested reference worktree with half-applied fixes.
@@ -390,3 +408,19 @@
   the UI/API exposed `7` stages,
   `verify` returned `PASS`,
   and `smoke_verify_log` preview was available through the artifact endpoint.
+- Started Phase 6 implementation on fresh `main` branch `codex/phase6-operator-workspace-dashboard`.
+- Split `scripts/operator_control_plane.py` into a pure derivation path and retained write-on-demand summarize path so workspace GET requests stay side-effect free.
+- Extended `scripts/operator_ui_models.py` with workspace overview, card-list, and run-detail read models that prefer persisted operator artifacts and fall back to derived payloads.
+- Extended `scripts/operator_ui_server.py` with:
+  `GET /api/workspace/overview`,
+  `GET /api/workspace/cards`,
+  and `GET /api/workspace/runs/{run_id}`.
+- Reworked `operator_ui/index.html`, `operator_ui/styles.css`, and `operator_ui/app.js` so the local shell now supports `Runtime Shell` and `Operator Workspace` modes in one page.
+- Added Phase 6 RED/acceptance coverage in:
+  `tests/test_operator_ui_workspace_models.py`,
+  `tests/test_operator_ui_workspace_server.py`,
+  and `tests/test_phase6_operator_workspace_dashboard.py`.
+- Ran the focused Phase 6 + retained regression floor successfully:
+  `78 passed`.
+- Re-ran PLC governance validation successfully:
+  `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 11 PLC governance artifact(s).`

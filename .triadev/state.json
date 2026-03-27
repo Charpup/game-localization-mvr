@@ -3,9 +3,9 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "phase5_pr_merge_ready",
-  "branch": "codex/phase5-frontend-runtime-shell",
-  "change_id": "phase5-frontend-runtime-shell",
+  "status": "phase6_operator_workspace_dashboard_accepted_pending_pr_closeout",
+  "branch": "codex/phase6-operator-workspace-dashboard",
+  "change_id": "phase6-operator-workspace-dashboard",
   "authority_zone": "scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
@@ -17,10 +17,13 @@
       "artifacts/*",
       "docs/project_lifecycle/**",
       "operator_ui/*",
+      "scripts/operator_control_plane.py",
       "scripts/operator_ui_*",
       "tests/test_operator_ui_*",
       "tests/test_phase5_frontend_runtime_shell.py",
-      "tests/test_phase5_acceptance_gate.py"
+      "tests/test_phase5_acceptance_gate.py",
+      "tests/test_phase6_operator_workspace_dashboard.py",
+      "tests/test_phase6_acceptance_gate.py"
     ],
     "protected_first_wave": [
       "scripts/repair_loop.py",
@@ -51,12 +54,12 @@
   },
   "value_gate": {
     "status": "GO",
-    "reason": "Phase 5 remains GO because it adds a thin operator shell over existing smoke runtime contracts without changing keep-chain semantics, runtime authority, or optional Metrics behavior."
+    "reason": "Phase 6 remains GO because it adds a read-mostly operator workspace over existing operator_control_plane and runtime artifacts without changing keep-chain semantics or introducing UI-side writeback."
   },
   "roadmap_focus": {
-    "post_e_main_scope": "phase5_frontend_runtime_shell",
+    "post_e_main_scope": "phase6_operator_workspace_dashboard",
     "post_e_sidecar_scope": "none",
     "planning_mode": "four-phase roadmap preserving milestone letters F-S with phase-sized merge windows"
   },
-  "last_updated": "2026-03-27"
+  "last_updated": "2026-03-28"
 }
