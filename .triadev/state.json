@@ -3,7 +3,7 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "phase6_operator_workspace_dashboard_validation_pending",
+  "status": "phase6_operator_workspace_dashboard_accepted_pending_pr_closeout",
   "branch": "codex/phase6-operator-workspace-dashboard",
   "change_id": "phase6-operator-workspace-dashboard",
   "authority_zone": "scripts",
@@ -22,7 +22,8 @@
       "tests/test_operator_ui_*",
       "tests/test_phase5_frontend_runtime_shell.py",
       "tests/test_phase5_acceptance_gate.py",
-      "tests/test_phase6_operator_workspace_dashboard.py"
+      "tests/test_phase6_operator_workspace_dashboard.py",
+      "tests/test_phase6_acceptance_gate.py"
     ],
     "protected_first_wave": [
       "scripts/repair_loop.py",
@@ -60,5 +61,5 @@
     "post_e_sidecar_scope": "none",
     "planning_mode": "four-phase roadmap preserving milestone letters F-S with phase-sized merge windows"
   },
-  "last_updated": "2026-03-27"
+  "last_updated": "2026-03-28"
 }

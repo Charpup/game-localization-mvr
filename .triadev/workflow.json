@@ -72,6 +72,17 @@
         "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_issue_plc_phase6_operator_workspace_dashboard_20260327.md",
         "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase6_operator_workspace_dashboard_20260327.md"
       ]
+    },
+    {
+      "id": "phase6-acceptance",
+      "name": "Phase 6 Acceptance",
+      "status": "completed",
+      "outputs": [
+        "tests/test_phase6_acceptance_gate.py",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-28/run_manifest_plc_phase6_operator_workspace_dashboard_acceptance_20260328.json",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-28/run_issue_plc_phase6_operator_workspace_dashboard_acceptance_20260328.md",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-28/run_verify_plc_phase6_operator_workspace_dashboard_acceptance_20260328.md"
+      ]
     }
   ],
   "notes": [
@@ -82,8 +93,8 @@
     "Pending runs remain in the runtime lane only until manifest-backed operator context exists."
   ],
   "post_e_roadmap": {
-    "status": "phase6-operator-workspace-dashboard-active",
-    "recommended_next_scope": "phase6_operator_workspace_dashboard_acceptance",
+    "status": "phase6-operator-workspace-dashboard-accepted",
+    "recommended_next_scope": "phase6_operator_workspace_dashboard_pr_closeout",
     "parallel_planning_sidecar": "none"
   },
   "active_phase4_slice": {
@@ -99,8 +110,8 @@
     "next_action": "preserve runtime shell behavior while Phase 6 adds workspace panels"
   },
   "active_phase6_slice": {
-    "status": "active",
-    "implement_status": "started",
+    "status": "accepted",
+    "implement_status": "complete",
     "scope": "phase 6 operator workspace dashboard",
     "branch": "codex/phase6-operator-workspace-dashboard",
     "bounded_surfaces": [
@@ -111,6 +122,7 @@
       "tests/test_operator_ui_workspace_models.py",
       "tests/test_operator_ui_workspace_server.py",
       "tests/test_phase6_operator_workspace_dashboard.py",
+      "tests/test_phase6_acceptance_gate.py",
       "SPEC-delta.yaml",
       "artifacts/design.md",
       "artifacts/tasks.md",
@@ -118,7 +130,8 @@
       "progress.md",
       ".triadev/state.json",
       ".triadev/workflow.json",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-27/"
+      "docs/project_lifecycle/run_records/2026-03/2026-03-27/",
+      "docs/project_lifecycle/run_records/2026-03/2026-03-28/"
     ],
     "explicit_non_goals": [
       "operator writeback actions",
@@ -126,13 +139,13 @@
       "frontend framework migration"
     ],
     "validation_strategy": {
-      "mode": "focused-workspace-dashboard-tests-plus-plc-validation",
+      "mode": "workspace-acceptance-gate-plus-regression",
       "smoke_required": false,
       "rationale": "Phase 6 adds read-mostly workspace aggregation over existing run and operator artifacts without changing smoke orchestration semantics.",
       "result": "passed",
-      "acceptance_command": "python -m pytest tests/test_phase4_operator_control_plane.py tests/test_operator_ui_models.py tests/test_operator_ui_workspace_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_operator_ui_workspace_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase6_operator_workspace_dashboard.py tests/test_phase5_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py tests/test_plc_docs_contract.py -q && python scripts/plc_validate_records.py --preset representative --preset templates",
-      "acceptance_summary": "78 passed; PLC validator presets pass."
+      "acceptance_command": "python -m pytest tests/test_phase4_operator_control_plane.py tests/test_operator_ui_models.py tests/test_operator_ui_workspace_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_operator_ui_workspace_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase5_acceptance_gate.py tests/test_phase6_operator_workspace_dashboard.py tests/test_phase6_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py tests/test_plc_docs_contract.py -q && python scripts/plc_validate_records.py --preset representative --preset templates",
+      "acceptance_summary": "79 passed; PLC validator presets pass; live Phase 6 acceptance gate passes."
     },
-    "next_action": "package this branch for Phase 6 acceptance and PR review"
+    "next_action": "package this branch for PR review absorption and merge"
   }
 }

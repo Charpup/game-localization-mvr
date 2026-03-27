@@ -1,0 +1,21 @@
+# run_verify
+
+- run_id: `plc_phase6_operator_workspace_dashboard_acceptance_20260328`
+- scope: `phase6_operator_workspace_dashboard_acceptance`
+- verification_result: `pass`
+- entrypoint_http_result: `pass`
+- workspace_drilldown_result: `pass`
+- runtime_reuse_result: `pass`
+- side_effect_free_reads_result: `pass`
+- plc_validation_result: `pass`
+- decision: `ACCEPTED`
+- verified:
+  - `python -m pytest tests/test_phase6_acceptance_gate.py -q` -> `1 passed`
+  - `python -m pytest tests/test_phase4_operator_control_plane.py tests/test_operator_ui_models.py tests/test_operator_ui_workspace_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_operator_ui_workspace_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase5_acceptance_gate.py tests/test_phase6_operator_workspace_dashboard.py tests/test_phase6_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py tests/test_plc_docs_contract.py -q` -> `79 passed`
+  - `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 11 PLC governance artifact(s).`
+  - live acceptance gate covered both a derived workspace run and a persisted-operator-artifact workspace run through the real HTTP server entrypoint
+- not_yet_verified:
+  - GitHub PR #20 review and merge
+- residual_risks:
+  - acceptance still uses repo-local fixture runs rather than a historical Phase 3/4 production artifact set
+  - Phase 6 remains intentionally read-only; operator writeback actions are still out of scope for this roadmap round
