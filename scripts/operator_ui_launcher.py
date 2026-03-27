@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+from secrets import token_hex
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -53,16 +54,19 @@ class OperatorUILauncher:
         python_executable: Optional[str] = None,
         now_fn: Optional[Callable[[], datetime]] = None,
         popen_fn: Optional[Callable[..., object]] = None,
+        run_id_suffix_fn: Optional[Callable[[], str]] = None,
     ):
         self.repo_root = Path(repo_root)
         self.python_executable = python_executable or sys.executable
         self.now_fn = now_fn or (lambda: datetime.now(timezone.utc))
         self.popen_fn = popen_fn or subprocess.Popen
+        self.run_id_suffix_fn = run_id_suffix_fn or (lambda: token_hex(2))
         self.pending_runs: Dict[str, Dict[str, object]] = {}
 
     def create_run_id(self, now: Optional[datetime] = None) -> str:
         timestamp = now or self.now_fn()
-        return f"ui_run_{timestamp.strftime('%Y%m%d_%H%M%S')}"
+        suffix = self.run_id_suffix_fn().strip().lower()
+        return f"ui_run_{timestamp.strftime('%Y%m%d_%H%M%S_%f')}_{suffix}"
 
     def build_run_dir(self, run_id: str) -> Path:
         return self.repo_root / "data" / "operator_ui_runs" / run_id

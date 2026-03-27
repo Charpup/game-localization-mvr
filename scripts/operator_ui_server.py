@@ -7,11 +7,15 @@ from __future__ import annotations
 import argparse
 import json
 import mimetypes
+import sys
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Dict
 from urllib.parse import parse_qs, urlparse
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.operator_ui_launcher import LauncherError, OperatorUILaunchError, OperatorUILauncher, PendingRunView
 from scripts.operator_ui_models import ArtifactRecord, build_pending_run_detail, find_run_manifest, load_run_detail, load_run_summaries
@@ -21,6 +25,8 @@ class OperatorUIApp:
     def __init__(self, repo_root: Path | str, launcher: OperatorUILauncher | None = None):
         self.repo_root = Path(repo_root)
         self.frontend_root = self.repo_root / "operator_ui"
+        if not self.frontend_root.exists():
+            self.frontend_root = Path(__file__).resolve().parents[1] / "operator_ui"
         self.launcher = launcher or OperatorUILauncher(self.repo_root)
 
     def list_runs(self, limit: int = 10) -> list[dict[str, Any]]:

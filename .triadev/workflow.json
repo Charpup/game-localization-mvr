@@ -66,6 +66,34 @@
         "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_issue_plc_phase5_frontend_runtime_shell_20260327.md",
         "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_20260327.md"
       ]
+    },
+    {
+      "id": "phase5-acceptance-closeout",
+      "name": "Phase 5 Acceptance Closeout",
+      "status": "completed",
+      "outputs": [
+        "tests/test_phase5_acceptance_gate.py",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_acceptance_closeout_20260327.json",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_acceptance_closeout_20260327.md"
+      ]
+    },
+    {
+      "id": "phase5-pr-closeout",
+      "name": "Phase 5 PR Closeout",
+      "status": "in_progress",
+      "outputs": [
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.json",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.md"
+      ]
+    },
+    {
+      "id": "phase5-merge-closeout",
+      "name": "Phase 5 Merge Closeout",
+      "status": "pending",
+      "outputs": [
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_merge_closeout_20260327.json",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_merge_closeout_20260327.md"
+      ]
     }
   ],
   "notes": [

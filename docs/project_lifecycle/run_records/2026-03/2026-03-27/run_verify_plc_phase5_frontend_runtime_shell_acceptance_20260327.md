@@ -1,0 +1,21 @@
+# run_verify
+
+- run_id: `plc_phase5_frontend_runtime_shell_acceptance_20260327`
+- scope: `phase5_frontend_runtime_shell_acceptance`
+- verification_result: `warn`
+- offline_result: `pass`
+- server_api_result: `pass`
+- operator_flow_result: `pass`
+- online_result: `env_blocked`
+- decision: `ACCEPTED_WITH_ENV_BLOCKER`
+- verified:
+  - `python -m pytest tests/test_operator_ui_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase5_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py -q` -> `37 passed`
+  - `python -m pytest tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py -q` -> `14 passed`
+  - `tests/test_phase5_acceptance_gate.py` validates the documented server entrypoint, live HTTP root load, `app.js` static asset load, fixture-backed run detail, allow-list artifact preview, `404/400` negative cases, and immediate pending-run visibility from `POST /api/runs`
+  - the root shell HTML exposes launcher, recent runs, verify summary, issue summary, and artifact inspection panels over live HTTP rather than direct Python imports
+  - extra POST fields are ignored by the server/launcher path and do not leak arbitrary CLI flags into the launched command
+- not_yet_verified:
+  - `python scripts/llm_ping.py` blocks the online representative-run lane because `LLM_BASE_URL` and `LLM_API_KEY` are missing
+  - a real browser-click walkthrough was not separately recorded; operator-flow acceptance here is code-level over the live shell and HTTP contracts
+- residual_risks:
+  - `tests/test_phase5_acceptance_gate.py` uses the workstation-local dataset path `D:\Dev_Env\loc-mvr 测试文档\test_input_200-row.csv`; this is valid evidence for the current environment but not yet a hermetic CI fixture

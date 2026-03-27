@@ -25,11 +25,12 @@ def test_launch_run_builds_expected_command_and_tracks_pending_run(tmp_path):
         repo_root=tmp_path,
         now_fn=lambda: datetime(2026, 3, 27, 1, 15, 0, tzinfo=timezone.utc),
         popen_fn=fake_popen,
+        run_id_suffix_fn=lambda: "abcd",
     )
 
     started = ui_launcher.launch_run("fixtures/input.csv", "en-US", "preflight")
 
-    assert started.run_id == "ui_run_20260327_011500"
+    assert started.run_id == "ui_run_20260327_011500_000000_abcd"
     assert started.status == "running"
     assert Path(started.run_dir).exists()
     assert "--run-dir" in calls["cmd"]
@@ -47,9 +48,32 @@ def test_launch_run_raises_launcher_error_without_leaking_registry(tmp_path):
         repo_root=tmp_path,
         now_fn=lambda: datetime(2026, 3, 27, 1, 15, 0, tzinfo=timezone.utc),
         popen_fn=fake_popen,
+        run_id_suffix_fn=lambda: "boom",
     )
 
     with pytest.raises(launcher.LauncherError):
         ui_launcher.launch_run("fixtures/input.csv", "en-US", "full")
 
     assert ui_launcher.list_pending_runs() == []
+
+
+def test_launch_run_generates_unique_ids_and_run_dirs_with_same_timestamp(tmp_path):
+    suffixes = iter(["a1b2", "c3d4"])
+
+    def fake_popen(cmd, cwd=None, stdout=None, stderr=None):
+        return _DummyProcess()
+
+    ui_launcher = launcher.OperatorUILauncher(
+        repo_root=tmp_path,
+        now_fn=lambda: datetime(2026, 3, 27, 1, 15, 0, tzinfo=timezone.utc),
+        popen_fn=fake_popen,
+        run_id_suffix_fn=lambda: next(suffixes),
+    )
+
+    first = ui_launcher.launch_run("fixtures/input.csv", "en-US", "preflight")
+    second = ui_launcher.launch_run("fixtures/input.csv", "en-US", "preflight")
+
+    assert first.run_id != second.run_id
+    assert first.run_dir != second.run_dir
+    assert ui_launcher.get_pending_run(first.run_id).run_id == first.run_id
+    assert ui_launcher.get_pending_run(second.run_id).run_id == second.run_id

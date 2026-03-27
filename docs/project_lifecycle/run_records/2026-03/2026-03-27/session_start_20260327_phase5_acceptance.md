@@ -1,0 +1,21 @@
+# session_start
+
+- date: `2026-03-27`
+- owner: `Codex`
+- scope: `phase5_frontend_runtime_shell_acceptance`
+- branch: `codex/phase5-frontend-runtime-shell`
+- route: `extended`
+- objective:
+  - convert Phase 5 runtime shell from implementation-complete to acceptance-gated for downstream work
+  - verify static contracts, real server/API behavior, operator-facing shell surface, and online representative-run readiness
+- acceptance_floor:
+  - `python -m pytest tests/test_operator_ui_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase5_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py -q`
+  - `python -m pytest tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py -q`
+  - `python scripts/llm_ping.py`
+- dataset: `D:\Dev_Env\loc-mvr 测试文档\test_input_200-row.csv`
+- server_entrypoint: `python scripts/operator_ui_server.py --host 127.0.0.1 --port 8765`
+- api_under_test:
+  - `GET /api/runs?limit=N`
+  - `GET /api/runs/{run_id}`
+  - `POST /api/runs`
+  - `GET /api/runs/{run_id}/artifacts/{artifact_key}`

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 import threading
 import urllib.error
 import urllib.request
@@ -126,3 +128,18 @@ def test_invalid_artifact_key_returns_404(live_server):
         urllib.request.urlopen(request)
 
     assert exc_info.value.code == 404
+
+
+def test_server_script_entrypoint_supports_cli_help():
+    repo_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        [sys.executable, "scripts/operator_ui_server.py", "--help"],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        timeout=20,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert "Run the Phase 5 operator UI server" in result.stdout

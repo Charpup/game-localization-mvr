@@ -81,3 +81,13 @@ def test_runtime_shell_serves_page_and_exposes_run_inspection_flow(tmp_path):
     finally:
         httpd.shutdown()
         thread.join(timeout=5)
+
+
+def test_runtime_shell_frontend_consumes_stages_and_verify_contract():
+    app_js = Path(__file__).resolve().parents[1] / "operator_ui" / "app.js"
+    source = app_js.read_text(encoding="utf-8")
+
+    assert "const stages = run.stages || [];" in source
+    assert "const verify = run.verify || {};" in source
+    assert "run.timeline" not in source
+    assert "run.verify_summary" not in source

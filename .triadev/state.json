@@ -3,7 +3,7 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "phase5_runtime_shell_complete",
+  "status": "phase5_closeout_in_progress",
   "branch": "codex/phase5-frontend-runtime-shell",
   "change_id": "phase5-frontend-runtime-shell",
   "authority_zone": "scripts",
@@ -19,7 +19,8 @@
       "operator_ui/*",
       "scripts/operator_ui_*",
       "tests/test_operator_ui_*",
-      "tests/test_phase5_frontend_runtime_shell.py"
+      "tests/test_phase5_frontend_runtime_shell.py",
+      "tests/test_phase5_acceptance_gate.py"
     ],
     "protected_first_wave": [
       "scripts/repair_loop.py",

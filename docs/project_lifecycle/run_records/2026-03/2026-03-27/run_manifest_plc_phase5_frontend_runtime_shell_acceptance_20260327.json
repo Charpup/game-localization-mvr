@@ -1,0 +1,30 @@
+{
+  "run_id": "plc_phase5_frontend_runtime_shell_acceptance_20260327",
+  "scope": "phase5_frontend_runtime_shell_acceptance",
+  "branch": "codex/phase5-frontend-runtime-shell",
+  "route": "extended",
+  "status": "completed_with_env_blocker",
+  "dataset": "D:\\Dev_Env\\loc-mvr 测试文档\\test_input_200-row.csv",
+  "server_url": "http://127.0.0.1:8765",
+  "artifacts": [
+    "scripts/operator_ui_server.py",
+    "tests/test_operator_ui_server.py",
+    "tests/test_phase5_acceptance_gate.py",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-27/session_start_20260327_phase5_acceptance.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_issue_plc_phase5_frontend_runtime_shell_acceptance_20260327.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_acceptance_20260327.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-27/milestone_state_phase5_frontend_runtime_shell_acceptance.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-27/session_end_20260327_phase5_acceptance.md"
+  ],
+  "tests": [
+    "python -m pytest tests/test_operator_ui_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase5_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py -q",
+    "python -m pytest tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py -q",
+    "python scripts/llm_ping.py"
+  ],
+  "lanes": {
+    "static": "pass",
+    "server_api": "pass",
+    "operator_flow": "pass",
+    "online_representative": "env_blocked"
+  }
+}

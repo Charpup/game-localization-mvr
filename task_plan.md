@@ -222,3 +222,23 @@ physical removal as part of this batch's final roadmap closeout.
 - [complete] Phase 2: Update authority manifest, frozen-zone inventory, root inventory, and closeout report with the fixed compat mirror decision.
 - [complete] Phase 3: Run Batch 10 regression suite plus authority/M4 evidence gate.
 - [complete] Phase 4: Prepare stacked closeout branch output and declare the cleanup roadmap closed after Batch 10, with any future compat mirror retirement handled as a separate migration program.
+
+## 2026-03-27 Phase 5 Closeout
+
+### Goal
+Finish Phase 5 by closing the remaining review blockers, converting acceptance from
+`env_blocked` to real online acceptance, and merging PR #19 with a complete PLC/TriadDev
+evidence chain.
+
+### Scope
+- Work only in the Phase 5 runtime shell surface, acceptance evidence, and closeout control files.
+- Keep LLM credentials process-scoped only; do not write them to repo-tracked files.
+- Resolve the four merge blockers on PR #19 before attempting merge:
+  server entrypoint/fallback, frontend timeline contract, frontend verify contract, and run-id collision risk.
+
+### Phases
+- [complete] Phase 0: Re-check PR review state, gh auth, and online-lane preflight with the provided credentials.
+- [complete] Phase 1: Land local fixes for frontend contract drift and launcher run-id uniqueness.
+- [complete] Phase 2: Re-run the full Phase 5 regression floor.
+- [complete] Phase 3: Run a real online representative `preflight` smoke launch through the local operator UI server.
+- [in_progress] Phase 4: Write acceptance closeout + PR closeout records, update TriadDev state, and push/merge PR #19.

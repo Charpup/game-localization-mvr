@@ -72,6 +72,8 @@ function renderRuns() {
 
 function renderDetail(run) {
   state.selectedRunId = run.run_id;
+  const stages = run.stages || [];
+  const verify = run.verify || {};
   ui.runTitle.textContent = run.run_id;
   ui.runMeta.innerHTML = `
     ${statusMarkup(run.overall_status, `${run.overall_status} overall`)}
@@ -84,9 +86,8 @@ function renderDetail(run) {
   `;
   setHeroStatus(run.overall_status, `Selected ${run.run_id}`);
 
-  const timeline = run.timeline || [];
-  ui.timelinePanel.innerHTML = timeline.length
-    ? timeline
+  ui.timelinePanel.innerHTML = stages.length
+    ? stages
         .map((stage) => `
           <article class="timeline-stage">
             <header>
@@ -101,11 +102,11 @@ function renderDetail(run) {
     : '<div class="empty-state">No timeline data yet for this run.</div>';
 
   ui.verifySummary.innerHTML = `
-    <p><strong>Status:</strong> ${run.verify_summary?.status || "n/a"}</p>
-    <p><strong>Overall:</strong> ${run.verify_summary?.overall || "n/a"}</p>
-    <p><strong>Issue Count:</strong> ${run.verify_summary?.issue_count || 0}</p>
+    <p><strong>Status:</strong> ${verify.status || "n/a"}</p>
+    <p><strong>Overall:</strong> ${verify.overall || "n/a"}</p>
+    <p><strong>Issue Count:</strong> ${verify.issue_count || 0}</p>
     <p><strong>QA Rows:</strong></p>
-    <pre>${(run.verify_summary?.qa_rows || []).join("\n") || "No QA rows."}</pre>
+    <pre>${(verify.qa_rows || []).join("\n") || "No QA rows."}</pre>
   `;
 
   ui.issueSummary.innerHTML = `
