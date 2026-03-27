@@ -1,0 +1,34 @@
+version: "1.0"
+canonical_asset: "data/style_profile.yaml"
+generated_assets:
+  - "workflow/style_guide.generated.md"
+mirror_assets:
+  - "workflow/style_guide.md"
+  - ".agent/workflows/style-guide.md"
+governance:
+  required_fields:
+    - "style_governance.style_guide_id"
+    - "style_governance.owner"
+    - "style_governance.status"
+    - "style_governance.approval_ref"
+    - "style_governance.adr_refs"
+    - "style_governance.generated_from_script"
+    - "style_governance.source_questionnaire"
+    - "style_governance.supersedes"
+    - "style_governance.deprecated_by"
+    - "style_governance.entry_audit.loadable"
+    - "style_governance.entry_audit.approved"
+    - "style_governance.entry_audit.deprecated"
+    - "style_governance.lineage.canonical_profile"
+    - "style_governance.lineage.generated_guide"
+    - "style_governance.lineage.mirror_guides"
+  status_enum:
+    - "draft"
+    - "approved"
+    - "deprecated"
+  approval_ref_prefixes:
+    - "docs/decisions/"
+    - "docs/project_lifecycle/"
+  none_values:
+    - "none"
+    - ""

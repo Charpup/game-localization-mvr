@@ -1,0 +1,19 @@
+{
+  "run_id": "phase4_operator_control_plane_batch",
+  "scope": "phase4_operator_control_plane_batch",
+  "date": "2026-03-26",
+  "owner": "Codex",
+  "base_branch": "main",
+  "active_branch": "codex/phase4-operator-control-plane-batch",
+  "objectives": [
+    "close bridge hardening on repair_loop and language_governance",
+    "add operator card contract plus operator control plane CLI",
+    "materialize one representative artifact-to-decision walkthrough",
+    "sync PLC/TriadDev state for the Phase 4 batch"
+  ],
+  "non_goals": [
+    "polished end-user GUI",
+    "reopening merged Phase 3 scope",
+    "changing keep-chain runtime semantics beyond bridge hardening"
+  ]
+}

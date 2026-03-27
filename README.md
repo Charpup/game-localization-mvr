@@ -15,7 +15,7 @@ A robust, automated workflow system for game localization with strict validation
 python scripts/llm_ping.py
 
 # 2. Validate workflow configuration (dry-run)
-python scripts/translate_llm.py input.csv output.csv workflow/style_guide.md glossary/compiled.yaml --dry-run
+python scripts/translate_llm.py --input input.csv --output output.csv --style workflow/style_guide.md --glossary glossary/compiled.yaml --style-profile workflow/style_profile.generated.yaml --dry-run
 
 # 3. Run E2E test
 python scripts/test_e2e_workflow.py
@@ -158,12 +158,15 @@ Write-Host "LLM_MODEL=$([bool]$env:LLM_MODEL)"
 ### 3. Run Pipeline
 
 ```bash
+# Bootstrap tracked style assets once per clean worktree
+python scripts/style_guide_bootstrap.py --dry-run
+
 # Verify LLM
 python scripts/llm_ping.py
 
 # Normalize → Translate → QA → Export
 python scripts/normalize_guard.py input.csv normalized.csv map.json workflow/placeholder_schema.yaml
-python scripts/translate_llm.py normalized.csv translated.csv workflow/style_guide.md glossary/compiled.yaml
+python scripts/translate_llm.py --input normalized.csv --output translated.csv --style workflow/style_guide.md --glossary glossary/compiled.yaml --style-profile workflow/style_profile.generated.yaml
 python scripts/qa_hard.py translated.csv qa_report.json map.json
 python scripts/rehydrate_export.py translated.csv map.json final.csv
 ```
@@ -178,6 +181,7 @@ python scripts/run_smoke_pipeline.py --input "D:\\Dev_Env\\loc-mvr 测试文档\
 ```
 
 This command:
+- auto-bootstraps `workflow/style_profile.generated.yaml` if the clean worktree does not have one yet
 - runs `llm_ping -> normalize_guard -> translate_llm -> qa_hard -> rehydrate_export`
 - generates a run manifest: `data/smoke_run_<timestamp>/run_manifest.json`
 - runs `smoke_verify --manifest ...`
@@ -220,7 +224,7 @@ python scripts/test_rehydrate.py
 python scripts/test_e2e_workflow.py
 
 # Dry-run validation
-python scripts/translate_llm.py input.csv out.csv style.md glossary.yaml --dry-run
+python scripts/translate_llm.py --input input.csv --output out.csv --style workflow/style_guide.md --glossary glossary/compiled.yaml --style-profile workflow/style_profile.generated.yaml --dry-run
 ```
 
 ---

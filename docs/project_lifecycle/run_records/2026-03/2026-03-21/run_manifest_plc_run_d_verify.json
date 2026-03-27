@@ -1,0 +1,39 @@
+{
+  "manifest_version": "baseline-drift-v1",
+  "run_id": "plc_run_d_verify",
+  "run_scope": "milestone_D_verify",
+  "status": "pass",
+  "started_at": "2026-03-21T16:02:51.645013+08:00",
+  "finished_at": "2026-03-21T16:02:51.665296+08:00",
+  "owner": "bob_c",
+  "input_manifest": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\input_manifest_plc_run_d_verify.json",
+  "issue_report_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_issue_plc_run_d_verify.md",
+  "verify_report_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_verify_plc_run_d_verify.md",
+  "artifacts": [
+    "scripts\\baseline_drift_control.py",
+    "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\baseline_manifest.json",
+    "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\compare\\current_manifest.json",
+    "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\compare\\drift_summary.json",
+    "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\compare\\drift_report.md",
+    "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\compare\\drift_diff_rows.csv"
+  ],
+  "blockers": [],
+  "decision_refs": [
+    "triadev:milestone_D_verify",
+    "plc:plc_run_d_verify",
+    "artifact:scripts/baseline_drift_control.py",
+    "signature:baseline:aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55",
+    "signature:current:aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55",
+    "signature:drift:5d888fe0d26a0782ebb95e794accfccdfeb48ae1b1e20817064b4f541f2b7628"
+  ],
+  "evidence_ready": true,
+  "gate_result": "pass",
+  "evidence": {
+    "input_manifest_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\input_manifest_plc_run_d_verify.json",
+    "issue_report_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_issue_plc_run_d_verify.md",
+    "verify_report_path": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_verify_plc_run_d_verify.md",
+    "artifact_count": 6
+  },
+  "next_step_owner": "bob_c",
+  "next_step_scope": "milestone_E_prepare"
+}

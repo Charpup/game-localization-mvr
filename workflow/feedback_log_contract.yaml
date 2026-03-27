@@ -1,0 +1,24 @@
+version: "1.0"
+artifact: "feedback_log"
+storage_defaults:
+  refresh_executor: "data/review_feedback_log.jsonl"
+  smoke_pipeline: "data/<run_id>/smoke_feedback_log.jsonl"
+required_fields:
+  - "feedback_id"
+  - "ticket_id"
+  - "string_id"
+  - "target_locale"
+  - "decision"
+  - "reviewer"
+  - "created_at"
+decision_enum:
+  - "approve"
+  - "reject"
+  - "request_retranslate"
+  - "request_refresh"
+  - "ignore"
+  - "supersede"
+optional_fields:
+  - "notes"
+  - "updated_target"
+  - "source_artifact"

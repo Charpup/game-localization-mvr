@@ -1,0 +1,36 @@
+# run_issue_plc_run_c_202603212000
+
+- run_id: plc_run_c_202603212000
+- run_scope: milestone_C_execute
+- severity_summary: pass
+- blockers: []
+- completed_checks:
+  - C1 术语提取链路支持 `--seg-backend` 与 style_profile 回填（domain_hint / backend_chain / stopwords）
+  - C2 `workflow/style_guide_questionnaire.md` 扩展为项目启动版问卷
+  - C3 新增 `scripts/style_guide_bootstrap.py`，并产出 `data/style_profile.yaml` / `workflow/style_guide.generated.md`
+  - C4 `scripts/style_sync_check.py` 规则接入 Step 0 门禁
+  - C5 `/loc-pipeline-full.md` 新增 Step 0 / Step 1 与 style 约束加载路径
+  - C6 `/loc-build-glossary.md` 与 `/loc-glossary-autopromote.md` 强化三档术语与风格降级标记
+  - C7 `/loc-translate.md` 与 `/loc-soft-qa.md` 注入 `--style-profile`
+  - C8 `scripts/translate_llm.py` 与 `scripts/soft_qa_llm.py` 在提示/规则中接入 style contract
+- pending_checks:
+  - ✅ 样本级回归 1：新分词链路与 jieba 对比（召回/噪音率/术语命中率）
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/term_candidates_c_chain_verify.yaml`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/term_candidates_c_chain_verify_evidence.yaml`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/term_candidates_jieba_verify.yaml`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/term_candidates_jieba_verify_evidence.yaml`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/term_compare_report.json`
+  - ✅ 样本级回归 2：3~5 条风格一致性批次（术语替换率、违规率、token 保护）
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/sample_translated_5.csv`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/sample_translated_80.csv`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/sample_translated_120.csv`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/softqa_report_5rows.json`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/softqa_report_80rows.json`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/softqa_report_120rows.json`
+  - ✅ 样本级回归 3：门禁失败演练（风格冲突/术语冲突/长度超限）可解释输出
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/sample_failure_3rows.csv`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/softqa_report_failure_rows.json`
+    - 输出：`docs/project_lifecycle/run_records/2026-03/2026-03-21/milestone_C_verify_artifacts/softqa_tasks_failure_rows.jsonl`
+- evidence_ready: true
+- note: C 里程碑核心链路与验收脚本齐备，`term_compare` 与 soft QA 的 3 类回归样本已落盘；可进入 `milestone_C_verify` 收口。
+

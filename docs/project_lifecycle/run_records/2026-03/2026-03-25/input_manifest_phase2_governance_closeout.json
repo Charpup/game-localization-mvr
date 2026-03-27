@@ -1,0 +1,19 @@
+{
+  "input_id": "phase2_governance_closeout_inputs",
+  "scope": "phase2_governance_closeout",
+  "artifacts": [
+    "workflow/plc_governance_contract.yaml",
+    "docs/project_lifecycle/field_schema.md",
+    "docs/project_lifecycle/continuity_protocol.md",
+    "docs/project_lifecycle/session_start_template.md",
+    "docs/project_lifecycle/session_end_template.md",
+    "docs/project_lifecycle/milestone_state_template.md",
+    "scripts/plc_validate_records.py",
+    "tests/test_plc_docs_contract.py",
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "task_plan.md",
+    "progress.md",
+    "docs/project_lifecycle/roadmap_index.md"
+  ]
+}

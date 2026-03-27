@@ -1,0 +1,21 @@
+- id: C
+- status: done
+- owner: Codex
+- next_owner: Codex
+- progress_pct: 100
+- evidence_ready: true
+- blockers: []
+- dependencies: [B]
+- decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
+- eta_hours: 8
+- notes: >
+  C 里程碑完成“词法链路 + 风格引导 + 译前/译中约束注入”的交付与验收收口；
+  样本级回归（分词对照、风格一致性、失败场景）全部落盘，`style_profile` 与 `term_compare` 证据链完整。
+- evidence:
+  - run_id: plc_run_c_202603212000
+  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_c_202603212000.json
+  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_c_202603212000.md
+  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_c_202603212000.md
+- handoff:
+  - next_owner: Codex
+  - next_scope: milestone_C_verify

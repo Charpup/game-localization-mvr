@@ -1,0 +1,81 @@
+{
+  "run_id": "plc_run_d_verify",
+  "schema": "milestone_D_drift_v1",
+  "schema_version": "baseline-drift-v1",
+  "generated_at": "2026-03-21T16:02:51.664296+08:00",
+  "run_scope": "milestone_D_verify",
+  "baseline_name": "plc_run_d_prepare",
+  "source_csv": "D:\\Dev_Env\\GPT_Codex_Workspace\\test_30_repaired.csv",
+  "baseline_snapshot_signature": "aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55",
+  "current_snapshot_signature": "aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55",
+  "drift_signature": "5d888fe0d26a0782ebb95e794accfccdfeb48ae1b1e20817064b4f541f2b7628",
+  "status": "pass",
+  "reason": "漂移在严格阈值内，可继续自动化流水线",
+  "metrics": {
+    "baseline_rows": 10,
+    "current_rows": 10,
+    "row_churn_ratio": 0.0,
+    "overlap_ratio": 1.0,
+    "added_count": 0,
+    "removed_count": 0,
+    "changed_count": 0,
+    "max_stratum_delta": 0,
+    "threshold_failures": [],
+    "baseline_sample_sha256": "f13e0e1533938c1eba3445d3233cde6f92d7f0293dacec64c8c38705e296e546",
+    "current_sample_sha256": "f13e0e1533938c1eba3445d3233cde6f92d7f0293dacec64c8c38705e296e546",
+    "sample_compare_path": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\compare\\current_manifest.json",
+    "source_sha_changed": false,
+    "sample_sha_changed": false
+  },
+  "thresholds": {
+    "max_row_churn_ratio": 0.05,
+    "max_stratum_delta": 2,
+    "require_source_match": true,
+    "require_sample_checksum_match": false
+  },
+  "artifacts": {
+    "run_manifest": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_manifest_plc_run_d_verify.json",
+    "run_issue": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_issue_plc_run_d_verify.md",
+    "run_verify": "docs\\project_lifecycle\\run_records\\2026-03\\2026-03-21\\run_verify_plc_run_d_verify.md",
+    "baseline_manifest": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\baseline_manifest.json",
+    "current_manifest": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\compare\\current_manifest.json",
+    "drift_summary": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\compare\\drift_summary.json",
+    "drift_report": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\compare\\drift_report.md",
+    "drift_diff_rows": "data\\baselines\\plc_run_d_prepare\\plc_run_d_prepare\\compare\\drift_diff_rows.csv"
+  },
+  "stratum_deltas": {
+    "UI": {
+      "baseline": 9,
+      "current": 9,
+      "delta": 0
+    },
+    "Dialogue": {
+      "baseline": 0,
+      "current": 0,
+      "delta": 0
+    },
+    "System": {
+      "baseline": 1,
+      "current": 1,
+      "delta": 0
+    },
+    "Placeholder": {
+      "baseline": 0,
+      "current": 0,
+      "delta": 0
+    },
+    "Other": {
+      "baseline": 0,
+      "current": 0,
+      "delta": 0
+    }
+  },
+  "decision_refs": [
+    "triadev:milestone_D_verify",
+    "plc:plc_run_d_verify",
+    "artifact:scripts/baseline_drift_control.py",
+    "signature:baseline:aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55",
+    "signature:current:aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55",
+    "signature:drift:5d888fe0d26a0782ebb95e794accfccdfeb48ae1b1e20817064b4f541f2b7628"
+  ]
+}

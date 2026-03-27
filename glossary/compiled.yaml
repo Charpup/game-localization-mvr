@@ -1,6 +1,6 @@
 meta:
   type: compiled
-  entry_count: 1925
+  entry_count: 1924
   note: Runtime read-only. Do not edit directly.
 entries:
 - term_zh: 攻击
@@ -863,9 +863,6 @@ entries:
   scope: base
 - term_zh: 领域
   term_ru: область
-  scope: base
-- term_zh: 副本
-  term_ru: подземелье
   scope: base
 - term_zh: 灵兽
   term_ru: дух-зверь

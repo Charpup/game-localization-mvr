@@ -1,0 +1,22 @@
+# run_issue_plc_run_d_verify
+
+- run_id: plc_run_d_verify
+- run_scope: milestone_D_verify
+- severity_summary: pass
+- blockers: []
+- completed_checks:
+  - 比较当前样本与基线 `plc_run_d_prepare`
+  - drift_summary 与 drift_report 已写入
+  - drift_diff_rows.csv 已产出
+- pending_checks:
+  - []
+- run_d_metrics:
+  - baseline_name: plc_run_d_prepare
+  - row_churn_ratio: 0.0
+  - max_stratum_delta: 0
+  - baseline_snapshot_signature: `aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55`
+  - current_snapshot_signature: `aa6b5d6725869f1eeb60a5c3a38e4d472fb90b7dae8e935283cfed91a15e9f55`
+  - drift_signature: `5d888fe0d26a0782ebb95e794accfccdfeb48ae1b1e20817064b4f541f2b7628`
+- threshold_failures: []
+- evidence_ready: true
+- note: 基线与漂移控制闭环已按脚本流程落盘，run_manifest/run_issue/run_verify 已就绪。

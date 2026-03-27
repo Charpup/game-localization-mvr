@@ -18,10 +18,162 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
 try:
     from scripts.smoke_issue_logger import append_issue, build_issue
 except ImportError:  # pragma: no cover
     from smoke_issue_logger import append_issue, build_issue
+try:
+    from scripts.review_governance import (
+        build_kpi_report,
+        build_review_tickets,
+        ensure_feedback_log,
+        load_feedback_log,
+        load_lifecycle_registry,
+        load_review_ticket_contract,
+        write_json as governance_write_json,
+        write_jsonl as governance_write_jsonl,
+    )
+except ImportError:  # pragma: no cover
+    from review_governance import (
+        build_kpi_report,
+        build_review_tickets,
+        ensure_feedback_log,
+        load_feedback_log,
+        load_lifecycle_registry,
+        load_review_ticket_contract,
+        write_json as governance_write_json,
+        write_jsonl as governance_write_jsonl,
+    )
+try:
+    from scripts.style_governance_runtime import evaluate_runtime_governance, format_runtime_governance_issues
+except ImportError:  # pragma: no cover
+    from style_governance_runtime import evaluate_runtime_governance, format_runtime_governance_issues
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+class GovernanceError(RuntimeError):
+    pass
+
+
+def _repo_relative(path: str) -> str:
+    raw = Path(path)
+    resolved = raw if raw.is_absolute() else (REPO_ROOT / raw).resolve()
+    try:
+        return resolved.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
+def _is_repo_managed(path: str) -> bool:
+    try:
+        (Path(path) if Path(path).is_absolute() else (REPO_ROOT / path).resolve()).relative_to(REPO_ROOT)
+        return True
+    except ValueError:
+        return False
+
+
+def _find_lifecycle_entry(asset_path: str, lifecycle_registry_path: str) -> Dict[str, Any]:
+    registry = load_lifecycle_registry(lifecycle_registry_path)
+    normalized = _repo_relative(asset_path)
+    for entry in registry.get("entries", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        if _repo_relative(str(entry.get("asset_path") or "")) == normalized:
+            return entry
+    return {}
+
+
+def validate_governed_asset(asset_path: str, asset_kind: str, *, lifecycle_registry_path: str) -> Dict[str, Any]:
+    if not Path(asset_path).exists():
+        raise GovernanceError(f"missing governed asset: {asset_path}")
+    if not _is_repo_managed(asset_path):
+        return {}
+    entry = _find_lifecycle_entry(asset_path, lifecycle_registry_path)
+    if not entry:
+        raise GovernanceError(f"missing lifecycle registry entry for {_repo_relative(asset_path)}")
+    expected_kind = "policy" if asset_kind in {"policy", "rubric"} else asset_kind
+    actual_kind = str(entry.get("asset_kind") or "")
+    if actual_kind != expected_kind:
+        raise GovernanceError(
+            f"lifecycle asset kind mismatch for {_repo_relative(asset_path)}: expected {expected_kind}, got {actual_kind}"
+        )
+    if str(entry.get("status") or "") != "approved":
+        raise GovernanceError(f"governed asset is not approved: {_repo_relative(asset_path)}")
+    return entry
+
+
+def validate_style_governance_runtime(style_profile_path: str, *, lifecycle_registry_path: str) -> Dict[str, Any]:
+    if not Path(style_profile_path).exists():
+        raise GovernanceError(f"style profile missing or invalid: {style_profile_path}")
+    if not _is_repo_managed(style_profile_path):
+        return {
+            "passed": True,
+            "style_profile_path": str(style_profile_path),
+            "asset_statuses": {},
+            "issues": [],
+        }
+    report = evaluate_runtime_governance(
+        style_profile_path=style_profile_path,
+        lifecycle_registry_path=lifecycle_registry_path,
+        policy_paths=["workflow/style_governance_contract.yaml"],
+    )
+    if not report["passed"]:
+        raise GovernanceError(format_runtime_governance_issues(report))
+    return report
+
+
+def _review_ticket_fieldnames(tickets: List[Dict[str, Any]]) -> List[str]:
+    required = list(load_review_ticket_contract().get("required_fields", []) or [])
+    extras: List[str] = []
+    for ticket in tickets:
+        for key in ticket.keys():
+            if key not in required and key not in extras:
+                extras.append(key)
+    return [*required, *extras]
+
+
+def write_review_tickets(jsonl_path: str, csv_path: str, tickets: List[Dict[str, Any]]) -> None:
+    governance_write_jsonl(jsonl_path, tickets)
+    fieldnames = _review_ticket_fieldnames(tickets)
+    rows: List[Dict[str, str]] = []
+    for ticket in tickets:
+        row: Dict[str, str] = {}
+        for field in fieldnames:
+            value = ticket.get(field)
+            if isinstance(value, (list, dict)):
+                row[field] = json.dumps(value, ensure_ascii=False)
+            else:
+                row[field] = "" if value is None else str(value)
+        rows.append(row)
+    if not rows:
+        rows = []
+    with open(csv_path, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+REVIEW_QUEUE_FIELDS = [
+    "task_id",
+    "string_id",
+    "task_type",
+    "review_owner",
+    "review_status",
+    "review_source",
+    "queue_reason",
+    "execution_status",
+    "final_status",
+    "status_reason",
+    "reason_codes",
+    "manual_review_reason",
+    "current_target",
+]
 
 
 def _timestamp() -> str:
@@ -83,7 +235,14 @@ def _read_json(path: Path) -> dict:
         return {}
 
 
-def _append_stage(manifest: dict, name: str, files: list, status: str, required: bool = True) -> None:
+def _append_stage(
+    manifest: dict,
+    name: str,
+    files: list,
+    status: str,
+    required: bool = True,
+    details: Optional[Dict[str, Any]] = None,
+) -> None:
     normalized_files = []
     for item in files:
         if isinstance(item, dict):
@@ -93,12 +252,15 @@ def _append_stage(manifest: dict, name: str, files: list, status: str, required:
             })
             continue
         normalized_files.append({"path": str(item), "required": True})
-    manifest["stages"].append({
+    stage = {
         "name": name,
         "status": status,
         "required": required,
         "files": normalized_files,
-    })
+    }
+    if details:
+        stage["details"] = details
+    manifest["stages"].append(stage)
 
 
 def _write_manifest(manifest_path: Path, manifest: dict) -> None:
@@ -121,12 +283,196 @@ def _set_manifest_artifact(manifest: dict, name: str, value: Any) -> None:
     manifest["artifacts"][name] = value
 
 
+def _read_jsonl(path: Path) -> List[Dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows: List[Dict[str, Any]] = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            text = line.strip()
+            if not text:
+                continue
+            try:
+                payload = json.loads(text)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(payload, dict):
+                rows.append(payload)
+    return rows
+
+
+def _read_csv_rows(path: Path) -> List[Dict[str, str]]:
+    if not path.exists():
+        return []
+    with open(path, "r", encoding="utf-8-sig", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def _write_review_queue(path: Path, rows: List[Dict[str, str]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=REVIEW_QUEUE_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def _dedupe_review_queue(rows: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    deduped: List[Dict[str, str]] = []
+    seen = set()
+    for row in rows:
+        key = (row.get("task_id", ""), row.get("review_source", ""), row.get("status_reason", ""))
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(row)
+    return deduped
+
+
+def _build_review_queue_entry(
+    *,
+    string_id: str,
+    review_source: str,
+    queue_reason: str,
+    current_target: str,
+    task_type: str = "manual_review",
+    execution_status: str = "review_handoff",
+    final_status: str = "review_handoff",
+    reason_codes: Optional[List[str]] = None,
+    manual_review_reason: str = "",
+) -> Dict[str, str]:
+    status_reason = queue_reason or review_source
+    return {
+        "task_id": f"{task_type}:{string_id or review_source}",
+        "string_id": string_id,
+        "task_type": task_type,
+        "review_owner": "human-linguist",
+        "review_status": "pending",
+        "review_source": review_source,
+        "queue_reason": queue_reason or review_source,
+        "execution_status": execution_status,
+        "final_status": final_status,
+        "status_reason": status_reason,
+        "reason_codes": json.dumps(reason_codes or [], ensure_ascii=False),
+        "manual_review_reason": manual_review_reason or queue_reason or review_source,
+        "current_target": current_target,
+    }
+
+
+def _review_handoff_summary(rows: List[Dict[str, str]], queue_path: Path) -> Dict[str, Any]:
+    by_source: Dict[str, int] = {}
+    string_ids: List[str] = []
+    for row in rows:
+        source = str(row.get("review_source") or "")
+        if source:
+            by_source[source] = by_source.get(source, 0) + 1
+        string_id = str(row.get("string_id") or "")
+        if string_id:
+            string_ids.append(string_id)
+    return {
+        "queue_path": str(queue_path),
+        "pending_count": len(rows),
+        "string_ids": sorted(dict.fromkeys(string_ids)),
+        "by_source": by_source,
+        "items": rows,
+    }
+
+
+def _normalize_review_ticket_queue_rows(rows: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    normalized: List[Dict[str, str]] = []
+    for row in rows:
+        item = dict(row)
+        task_id = str(item.get("task_id") or "")
+        review_source = str(item.get("review_source") or "manual_review")
+        if not task_id:
+            task_id = f"manual_review:{item.get('string_id') or review_source}"
+            item["task_id"] = task_id
+        if not str(item.get("string_id") or ""):
+            item["string_id"] = str(task_id.split(":", 1)[-1] or review_source)
+        if not str(item.get("review_status") or "") or str(item.get("review_status") or "") == "not_required":
+            item["review_status"] = "pending"
+        if not str(item.get("current_target") or ""):
+            item["current_target"] = "[manual review required]"
+        reason_codes = item.get("reason_codes")
+        if isinstance(reason_codes, str):
+            stripped = reason_codes.strip()
+            if stripped in {"", "[]"}:
+                item["reason_codes"] = json.dumps([review_source.upper()], ensure_ascii=False)
+        elif not reason_codes:
+            item["reason_codes"] = json.dumps([review_source.upper()], ensure_ascii=False)
+        normalized.append(item)
+    return normalized
+
+
+def _build_review_ticket_task_lookup(rows: List[Dict[str, str]], target_locale: str) -> Dict[str, Dict[str, Any]]:
+    lookup: Dict[str, Dict[str, Any]] = {}
+    high_risk_sources = {"post_gate_blocked", "execution_failure", "soft_qa_hard_gate", "soft_repair_rollback"}
+    for row in rows:
+        task_id = str(row.get("task_id") or "")
+        if not task_id:
+            continue
+        review_source = str(row.get("review_source") or "")
+        risk_level = "high" if review_source in high_risk_sources else "medium"
+        lookup[task_id] = {
+            "task_id": task_id,
+            "target_locale": target_locale,
+            "content_class": "general",
+            "risk_level": risk_level,
+            "target_constraints": {
+                "content_class": "general",
+                "risk_level": risk_level,
+            },
+        }
+    return lookup
+
+
+def _extract_current_target(row: Dict[str, Any], fallback: str = "") -> str:
+    preferred_keys = ["target_text", "target", "target_ru", "target_en"]
+    dynamic_target_keys = [
+        key for key in row.keys()
+        if key.startswith("target_") and key not in preferred_keys
+    ]
+    for key in preferred_keys + sorted(dynamic_target_keys):
+        value = str(row.get(key) or "")
+        if value:
+            return value
+    return fallback
+
+
+def _derive_overall_status(stages: List[Dict[str, Any]], gate_summary: Dict[str, Any], review_queue: List[Dict[str, str]]) -> str:
+    if gate_summary.get("status") == "failed":
+        return "failed"
+    if gate_summary.get("status") == "blocked":
+        return "blocked"
+    if any(str(stage.get("status") or "") == "fail" and bool(stage.get("required", True)) for stage in stages):
+        return "failed"
+    if review_queue or any(str(stage.get("status") or "") == "warn" for stage in stages):
+        return "warn"
+    return "pass"
+
+
+def _stage_status_counts(stages: List[Dict[str, Any]]) -> Dict[str, int]:
+    counts: Dict[str, int] = {}
+    for stage in stages:
+        status = str(stage.get("status") or "")
+        counts[status] = counts.get(status, 0) + 1
+    return counts
+
+
+def _qa_stage_status(returncode: int, has_errors: bool, actionable_warning_total: int) -> str:
+    if returncode != 0 or has_errors:
+        return "block"
+    if actionable_warning_total > 0:
+        return "warn"
+    return "pass"
+
+
 def _make_manifest(args: argparse.Namespace, run_id: str, input_csv: Path, run_dir: Path, issue_file: Path) -> dict:
     started = datetime.now(timezone.utc)
     return {
         "run_id": run_id,
         "timestamp": started.isoformat(),
         "manifest_version": "smoke-manifest-v1",
+        "status_contract_version": "phase1-runtime-v1",
         "project": "game-localization-mvr",
         "run_dir": str(run_dir.resolve()),
         "input_csv": str(input_csv),
@@ -139,9 +485,12 @@ def _make_manifest(args: argparse.Namespace, run_id: str, input_csv: Path, run_d
         "issue_file": str(issue_file),
         "artifacts": {
             "style_guide": args.style,
+            "style_profile": args.style_profile,
+            "lifecycle_registry": getattr(args, "lifecycle_registry", "workflow/lifecycle_registry.yaml"),
             "schema": args.schema,
             "forbidden_patterns": args.forbidden,
             "glossary": args.glossary,
+            "soft_qa_rubric": getattr(args, "soft_qa_rubric", "workflow/soft_qa_rubric.yaml"),
             "model": args.model,
         },
         "delivery_columns": [],
@@ -154,6 +503,28 @@ def _make_manifest(args: argparse.Namespace, run_id: str, input_csv: Path, run_d
             "input": 0
         },
         "row_checks": {},
+        "repair_cycles": {
+            "hard": {"status": "skipped", "task_count": 0, "escalation_count": 0},
+            "soft": {"status": "skipped", "task_count": 0, "escalation_count": 0},
+        },
+        "review_handoff": {
+            "queue_path": "",
+            "pending_count": 0,
+            "string_ids": [],
+            "by_source": {},
+            "items": [],
+        },
+        "gate_summary": {
+            "status": "running",
+            "failed_gates": [],
+            "blocking_stage": "",
+        },
+        "delivery_decision": {
+            "selected_candidate_csv": "",
+            "selected_candidate_stage": "",
+            "rollback_used": False,
+            "rollback_reason": "",
+        },
         "stages": [],
         "started_at": started.isoformat()
     }
@@ -167,6 +538,43 @@ def _write_row_checks(manifest: dict, input_rows: int, translate_rows: int, fina
         "translate_delta": translate_rows - input_rows,
         "final_delta": final_rows - input_rows,
     }
+
+
+def _resolve_style_profile_path(path: str) -> str:
+    if path and path.strip():
+        return path
+    for candidate in ("workflow/style_profile.generated.yaml", "data/style_profile.yaml"):
+        if Path(candidate).exists():
+            return candidate
+    return "workflow/style_profile.generated.yaml"
+
+
+def _ensure_style_profile(path: str, log_path: Path) -> tuple[bool, str]:
+    style_profile_path = Path(path)
+    if style_profile_path.exists():
+        return True, str(style_profile_path)
+
+    questionnaire = Path("workflow/style_guide_questionnaire.md")
+    if not questionnaire.exists():
+        with open(log_path, "w", encoding="utf-8") as f:
+            f.write(f"style_profile_missing: {path}\n")
+            f.write(f"questionnaire_missing: {questionnaire}\n")
+        return False, str(style_profile_path)
+
+    guide_output = Path("workflow/style_guide.generated.md")
+    cmd = [
+        sys.executable,
+        "scripts/style_guide_bootstrap.py",
+        "--questionnaire",
+        str(questionnaire),
+        "--guide-output",
+        str(guide_output),
+        "--profile-output",
+        str(style_profile_path),
+        "--dry-run",
+    ]
+    result = _run_step(cmd, log_path)
+    return result.returncode == 0 and style_profile_path.exists(), str(style_profile_path)
 
 
 def _issue_row_mismatch(run_id: str, issue_file: Path, stage: str, expected: int, actual: int, note: str) -> None:
@@ -191,7 +599,7 @@ def _run_metrics_stage(
     run_dir: Path,
     issue_file: Path,
 ) -> None:
-    metrics_log = run_dir / f"05_{_safe_stage_name('metrics')}.log"
+    metrics_log = run_dir / f"06_{_safe_stage_name('metrics')}.log"
     metrics_output_base = run_dir / "smoke_metrics_report"
     metrics_md = run_dir / "smoke_metrics_report.md"
     metrics_json = run_dir / "smoke_metrics_report.json"
@@ -387,7 +795,34 @@ def _append_symbol_regression_checks(
                 ))
 
 
+def _finalize_manifest(
+    manifest: Dict[str, Any],
+    *,
+    run_manifest_path: Path,
+    review_queue_path: Path,
+    review_queue_rows: List[Dict[str, str]],
+    gate_summary: Dict[str, Any],
+    status_reason: str = "",
+    passed_at: Optional[str] = None,
+) -> None:
+    deduped_review_rows = _dedupe_review_queue(review_queue_rows)
+    _write_review_queue(review_queue_path, deduped_review_rows)
+    manifest["review_handoff"] = _review_handoff_summary(deduped_review_rows, review_queue_path)
+    manifest["gate_summary"] = gate_summary
+    manifest["overall_status"] = _derive_overall_status(manifest.get("stages", []), gate_summary, deduped_review_rows)
+    manifest["status"] = manifest["overall_status"]
+    manifest["stage_status_counts"] = _stage_status_counts(manifest.get("stages", []))
+    manifest["status_reason"] = status_reason
+    if passed_at:
+        manifest["passed_at"] = passed_at
+    _write_manifest(run_manifest_path, manifest)
+
+
 def run_pipeline(args: argparse.Namespace) -> int:
+    if not getattr(args, "soft_qa_rubric", ""):
+        args.soft_qa_rubric = "workflow/soft_qa_rubric.yaml"
+    if not getattr(args, "lifecycle_registry", ""):
+        args.lifecycle_registry = "workflow/lifecycle_registry.yaml"
     run_id = getattr(args, "run_id", "") or f"smoke_run_{_timestamp()}"
     run_dir = Path(args.run_dir or Path("data") / run_id)
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -399,10 +834,127 @@ def run_pipeline(args: argparse.Namespace) -> int:
     placeholder_map = run_dir / "smoke_placeholder_map.json"
     translated_csv = run_dir / "smoke_translated.csv"
     qa_hard_report = run_dir / "smoke_qa_hard_report.json"
+    repaired_hard_csv = run_dir / "smoke_repaired_hard.csv"
+    qa_hard_recheck_report = run_dir / "smoke_qa_hard_recheck_report.json"
+    qa_soft_report = run_dir / "smoke_qa_soft_report.json"
+    qa_soft_tasks = run_dir / "smoke_repair_tasks.jsonl"
+    repaired_soft_csv = run_dir / "smoke_repaired_soft.csv"
+    qa_hard_post_soft_report = run_dir / "smoke_qa_hard_post_soft_report.json"
+    review_queue_path = run_dir / "smoke_review_queue.csv"
+    review_tickets_jsonl = run_dir / "smoke_review_tickets.jsonl"
+    review_tickets_csv = run_dir / "smoke_review_tickets.csv"
+    feedback_log_jsonl = run_dir / "smoke_review_feedback_log.jsonl"
+    kpi_report_json = run_dir / "smoke_language_governance_kpi.json"
     final_csv = run_dir / "smoke_final_export.csv"
     run_manifest_path = run_dir / "run_manifest.json"
 
     manifest = _make_manifest(args, run_id, input_csv, run_dir, issue_file)
+    manifest["review_handoff"]["queue_path"] = str(review_queue_path)
+    _append_artifact(manifest, "smoke_review_queue", review_queue_path)
+    _append_artifact(manifest, "smoke_review_tickets_jsonl", review_tickets_jsonl)
+    _append_artifact(manifest, "smoke_review_tickets_csv", review_tickets_csv)
+    _append_artifact(manifest, "smoke_feedback_log_jsonl", feedback_log_jsonl)
+    _append_artifact(manifest, "smoke_governance_kpi_json", kpi_report_json)
+    review_queue_rows: List[Dict[str, str]] = []
+    candidate_csv: Optional[Path] = None
+    candidate_stage = ""
+    runtime_governance: Dict[str, Any] = {
+        "passed": True,
+        "style_profile_path": str(args.style_profile or ""),
+        "asset_statuses": {},
+        "issues": [],
+    }
+
+    def finish_failed(stage_name: str, reason: str, *, failed_gate: str = "", code: int = 1) -> int:
+        manifest["delivery_decision"]["selected_candidate_csv"] = str(candidate_csv) if candidate_csv else ""
+        manifest["delivery_decision"]["selected_candidate_stage"] = candidate_stage
+        _finalize_manifest(
+            manifest,
+            run_manifest_path=run_manifest_path,
+            review_queue_path=review_queue_path,
+            review_queue_rows=review_queue_rows,
+            gate_summary={
+                "status": "failed",
+                "failed_gates": [failed_gate] if failed_gate else [],
+                "blocking_stage": stage_name,
+            },
+            status_reason=reason,
+        )
+        return code
+
+    def finish_blocked(stage_name: str, reason: str, *, failed_gates: List[str], code: int = 1) -> int:
+        manifest["delivery_decision"]["selected_candidate_csv"] = str(candidate_csv) if candidate_csv else ""
+        manifest["delivery_decision"]["selected_candidate_stage"] = candidate_stage
+        _finalize_manifest(
+            manifest,
+            run_manifest_path=run_manifest_path,
+            review_queue_path=review_queue_path,
+            review_queue_rows=review_queue_rows,
+            gate_summary={
+                "status": "blocked",
+                "failed_gates": failed_gates,
+                "blocking_stage": stage_name,
+            },
+            status_reason=reason,
+        )
+        return code
+
+    def append_escalation_rows(
+        escalation_rows: List[Dict[str, str]],
+        *,
+        review_source: str,
+        current_rows_map: Dict[str, Dict[str, str]],
+        final_status: str = "review_handoff",
+        queue_reason: str = "",
+    ) -> None:
+        for escalation in escalation_rows:
+            string_id = str(escalation.get("string_id") or "")
+            current_target = ""
+            if string_id:
+                current_row = current_rows_map.get(string_id) or {}
+                current_target = _extract_current_target(current_row)
+            review_queue_rows.append(
+                _build_review_queue_entry(
+                    string_id=string_id,
+                    review_source=review_source,
+                    queue_reason=queue_reason or str(escalation.get("suggested_action") or escalation.get("issues_summary") or review_source),
+                    current_target=current_target,
+                    execution_status="review_handoff" if final_status != "blocked" else "updated",
+                    final_status=final_status,
+                    manual_review_reason=str(escalation.get("suggested_action") or queue_reason or review_source),
+                )
+            )
+
+    def append_qa_error_rows(
+        report: Dict[str, Any],
+        *,
+        review_source: str,
+        current_rows_map: Dict[str, Dict[str, str]],
+        queue_reason: str,
+        final_status: str = "blocked",
+    ) -> None:
+        for error in report.get("errors", []) or []:
+            string_id = str(error.get("string_id") or "")
+            if not string_id:
+                continue
+            current_row = current_rows_map.get(string_id) or {}
+            current_target = _extract_current_target(
+                current_row,
+                fallback=str(error.get("current_translation") or ""),
+            )
+            reason_codes = [str(error.get("type") or "")] if error.get("type") else []
+            review_queue_rows.append(
+                _build_review_queue_entry(
+                    string_id=string_id,
+                    review_source=review_source,
+                    queue_reason=queue_reason,
+                    current_target=current_target,
+                    execution_status="review_handoff" if final_status != "blocked" else "updated",
+                    final_status=final_status,
+                    reason_codes=reason_codes,
+                    manual_review_reason=queue_reason,
+                )
+            )
 
     if not input_csv.exists():
         append_issue(str(issue_file), build_issue(
@@ -414,12 +966,48 @@ def run_pipeline(args: argparse.Namespace) -> int:
             suggest="检查输入 CSV 是否存在。"
         ))
         print(f"Missing input: {input_csv}")
-        manifest["status"] = "failed"
-        _write_manifest(run_manifest_path, manifest)
-        return 1
+        return finish_failed("normalize", "input_missing", failed_gate="input")
 
     input_row_count = _count_csv_rows(input_csv)
     manifest["row_counts"]["input"] = input_row_count
+
+    style_profile_log = run_dir / f"00a_{_safe_stage_name('style_profile_bootstrap')}.log"
+    args.style_profile = _resolve_style_profile_path(args.style_profile)
+    style_profile_ready, resolved_style_profile = _ensure_style_profile(args.style_profile, style_profile_log)
+    args.style_profile = resolved_style_profile
+    manifest["artifacts"]["style_profile"] = args.style_profile
+    _append_stage_artifact(manifest, "style_profile_log", style_profile_log)
+    _append_stage_artifact(manifest, "style_profile", Path(args.style_profile))
+    if not style_profile_ready:
+        append_issue(str(issue_file), build_issue(
+            run_id=run_id,
+            stage="style_profile_bootstrap",
+            severity="P0",
+            error_code="STYLE_PROFILE_MISSING",
+            context={"style_profile": args.style_profile, "log": str(style_profile_log)},
+            suggest="通过 scripts/style_guide_bootstrap.py 生成 style profile 后再重试。"
+        ))
+        return finish_failed("style_profile_bootstrap", "style_profile_missing", failed_gate="style_profile")
+    try:
+        lifecycle_registry_path = getattr(args, "lifecycle_registry", "workflow/lifecycle_registry.yaml")
+        runtime_governance = validate_style_governance_runtime(
+            args.style_profile,
+            lifecycle_registry_path=lifecycle_registry_path,
+        )
+        validate_governed_asset(args.glossary, "glossary", lifecycle_registry_path=lifecycle_registry_path)
+        validate_governed_asset(args.soft_qa_rubric, "rubric", lifecycle_registry_path=lifecycle_registry_path)
+        validate_governed_asset(args.schema, "policy", lifecycle_registry_path=lifecycle_registry_path)
+    except GovernanceError as exc:
+        append_issue(str(issue_file), build_issue(
+            run_id=run_id,
+            stage="style_governance_gate",
+            severity="P0",
+            error_code="STYLE_GOVERNANCE_GATE_FAIL",
+            context={"style_profile": args.style_profile, "error": str(exc)},
+            suggest="修复 style governance / lifecycle registry 后重试。",
+        ))
+        return finish_failed("style_governance_gate", "style_governance_gate_failed", failed_gate="style_governance")
+    manifest["runtime_governance"] = runtime_governance
 
     # 0) connectivity
     ping_log = run_dir / f"00_{_safe_stage_name('connectivity')}.log"
@@ -437,9 +1025,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             context={"log": str(ping_log), "returncode": ping.returncode, "stdout": ping.stdout[-200:]},
             suggest="先修复 LLM 凭证与 base_url，然后重试。"
         ))
-        manifest["status"] = "failed"
-        _write_manifest(run_manifest_path, manifest)
-        return 1
+        return finish_failed("connectivity", "llm_connectivity_fail", failed_gate="connectivity")
 
     # 1) normalize
     normalize_log = run_dir / f"01_{_safe_stage_name('normalize')}.log"
@@ -467,9 +1053,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             context={"log": str(normalize_log), "returncode": normalize.returncode},
             suggest="检查输入 CSV 的列字段与占位符格式。"
         ))
-        manifest["status"] = "failed"
-        _write_manifest(run_manifest_path, manifest)
-        return 1
+        return finish_failed("normalize", "normalize_fail", failed_gate="normalize")
 
     # 2) translate (EN preferred, RU fallback)
     translation_log = run_dir / f"02_{_safe_stage_name('translate')}.log"
@@ -481,6 +1065,8 @@ def run_pipeline(args: argparse.Namespace) -> int:
         "--output", str(translated_csv),
         "--style", args.style,
         "--glossary", args.glossary,
+        "--style-profile", args.style_profile,
+        "--lifecycle-registry", lifecycle_registry_path,
         "--target-lang", active_target,
         "--target-key", _derive_target_key(active_target),
         "--model", args.model,
@@ -510,6 +1096,8 @@ def run_pipeline(args: argparse.Namespace) -> int:
             "--output", str(translated_csv),
             "--style", args.style,
             "--glossary", args.glossary,
+            "--style-profile", args.style_profile,
+            "--lifecycle-registry", lifecycle_registry_path,
             "--target-lang", active_target,
             "--target-key", _derive_target_key(active_target),
             "--model", args.model,
@@ -539,9 +1127,10 @@ def run_pipeline(args: argparse.Namespace) -> int:
             context={"log": str(translation_log), "returncode": translate.returncode, "target_lang": active_target},
             suggest="检查模型是否可用、输出字段格式和网络连通。"
         ))
-        manifest["status"] = "failed"
-        _write_manifest(run_manifest_path, manifest)
-        return 1
+        return finish_failed("translate", "translate_fail", failed_gate="translate")
+
+    candidate_csv = translated_csv
+    candidate_stage = "translate"
 
     # 3) QA hard
     qa_log = run_dir / f"03_{_safe_stage_name('qa_hard')}.log"
@@ -553,12 +1142,6 @@ def run_pipeline(args: argparse.Namespace) -> int:
         args.forbidden,
         str(qa_hard_report),
     ], qa_log)
-    _append_stage(manifest, "QA Hard", [qa_hard_report], "pass" if qa.returncode == 0 else "fail")
-    _append_artifact(manifest, "smoke_qa_hard_report", qa_hard_report)
-    _append_artifact(manifest, "smoke_qa_hard_log", qa_log)
-    _append_stage_artifact(manifest, "qa_hard_report", qa_hard_report)
-    _append_stage_artifact(manifest, "qa_hard_log", qa_log)
-    manifest["qa_hard_report"] = str(qa_hard_report)
     qa_report = _read_json(qa_hard_report)
     qa_has_errors = bool(qa_report.get("has_errors"))
     qa_warning_total = int((qa_report.get("metadata", {}) or {}).get("total_warnings", 0))
@@ -566,6 +1149,26 @@ def run_pipeline(args: argparse.Namespace) -> int:
     qa_actionable_warning_total = int(qa_warning_policy.get("actionable_warning_total", qa_warning_total))
     qa_warning_samples = (qa_report.get("warnings") or [])[:50]
     qa_warning_counts = qa_report.get("warning_counts", {})
+    qa_stage_status = _qa_stage_status(qa.returncode, qa_has_errors, qa_actionable_warning_total)
+    if qa_stage_status == "block":
+        qa_stage_status = "warn"
+    _append_stage(
+        manifest,
+        "QA Hard",
+        [qa_hard_report],
+        qa_stage_status,
+        details={
+            "errors": int((qa_report.get("metadata", {}) or {}).get("total_errors", 0)),
+            "warnings": qa_warning_total,
+            "actionable_warning_total": qa_actionable_warning_total,
+            "recovery_path": "repair_hard" if (qa.returncode != 0 or qa_has_errors) else "not_needed",
+        },
+    )
+    _append_artifact(manifest, "smoke_qa_hard_report", qa_hard_report)
+    _append_artifact(manifest, "smoke_qa_hard_log", qa_log)
+    _append_stage_artifact(manifest, "qa_hard_report", qa_hard_report)
+    _append_stage_artifact(manifest, "qa_hard_log", qa_log)
+    manifest["qa_hard_report"] = str(qa_hard_report)
     if qa_has_errors:
         append_issue(str(issue_file), build_issue(
             run_id=run_id,
@@ -595,7 +1198,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
             },
             suggest="留意软告警趋势，必要时在 normalize/数据侧修正，再决定是否允许。"
         ))
-    if qa.returncode != 0:
+    if qa.returncode != 0 and not qa_has_errors:
         append_issue(str(issue_file), build_issue(
             run_id=run_id,
             stage="qa_hard",
@@ -606,16 +1209,375 @@ def run_pipeline(args: argparse.Namespace) -> int:
         ))
 
     if qa.returncode != 0 or qa_has_errors:
-        # Keep going only for non-blocking? smoke hard gate is blocking by plan
-        manifest["status"] = "failed"
-        _write_manifest(run_manifest_path, manifest)
-        return 1
+        repair_hard_dir = run_dir / "repair_reports" / "hard"
+        repair_hard_log = run_dir / f"03b_{_safe_stage_name('repair_hard')}.log"
+        repair_hard = _run_step([
+            sys.executable,
+            "scripts/repair_loop.py",
+            "--input", str(translated_csv),
+            "--tasks", str(qa_hard_report),
+            "--output", str(repaired_hard_csv),
+            "--output-dir", str(repair_hard_dir),
+            "--qa-type", "hard",
+            "--target-lang", active_target,
+        ], repair_hard_log)
+        hard_stats_path = repair_hard_dir / "repair_hard_stats.json"
+        hard_escalation_path = repair_hard_dir / "escalated_hard_qa.csv"
+        hard_escalations = _read_csv_rows(hard_escalation_path)
+        hard_stats = _read_json(hard_stats_path)
+        hard_repair_ok = repair_hard.returncode == 0 and repaired_hard_csv.exists()
+        manifest["repair_cycles"]["hard"] = {
+            "status": "completed" if hard_repair_ok else "failed",
+            "task_count": int(hard_stats.get("total_tasks", len(qa_report.get("errors", []) or []))),
+            "repaired": int(hard_stats.get("repaired", 0)),
+            "escalation_count": len(hard_escalations),
+            "stats_path": str(hard_stats_path),
+            "escalation_path": str(hard_escalation_path),
+            "log": str(repair_hard_log),
+        }
+        _append_stage(
+            manifest,
+            "Repair Hard",
+            [
+                repaired_hard_csv,
+                {"path": str(hard_stats_path), "required": False},
+                {"path": str(hard_escalation_path), "required": False},
+            ],
+            "pass" if hard_repair_ok else "fail",
+            details={
+                "task_count": manifest["repair_cycles"]["hard"]["task_count"],
+                "repaired": manifest["repair_cycles"]["hard"]["repaired"],
+                "escalation_count": len(hard_escalations),
+            },
+        )
+        _append_artifact(manifest, "smoke_repaired_hard_csv", repaired_hard_csv)
+        _append_stage_artifact(manifest, "repair_hard_log", repair_hard_log)
+        _append_stage_artifact(manifest, "repair_hard_stats", hard_stats_path)
+        _append_stage_artifact(manifest, "repair_hard_escalations", hard_escalation_path)
+        if not hard_repair_ok:
+            append_issue(str(issue_file), build_issue(
+                run_id=run_id,
+                stage="repair_hard",
+                severity="P0",
+                error_code="REPAIR_HARD_FAIL",
+                context={"log": str(repair_hard_log), "returncode": repair_hard.returncode},
+                suggest="检查 repair_loop hard 输出与修复配置后重试。"
+            ))
+            return finish_failed("repair_hard", "repair_hard_fail", failed_gate="repair_hard")
 
-    # 4) rehydrate export
-    rehydrate_log = run_dir / f"04_{_safe_stage_name('rehydrate')}.log"
+        candidate_csv = repaired_hard_csv
+        candidate_stage = "repair_hard"
+        qa_hard_recheck_log = run_dir / f"03c_{_safe_stage_name('qa_hard_recheck')}.log"
+        qa_hard_recheck = _run_step([
+            sys.executable, "scripts/qa_hard.py",
+            str(candidate_csv),
+            str(placeholder_map),
+            args.schema,
+            args.forbidden,
+            str(qa_hard_recheck_report),
+        ], qa_hard_recheck_log)
+        qa_hard_recheck_payload = _read_json(qa_hard_recheck_report)
+        qa_hard_recheck_has_errors = bool(qa_hard_recheck_payload.get("has_errors"))
+        qa_hard_recheck_warning_total = int((qa_hard_recheck_payload.get("metadata", {}) or {}).get("total_warnings", 0))
+        qa_hard_recheck_warning_policy = qa_hard_recheck_payload.get("warning_policy") or {}
+        qa_hard_recheck_actionable_warning_total = int(
+            qa_hard_recheck_warning_policy.get("actionable_warning_total", qa_hard_recheck_warning_total)
+        )
+        _append_stage(
+            manifest,
+            "QA Hard Recheck",
+            [qa_hard_recheck_report],
+            _qa_stage_status(
+                qa_hard_recheck.returncode,
+                qa_hard_recheck_has_errors,
+                qa_hard_recheck_actionable_warning_total,
+            ),
+            details={
+                "errors": int((qa_hard_recheck_payload.get("metadata", {}) or {}).get("total_errors", 0)),
+                "warnings": qa_hard_recheck_warning_total,
+                "actionable_warning_total": qa_hard_recheck_actionable_warning_total,
+            },
+        )
+        _append_stage_artifact(manifest, "qa_hard_recheck_report", qa_hard_recheck_report)
+        _append_stage_artifact(manifest, "qa_hard_recheck_log", qa_hard_recheck_log)
+        if qa_hard_recheck.returncode != 0 or qa_hard_recheck_has_errors:
+            repaired_rows_map = _read_rows_as_dict(candidate_csv, "string_id")
+            append_escalation_rows(
+                hard_escalations,
+                review_source="repair_hard_escalation",
+                current_rows_map=repaired_rows_map,
+                final_status="blocked",
+                queue_reason="repair_hard_escalated",
+            )
+            append_qa_error_rows(
+                qa_hard_recheck_payload,
+                review_source="qa_hard_recheck_blocked",
+                current_rows_map=repaired_rows_map,
+                queue_reason="qa_hard_failed_after_repair",
+                final_status="blocked",
+            )
+            append_issue(str(issue_file), build_issue(
+                run_id=run_id,
+                stage="qa_hard_recheck",
+                severity="P0",
+                error_code="QA_HARD_RECHECK_FAIL",
+                context={
+                    "report": str(qa_hard_recheck_report),
+                    "log": str(qa_hard_recheck_log),
+                    "total_errors": (qa_hard_recheck_payload.get("metadata", {}) or {}).get("total_errors", 0),
+                },
+                suggest="硬修复后仍有硬性错误，改为人工复核处理。"
+            ))
+            return finish_blocked("qa_hard_recheck", "qa_hard_failed_after_repair", failed_gates=["qa_hard"])
+
+    # 4) soft QA -> repair loop (soft) with rollback-safe promotion
+    soft_qa_log = run_dir / f"04_{_safe_stage_name('soft_qa')}.log"
+    soft_qa = _run_step([
+        sys.executable,
+        "scripts/soft_qa_llm.py",
+        str(candidate_csv),
+        args.style,
+        args.glossary,
+        args.soft_qa_rubric,
+        "--style-profile", args.style_profile,
+        "--lifecycle-registry", lifecycle_registry_path,
+        "--out_report", str(qa_soft_report),
+        "--out_tasks", str(qa_soft_tasks),
+    ], soft_qa_log)
+    soft_qa_payload = _read_json(qa_soft_report)
+    soft_qa_tasks = _read_jsonl(qa_soft_tasks)
+    soft_findings = bool(soft_qa_payload.get("has_findings")) or bool(soft_qa_tasks)
+    soft_gate_status = str((soft_qa_payload.get("hard_gate") or {}).get("status") or "")
+    soft_hard_gate_triggered = soft_qa.returncode == 2 or soft_gate_status == "fail"
+    soft_stage_status = "pass"
+    if soft_qa.returncode not in (0, 2):
+        soft_stage_status = "warn"
+    elif soft_findings or soft_hard_gate_triggered:
+        soft_stage_status = "warn"
+    _append_stage(
+        manifest,
+        "Soft QA",
+        [
+            qa_soft_report,
+            {"path": str(qa_soft_tasks), "required": False},
+        ],
+        soft_stage_status,
+        details={
+            "returncode": soft_qa.returncode,
+            "has_findings": soft_findings,
+            "hard_gate_status": soft_gate_status or ("fail" if soft_hard_gate_triggered else "pass"),
+            "task_count": len(soft_qa_tasks),
+        },
+    )
+    _append_artifact(manifest, "smoke_qa_soft_report", qa_soft_report)
+    _append_artifact(manifest, "smoke_qa_soft_tasks", qa_soft_tasks)
+    _append_stage_artifact(manifest, "soft_qa_log", soft_qa_log)
+    _append_stage_artifact(manifest, "soft_qa_report", qa_soft_report)
+    _append_stage_artifact(manifest, "soft_qa_tasks", qa_soft_tasks)
+    if soft_qa.returncode not in (0, 2):
+        append_issue(str(issue_file), build_issue(
+            run_id=run_id,
+            stage="soft_qa",
+            severity="P1",
+            error_code="SOFT_QA_EXECUTION_FAIL",
+            context={"log": str(soft_qa_log), "returncode": soft_qa.returncode},
+            suggest="检查 soft QA 模型调用与 rubric 配置；当前交付将回退为人工复核。"
+        ))
+        review_queue_rows.append(
+            _build_review_queue_entry(
+                string_id="",
+                review_source="soft_qa_execution_failure",
+                queue_reason="soft_qa_execution_failed",
+                current_target="",
+                execution_status="failed",
+                final_status="review_handoff",
+                manual_review_reason="soft_qa_execution_failed",
+            )
+        )
+    if soft_hard_gate_triggered and not soft_qa_tasks:
+        append_issue(str(issue_file), build_issue(
+            run_id=run_id,
+            stage="soft_qa",
+            severity="P1",
+            error_code="SOFT_QA_HARD_GATE_NO_TASKS",
+            context={
+                "report": str(qa_soft_report),
+                "log": str(soft_qa_log),
+                "returncode": soft_qa.returncode,
+                "hard_gate_status": soft_gate_status or "fail",
+            },
+            suggest="soft QA 触发硬门禁但没有生成 repair 任务，改为人工复核后再决定是否继续交付。"
+        ))
+        review_queue_rows.append(
+            _build_review_queue_entry(
+                string_id="",
+                review_source="soft_qa_hard_gate",
+                queue_reason="soft_qa_hard_gate_no_tasks",
+                current_target="",
+                execution_status="review_handoff",
+                final_status="review_handoff",
+                manual_review_reason="soft_qa_hard_gate_no_tasks",
+            )
+        )
+
+    if soft_findings and soft_qa_tasks:
+        repair_soft_dir = run_dir / "repair_reports" / "soft"
+        repair_soft_log = run_dir / f"04b_{_safe_stage_name('repair_soft')}.log"
+        repair_soft = _run_step([
+            sys.executable,
+            "scripts/repair_loop.py",
+            "--input", str(candidate_csv),
+            "--tasks", str(qa_soft_tasks),
+            "--output", str(repaired_soft_csv),
+            "--output-dir", str(repair_soft_dir),
+            "--qa-type", "soft",
+            "--target-lang", active_target,
+        ], repair_soft_log)
+        soft_stats_path = repair_soft_dir / "repair_soft_stats.json"
+        soft_escalation_path = repair_soft_dir / "escalated_soft_qa.csv"
+        soft_escalations = _read_csv_rows(soft_escalation_path)
+        soft_stats = _read_json(soft_stats_path)
+        soft_repair_ok = repair_soft.returncode == 0 and repaired_soft_csv.exists()
+        manifest["repair_cycles"]["soft"] = {
+            "status": "completed" if soft_repair_ok else "failed",
+            "task_count": int(soft_stats.get("total_tasks", len(soft_qa_tasks))),
+            "repaired": int(soft_stats.get("repaired", 0)),
+            "escalation_count": len(soft_escalations),
+            "stats_path": str(soft_stats_path),
+            "escalation_path": str(soft_escalation_path),
+            "log": str(repair_soft_log),
+        }
+        _append_stage(
+            manifest,
+            "Repair Soft",
+            [
+                repaired_soft_csv,
+                {"path": str(soft_stats_path), "required": False},
+                {"path": str(soft_escalation_path), "required": False},
+            ],
+            "pass" if soft_repair_ok else "warn",
+            details={
+                "task_count": manifest["repair_cycles"]["soft"]["task_count"],
+                "repaired": manifest["repair_cycles"]["soft"]["repaired"],
+                "escalation_count": len(soft_escalations),
+            },
+        )
+        _append_stage_artifact(manifest, "repair_soft_log", repair_soft_log)
+        _append_stage_artifact(manifest, "repair_soft_stats", soft_stats_path)
+        _append_stage_artifact(manifest, "repair_soft_escalations", soft_escalation_path)
+        if not soft_repair_ok:
+            append_issue(str(issue_file), build_issue(
+                run_id=run_id,
+                stage="repair_soft",
+                severity="P1",
+                error_code="REPAIR_SOFT_FAIL",
+                context={"log": str(repair_soft_log), "returncode": repair_soft.returncode},
+                suggest="保持硬规则安全候选输出，并将 soft 问题转人工复核。"
+            ))
+            current_rows_map = _read_rows_as_dict(candidate_csv, "string_id")
+            for task in soft_qa_tasks:
+                string_id = str(task.get("string_id") or "")
+                current_row = current_rows_map.get(string_id) or {}
+                review_queue_rows.append(
+                    _build_review_queue_entry(
+                        string_id=string_id,
+                        review_source="soft_repair_execution_failure",
+                        queue_reason="soft_repair_execution_failed",
+                        current_target=_extract_current_target(current_row),
+                        execution_status="failed",
+                        final_status="review_handoff",
+                        reason_codes=[str(task.get("type") or "")] if task.get("type") else [],
+                        manual_review_reason="soft_repair_execution_failed",
+                    )
+                )
+        else:
+            qa_hard_post_soft_log = run_dir / f"04c_{_safe_stage_name('qa_hard_post_soft')}.log"
+            qa_hard_post_soft = _run_step([
+                sys.executable, "scripts/qa_hard.py",
+                str(repaired_soft_csv),
+                str(placeholder_map),
+                args.schema,
+                args.forbidden,
+                str(qa_hard_post_soft_report),
+            ], qa_hard_post_soft_log)
+            qa_hard_post_soft_payload = _read_json(qa_hard_post_soft_report)
+            qa_hard_post_soft_has_errors = bool(qa_hard_post_soft_payload.get("has_errors"))
+            qa_hard_post_soft_warning_total = int((qa_hard_post_soft_payload.get("metadata", {}) or {}).get("total_warnings", 0))
+            qa_hard_post_soft_warning_policy = qa_hard_post_soft_payload.get("warning_policy") or {}
+            qa_hard_post_soft_actionable_warning_total = int(
+                qa_hard_post_soft_warning_policy.get("actionable_warning_total", qa_hard_post_soft_warning_total)
+            )
+            _append_stage(
+                manifest,
+                "QA Hard Post Soft",
+                [qa_hard_post_soft_report],
+                _qa_stage_status(
+                    qa_hard_post_soft.returncode,
+                    qa_hard_post_soft_has_errors,
+                    qa_hard_post_soft_actionable_warning_total,
+                ),
+                details={
+                    "errors": int((qa_hard_post_soft_payload.get("metadata", {}) or {}).get("total_errors", 0)),
+                    "warnings": qa_hard_post_soft_warning_total,
+                    "actionable_warning_total": qa_hard_post_soft_actionable_warning_total,
+                },
+            )
+            _append_stage_artifact(manifest, "qa_hard_post_soft_report", qa_hard_post_soft_report)
+            _append_stage_artifact(manifest, "qa_hard_post_soft_log", qa_hard_post_soft_log)
+            if qa_hard_post_soft.returncode != 0 or qa_hard_post_soft_has_errors:
+                current_rows_map = _read_rows_as_dict(candidate_csv, "string_id")
+                append_escalation_rows(
+                    soft_escalations,
+                    review_source="repair_soft_escalation",
+                    current_rows_map=current_rows_map,
+                    queue_reason="repair_soft_escalated",
+                )
+                append_qa_error_rows(
+                    qa_hard_post_soft_payload,
+                    review_source="soft_repair_rollback",
+                    current_rows_map=current_rows_map,
+                    queue_reason="qa_hard_failed_after_soft_repair",
+                    final_status="review_handoff",
+                )
+                append_issue(str(issue_file), build_issue(
+                    run_id=run_id,
+                    stage="qa_hard_post_soft",
+                    severity="P1",
+                    error_code="SOFT_REPAIR_ROLLBACK",
+                    context={
+                        "report": str(qa_hard_post_soft_report),
+                        "log": str(qa_hard_post_soft_log),
+                        "rollback_to": str(candidate_csv),
+                    },
+                    suggest="soft repair 破坏了硬规则，已回滚到上一个硬规则安全候选。"
+                ))
+                manifest["delivery_decision"]["rollback_used"] = True
+                manifest["delivery_decision"]["rollback_reason"] = "soft_repair_failed_hard_gate"
+            else:
+                candidate_csv = repaired_soft_csv
+                candidate_stage = "repair_soft"
+                current_rows_map = _read_rows_as_dict(candidate_csv, "string_id")
+                append_escalation_rows(
+                    soft_escalations,
+                    review_source="repair_soft_escalation",
+                    current_rows_map=current_rows_map,
+                    queue_reason="repair_soft_escalated",
+                )
+    else:
+        manifest["repair_cycles"]["soft"] = {
+            "status": "skipped",
+            "task_count": len(soft_qa_tasks),
+            "escalation_count": 0,
+        }
+
+    manifest["delivery_decision"]["selected_candidate_csv"] = str(candidate_csv)
+    manifest["delivery_decision"]["selected_candidate_stage"] = candidate_stage
+
+    # 5) rehydrate export
+    rehydrate_log = run_dir / f"05_{_safe_stage_name('rehydrate')}.log"
     rehydrate = _run_step([
         sys.executable, "scripts/rehydrate_export.py",
-        str(translated_csv),
+        str(candidate_csv),
         str(placeholder_map),
         str(final_csv),
         "--target-lang", active_target
@@ -637,12 +1599,11 @@ def run_pipeline(args: argparse.Namespace) -> int:
             context={"log": str(rehydrate_log), "returncode": rehydrate.returncode, "target_lang": active_target},
             suggest="检查 placeholder 映射完整性和输出列定义。"
         ))
-        manifest["status"] = "failed"
-        _write_manifest(run_manifest_path, manifest)
-        return 1
+        return finish_failed("rehydrate", "rehydrate_fail", failed_gate="rehydrate")
 
-    # 5) row count integrity checks
+    # 6) row count integrity checks
     translated_rows = _count_csv_rows(translated_csv)
+    candidate_rows = _count_csv_rows(candidate_csv)
     final_rows = _count_csv_rows(final_csv)
     input_rows_map = _read_rows_as_dict(input_csv, "string_id")
     final_rows_map = _read_rows_as_dict(final_csv, "string_id")
@@ -652,6 +1613,8 @@ def run_pipeline(args: argparse.Namespace) -> int:
             reader = csv.reader(f)
             final_headers = next(reader, []) or []
     _write_row_checks(manifest, input_row_count, translated_rows, final_rows)
+    manifest["row_checks"]["candidate_rows"] = candidate_rows
+    manifest["row_checks"]["candidate_delta"] = candidate_rows - input_row_count
     _append_symbol_regression_checks(
         run_id=run_id,
         issue_file=issue_file,
@@ -675,16 +1638,15 @@ def run_pipeline(args: argparse.Namespace) -> int:
         manifest["delivery_columns"].append("target_text")
     if translated_rows != input_row_count:
         _issue_row_mismatch(run_id, issue_file, "translate", input_row_count, translated_rows, "translate output row count mismatch")
-        manifest["status"] = "failed"
-        _write_manifest(run_manifest_path, manifest)
-        return 1
+        return finish_blocked("row_count_integrity", "translate_row_count_mismatch", failed_gates=["row_count_integrity"])
+    if candidate_rows != input_row_count:
+        _issue_row_mismatch(run_id, issue_file, candidate_stage or "candidate", input_row_count, candidate_rows, "candidate output row count mismatch")
+        return finish_blocked("row_count_integrity", "candidate_row_count_mismatch", failed_gates=["row_count_integrity"])
     if final_rows != input_row_count:
         _issue_row_mismatch(run_id, issue_file, "rehydrate", input_row_count, final_rows, "final output row count mismatch")
-        manifest["status"] = "failed"
-        _write_manifest(run_manifest_path, manifest)
-        return 1
+        return finish_blocked("row_count_integrity", "final_row_count_mismatch", failed_gates=["row_count_integrity"])
 
-    # 6) metrics (non-blocking observability)
+    # 7) metrics (non-blocking observability)
     _run_metrics_stage(
         manifest=manifest,
         run_id=run_id,
@@ -692,7 +1654,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
         issue_file=issue_file,
     )
 
-    # 7) verify (manifest-driven)
+    # 8) verify (manifest-driven)
     verify_log = run_dir / f"99_{_safe_stage_name('smoke_verify')}.log"
     manifest["final_file"] = str(final_csv)
     manifest["stage_artifacts"].update({
@@ -701,6 +1663,46 @@ def run_pipeline(args: argparse.Namespace) -> int:
     _append_stage_artifact(manifest, "verify_input", final_csv)
     _append_artifact(manifest, "smoke_manifest", run_manifest_path)
     _append_artifact(manifest, "smoke_verify_log", verify_log)
+    deduped_review_queue = _normalize_review_ticket_queue_rows(_dedupe_review_queue(review_queue_rows))
+    _write_review_queue(review_queue_path, deduped_review_queue)
+    ensure_feedback_log(str(feedback_log_jsonl))
+    feedback_logs = load_feedback_log(str(feedback_log_jsonl))
+    review_tickets = build_review_tickets(
+        deduped_review_queue,
+        task_lookup=_build_review_ticket_task_lookup(deduped_review_queue, active_target),
+        source_artifacts={
+            "run_manifest": str(run_manifest_path),
+            "review_queue": str(review_queue_path),
+            "style_profile": args.style_profile,
+        },
+        default_locale=active_target,
+    )
+    write_review_tickets(str(review_tickets_jsonl), str(review_tickets_csv), review_tickets)
+    governance_write_json(
+        str(kpi_report_json),
+        build_kpi_report(
+            scope="smoke_pipeline",
+            manifest=manifest,
+            review_tickets=review_tickets,
+            feedback_logs=feedback_logs,
+            runtime_governance=runtime_governance,
+            lifecycle_registry=load_lifecycle_registry(getattr(args, "lifecycle_registry", "workflow/lifecycle_registry.yaml")),
+            metrics_payload=_read_json(run_dir / "smoke_metrics_report.json"),
+            extra_sources={
+                "run_manifest": str(run_manifest_path),
+                "review_queue": str(review_queue_path),
+                "review_tickets": str(review_tickets_jsonl),
+                "feedback_log": str(feedback_log_jsonl),
+                "metrics_report_json": str(run_dir / "smoke_metrics_report.json"),
+                "lifecycle_registry_path": getattr(args, "lifecycle_registry", "workflow/lifecycle_registry.yaml"),
+            },
+        ),
+    )
+    manifest.setdefault("artifacts", {})
+    manifest["artifacts"]["smoke_review_tickets_jsonl"] = str(review_tickets_jsonl)
+    manifest["artifacts"]["smoke_review_tickets_csv"] = str(review_tickets_csv)
+    manifest["artifacts"]["smoke_feedback_log_jsonl"] = str(feedback_log_jsonl)
+    manifest["artifacts"]["smoke_governance_kpi_json"] = str(kpi_report_json)
     _write_manifest(run_manifest_path, manifest)
 
     verify = _run_step([
@@ -709,7 +1711,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
         "--mode", args.verify_mode,
         "--issue-file", str(issue_file),
     ], verify_log)
-    _append_stage(manifest, "Smoke Verify", [verify_log], "pass" if verify.returncode == 0 else "fail")
+    _append_stage(manifest, "Smoke Verify", [verify_log], "pass" if verify.returncode == 0 else "block")
     if verify.returncode != 0:
         append_issue(str(issue_file), build_issue(
             run_id=run_id,
@@ -719,19 +1721,28 @@ def run_pipeline(args: argparse.Namespace) -> int:
             context={"log": str(verify_log), "returncode": verify.returncode},
             suggest="修复被阻断项后复跑 verify。"
         ))
-        manifest["status"] = "failed"
-        _write_manifest(run_manifest_path, manifest)
-        return verify.returncode
+        return finish_blocked("smoke_verify", "smoke_verify_blocked", failed_gates=["smoke_verify"], code=verify.returncode)
 
-    manifest["status"] = "success"
-    manifest["passed_at"] = datetime.now(timezone.utc).isoformat()
+    passed_at = datetime.now(timezone.utc).isoformat()
     manifest["stage_artifacts"]["final_file"] = str(final_csv)
     manifest["pipeline_completion"] = {
-        "status": "success",
-        "completed_at": manifest["passed_at"],
-        "notes": "Pipeline finished without blocking errors."
+        "status": "completed",
+        "completed_at": passed_at,
+        "notes": "Pipeline finished with unified phase-1 quality closure semantics."
     }
-    _write_manifest(run_manifest_path, manifest)
+    _finalize_manifest(
+        manifest,
+        run_manifest_path=run_manifest_path,
+        review_queue_path=review_queue_path,
+        review_queue_rows=review_queue_rows,
+        gate_summary={
+            "status": "passed",
+            "failed_gates": [],
+            "blocking_stage": "",
+        },
+        status_reason="pipeline_completed",
+        passed_at=passed_at,
+    )
     return 0
 
 
@@ -746,7 +1757,10 @@ def main():
     parser.add_argument("--verify-mode", choices=["preflight", "full"], default="full", help="Smoke verify mode")
     parser.add_argument("--model", default="claude-haiku-4-5-20251001", help="Translation model")
     parser.add_argument("--style", default="workflow/style_guide.md", help="Style guide path")
-    parser.add_argument("--glossary", default="workflow/smoke_glossary_approved.yaml", help="Glossary path")
+    parser.add_argument("--style-profile", default="", help="Style profile path. Defaults to tracked authority candidates and auto-bootstrap.")
+    parser.add_argument("--lifecycle-registry", default="workflow/lifecycle_registry.yaml", help="Lifecycle registry for governed assets.")
+    parser.add_argument("--glossary", default="glossary/compiled.yaml", help="Glossary path")
+    parser.add_argument("--soft-qa-rubric", default="workflow/soft_qa_rubric.yaml", help="Soft QA rubric path")
     parser.add_argument("--schema", default="workflow/placeholder_schema.yaml", help="Placeholder schema path")
     parser.add_argument("--forbidden", default="workflow/forbidden_patterns.txt", help="Forbidden patterns path")
     parser.add_argument("--source-lang", default="zh-CN", help="Source language for normalization (default: zh-CN)")

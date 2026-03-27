@@ -1,0 +1,18 @@
+{
+  "manifest_version": "plc-phase1-large-batch-input-v1",
+  "run_id": "phase1_large_batch_closeout",
+  "scope": "phase1_large_batch_closeout",
+  "branch": "codex/phase1-quality-runtime-closeout",
+  "objectives": [
+    "close hard QA to repair-loop to hard-recheck orchestration",
+    "route soft QA into bounded repair, rollback-safe promotion, and review handoff",
+    "emit unified phase-1 manifest state across QA, repair, review, and delivery decisions"
+  ],
+  "source_refs": [
+    "task_plan.md",
+    "progress.md",
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "docs/project_lifecycle/roadmap_index.md"
+  ]
+}

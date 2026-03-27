@@ -1,0 +1,141 @@
+version: 2
+artifacts:
+  run_manifest:
+    format: json
+    required_fields:
+      - manifest_version
+      - run_id
+      - run_scope
+      - status
+      - started_at
+      - finished_at
+      - owner
+      - input_manifest
+      - issue_report_path
+      - verify_report_path
+      - artifacts
+      - blockers
+      - changed_files
+      - evidence_refs
+      - adr_refs
+      - decision_refs
+      - evidence_ready
+      - next_step_owner
+      - next_step_scope
+    enum_fields:
+      status: [pass, warn, blocked]
+      gate_result: [pass, warn, blocked]
+    boolean_fields:
+      - evidence_ready
+  session_start:
+    format: markdown_sections
+    required_top_level:
+      - date
+      - branch
+      - current_scope
+      - route
+      - base_branch
+    required_sections:
+      Context:
+        - read_versions
+        - blockers
+      Slice:
+        - bounded implementation target
+        - mini plan
+      Validation Decision:
+        - validation mode
+        - smoke run
+        - rationale
+      Handoff:
+        - next_owner
+        - next_scope
+        - next_action
+  session_end:
+    format: markdown_sections
+    required_top_level:
+      - date
+      - branch
+      - current_scope
+      - slice_status
+    enum_fields:
+      slice_status: [completed, blocked]
+    required_sections:
+      Delivered Surface: []
+      Acceptance:
+        - command
+        - result
+        - smoke run
+        - rationale
+      Outcome: []
+      Governance:
+        - changed_files
+        - evidence_refs
+        - adr_refs
+        - blocker list
+      Handoff:
+        - next_owner
+        - next_scope
+        - open_issues
+        - next_hour_task
+        - next_action
+  milestone_state:
+    format: markdown_root
+    required_top_level:
+      - id
+      - status
+      - owner
+      - next_owner
+      - progress_pct
+      - evidence_ready
+      - blockers
+      - dependencies
+      - decision_ref
+      - eta_hours
+      - notes
+      - changed_files
+      - evidence_refs
+      - adr_refs
+      - evidence
+      - handoff
+    enum_fields:
+      status: [todo, in_progress, blocked, done, shelved]
+    boolean_fields:
+      - evidence_ready
+    integer_fields:
+      - progress_pct
+      - eta_hours
+    required_nested:
+      evidence:
+        - run_id
+        - run_manifest
+        - run_issue
+        - run_verify
+      handoff:
+        - next_owner
+        - next_scope
+        - next_action
+presets:
+  representative:
+    - artifact_type: run_manifest
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase2_governance_closeout.json
+    - artifact_type: milestone_state
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_M.md
+    - artifact_type: session_start
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase2_governance_closeout.md
+    - artifact_type: session_end
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase2_governance_closeout.md
+    - artifact_type: run_manifest
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase1_large_batch_closeout.json
+    - artifact_type: milestone_state
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_H.md
+    - artifact_type: session_start
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase1_large_batch_closeout.md
+    - artifact_type: session_end
+      path: docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase1_large_batch_closeout.md
+  templates:
+    - artifact_type: session_start
+      path: docs/project_lifecycle/session_start_template.md
+    - artifact_type: session_end
+      path: docs/project_lifecycle/session_end_template.md
+    - artifact_type: milestone_state
+      path: docs/project_lifecycle/milestone_state_template.md

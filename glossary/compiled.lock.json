@@ -1,10 +1,10 @@
 {
-  "version": "2026.01.27.1",
-  "hash": "sha256:7af4beaf1e4b081e",
-  "compiled_at": "2026-01-27T11:53:47.330014",
-  "entry_count": 1925,
+  "version": "2026.03.26.1",
+  "hash": "sha256:54d4fbbb308291a8",
+  "compiled_at": "2026-03-26T11:53:27.054614",
+  "entry_count": 1924,
   "language_pair": "zh-CN->ru-RU",
   "genre": "anime",
   "franchise": "naruto",
-  "source": "glossary/approved.yaml"
+  "source": "glossary\\approved.yaml"
 }

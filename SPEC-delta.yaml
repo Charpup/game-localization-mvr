@@ -1,26 +1,20 @@
 delta_version: 0.4.0
-change_id: phase5-frontend-runtime-shell
-change_type: operator-ui-adapter
-status: verified
+change_id: milestone-e-prepare-20260324
+change_type: milestone-e-multi-market-delta-and-incremental-retranslation
+status: in_progress
 intent:
   summary: >
-    Add a thin local operator UI shell on top of the existing smoke pipeline contracts
-    so a human can launch, inspect, and troubleshoot one representative run without
-    reading raw files or invoking shell commands directly.
+    Add a locale-generic typed delta engine and incremental retranslation task flow
+    for milestone E, while keeping current ru-RU assets usable through a compatibility
+    layer and preserving the existing keep-chain runtime contract.
   non_goals:
-    - Rebuilding orchestration logic inside the UI layer
-    - Replacing run_manifest, smoke_verify, or smoke_issues as the source of truth
-    - Introducing a JS build system, SPA framework, or external frontend toolchain
-    - Implementing Phase 6 operator dashboards, KPI panels, or governance drift views
+    - Building a GUI or dashboard in milestone E
+    - Reopening earlier cleanup batches or changing authority-zone ownership
+    - Hard-cutting all existing ru-RU specific assets in one migration
+    - Changing smoke metrics from optional to blocking
 assertions:
-  authority_zone: scripts
-  adapter_surfaces:
-    - scripts/operator_ui_models.py
-    - scripts/operator_ui_launcher.py
-    - scripts/operator_ui_server.py
-    - operator_ui/index.html
-    - operator_ui/styles.css
-    - operator_ui/app.js
+  authority_zone: main_worktree/scripts
+  compat_zone: src/scripts
   keep_chain:
     - llm_ping
     - normalize_guard
@@ -28,51 +22,34 @@ assertions:
     - qa_hard
     - rehydrate_export
     - smoke_verify
-  source_of_truth:
-    - run_manifest.json
-    - smoke_verify_<run_id>.json
-    - smoke_issues.json
-planned_controls:
-  - Keep run_smoke_pipeline.py and smoke_verify.py behavior stable unless tests expose a minimal compatibility gap.
-  - Restrict artifact reads to manifest-declared artifacts plus derived verify and issue files for the selected run.
-  - Expose only a thin launcher contract: input, target_lang, verify_mode.
-  - Keep the server stack inside the Python standard library.
-  - Drive implementation with RED tests for models, launcher, server, and end-to-end shell acceptance.
-contracts:
-  apis:
-    - GET /api/runs?limit=N
-    - GET /api/runs/{run_id}
-    - POST /api/runs
-    - GET /api/runs/{run_id}/artifacts/{artifact_key}
-  run_detail_fields:
-    - run_id
-    - overall_status
-    - manifest_status
-    - verify
-    - issue_summary
-    - stages
-    - artifacts
-    - row_checks
-    - allowed_artifact_keys
-risk_controls:
-  - Launcher-created run directories must be explicit and deterministic enough for UI polling.
-  - Artifact preview endpoints must reject unknown keys and path traversal attempts.
-  - Existing regression floors for smoke verify, runtime adapter, metrics, and validation must stay green.
-verification_evidence:
-  targeted_phase5:
-    - tests/test_operator_ui_models.py
-    - tests/test_operator_ui_launcher.py
-    - tests/test_operator_ui_server.py
-    - tests/test_phase5_frontend_runtime_shell.py
-  retained_regression_floor:
+  minimal_irreversible_core:
+    - scripts/run_smoke_pipeline.py
+    - scripts/runtime_adapter.py
+    - scripts/smoke_issue_logger.py
+    - scripts/m4_3_collect_coverage.py
+    - scripts/m4_4_decision.py
     - tests/test_smoke_verify.py
-    - tests/test_runtime_adapter_contract.py
-    - tests/test_batch6_repair_metrics_contract.py
-    - tests/test_validation_contract.py
     - tests/test_qa_hard.py
-    - tests/test_script_authority.py
-    - tests/test_batch3_batch4_governance.py
-implementation_notes:
-  - Added `--run-id` as an optional compatibility argument to `scripts/run_smoke_pipeline.py`.
-  - Added a standard-library HTTP server and vanilla static assets under `operator_ui/`.
-  - Merged run manifest, verify, and issue reports into a stable allow-listed operator view model.
+    - tests/test_normalize_segmentation.py
+planned_controls:
+  - Freeze a single E contract source of truth in workflow/milestone_e_contract.yaml.
+  - Standardize clean-worktree inputs for style profile and glossary authority.
+  - Replace glossary-only impact detection with typed delta propagation and locale-aware row impacts.
+  - Split refresh into task generation and task execution with post-run hard gates.
+  - Keep authority drift policy, keep-chain behavior, and optional Metrics semantics unchanged.
+status_map:
+  ../src/scripts/**: compat-keep managed compatibility liability with closeout_decision separate-exit-program
+  stress_test_3k_run.sh: must-keep canonical stress shell authority
+  repair_loop.py: must-keep retained repair authority
+  run_validation.py: must-keep retained validation baseline
+  build_validation_set.py: must-keep retained validation baseline generator
+  runtime_adapter.py: must-keep core
+  metrics_aggregator.py: optional observability surface
+blocked_zones:
+  []
+risk_controls:
+  - Keep-chain scripts remain semantically unchanged while E adds parallel delta/task surfaces around them.
+  - Locale-generic contracts must preserve backward readability of current ru-RU assets.
+  - Executor outputs must preserve row count and placeholder signature integrity.
+  - Clean-worktree execution must not depend on residual local data files.
+  - Existing smoke evidence generation and authority policy remain intact while E adds new delta-run artifacts.

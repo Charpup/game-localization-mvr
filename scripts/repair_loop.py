@@ -12,13 +12,25 @@ Features:
 import os
 import sys
 import json
+import re
 import yaml
 import pandas as pd
 from datetime import datetime
+from pathlib import Path
 from typing import List, Dict, Optional, Tuple
 
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+# Ensure UTF-8 output on Windows consoles before any status glyphs are printed.
+if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+if sys.platform == "win32" and hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace", line_buffering=True)
+
 # 确保 unbuffered 输出
-if hasattr(sys.stdout, 'reconfigure'):
+if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(line_buffering=True)
 
 
@@ -26,6 +38,89 @@ QA_TYPE_TO_STEP = {
     "hard": "repair_hard",
     "soft": "repair_soft_major",
 }
+
+CJK_RE = re.compile(r"[\u4e00-\u9fff]")
+META_RESPONSE_RE = re.compile(
+    r"(?:i'm ready to help|please provide|once you (?:share|provide)|source text and current translation are empty)",
+    re.IGNORECASE,
+)
+FROZEN_TOKEN_RE = re.compile(r"⟦[A-Z]+_\d+⟧")
+
+
+def _task_key(value: object) -> str:
+    if value is None:
+        return ""
+    try:
+        if pd.isna(value):
+            return ""
+    except Exception:
+        pass
+    return str(value).strip()
+
+
+def _first_present(row: Dict[str, object], candidates: List[str]) -> str:
+    for key in candidates:
+        value = row.get(key)
+        if value is None:
+            continue
+        try:
+            if pd.isna(value):
+                continue
+        except Exception:
+            pass
+        text = str(value).strip()
+        if text:
+            return text
+    return ""
+
+
+def _target_value_columns(columns: List[str]) -> List[str]:
+    result: List[str] = []
+    excluded_exact = {
+        "target_locale",
+        "target_lang",
+        "target_language",
+        "target_key",
+        "target_column",
+    }
+    for column in columns:
+        lower = column.lower()
+        if lower in {"target", "target_text", "translated_text"} or lower.startswith("target_"):
+            if "length" in lower or lower.startswith("max_"):
+                continue
+            if lower in excluded_exact or lower.endswith("_locale") or lower.endswith("_language"):
+                continue
+            result.append(column)
+    return result
+
+
+def hydrate_task_from_frame(task: "RepairTask", data_df: pd.DataFrame) -> None:
+    if "string_id" not in data_df.columns:
+        return
+
+    key = _task_key(task.string_id)
+    if not key:
+        return
+
+    matches = data_df[data_df["string_id"].astype(str).str.strip() == key]
+    if matches.empty:
+        return
+
+    row = matches.iloc[0].to_dict()
+    target_columns = _target_value_columns(list(data_df.columns))
+
+    if not task.source_text:
+        task.source_text = _first_present(row, ["tokenized_zh", "source_zh", "source_text", "source"])
+    if not task.current_translation:
+        task.current_translation = _first_present(row, [*target_columns, "current_translation", "target"])
+    if not task.max_length:
+        task.max_length = row.get("max_length_target") or row.get("max_len_target") or 0
+    if not task.content_type:
+        task.content_type = _first_present(row, ["content_type", "content_class"])
+
+
+def _extract_frozen_tokens(text: str) -> List[str]:
+    return FROZEN_TOKEN_RE.findall(text or "")
 
 
 def repair_step_for_qa_type(qa_type: str) -> str:
@@ -119,12 +214,13 @@ class RepairTask:
 class RepairLoop:
     """多轮修复引擎"""
 
-    def __init__(self, config: dict, qa_type: str = "soft"):
+    def __init__(self, config: dict, qa_type: str = "soft", target_lang: str = "ru-RU"):
         self.config = config.get("repair_loop", {})
         self.max_rounds = self.config.get("max_rounds", 3)
         self.rounds_config = self.config.get("rounds", {})
         self.qa_type = qa_type
         self.route_step = repair_step_for_qa_type(qa_type)
+        self.target_lang = target_lang or "ru-RU"
 
         # 统计
         self.stats = {
@@ -249,6 +345,13 @@ class RepairLoop:
             f"- {i.get('type', 'unknown')}: {i.get('detail', '')}"
             for i in task.issues
         ])
+        frozen_token_sequence = _extract_frozen_tokens(task.source_text)
+        frozen_token_hint = ""
+        if frozen_token_sequence:
+            frozen_token_hint = (
+                "\n- Preserve the exact frozen token sequence from source, including duplicates and order:\n"
+                f"  {' '.join(frozen_token_sequence)}"
+            )
 
         if variant == "standard":
             system = f"""You are a translation repair specialist. Fix the following translation issues.
@@ -257,8 +360,11 @@ class RepairLoop:
 {issue_desc}
 
 ## Constraints
+- Target language: {self.target_lang}
 - Max length: {task.max_length} characters (if specified)
 - Preserve all placeholders exactly as they appear in source
+- Preserve all frozen tag/placeholder tokens exactly, including duplicates and order{frozen_token_hint}
+- Translate bracketed gameplay/status text such as [沉默]; keep the brackets, but translate the text inside them unless it is a frozen token.
 - Maintain the original tone and style
 
 ## Output
@@ -274,8 +380,11 @@ Return ONLY the corrected translation, nothing else."""
 {json.dumps(task.repair_history, indent=2, ensure_ascii=False)}
 
 ## Constraints
+- Target language: {self.target_lang}
 - Max length: {task.max_length} characters (STRICT)
 - ALL placeholders must be preserved exactly
+- ALL frozen tag/placeholder tokens must preserve exact duplicates and order{frozen_token_hint}
+- Bracketed gameplay/status text like [沉默] must be translated, not copied through unchanged.
 - Meaning must match the source text
 
 ## Instructions
@@ -301,8 +410,11 @@ Return ONLY the corrected translation."""
 {json.dumps(task.repair_history, indent=2, ensure_ascii=False)}
 
 ## Strict Constraints
+- Target language: {self.target_lang}
 - Max length: {task.max_length} chars
 - Placeholders: Must match source exactly
+- Frozen tag/token sequence: Must match source exactly, including duplicates and order{frozen_token_hint}
+- Bracketed gameplay/status text like [沉默] must stay bracketed but the inner text must be translated into {self.target_lang}.
 - Quality: Professional game localization standard
 
 ## Your Task
@@ -310,7 +422,8 @@ Provide a definitive fix. If impossible within constraints, indicate "[NEEDS_HUM
 
 Return ONLY the corrected translation (or [NEEDS_HUMAN] + explanation)."""
 
-        user = f"""Source: {task.source_text}
+        user = f"""Target language: {self.target_lang}
+Source: {task.source_text}
 Current translation: {task.current_translation}
 
 Fix the issues and return the corrected translation:"""
@@ -341,6 +454,7 @@ Fix the issues and return the corrected translation:"""
 
         translation = repair_result.get("translation", "")
         validation = {"passed": True, "checks": []}
+        issue_types = {str(issue.get("type", "")).strip() for issue in task.issues if isinstance(issue, dict)}
 
         # 检查长度
         if task.max_length > 0 and len(translation) > task.max_length:
@@ -362,6 +476,16 @@ Fix the issues and return the corrected translation:"""
                 "detail": f"Source: {source_phs}, Target: {target_phs}"
             })
 
+        source_frozen_tokens = _extract_frozen_tokens(task.source_text)
+        target_frozen_tokens = _extract_frozen_tokens(translation)
+        if source_frozen_tokens != target_frozen_tokens:
+            validation["passed"] = False
+            validation["checks"].append({
+                "type": "frozen_token_sequence",
+                "passed": False,
+                "detail": f"Source: {source_frozen_tokens}, Target: {target_frozen_tokens}"
+            })
+
         # 检查是否为空
         if not translation.strip():
             validation["passed"] = False
@@ -369,6 +493,22 @@ Fix the issues and return the corrected translation:"""
                 "type": "empty",
                 "passed": False,
                 "detail": "Translation is empty"
+            })
+
+        if META_RESPONSE_RE.search(translation):
+            validation["passed"] = False
+            validation["checks"].append({
+                "type": "meta_response",
+                "passed": False,
+                "detail": "LLM returned a request-for-input/meta response instead of a translation"
+            })
+
+        if ("forbidden_hit" in issue_types or CJK_RE.search(task.current_translation or "")) and CJK_RE.search(translation):
+            validation["passed"] = False
+            validation["checks"].append({
+                "type": "cjk_remaining",
+                "passed": False,
+                "detail": "Translation still contains CJK characters after repair"
             })
 
         return validation
@@ -389,11 +529,13 @@ Fix the issues and return the corrected translation:"""
 
     def _apply_repair(self, df: pd.DataFrame, task: RepairTask) -> pd.DataFrame:
         """应用修复到 DataFrame"""
-        idx = df[df["string_id"] == task.string_id].index
+        if "string_id" not in df.columns:
+            return df
+        idx = df[df["string_id"].astype(str).str.strip() == _task_key(task.string_id)].index
         if len(idx) > 0:
-            target_col = [c for c in df.columns if 'ru' in c.lower() or 'target' in c.lower()]
-            if target_col:
-                df.loc[idx[0], target_col[0]] = task.final_translation
+            target_columns = _target_value_columns(list(df.columns))
+            for column in target_columns:
+                df.loc[idx[0], column] = task.final_translation
         return df
 
     def _write_checkpoint(self, output_dir: str, round_num: int, pending: int):
@@ -485,6 +627,7 @@ def build_parser():
         default="soft",
         help="Repair mode: hard -> repair_hard, soft -> repair_soft_major",
     )
+    parser.add_argument("--target-lang", default="ru-RU", help="Target language for repair output prompts")
     parser.add_argument("--config", default="config/repair_config.yaml")
     return parser
 
@@ -506,18 +649,27 @@ def main():
     try:
         with open(args.tasks, 'r', encoding='utf-8') as f:
             content = f.read().strip()
+            data = None
             if content.startswith('{'):
-                 data = json.loads(content)
-                 if "errors" in data:
-                     # Standard QA report format
-                     for err in data["errors"]:
-                         # Map 'source' to 'source_text' if needed
-                         if "source" in err and "source_text" not in err:
-                             err["source_text"] = err["source"]
-                         tasks.append(RepairTask(err))
-                 else:
-                     # Maybe single object?
-                     tasks.append(RepairTask(data))
+                try:
+                    data = json.loads(content)
+                except json.JSONDecodeError:
+                    data = None
+            if isinstance(data, dict):
+                if "errors" in data:
+                    # Standard QA report format
+                    for err in data["errors"]:
+                        # Map 'source' to 'source_text' if needed
+                        if "source" in err and "source_text" not in err:
+                            err["source_text"] = err["source"]
+                        if "target" in err and "current_translation" not in err:
+                            err["current_translation"] = err["target"]
+                        tasks.append(RepairTask(err))
+                else:
+                    # Maybe single object?
+                    if "target" in data and "current_translation" not in data:
+                        data["current_translation"] = data["target"]
+                    tasks.append(RepairTask(data))
             else:
                 # JSONL Format
                 for line in content.splitlines():
@@ -525,6 +677,8 @@ def main():
                         t = json.loads(line)
                         if "source" in t and "source_text" not in t:
                              t["source_text"] = t["source"]
+                        if "target" in t and "current_translation" not in t:
+                            t["current_translation"] = t["target"]
                         tasks.append(RepairTask(t))
     except Exception as e:
         print(f"❌ Failed to load tasks: {e}")
@@ -537,8 +691,11 @@ def main():
         df.to_csv(args.output, index=False, encoding='utf-8')
         return
 
+    for task in tasks:
+        hydrate_task_from_frame(task, df)
+
     # 执行修复
-    repair_loop = RepairLoop(config, args.qa_type)
+    repair_loop = RepairLoop(config, args.qa_type, target_lang=args.target_lang)
     repaired_df, escalations = repair_loop.run(tasks, df, args.output_dir)
 
     # 保存修复后的数据

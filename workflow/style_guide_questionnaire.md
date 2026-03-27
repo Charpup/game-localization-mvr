@@ -1,65 +1,78 @@
-# Style Guide Questionnaire
->
-> Please fill out this questionnaire to generate a tailored localization style guide.
-> **Note**: This file will be compiled into a JSON source-of-truth. Do not change the structure of headers.
+# 项目启动风格指南问卷（C 里程碑用）
 
-## 1. IP & Franchise Info
+> 用于启动即生成 `data/style_profile.yaml` 和 `workflow/style_guide.generated.md`。
+> 请尽量用「中文答案 + 中文关键词」填写，脚本会按规则转入风格 profile。
 
-**Official Title (ZH)**:
-**Official Title (RU)**:
-**Genre**: (e.g., Shonen Jump, Fantasy, Cyberpunk)
-**Target Audience**: (e.g., Teens 13-18, General, Hardcore Gamers)
-**Key Themes**: (e.g., Friendship, Ninja World, Pirate Adventure)
+## project_context
 
-## 2. Tone & Voice
+**source_language**: zh-CN  
+**target_language**: ru-RU  
+**project_code**: naruto_localization_demo  
+**franchise**: Naruto  
+**official_title_(zh)**: 火影忍者  
+**official_title_(ru)**: Наруто  
+**genre**: 动作 RPG  
+**target_audience**: 12-35 岁  
+**key_themes**: 冒险, 团队作战, 升华成长, 能力解锁, 任务系统
 
-**Tone Ratio**:
+## text_tone&_voice
 
-- [ ] 100% Official / Neutral
-- [ ] 70% Official / 30% Anime-flavored
-- [ ] 50% Official / 50% Character-heavy
-- [ ] 20% Official / 80% Meme & Slang
+**official_ratio**: 70  
+**anime_ratio**: 30  
+**preferred_register**: neutral_formal
 
-**Keywords**: (e.g., Epic, Humorous, Dark, Formal)
+**forbidden_patterns**: 过度网络化, 俚语轶闻, 机械逐字直译
 
-## 3. Register (Politeness)
+## register_and_voice
 
-**Player Addressing**:
+**no_over_localization**: true  
+**no_over_literal**: true
 
-- [ ] Use `вы` (Formal/Plural) - Default for system messages
-- [ ] Use `ты` (Informal/Singular) - Default for NPCs/Characters
+- [x] 禁止在系统文案、错误提示中使用梗与二次元台词
+- [ ] 允许在剧情对话中使用轻量梗
+- [ ] 允许在角色对白中大量口语化
 
-**Capitalization of You**:
+## names_and_nouns
 
-- [ ] Capitalize `Вы/Ты` (Respectful)
-- [ ] Lowercase `вы/ты` (Modern/Standard)
+**character_name_policy**: keep_transliterated  
+**culture_localization**: preserve
 
-## 4. Terminology Policy
+## naming_conventions
 
-**Handling Proper Nouns (Names, Places, Skills)**:
+**proper_nouns**: hybrid  
 
-- [ ] **Transliteration (Standard)**: Use Polivanov system or standard phonetics (e.g., Naruto -> Наруто).
-- [ ] **Localization (Meaning)**: Translate the meaning (e.g., Hidden Leaf -> Деревня Скрытого Листа).
-- [ ] **Hybrid**: Transliterate names, Translate places/skills.
-- [ ] **Keep English**: (Not recommended for RU)
+## terminology_policy
 
-## 5. UI & Brevity
+**forbidden_terms**: 奶妈, 副本, 攻略, bug, issue  
+**preferred_terms**: 忍术: Ниндзюцу, 木叶: Коноха, 忍者: ниндзя  
+**prohibited_aliases**: 不允许把「木叶」改写为「деревня_树叶」  
+**banned_terms**: 随机翻译, 直译, 机翻
 
-**Length Restrictions**:
+## ui_constraints
 
-- [ ] **Strict**: Must not exceed English length (ideal for mobile).
-- [ ] **Flexible**: Can be up to 30% longer than English.
-- [ ] **Unlimited**: Priority on naturalness over space.
+**button_length**: 18  
+**dialogue_length**: 120  
+**max_length_expansion**: 30  
+**button_line_policy**: 只允许单行按钮  
+**length_policy**: balanced  
+**abbreviation_policy**: moderate  
 
-**Abbreviation Policy**:
+## segmentation_and_context
 
-- [ ] Avoid abbreviations unless critical.
-- [ ] Use standard MMO abbr (hp, xp, lvl) freely.
+**segmentation_backend_chain**: pkuseg,thulac,lac,jieba  
+**domain_hint**: ui  
+**named_entity_sample**: 火影, 木叶, 佐助, 鸣人, 卡卡西, 疾风忍者村  
+**fallback_if_missing**: heuristic
 
-## 6. Forbidden Patterns
->
-> List any specific words, punctuation styles, or patterns that are strictly forbidden.
+## forbidden_patterns
 
-- Pattern: "..." (Three dots) -> Use ellipsis character `…`
-- Pattern: "Key:" -> Keep colon attached? No, in RU use non-breaking space before colon if needed? (Clarify)
-- Specific Term:
+**specific_terms**: 符合:..., 不要使用:...,  
+**placeholder_rules**: ⟦PH_xx⟧, ⟦TAG_xx⟧, {0}, %s, %d 必须保留  
+**narrative_forbidden**: 避免“硬翻”导致歧义, 避免误导式戏谑
+
+## units
+
+**time_unit**: 秒  
+**time_unit_target**: секунд  
+**currency_unit**: 原石  
+**currency_unit_target**: алмазы

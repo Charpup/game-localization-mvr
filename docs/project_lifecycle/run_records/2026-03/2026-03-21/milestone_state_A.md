@@ -1,0 +1,19 @@
+- id: A
+- status: done
+- owner: Codex
+- next_owner: Codex
+- progress_pct: 100
+- evidence_ready: true
+- blockers: []
+- dependencies: []
+- decision_ref: docs/decisions/ADR-0002-skill-governance-framework.md
+- eta_hours: 0
+- notes: 里程碑 A 已完成 A1~A5 与文档闭环，进入 A6 收口签署与 B 的交接前置准备。
+- evidence:
+  - run_id: plc_run_a_20260321_1000
+  - run_manifest: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_manifest_plc_run_a_20260321_1000.json
+  - run_issue: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_issue_plc_run_a_20260321_1000.md
+  - run_verify: docs/project_lifecycle/run_records/2026-03/2026-03-21/run_verify_plc_run_a_20260321_1000.md
+- handoff:
+  - next_owner: Codex
+  - next_scope: milestone_B_readiness

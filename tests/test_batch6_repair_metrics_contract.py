@@ -14,7 +14,18 @@ import scripts.smoke_verify as smoke_verify
 
 
 ROOT = Path(__file__).parent.parent
-REPO_ROOT = ROOT.parent
+
+
+def _inventory_path() -> Path:
+    candidates = [
+        ROOT / "SCRIPTS_INVENTORY.md",
+        ROOT / "game-localization-mvr" / "SCRIPTS_INVENTORY.md",
+        ROOT.parent / "SCRIPTS_INVENTORY.md",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError("SCRIPTS_INVENTORY.md not found in expected repo roots")
 
 
 def test_batch4_inventory_tracks_repair_targets_as_archived_or_ready_to_archive():
@@ -27,7 +38,7 @@ def test_batch4_inventory_tracks_repair_targets_as_archived_or_ready_to_archive(
 
 def test_rules_and_inventory_retire_repair_loop_v2_from_current_tooling():
     rules = (ROOT / ".agent" / "rules" / "localization-mvr-rules.md").read_text(encoding="utf-8")
-    inventory = (REPO_ROOT / "SCRIPTS_INVENTORY.md").read_text(encoding="utf-8")
+    inventory = _inventory_path().read_text(encoding="utf-8")
 
     assert "repair_loop_v2.py" in rules
     assert "历史归档" in rules or "历史候选保留" in rules
@@ -95,12 +106,16 @@ def test_metrics_aggregator_uses_trace_usage_and_estimates_missing_tokens():
 
 def _make_args(tmp_path: Path) -> Namespace:
     style = tmp_path / "style.md"
+    style_profile = tmp_path / "style_profile.yaml"
     glossary = tmp_path / "glossary.yaml"
+    rubric = tmp_path / "soft_qa_rubric.yaml"
     schema = tmp_path / "schema.yaml"
     forbidden = tmp_path / "forbidden.txt"
     input_csv = tmp_path / "input.csv"
     style.write_text("style", encoding="utf-8")
+    style_profile.write_text("{}", encoding="utf-8")
     glossary.write_text("approved: []\n", encoding="utf-8")
+    rubric.write_text("{}", encoding="utf-8")
     schema.write_text("placeholders: []\n", encoding="utf-8")
     forbidden.write_text("", encoding="utf-8")
     input_csv.write_text("string_id,source_zh\n1,你好\n", encoding="utf-8")
@@ -115,7 +130,9 @@ def _make_args(tmp_path: Path) -> Namespace:
         verify_mode="full",
         model="claude-haiku-4-5-20251001",
         style=str(style),
+        style_profile=str(style_profile),
         glossary=str(glossary),
+        soft_qa_rubric=str(rubric),
         schema=str(schema),
         forbidden=str(forbidden),
         source_lang="zh-CN",
@@ -165,6 +182,13 @@ def test_run_pipeline_writes_optional_metrics_artifacts(monkeypatch, tmp_path):
                 json.dumps({"request_id": "req-1", "prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15}) + "\n",
                 encoding="utf-8",
             )
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        if "soft_qa_llm.py" in cmd_text:
+            Path(cmd[cmd.index("--out_report") + 1]).write_text(
+                json.dumps({"has_findings": False, "summary": {"major": 0, "minor": 0, "total_tasks": 0}, "hard_gate": {"status": "pass"}}),
+                encoding="utf-8",
+            )
+            Path(cmd[cmd.index("--out_tasks") + 1]).write_text("", encoding="utf-8")
             return SimpleNamespace(returncode=0, stdout="", stderr="")
         if "qa_hard.py" in cmd_text:
             Path(cmd[6]).write_text(json.dumps({"has_errors": False, "metadata": {"total_errors": 0, "total_warnings": 0}}), encoding="utf-8")
@@ -236,6 +260,13 @@ def test_run_pipeline_does_not_block_on_metrics_failure(monkeypatch, tmp_path):
                 + "\n",
                 encoding="utf-8",
             )
+            return SimpleNamespace(returncode=0, stdout="", stderr="")
+        if "soft_qa_llm.py" in cmd_text:
+            Path(cmd[cmd.index("--out_report") + 1]).write_text(
+                json.dumps({"has_findings": False, "summary": {"major": 0, "minor": 0, "total_tasks": 0}, "hard_gate": {"status": "pass"}}),
+                encoding="utf-8",
+            )
+            Path(cmd[cmd.index("--out_tasks") + 1]).write_text("", encoding="utf-8")
             return SimpleNamespace(returncode=0, stdout="", stderr="")
         if "qa_hard.py" in cmd_text:
             Path(cmd[6]).write_text(json.dumps({"has_errors": False, "metadata": {"total_errors": 0, "total_warnings": 0}}), encoding="utf-8")
