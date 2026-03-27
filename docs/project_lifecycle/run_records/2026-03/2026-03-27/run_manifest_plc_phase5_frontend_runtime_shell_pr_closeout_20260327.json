@@ -1,0 +1,31 @@
+{
+  "run_id": "plc_phase5_frontend_runtime_shell_pr_closeout_20260327",
+  "scope": "phase5_frontend_runtime_shell_pr_closeout",
+  "branch": "codex/phase5-frontend-runtime-shell",
+  "route": "extended",
+  "status": "merge_ready",
+  "pr_number": 19,
+  "pr_url": "https://github.com/Charpup/game-localization-mvr/pull/19",
+  "head_commit": "e56a15f",
+  "artifacts": [
+    "operator_ui/app.js",
+    "scripts/operator_ui_launcher.py",
+    "scripts/operator_ui_server.py",
+    "tests/test_operator_ui_launcher.py",
+    "tests/test_operator_ui_server.py",
+    "tests/test_phase5_frontend_runtime_shell.py",
+    "tests/test_phase5_acceptance_gate.py",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.md"
+  ],
+  "tests": [
+    "python -m pytest tests/test_operator_ui_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase5_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py -q"
+  ],
+  "review_threads": {
+    "scripts/operator_ui_server.py": "fixed",
+    "operator_ui/app.js timeline": "fixed",
+    "operator_ui/app.js verify": "fixed",
+    "scripts/operator_ui_launcher.py run_id entropy": "fixed",
+    "tests/test_phase5_acceptance_gate.py portable fixture": "fixed",
+    "scripts/operator_ui_server.py malformed limit handling": "fixed"
+  }
+}

@@ -132,7 +132,7 @@
     {
       "id": "phase5-pr-closeout",
       "name": "Phase 5 PR Closeout",
-      "status": "in_progress",
+      "status": "completed",
       "outputs": [
         "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.json",
         "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.md"
