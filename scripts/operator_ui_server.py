@@ -157,7 +157,11 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
             segments = [segment for segment in parsed.path.strip("/").split("/") if segment]
             query = parse_qs(parsed.query)
             if segments == ["api", "runs"]:
-                limit = int(query.get("limit", ["10"])[0])
+                try:
+                    limit = int(query.get("limit", ["10"])[0])
+                except (TypeError, ValueError):
+                    self._write_json({"error": "bad_request", "detail": "limit must be an integer"}, status=HTTPStatus.BAD_REQUEST)
+                    return
                 self._write_json({"runs": app.list_runs(limit=limit)})
                 return
 

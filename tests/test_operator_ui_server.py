@@ -130,6 +130,14 @@ def test_invalid_artifact_key_returns_404(live_server):
     assert exc_info.value.code == 404
 
 
+def test_invalid_runs_limit_returns_400(live_server):
+    request = urllib.request.Request(live_server + "/api/runs?limit=abc", method="GET")
+    with pytest.raises(urllib.error.HTTPError) as exc_info:
+        urllib.request.urlopen(request)
+
+    assert exc_info.value.code == 400
+
+
 def test_server_script_entrypoint_supports_cli_help():
     repo_root = Path(__file__).resolve().parents[1]
     result = subprocess.run(

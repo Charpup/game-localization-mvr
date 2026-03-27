@@ -53,6 +53,13 @@ def _write_repo_run_fixture(repo_root: Path, run_id: str) -> Path:
     return run_dir
 
 
+def _write_launch_input_fixture(repo_root: Path) -> Path:
+    input_path = repo_root / "data" / "operator_ui_runs" / "phase5_acceptance_gate_input.csv"
+    input_path.parent.mkdir(parents=True, exist_ok=True)
+    input_path.write_text("string_id,source_zh\nui-1,你好\n", encoding="utf-8")
+    return input_path
+
+
 def _free_port() -> int:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         sock.bind(("127.0.0.1", 0))
@@ -95,6 +102,7 @@ def test_phase5_acceptance_gate_real_entrypoint_and_http_contracts():
     repo_root = Path(__file__).resolve().parents[1]
     run_id = "phase5_acceptance_gate_fixture"
     run_dir = _write_repo_run_fixture(repo_root, run_id)
+    input_csv = _write_launch_input_fixture(repo_root)
     port = _free_port()
     base_url = f"http://127.0.0.1:{port}"
     launched_pid = None
@@ -163,8 +171,6 @@ def test_phase5_acceptance_gate_real_entrypoint_and_http_contracts():
             _http_json(base_url, "/api/runs", method="POST", payload={"input": "only-one-field.csv"})
         assert exc_info.value.code == 400
 
-        input_csv = Path(r"D:\Dev_Env\loc-mvr 测试文档\test_input_200-row.csv")
-        assert input_csv.exists()
         status, launched = _http_json(
             base_url,
             "/api/runs",
@@ -200,6 +206,8 @@ def test_phase5_acceptance_gate_real_entrypoint_and_http_contracts():
             except subprocess.TimeoutExpired:
                 process.kill()
                 process.wait(timeout=5)
+        if input_csv.exists():
+            input_csv.unlink()
         if run_dir.exists():
             for path in sorted(run_dir.rglob("*"), reverse=True):
                 if path.is_file():
