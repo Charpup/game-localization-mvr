@@ -10,9 +10,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
+from scripts.operator_control_plane import derive_operator_artifacts
+
 
 TEXT_SUFFIXES = {".log", ".txt", ".md", ".py", ".yaml", ".yml", ".csv"}
 JSON_SUFFIXES = {".json", ".jsonl"}
+WORKSPACE_CARD_STATUSES = {"all", "open", "closed"}
+WORKSPACE_CARD_PRIORITIES = {"P0", "P1", "P2"}
+WORKSPACE_CARD_TYPES = {"review_ticket", "runtime_alert", "governance_drift", "kpi_watch", "decision_required"}
 
 
 @dataclass
@@ -191,6 +196,86 @@ class RunDetail:
         return data
 
 
+@dataclass
+class WorkspaceCardView:
+    card_id: str
+    run_id: str
+    card_type: str
+    priority: str
+    status: str
+    title: str
+    summary: str
+    target_locale: str
+    recommended_actions: List[str]
+    artifact_refs: Dict[str, str]
+    evidence_refs: List[str]
+    adr_refs: List[str]
+    owner: str
+    started_at: str
+    overall_status: str
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "card_id": self.card_id,
+            "run_id": self.run_id,
+            "card_type": self.card_type,
+            "priority": self.priority,
+            "status": self.status,
+            "title": self.title,
+            "summary": self.summary,
+            "target_locale": self.target_locale,
+            "recommended_actions": list(self.recommended_actions),
+            "artifact_refs": dict(self.artifact_refs),
+            "evidence_refs": list(self.evidence_refs),
+            "adr_refs": list(self.adr_refs),
+            "owner": self.owner,
+            "started_at": self.started_at,
+            "overall_status": self.overall_status,
+        }
+
+
+@dataclass
+class WorkspaceOverview:
+    open_card_count: int
+    runs_with_open_cards: int
+    open_review_tickets: int
+    runs_with_drift: int
+    runtime_health_counts: Dict[str, int]
+    recent_runs: List[RunSummary]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "open_card_count": self.open_card_count,
+            "runs_with_open_cards": self.runs_with_open_cards,
+            "open_review_tickets": self.open_review_tickets,
+            "runs_with_drift": self.runs_with_drift,
+            "runtime_health_counts": dict(self.runtime_health_counts),
+            "recent_runs": [run.to_dict() for run in self.recent_runs],
+        }
+
+
+@dataclass
+class WorkspaceRunDetail:
+    run_id: str
+    operator_summary: Dict[str, Any]
+    cards: List[WorkspaceCardView]
+    review_workload: Dict[str, Any]
+    kpi_snapshot: Dict[str, Any]
+    governance_drift: Dict[str, Any]
+    decision_context: Dict[str, Any]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "run_id": self.run_id,
+            "operator_summary": dict(self.operator_summary),
+            "cards": [card.to_dict() for card in self.cards],
+            "review_workload": dict(self.review_workload),
+            "kpi_snapshot": dict(self.kpi_snapshot),
+            "governance_drift": dict(self.governance_drift),
+            "decision_context": dict(self.decision_context),
+        }
+
+
 def _read_json(path: Path) -> Any:
     if not path.exists():
         return {}
@@ -199,6 +284,22 @@ def _read_json(path: Path) -> Any:
             return json.load(handle)
     except Exception:
         return {}
+
+
+def _read_jsonl(path: Path) -> List[Dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows: List[Dict[str, Any]] = []
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            parsed = json.loads(line)
+            if isinstance(parsed, dict):
+                rows.append(parsed)
+    except Exception:
+        return []
+    return rows
 
 
 def _infer_repo_root(manifest_path: Path) -> Path:
@@ -403,6 +504,189 @@ def _build_artifact_records(
     add_artifact("smoke_verify_report", str(verify_path), "derived")
     add_artifact("smoke_issues_report", str(issue_path), "derived")
     return artifact_index
+
+
+def _list_manifest_paths(repo_root: Path) -> List[Path]:
+    data_root = repo_root / "data"
+    if not data_root.exists():
+        return []
+    return sorted(
+        data_root.rglob("run_manifest.json"),
+        key=lambda path: (
+            str(_read_json(path).get("started_at", _read_json(path).get("timestamp", ""))),
+            path.stat().st_mtime,
+        ),
+        reverse=True,
+    )
+
+
+def _operator_artifact_paths(repo_root: Path, run_id: str) -> tuple[Path, Path]:
+    return (
+        repo_root / "data" / "operator_cards" / run_id / "operator_cards.jsonl",
+        repo_root / "data" / "operator_reports" / run_id / "operator_summary.json",
+    )
+
+
+def _load_or_derive_operator_payload(repo_root: Path, run_detail: RunDetail) -> Dict[str, Any]:
+    cards_path, summary_path = _operator_artifact_paths(repo_root, run_detail.run_id)
+    persisted_cards = _read_jsonl(cards_path)
+    persisted_summary = _read_json(summary_path)
+    if persisted_cards and isinstance(persisted_summary, dict) and persisted_summary:
+        return {
+            "run_id": run_detail.run_id,
+            "cards_path": str(cards_path),
+            "summary_json_path": str(summary_path),
+            "summary_md_path": str(summary_path.with_suffix(".md")),
+            "open_card_count": int(persisted_summary.get("open_operator_cards", 0) or 0),
+            "report": persisted_summary,
+            "cards": persisted_cards,
+        }
+    return derive_operator_artifacts(run_dir=run_detail.run_dir)
+
+
+def _priority_rank(priority: str) -> int:
+    return {"P0": 0, "P1": 1, "P2": 2}.get(str(priority or "").upper(), 99)
+
+
+def _status_rank(status: str) -> int:
+    return {"open": 0, "closed": 1}.get(str(status or "").lower(), 99)
+
+
+def _normalize_workspace_card(card: Dict[str, Any], run_detail: RunDetail) -> WorkspaceCardView:
+    return WorkspaceCardView(
+        card_id=str(card.get("card_id", "")),
+        run_id=str(card.get("run_id", run_detail.run_id)),
+        card_type=str(card.get("card_type", "")),
+        priority=str(card.get("priority", "P2")),
+        status=str(card.get("status", "open")),
+        title=str(card.get("title", "")),
+        summary=str(card.get("summary", "")),
+        target_locale=str(card.get("target_locale", run_detail.target_lang or "unknown")),
+        recommended_actions=list(card.get("recommended_actions", []) or []),
+        artifact_refs={str(key): str(value) for key, value in dict(card.get("artifact_refs", {}) or {}).items()},
+        evidence_refs=[str(item) for item in list(card.get("evidence_refs", []) or [])],
+        adr_refs=[str(item) for item in list(card.get("adr_refs", []) or [])],
+        owner=str(card.get("owner", "")),
+        started_at=run_detail.started_at,
+        overall_status=run_detail.overall_status,
+    )
+
+
+def _sorted_workspace_cards(cards: List[WorkspaceCardView]) -> List[WorkspaceCardView]:
+    return sorted(
+        cards,
+        key=lambda card: (_status_rank(card.status), _priority_rank(card.priority), card.started_at, card.card_id),
+    )
+
+
+def _build_decision_context(cards: List[WorkspaceCardView], report: Dict[str, Any]) -> Dict[str, Any]:
+    primary = _sorted_workspace_cards(cards)[0] if cards else None
+    if primary is None:
+        return {
+            "card_id": "",
+            "title": "No operator decision required",
+            "summary": "This run currently has no operator cards requiring follow-up.",
+            "recommended_actions": list(report.get("next_recommended_actions", []) or []),
+            "artifact_refs": dict(report.get("artifact_refs", {}) or {}),
+            "evidence_refs": list(report.get("evidence_refs", []) or []),
+            "adr_refs": list(report.get("adr_refs", []) or []),
+        }
+    return {
+        "card_id": primary.card_id,
+        "title": primary.title,
+        "summary": primary.summary,
+        "recommended_actions": list(primary.recommended_actions),
+        "artifact_refs": dict(primary.artifact_refs),
+        "evidence_refs": list(primary.evidence_refs),
+        "adr_refs": list(primary.adr_refs),
+    }
+
+
+def _validate_workspace_filters(status: str, card_type: str, priority: str) -> None:
+    if status not in WORKSPACE_CARD_STATUSES:
+        raise ValueError("status must be one of all/open/closed")
+    if card_type and card_type not in WORKSPACE_CARD_TYPES:
+        raise ValueError("card_type must be one of the operator_card contract enums")
+    if priority and priority not in WORKSPACE_CARD_PRIORITIES:
+        raise ValueError("priority must be one of P0/P1/P2")
+
+
+def load_workspace_run_detail(repo_root: Path | str, run_id: str) -> WorkspaceRunDetail:
+    repo_root_path = Path(repo_root)
+    run_detail = load_run_detail(find_run_manifest(repo_root_path, run_id), repo_root=repo_root_path)
+    payload = _load_or_derive_operator_payload(repo_root_path, run_detail)
+    cards = _sorted_workspace_cards([_normalize_workspace_card(card, run_detail) for card in payload["cards"]])
+    report = dict(payload["report"])
+    workspace = WorkspaceRunDetail(
+        run_id=run_detail.run_id,
+        operator_summary=report,
+        cards=cards,
+        review_workload=dict(report.get("open_review_workload", {}) or {}),
+        kpi_snapshot=dict(report.get("kpi_snapshot", {}) or {}),
+        governance_drift=dict(report.get("governance_drift_summary", {}) or {}),
+        decision_context=_build_decision_context(cards, report),
+    )
+    return workspace
+
+
+def load_workspace_cards(
+    repo_root: Path | str,
+    *,
+    status: str = "open",
+    card_type: str = "",
+    priority: str = "",
+    target_locale: str = "",
+    limit: int = 50,
+) -> List[WorkspaceCardView]:
+    _validate_workspace_filters(status, card_type, priority)
+    repo_root_path = Path(repo_root)
+    cards: List[WorkspaceCardView] = []
+    for manifest_path in _list_manifest_paths(repo_root_path):
+        run_detail = load_run_detail(manifest_path, repo_root=repo_root_path)
+        payload = _load_or_derive_operator_payload(repo_root_path, run_detail)
+        for raw_card in payload["cards"]:
+            card = _normalize_workspace_card(raw_card, run_detail)
+            if status != "all" and card.status != status:
+                continue
+            if card_type and card.card_type != card_type:
+                continue
+            if priority and card.priority != priority:
+                continue
+            if target_locale and card.target_locale != target_locale:
+                continue
+            cards.append(card)
+    return _sorted_workspace_cards(cards)[: max(limit, 0)]
+
+
+def load_workspace_overview(repo_root: Path | str, limit_runs: int = 10) -> WorkspaceOverview:
+    repo_root_path = Path(repo_root)
+    runtime_health_counts: Counter[str] = Counter()
+    open_card_count = 0
+    runs_with_open_cards = 0
+    runs_with_drift = 0
+    open_review_tickets = 0
+    for manifest_path in _list_manifest_paths(repo_root_path):
+        run_detail = load_run_detail(manifest_path, repo_root=repo_root_path)
+        runtime_health_counts[run_detail.overall_status] += 1
+        payload = _load_or_derive_operator_payload(repo_root_path, run_detail)
+        cards = [_normalize_workspace_card(card, run_detail) for card in payload["cards"]]
+        open_cards = [card for card in cards if card.status == "open"]
+        open_card_count += len(open_cards)
+        if open_cards:
+            runs_with_open_cards += 1
+        if any(card.card_type == "governance_drift" and card.status == "open" for card in cards):
+            runs_with_drift += 1
+        report = dict(payload["report"])
+        open_review_tickets += int(((report.get("open_review_workload") or {}).get("pending_review_tickets")) or 0)
+    overview = WorkspaceOverview(
+        open_card_count=open_card_count,
+        runs_with_open_cards=runs_with_open_cards,
+        open_review_tickets=open_review_tickets,
+        runs_with_drift=runs_with_drift,
+        runtime_health_counts=dict(runtime_health_counts),
+        recent_runs=load_run_summaries(repo_root_path, limit=limit_runs),
+    )
+    return overview
 
 
 def find_run_manifest(repo_root: Path | str, run_id: str) -> Path:

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "phase5-frontend-runtime-shell",
+  "change_id": "phase6-operator-workspace-dashboard",
   "route": "extended",
   "authority": {
     "primary": "scripts",
@@ -8,97 +8,18 @@
   },
   "stages": [
     {
-      "id": "e-contract",
-      "name": "Milestone E Contract Gate",
+      "id": "phase4-operator-control-plane",
+      "name": "Phase 4 Operator Control Plane",
       "status": "completed",
       "outputs": [
-        "workflow/milestone_e_contract.yaml",
-        "task_plan.md",
-        "progress.md",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-24/session_start_20260324_milestone_e.md"
+        "workflow/operator_card_contract.yaml",
+        "scripts/operator_control_plane.py",
+        "docs/decisions/ADR-0003-operator-control-plane-operating-model.md"
       ]
     },
     {
-      "id": "e-repro",
-      "name": "Milestone E Repro And CLI Authority",
-      "status": "completed",
-      "outputs": [
-        "scripts/translate_llm.py",
-        "scripts/run_smoke_pipeline.py",
-        "scripts/style_guide_bootstrap.py",
-        "README.md",
-        "docs/localization_pipeline_workflow.md",
-        "tests/test_soft_qa_contract.py"
-      ]
-    },
-    {
-      "id": "e-delta-engine",
-      "name": "Milestone E Typed Delta Engine",
-      "status": "completed",
-      "outputs": [
-        "scripts/glossary_delta.py",
-        "tests/test_glossary_delta_contract.py"
-      ]
-    },
-    {
-      "id": "e-task-executor",
-      "name": "Milestone E Incremental Task Executor",
-      "status": "completed",
-      "outputs": [
-        "scripts/translate_refresh.py",
-        "tests/test_translate_refresh_contract.py",
-        "tests/test_milestone_e_e2e.py"
-      ]
-    },
-    {
-      "id": "e-regression",
-      "name": "Milestone E Regression And Evidence",
-      "status": "completed",
-      "outputs": [
-        "data/delta_runs/",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-24/session_end_20260324_milestone_e.md"
-      ]
-    },
-    {
-      "id": "detect-current-surface",
-      "name": "Detect Current Surface (Historical)",
-      "status": "completed",
-      "outputs": [
-        "SPEC.yaml",
-        "SPEC-delta.yaml"
-      ]
-    },
-    {
-      "id": "freeze-phase5-contracts",
-      "name": "Freeze Phase 5 Contracts",
-      "status": "completed",
-      "outputs": [
-        "artifacts/design.md",
-        "artifacts/tasks.md",
-        "SPEC-delta.yaml"
-      ]
-    },
-    {
-      "id": "value-gate",
-      "name": "Value Gate",
-      "status": "completed",
-      "result": "GO",
-      "evidence_file": "value-review.md"
-    },
-    {
-      "id": "phase5-red-tests",
-      "name": "Phase 5 RED Tests",
-      "status": "completed",
-      "outputs": [
-        "tests/test_operator_ui_models.py",
-        "tests/test_operator_ui_launcher.py",
-        "tests/test_operator_ui_server.py",
-        "tests/test_phase5_frontend_runtime_shell.py"
-      ]
-    },
-    {
-      "id": "phase5-implementation",
-      "name": "Phase 5 Runtime Shell Implementation",
+      "id": "phase5-runtime-shell",
+      "name": "Phase 5 Frontend Runtime Shell",
       "status": "completed",
       "outputs": [
         "scripts/operator_ui_models.py",
@@ -110,289 +31,108 @@
       ]
     },
     {
-      "id": "phase5-regression-evidence",
-      "name": "Phase 5 Regression And Evidence",
+      "id": "phase6-freeze-contracts",
+      "name": "Phase 6 Contract Freeze",
       "status": "completed",
       "outputs": [
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_20260327.json",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_issue_plc_phase5_frontend_runtime_shell_20260327.md",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_20260327.md"
+        "SPEC-delta.yaml",
+        "artifacts/design.md",
+        "artifacts/tasks.md"
       ]
     },
     {
-      "id": "phase5-acceptance-closeout",
-      "name": "Phase 5 Acceptance Closeout",
+      "id": "phase6-red-tests",
+      "name": "Phase 6 RED Tests",
       "status": "completed",
       "outputs": [
-        "tests/test_phase5_acceptance_gate.py",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_acceptance_closeout_20260327.json",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_acceptance_closeout_20260327.md"
+        "tests/test_operator_ui_workspace_models.py",
+        "tests/test_operator_ui_workspace_server.py",
+        "tests/test_phase6_operator_workspace_dashboard.py"
       ]
     },
     {
-      "id": "phase5-pr-closeout",
-      "name": "Phase 5 PR Closeout",
+      "id": "phase6-implementation",
+      "name": "Phase 6 Workspace Dashboard Implementation",
       "status": "completed",
       "outputs": [
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.json",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.md"
+        "scripts/operator_control_plane.py",
+        "scripts/operator_ui_models.py",
+        "scripts/operator_ui_server.py",
+        "operator_ui/index.html",
+        "operator_ui/styles.css",
+        "operator_ui/app.js"
       ]
     },
     {
-      "id": "phase5-merge-closeout",
-      "name": "Phase 5 Merge Closeout",
-      "status": "pending",
+      "id": "phase6-regression-evidence",
+      "name": "Phase 6 Regression And Evidence",
+      "status": "completed",
       "outputs": [
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_merge_closeout_20260327.json",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_merge_closeout_20260327.md"
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase6_operator_workspace_dashboard_20260327.json",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_issue_plc_phase6_operator_workspace_dashboard_20260327.md",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase6_operator_workspace_dashboard_20260327.md"
       ]
     }
   ],
   "notes": [
-    "Authority stays on scripts/ for the active smoke runtime.",
-    "Phase 5 adds a Python local web UI without changing keep-chain behavior.",
-    "Metrics stays optional and non-blocking exactly as established before Phase 5.",
-    "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists.",
-    "Authority stays on main_worktree/scripts.",
-    "Batch 7 already restored the retained validation baseline and repair authority as must-keep surfaces.",
-    "Batch 8 completed the repair-side archive closeout and Batch 9 canonicalized the stress shell surface.",
-    "Batch 10 closes the cleanup roadmap by fixing src/scripts as an operationally retained, exit-planned compatibility mirror.",
-    "Metrics stays optional and non-blocking exactly as established in Batch 6.",
-    "Control plane changes remain descriptive and must not alter keep-chain behavior.",
-    "Milestone E executes gate-first: contract locally, then parallel repro and delta work, then executor integration.",
-    "Milestone E is multi-market first with a compatibility layer for current ru-RU assets.",
-    "Phase 2 reviewer blockers were closed before status completion: staged candidate output, locale-grouped execution, and fail-closed glossary locale lookup.",
-    "Post-E roadmap is now interpreted as four execution phases while preserving milestone letters F-S.",
-    "Phase 2 first package is governance substrate hardening for run/session/milestone contracts and validation.",
-    "Phase 2 closeout extends the substrate with machine-checkable changed_files/evidence_refs/adr_refs and leaves Phase 3 in planning-ready only.",
-    "The milestone-I style-governance package is now merged as a bridge foundation on main, but it does not change the primary execution order.",
-    "Phase 1 large-batch runtime closure is now merged on main as PR #16 / commit 3a84f55.",
-    "Broader Phase 3 no longer needs to stay deferred, because H is now merged and the milestone-I bridge package is already on main.",
-    "Phase 3 language governance is now merged on main as the last completed post-E batch.",
-    "Current execution focus is the single Phase 4 operator-control-plane batch on codex/phase4-operator-control-plane-batch.",
-    "Phase 4 starts with bridge hardening on repair-loop target-column detection and explicit lifecycle-registry fail-closed behavior before the operator aggregation/report surfaces land."
+    "Authority stays on scripts/ for the active smoke runtime and operator adapter surfaces.",
+    "Phase 6 extends the accepted Phase 5 shell instead of replacing it.",
+    "Workspace APIs are read-only and must not write operator artifacts during GET requests.",
+    "Artifact preview remains manifest-scoped and allow-list based exactly as established in Phase 5.",
+    "Pending runs remain in the runtime lane only until manifest-backed operator context exists."
   ],
   "post_e_roadmap": {
-    "status": "phase-4-large-batch-active",
-    "recommended_next_scope": "phase4_operator_control_plane_batch",
-    "parallel_planning_sidecar": "none",
-    "execution_preference": [
-      "phase-1-quality-closure",
-      "phase-2-governance-substrate",
-      "phase-3-language-governance",
-      "phase-4-operator-control-plane"
-    ],
-    "phases": [
-      {
-        "id": "phase-1-quality-closure",
-        "milestones": [
-          "F",
-          "G",
-          "H"
-        ],
-        "goal": "Close qa/repair/review routing into one runtime-quality state machine."
-      },
-      {
-        "id": "phase-2-governance-substrate",
-        "milestones": [
-          "M",
-          "N",
-          "O",
-          "P"
-        ],
-        "goal": "Freeze run/session/evidence/milestone schemas before later operator surfaces expand."
-      },
-      {
-        "id": "phase-3-language-governance",
-        "milestones": [
-          "I",
-          "J",
-          "K",
-          "L"
-        ],
-        "goal": "Version style governance, human-review intake, feedback logging, lifecycle retirement, and KPI reporting."
-      },
-      {
-        "id": "phase-4-operator-control-plane",
-        "milestones": [
-          "Q",
-          "R",
-          "S"
-        ],
-        "goal": "Build an agent-first operator control plane, reporting surfaces, and final operating-model ADR."
-      }
-    ]
-  },
-  "active_phase1_slice": {
-    "status": "completed",
-    "scope": "phase 1 large-batch runtime closeout",
-    "branch": "main",
-    "bounded_surfaces": [
-      "scripts/run_smoke_pipeline.py",
-      "tests/test_phase1_quality_runtime_contract.py",
-      "tests/test_batch6_repair_metrics_contract.py",
-      "tests/test_repair_loop_contract.py",
-      "task_plan.md",
-      "progress.md",
-      ".triadev/state.json",
-      ".triadev/workflow.json",
-      "docs/project_lifecycle/roadmap_index.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase1_large_batch_closeout.json",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase1_large_batch_closeout.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase1_large_batch_closeout.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase1_large_batch_closeout.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase1_large_batch_closeout.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase1_large_batch_closeout.json",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_phase1_large_batch_closeout.md"
-    ],
-    "mapped_milestones": [
-      "F",
-      "G",
-      "H"
-    ],
-    "explicit_non_goals": [
-      "broader Phase 3 runtime enforcement",
-      "human-review intake and feedback logging",
-      "Phase 4 operator-control-plane work"
-    ],
-    "validation_strategy": {
-      "mode": "focused-runtime-tests-plus-representative-smoke",
-      "smoke_required": true,
-      "rationale": "This phase batch closes hard QA repair, soft routing, rollback-safe promotion, and unified status semantics in the smoke orchestrator before broader Phase 3 resumes.",
-      "result": "passed",
-      "acceptance_command": "python -m py_compile scripts/run_smoke_pipeline.py && python -m pytest tests/test_batch6_repair_metrics_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_repair_loop_contract.py tests/test_soft_qa_contract.py tests/test_smoke_verify.py -q && python -m pytest tests/test_translate_refresh_contract.py tests/test_milestone_e_e2e.py tests/test_plc_docs_contract.py -q && python scripts/plc_validate_records.py --preset representative --preset templates",
-      "acceptance_summary": "run_smoke_pipeline compiles; 31 passed on focused runtime tests; 21 passed on executor + PLC docs; PLC validator presets pass; PR #16 merged to main."
-    },
-    "next_action": "keep Phase 1 as merged history only and move the active main scope to the Phase 3 batch"
-  },
-  "active_phase2_slice": {
-    "status": "completed",
-    "scope": "phase 2 governance substrate closeout",
-    "branch": "codex/phase2-governance-closeout",
-    "bounded_surfaces": [
-      "workflow/plc_governance_contract.yaml",
-      "scripts/plc_validate_records.py",
-      "tests/test_plc_docs_contract.py",
-      "docs/project_lifecycle/continuity_protocol.md",
-      "docs/project_lifecycle/session_start_template.md",
-      "docs/project_lifecycle/session_end_template.md",
-      "docs/project_lifecycle/milestone_state_template.md",
-      "docs/project_lifecycle/field_schema.md",
-      "docs/project_lifecycle/roadmap_index.md",
-      "task_plan.md",
-      "progress.md"
-    ],
-    "mapped_milestones": [
-      "M",
-      "N",
-      "O",
-      "P"
-    ],
-    "explicit_non_goals": [
-      "translation runtime changes",
-      "smoke pipeline orchestration changes",
-      "GUI/operator control plane work"
-    ],
-    "validation_strategy": {
-      "mode": "focused-governance-tests",
-      "smoke_required": false,
-      "rationale": "This closeout package changes PLC/TriadDev governance contracts, validator rules, and representative lifecycle records only.",
-      "result": "passed",
-      "acceptance_command": "python -m pytest tests/test_plc_docs_contract.py -q && python scripts/plc_validate_records.py --preset representative --preset templates",
-      "acceptance_summary": "9 passed; Validated 7 PLC governance artifact(s)."
-    },
-    "next_action": "phase 2 PR merged; hand off to milestone_I_prepare planning-only work on clean main"
-  },
-  "active_phase3_slice": {
-    "status": "completed",
-    "scope": "phase 3 language governance batch",
-    "branch": "main",
-    "bounded_surfaces": [
-      "workflow/style_governance_contract.yaml",
-      "data/style_profile.yaml",
-      "scripts/translate_llm.py",
-      "scripts/soft_qa_llm.py",
-      "scripts/translate_refresh.py",
-      "scripts/run_smoke_pipeline.py",
-      "workflow/style_guide.generated.md",
-      "workflow/style_guide.md",
-      ".agent/workflows/style-guide.md",
-      "scripts/style_guide_bootstrap.py",
-      "scripts/style_sync_check.py",
-      "tests/test_style_governance_contract.py",
-      "workflow/review_ticket_contract.yaml",
-      "workflow/feedback_log_contract.yaml",
-      "workflow/lifecycle_contract.yaml",
-      "workflow/kpi_report_contract.yaml",
-      "task_plan.md",
-      "progress.md",
-      ".triadev/state.json",
-      ".triadev/workflow.json",
-      "docs/project_lifecycle/roadmap_index.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/phase3_milestone_i_contract_package_note.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/input_manifest_phase3_milestone_i_contract_package.json",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_start_20260325_phase3_milestone_i_contract_package.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/session_end_20260325_phase3_milestone_i_contract_package.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_issue_phase3_milestone_i_contract_package.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_verify_phase3_milestone_i_contract_package.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/run_manifest_phase3_milestone_i_contract_package.json",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-25/milestone_state_I.md"
-    ],
-    "mapped_milestones": [
-      "I",
-      "J",
-      "K",
-      "L"
-    ],
-    "explicit_non_goals": [
-      "Phase 4 operator control plane",
-      "end-user GUI work",
-      "reopening Phase 1 runtime work except for fallout fixes"
-    ],
-    "validation_strategy": {
-      "mode": "focused-governance-and-runtime-consumer-tests-plus-representative-smoke",
-      "smoke_required": true,
-      "rationale": "Phase 3 changes runtime style-governance consumption, review/feedback persistence, lifecycle state, and KPI artifacts; one representative smoke path is required before merge.",
-      "result": "passed",
-      "acceptance_command": "python -m pytest tests/test_phase3_governance_helpers.py tests/test_phase3_runtime_governance.py tests/test_phase3_language_governance_contract.py tests/test_translate_refresh_contract.py tests/test_phase1_quality_runtime_contract.py tests/test_translate_style_contract.py tests/test_soft_qa_contract.py tests/test_plc_docs_contract.py -q && python scripts/style_sync_check.py && python scripts/plc_validate_records.py --preset representative --preset templates && python scripts/llm_ping.py",
-      "acceptance_summary": "44 passed; style_sync_check pass; PLC validator presets pass; live smoke feasibility check is environment-blocked because the current shell lacks LLM_BASE_URL and LLM_API_KEY, so the required representative smoke gate is satisfied with deterministic orchestration coverage in tests/test_phase1_quality_runtime_contract.py."
-    },
-    "next_action": "keep Phase 3 as merged history only and move the active main scope to the Phase 4 operator-control-plane batch"
+    "status": "phase6-operator-workspace-dashboard-active",
+    "recommended_next_scope": "phase6_operator_workspace_dashboard_acceptance",
+    "parallel_planning_sidecar": "none"
   },
   "active_phase4_slice": {
+    "status": "completed",
+    "scope": "phase 4 operator control plane batch",
+    "branch": "main",
+    "next_action": "consume operator cards and summaries through the Phase 6 workspace shell"
+  },
+  "active_phase5_slice": {
+    "status": "completed",
+    "scope": "phase 5 frontend runtime shell",
+    "branch": "main",
+    "next_action": "preserve runtime shell behavior while Phase 6 adds workspace panels"
+  },
+  "active_phase6_slice": {
     "status": "active",
     "implement_status": "started",
-    "scope": "phase 4 operator control plane batch",
-    "branch": "codex/phase4-operator-control-plane-batch",
+    "scope": "phase 6 operator workspace dashboard",
+    "branch": "codex/phase6-operator-workspace-dashboard",
     "bounded_surfaces": [
-      "scripts/repair_loop.py",
-      "scripts/language_governance.py",
       "scripts/operator_control_plane.py",
-      "workflow/operator_card_contract.yaml",
-      "docs/decisions/ADR-0003-operator-control-plane-operating-model.md",
+      "scripts/operator_ui_models.py",
+      "scripts/operator_ui_server.py",
+      "operator_ui/*",
+      "tests/test_operator_ui_workspace_models.py",
+      "tests/test_operator_ui_workspace_server.py",
+      "tests/test_phase6_operator_workspace_dashboard.py",
+      "SPEC-delta.yaml",
+      "artifacts/design.md",
+      "artifacts/tasks.md",
       "task_plan.md",
       "progress.md",
-      "value-review.md",
       ".triadev/state.json",
       ".triadev/workflow.json",
-      "docs/project_lifecycle/roadmap_index.md",
-      "docs/project_lifecycle/run_records/2026-03/2026-03-26/"
-    ],
-    "mapped_milestones": [
-      "Q",
-      "R",
-      "S"
+      "docs/project_lifecycle/run_records/2026-03/2026-03-27/"
     ],
     "explicit_non_goals": [
-      "polished end-user GUI",
-      "reopening merged Phase 3 feature scope",
-      "replacing existing runtime/governance artifact contracts"
+      "operator writeback actions",
+      "new runtime semantics",
+      "frontend framework migration"
     ],
     "validation_strategy": {
-      "mode": "focused-operator-governance-tests-plus-representative-artifact-walkthrough",
+      "mode": "focused-workspace-dashboard-tests-plus-plc-validation",
       "smoke_required": false,
-      "rationale": "Phase 4 aggregates existing artifacts into operator cards and reports; representative artifact-to-decision evidence is required, while live smoke is only needed if smoke orchestration semantics change again."
+      "rationale": "Phase 6 adds read-mostly workspace aggregation over existing run and operator artifacts without changing smoke orchestration semantics.",
+      "result": "passed",
+      "acceptance_command": "python -m pytest tests/test_phase4_operator_control_plane.py tests/test_operator_ui_models.py tests/test_operator_ui_workspace_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_operator_ui_workspace_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_phase6_operator_workspace_dashboard.py tests/test_phase5_acceptance_gate.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py tests/test_plc_docs_contract.py -q && python scripts/plc_validate_records.py --preset representative --preset templates",
+      "acceptance_summary": "78 passed; PLC validator presets pass."
     },
-    "next_action": "finish bridge hardening, materialize operator cards/reports from the representative Phase 3 run, and open the single Phase 4 PR"
+    "next_action": "package this branch for Phase 6 acceptance and PR review"
   }
 }

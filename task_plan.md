@@ -2,7 +2,33 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `phase4_operator_control_plane_batch` on branch `codex/phase4-operator-control-plane-batch`.
+> The current active scope is `phase6_operator_workspace_dashboard` on branch `codex/phase6-operator-workspace-dashboard`.
+
+## 2026-03-27 Phase 6 Operator Workspace Dashboard
+
+### Goal
+Extend the accepted Phase 5 runtime shell into a read-mostly operator workspace that aggregates
+operator cards, review workload, KPI snapshot, drift signals, and ADR-backed decision context
+without changing runtime truth sources or adding UI-side writeback.
+
+### Scope
+- keep the existing Phase 5 `/api/runs*` contracts unchanged
+- split `operator_control_plane` into pure derivation plus write-on-demand summarize behavior
+- add workspace read models and `/api/workspace/*` endpoints
+- add runtime/workspace mode switching and six dashboard panels in the local UI shell
+- freeze Phase 6 PLC/TriadDev design and evidence on this branch
+
+### Planned Validation
+- focused workspace model/API/frontend tests
+- retained Phase 4 + Phase 5 + governance regression floor
+- `python scripts/plc_validate_records.py --preset representative --preset templates`
+
+### Current Result
+- pure derivation and persisted-artifact preference now coexist in `operator_control_plane`
+- workspace read models and three read-only workspace endpoints are implemented
+- the local UI now supports `Runtime Shell` and `Operator Workspace` modes in one page
+- current validation result is `77 passed` plus PLC validator presets green
+- next boundary is Phase 6 acceptance / PR packaging, not more design work
 
 ## 2026-03-26 Phase 4 Operator Control Plane Batch
 

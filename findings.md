@@ -201,3 +201,9 @@
 - The frontend regressions survived the first implementation pass because API tests were green while no test pinned the JavaScript field names against the backend contract.
 - A real online representative run through the local UI shell now proves the Phase 5 surface is end-to-end viable:
   launch, run discovery, run detail, stage timeline, verify summary, issue summary, and allow-list artifact preview all work over live HTTP.
+
+## 2026-03-27 Phase 6 Operator Workspace Dashboard
+- The key architectural constraint from Phase 5 still holds: workspace reads must stay artifact-first and side-effect free. The Phase 6 backend therefore needed a pure derivation path in `operator_control_plane.py` rather than reusing the write-on-demand summarize path inside HTTP GET handlers.
+- Persisted operator artifacts and derived operator views need to remain structurally compatible. Phase 6 now tests both paths explicitly so a CLI-generated `operator_cards/operator_summary` pair and an on-the-fly derived workspace view produce the same dashboard-facing shape.
+- Pending launches belong in the runtime lane, not the workspace inbox. The dashboard only starts surfacing a run once manifest-backed operator context exists, which avoids mixing in-flight launch metadata with operator decision objects.
+- The existing Phase 5 shell could absorb the workspace without a framework migration. A mode switch plus section-level render helpers in `operator_ui/app.js` was enough to keep the UI thin while adding six new dashboard panels and drilldown paths, and the retained Phase 4/5/6 regression floor is currently green at `78 passed`.

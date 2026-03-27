@@ -390,3 +390,19 @@
   the UI/API exposed `7` stages,
   `verify` returned `PASS`,
   and `smoke_verify_log` preview was available through the artifact endpoint.
+- Started Phase 6 implementation on fresh `main` branch `codex/phase6-operator-workspace-dashboard`.
+- Split `scripts/operator_control_plane.py` into a pure derivation path and retained write-on-demand summarize path so workspace GET requests stay side-effect free.
+- Extended `scripts/operator_ui_models.py` with workspace overview, card-list, and run-detail read models that prefer persisted operator artifacts and fall back to derived payloads.
+- Extended `scripts/operator_ui_server.py` with:
+  `GET /api/workspace/overview`,
+  `GET /api/workspace/cards`,
+  and `GET /api/workspace/runs/{run_id}`.
+- Reworked `operator_ui/index.html`, `operator_ui/styles.css`, and `operator_ui/app.js` so the local shell now supports `Runtime Shell` and `Operator Workspace` modes in one page.
+- Added Phase 6 RED/acceptance coverage in:
+  `tests/test_operator_ui_workspace_models.py`,
+  `tests/test_operator_ui_workspace_server.py`,
+  and `tests/test_phase6_operator_workspace_dashboard.py`.
+- Ran the focused Phase 6 + retained regression floor successfully:
+  `78 passed`.
+- Re-ran PLC governance validation successfully:
+  `python scripts/plc_validate_records.py --preset representative --preset templates` -> `Validated 11 PLC governance artifact(s).`
