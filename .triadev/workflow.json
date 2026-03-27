@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "change_id": "phase4-operator-control-plane-batch-20260326",
+  "change_id": "phase5-frontend-runtime-shell",
   "route": "extended",
   "authority": {
-    "primary": "main_worktree/scripts",
+    "primary": "scripts",
     "compatibility": "src/scripts"
   },
   "stages": [
@@ -69,16 +69,13 @@
       ]
     },
     {
-      "id": "lock-keep-chain",
-      "name": "Lock Keep Chain",
+      "id": "freeze-phase5-contracts",
+      "name": "Freeze Phase 5 Contracts",
       "status": "completed",
-      "chain": [
-        "llm_ping",
-        "normalize_guard",
-        "translate_llm",
-        "qa_hard",
-        "rehydrate_export",
-        "smoke_verify"
+      "outputs": [
+        "artifacts/design.md",
+        "artifacts/tasks.md",
+        "SPEC-delta.yaml"
       ]
     },
     {
@@ -89,61 +86,74 @@
       "evidence_file": "value-review.md"
     },
     {
-      "id": "implementation-guardrails",
-      "name": "Implementation Guardrails",
+      "id": "phase5-red-tests",
+      "name": "Phase 5 RED Tests",
       "status": "completed",
-      "protected_first_wave": [
-        "../src/scripts/**",
-        "scripts/stress_test_3k_run.sh",
-        "skill-v1.4.0/**",
-        "packaging/**"
+      "outputs": [
+        "tests/test_operator_ui_models.py",
+        "tests/test_operator_ui_launcher.py",
+        "tests/test_operator_ui_server.py",
+        "tests/test_phase5_frontend_runtime_shell.py"
       ]
     },
     {
-      "id": "batch10-compat-mirror-mapping",
-      "name": "Batch 10 Compat Mirror Mapping",
+      "id": "phase5-implementation",
+      "name": "Phase 5 Runtime Shell Implementation",
       "status": "completed",
       "outputs": [
-        "workflow/batch4_frozen_zone_inventory.json",
-        "workflow/script_authority_manifest.json",
-        "../SCRIPTS_INVENTORY.md",
-        "reports/cleanup_batch9_stress_surface_20260319.md"
+        "scripts/operator_ui_models.py",
+        "scripts/operator_ui_launcher.py",
+        "scripts/operator_ui_server.py",
+        "operator_ui/index.html",
+        "operator_ui/styles.css",
+        "operator_ui/app.js"
       ]
     },
     {
-      "id": "batch10-red-tests",
-      "name": "Batch 10 RED Tests",
+      "id": "phase5-regression-evidence",
+      "name": "Phase 5 Regression And Evidence",
       "status": "completed",
       "outputs": [
-        "tests/test_batch10_closeout_decision.py",
-        "tests/test_script_authority.py",
-        "tests/test_batch3_batch4_governance.py"
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_20260327.json",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_issue_plc_phase5_frontend_runtime_shell_20260327.md",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_20260327.md"
       ]
     },
     {
-      "id": "batch10-closeout-decision",
-      "name": "Batch 10 Compat Mirror Closeout Decision",
+      "id": "phase5-acceptance-closeout",
+      "name": "Phase 5 Acceptance Closeout",
       "status": "completed",
       "outputs": [
-        "workflow/script_authority_manifest.json",
-        "../SCRIPTS_INVENTORY.md",
-        "workflow/batch4_frozen_zone_inventory.json"
+        "tests/test_phase5_acceptance_gate.py",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_acceptance_closeout_20260327.json",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_acceptance_closeout_20260327.md"
       ]
     },
     {
-      "id": "batch10-regression-evidence",
-      "name": "Batch 10 Regression And Evidence",
+      "id": "phase5-pr-closeout",
+      "name": "Phase 5 PR Closeout",
       "status": "completed",
       "outputs": [
-        "reports/cleanup_batch10_compat_mirror_closeout_20260319.md",
-        "reports/script_authority_report_20260319.json",
-        "data/smoke_runs/M4_4_decision.jsonl"
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.json",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.md"
+      ]
+    },
+    {
+      "id": "phase5-merge-closeout",
+      "name": "Phase 5 Merge Closeout",
+      "status": "pending",
+      "outputs": [
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase5_frontend_runtime_shell_merge_closeout_20260327.json",
+        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_merge_closeout_20260327.md"
       ]
     }
   ],
   "notes": [
-    "Authority stays on main_worktree/scripts.",
+    "Authority stays on scripts/ for the active smoke runtime.",
+    "Phase 5 adds a Python local web UI without changing keep-chain behavior.",
+    "Metrics stays optional and non-blocking exactly as established before Phase 5.",
     "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists.",
+    "Authority stays on main_worktree/scripts.",
     "Batch 7 already restored the retained validation baseline and repair authority as must-keep surfaces.",
     "Batch 8 completed the repair-side archive closeout and Batch 9 canonicalized the stress shell surface.",
     "Batch 10 closes the cleanup roadmap by fixing src/scripts as an operationally retained, exit-planned compatibility mirror.",

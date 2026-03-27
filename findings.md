@@ -190,3 +190,14 @@
 - Batch 9 regression/evidence state is green: focused governance regression passed, the
   explicit full test-file run passed at `98 passed, 8 skipped`, authority remains `WARN`
   only on `runtime_adapter.py`, and `M4_4_decision.jsonl` still reports `KEEP=6`.
+
+## 2026-03-27 Phase 5 Closeout
+- The original Phase 5 acceptance blocker was environmental, not code-level:
+  `llm_ping.py` passed immediately once `LLM_BASE_URL` and `LLM_API_KEY` were injected for the process.
+- PR #19 still had real merge blockers after the first acceptance pass:
+  unresolved frontend timeline and verify field mismatches,
+  unresolved run-id collision risk in `operator_ui_launcher.py`,
+  and an unpushed local fix for `operator_ui_server.py` script entrypoint / asset fallback.
+- The frontend regressions survived the first implementation pass because API tests were green while no test pinned the JavaScript field names against the backend contract.
+- A real online representative run through the local UI shell now proves the Phase 5 surface is end-to-end viable:
+  launch, run discovery, run detail, stage timeline, verify summary, issue summary, and allow-list artifact preview all work over live HTTP.

@@ -823,7 +823,7 @@ def run_pipeline(args: argparse.Namespace) -> int:
         args.soft_qa_rubric = "workflow/soft_qa_rubric.yaml"
     if not getattr(args, "lifecycle_registry", ""):
         args.lifecycle_registry = "workflow/lifecycle_registry.yaml"
-    run_id = f"smoke_run_{_timestamp()}"
+    run_id = getattr(args, "run_id", "") or f"smoke_run_{_timestamp()}"
     run_dir = Path(args.run_dir or Path("data") / run_id)
     run_dir.mkdir(parents=True, exist_ok=True)
     issue_file = run_dir / "smoke_issues.json"
@@ -1750,6 +1750,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run smoke pipeline")
     parser.add_argument("--input", required=True, help="Input CSV path")
     parser.add_argument("--run-dir", default="", help="Custom run output directory")
+    parser.add_argument("--run-id", default="", help="Optional explicit run identifier")
     parser.add_argument("--target-lang", default="ru-RU", help="Primary target language, e.g. en-US")
     parser.add_argument("--fallback-target-lang", default="ru-RU", help="Fallback target language")
     parser.add_argument("--disable-target-fallback", action="store_true", help="Disable EN→RU fallback")

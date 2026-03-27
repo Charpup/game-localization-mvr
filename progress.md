@@ -368,3 +368,25 @@
 - Batch 9 now marks the roadmap as closeout-ready: Batch 10 should focus only on the
   long-term decision for `src/scripts` compat mirror rather than opening new cleanup
   surfaces.
+
+## 2026-03-27
+- Re-opened Phase 5 on `codex/phase5-frontend-runtime-shell` to finish acceptance and PR closeout rather than starting Phase 6.
+- Verified the provided LLM credentials with `python scripts/llm_ping.py`; connectivity passed and returned `PONG`.
+- Confirmed PR #19 remains open and currently merge-blocked by one branch conflict plus four unresolved review threads.
+- Fixed the operator UI frontend contract so detail rendering now consumes `run.stages` and `run.verify`.
+- Fixed operator UI launcher run-id generation so same-second launches produce unique run IDs and run directories.
+- Hardened the documented `python scripts/operator_ui_server.py` entrypoint with repo-root import bootstrapping and frontend asset fallback.
+- Added/extended closeout coverage:
+  `tests/test_operator_ui_launcher.py`,
+  `tests/test_operator_ui_server.py`,
+  `tests/test_phase5_frontend_runtime_shell.py`,
+  and `tests/test_phase5_acceptance_gate.py`.
+- Re-ran the full retained Phase 5 regression floor successfully:
+  `39 passed` plus `14 passed`.
+- Ran a real representative online `preflight` launch through the local UI server using
+  `D:\Dev_Env\loc-mvr 测试文档\test_input_200-row.csv`;
+  the launched run was `ui_run_20260327_052512_477292_22c1`,
+  `run_manifest.json` was produced,
+  the UI/API exposed `7` stages,
+  `verify` returned `PASS`,
+  and `smoke_verify_log` preview was available through the artifact endpoint.
