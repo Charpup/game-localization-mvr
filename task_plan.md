@@ -780,7 +780,6 @@ physical removal as part of this batch's final roadmap closeout.
 - [complete] Phase 3: Run Batch 10 regression suite plus authority/M4 evidence gate.
 - [complete] Phase 4: Prepare stacked closeout branch output and declare the cleanup roadmap closed after Batch 10, with any future compat mirror retirement handled as a separate migration program.
 
-<<<<<<< HEAD
 ## 2026-03-27 Phase 5 Closeout
 
 ### Goal
@@ -800,7 +799,7 @@ evidence chain.
 - [complete] Phase 2: Re-run the full Phase 5 regression floor.
 - [complete] Phase 3: Run a real online representative `preflight` smoke launch through the local operator UI server.
 - [in_progress] Phase 4: Write acceptance closeout + PR closeout records, update TriadDev state, and push/merge PR #19.
-=======
+
 ## 2026-03-21 Milestone D 收口与里程碑 E 续接
 
 ### Goal
@@ -820,4 +819,3 @@ Complete milestone D baseline/d drift-control hard-gate closure and register evi
 
 ### Next Owner
 - `Codex`，`next_scope=milestone_E_prepare`
->>>>>>> origin/main

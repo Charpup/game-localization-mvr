@@ -1,12 +1,7 @@
 {
   "version": 1,
-<<<<<<< HEAD
   "change_id": "phase5-frontend-runtime-shell",
-  "route": "brownfield",
-=======
-  "change_id": "phase4-operator-control-plane-batch-20260326",
   "route": "extended",
->>>>>>> origin/main
   "authority": {
     "primary": "scripts",
     "compatibility": "src/scripts"
@@ -154,15 +149,11 @@
     }
   ],
   "notes": [
-<<<<<<< HEAD
     "Authority stays on scripts/ for the active smoke runtime.",
     "Phase 5 adds a Python local web UI without changing keep-chain behavior.",
     "Metrics stays optional and non-blocking exactly as established before Phase 5.",
-    "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists."
-  ]
-=======
-    "Authority stays on main_worktree/scripts.",
     "Repo-root src/scripts remains the compatibility zone until an explicit migration plan exists.",
+    "Authority stays on main_worktree/scripts.",
     "Batch 7 already restored the retained validation baseline and repair authority as must-keep surfaces.",
     "Batch 8 completed the repair-side archive closeout and Batch 9 canonicalized the stress shell surface.",
     "Batch 10 closes the cleanup roadmap by fixing src/scripts as an operationally retained, exit-planned compatibility mirror.",
@@ -404,5 +395,4 @@
     },
     "next_action": "finish bridge hardening, materialize operator cards/reports from the representative Phase 3 run, and open the single Phase 4 PR"
   }
->>>>>>> origin/main
 }
