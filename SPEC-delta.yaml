@@ -1,21 +1,26 @@
-delta_version: 0.3.0
-change_id: deep-cleanup-main-batch10
-change_type: compat-mirror-closeout-decision
-status: in_progress
+delta_version: 0.4.0
+change_id: phase5-frontend-runtime-shell
+change_type: operator-ui-adapter
+status: verified
 intent:
   summary: >
-    Close the current cleanup roadmap by fixing a final governance decision for
-    repo-root src/scripts as an operationally retained, exit-planned compatibility
-    mirror while preserving retained production-dev baselines, keep-chain, M4,
-    authority drift, and optional Metrics semantics unchanged.
+    Add a thin local operator UI shell on top of the existing smoke pipeline contracts
+    so a human can launch, inspect, and troubleshoot one representative run without
+    reading raw files or invoking shell commands directly.
   non_goals:
-    - Reworking retained authority scripts or packaging behavior
-    - Physically deleting or migrating src/scripts in this batch
-    - Making Metrics a blocking smoke gate
-    - Altering the keep-chain runtime contract
+    - Rebuilding orchestration logic inside the UI layer
+    - Replacing run_manifest, smoke_verify, or smoke_issues as the source of truth
+    - Introducing a JS build system, SPA framework, or external frontend toolchain
+    - Implementing Phase 6 operator dashboards, KPI panels, or governance drift views
 assertions:
-  authority_zone: main_worktree/scripts
-  compat_zone: src/scripts
+  authority_zone: scripts
+  adapter_surfaces:
+    - scripts/operator_ui_models.py
+    - scripts/operator_ui_launcher.py
+    - scripts/operator_ui_server.py
+    - operator_ui/index.html
+    - operator_ui/styles.css
+    - operator_ui/app.js
   keep_chain:
     - llm_ping
     - normalize_guard
@@ -23,35 +28,51 @@ assertions:
     - qa_hard
     - rehydrate_export
     - smoke_verify
-  minimal_irreversible_core:
-    - scripts/run_smoke_pipeline.py
-    - scripts/runtime_adapter.py
-    - scripts/smoke_issue_logger.py
-    - scripts/m4_3_collect_coverage.py
-    - scripts/m4_4_decision.py
-    - tests/test_smoke_verify.py
-    - tests/test_qa_hard.py
-    - tests/test_normalize_segmentation.py
+  source_of_truth:
+    - run_manifest.json
+    - smoke_verify_<run_id>.json
+    - smoke_issues.json
 planned_controls:
-  - Keep ../src/scripts/** operationally present but explicitly mark it as closeout_decision=separate-exit-program.
-  - Freeze the mirror_required list and describe future shrinkage as separate compat migration work.
-  - Remove non-real blocked placeholders from the frozen-zone inventory so closeout criteria reflect only real surfaces.
-  - Add Batch 10 closeout governance tests and a closeout report.
-  - Keep authority drift at WARN(runtime_adapter only), keep Metrics optional, and keep M4 decision logic unchanged.
-status_map:
-  ../src/scripts/**: compat-keep managed compatibility liability with closeout_decision separate-exit-program
-  stress_test_3k_run.sh: must-keep canonical stress shell authority
-  repair_loop.py: must-keep retained repair authority
-  run_validation.py: must-keep retained validation baseline
-  build_validation_set.py: must-keep retained validation baseline generator
-  runtime_adapter.py: must-keep core
-  metrics_aggregator.py: optional observability surface
-blocked_zones:
-  []
+  - Keep run_smoke_pipeline.py and smoke_verify.py behavior stable unless tests expose a minimal compatibility gap.
+  - Restrict artifact reads to manifest-declared artifacts plus derived verify and issue files for the selected run.
+  - Expose only a thin launcher contract: input, target_lang, verify_mode.
+  - Keep the server stack inside the Python standard library.
+  - Drive implementation with RED tests for models, launcher, server, and end-to-end shell acceptance.
+contracts:
+  apis:
+    - GET /api/runs?limit=N
+    - GET /api/runs/{run_id}
+    - POST /api/runs
+    - GET /api/runs/{run_id}/artifacts/{artifact_key}
+  run_detail_fields:
+    - run_id
+    - overall_status
+    - manifest_status
+    - verify
+    - issue_summary
+    - stages
+    - artifacts
+    - row_checks
+    - allowed_artifact_keys
 risk_controls:
-  - Keep-chain scripts remain untouched except for already-established optional Metrics wiring.
-  - Retained validation and repair authority surfaces must not be modified.
-  - Governance artifacts must explain that src/scripts is not the authority root and remains only as an exit-planned compatibility liability.
-  - package_v1.3.0.sh and package_v140.sh behavior must remain unchanged in this batch.
-  - authority report may remain WARN on runtime_adapter drift, but must not add required mirror drift.
-  - M4 decision logic and smoke evidence generation remain unchanged.
+  - Launcher-created run directories must be explicit and deterministic enough for UI polling.
+  - Artifact preview endpoints must reject unknown keys and path traversal attempts.
+  - Existing regression floors for smoke verify, runtime adapter, metrics, and validation must stay green.
+verification_evidence:
+  targeted_phase5:
+    - tests/test_operator_ui_models.py
+    - tests/test_operator_ui_launcher.py
+    - tests/test_operator_ui_server.py
+    - tests/test_phase5_frontend_runtime_shell.py
+  retained_regression_floor:
+    - tests/test_smoke_verify.py
+    - tests/test_runtime_adapter_contract.py
+    - tests/test_batch6_repair_metrics_contract.py
+    - tests/test_validation_contract.py
+    - tests/test_qa_hard.py
+    - tests/test_script_authority.py
+    - tests/test_batch3_batch4_governance.py
+implementation_notes:
+  - Added `--run-id` as an optional compatibility argument to `scripts/run_smoke_pipeline.py`.
+  - Added a standard-library HTTP server and vanilla static assets under `operator_ui/`.
+  - Merged run manifest, verify, and issue reports into a stable allow-listed operator view model.

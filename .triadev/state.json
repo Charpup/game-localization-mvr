@@ -3,17 +3,23 @@
   "project": "game-localization-mvr",
   "mode": "brownfield",
   "route": "extended",
-  "status": "batch10_complete",
-  "branch": "codex/deep-cleanup-batch10",
-  "change_id": "deep-cleanup-main-batch10",
-  "authority_zone": "main_worktree/scripts",
+  "status": "phase5_runtime_shell_complete",
+  "branch": "codex/phase5-frontend-runtime-shell",
+  "change_id": "phase5-frontend-runtime-shell",
+  "authority_zone": "scripts",
   "compat_zone": "src/scripts",
   "control_plane_scope": {
     "allowed_write_paths": [
       ".triadev/*",
       "SPEC.yaml",
       "SPEC-delta.yaml",
-      "value-review.md"
+      "value-review.md",
+      "artifacts/*",
+      "docs/project_lifecycle/**",
+      "operator_ui/*",
+      "scripts/operator_ui_*",
+      "tests/test_operator_ui_*",
+      "tests/test_phase5_frontend_runtime_shell.py"
     ],
     "protected_first_wave": [
       "scripts/repair_loop.py",
@@ -44,7 +50,7 @@
   },
   "value_gate": {
     "status": "GO",
-    "reason": "Batch 10 remains GO because it closes the roadmap with a governance decision for src/scripts without changing keep-chain, M4, authority, retained repair authority, retained validation baselines, packaging behavior, or optional Metrics semantics."
+    "reason": "Phase 5 remains GO because it adds a thin operator shell over existing smoke runtime contracts without changing keep-chain semantics, runtime authority, or optional Metrics behavior."
   },
-  "last_updated": "2026-03-19"
+  "last_updated": "2026-03-27"
 }

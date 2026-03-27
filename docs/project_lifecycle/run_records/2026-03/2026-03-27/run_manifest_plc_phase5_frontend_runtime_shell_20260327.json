@@ -1,0 +1,23 @@
+{
+  "run_id": "plc_phase5_frontend_runtime_shell_20260327",
+  "scope": "phase5_frontend_runtime_shell",
+  "branch": "codex/phase5-frontend-runtime-shell",
+  "route": "extended",
+  "status": "done",
+  "artifacts": [
+    "SPEC-delta.yaml",
+    "artifacts/design.md",
+    "artifacts/tasks.md",
+    "scripts/operator_ui_models.py",
+    "scripts/operator_ui_launcher.py",
+    "scripts/operator_ui_server.py",
+    "operator_ui/index.html",
+    "operator_ui/styles.css",
+    "operator_ui/app.js"
+  ],
+  "tests": [
+    "python -m pytest tests/test_operator_ui_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_phase5_frontend_runtime_shell.py -q",
+    "python -m pytest tests/test_operator_ui_models.py tests/test_operator_ui_launcher.py tests/test_operator_ui_server.py tests/test_phase5_frontend_runtime_shell.py tests/test_smoke_verify.py tests/test_runtime_adapter_contract.py tests/test_batch6_repair_metrics_contract.py tests/test_validation_contract.py -q",
+    "python -m pytest tests/test_qa_hard.py tests/test_script_authority.py tests/test_batch3_batch4_governance.py -q"
+  ]
+}
