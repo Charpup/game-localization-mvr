@@ -125,11 +125,11 @@ def test_phase5_acceptance_gate_real_entrypoint_and_http_contracts():
 
     try:
         html = _wait_for_http_ready(base_url, process)
-        assert "Representative Smoke Run" in html
-        assert "Recent Runs" in html
-        assert "Verify Summary" in html
-        assert "Issue Summary" in html
-        assert "Logs, Reports, And Manifest" in html
+        assert "代表性 Smoke Run" in html
+        assert "最近 Run" in html
+        assert "验证摘要" in html
+        assert "问题摘要" in html
+        assert "日志、报告与清单" in html
 
         with urllib.request.urlopen(base_url + "/app.js", timeout=10) as response:
             assert response.status == 200

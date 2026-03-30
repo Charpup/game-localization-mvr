@@ -8,7 +8,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
-from review_governance import read_json, read_jsonl, write_json, write_jsonl
+try:
+    from review_governance import read_json, read_jsonl, write_json, write_jsonl
+except ModuleNotFoundError:  # pragma: no cover - module entrypoint fallback
+    from scripts.review_governance import read_json, read_jsonl, write_json, write_jsonl
 
 try:
     import yaml
@@ -236,8 +239,10 @@ def derive_operator_artifacts(
     run_dir: str,
     owner: str = "Codex",
     adr_refs: Optional[List[str]] = None,
+    repo_root: Optional[str | Path] = None,
 ) -> Dict[str, Any]:
     run_path = Path(run_dir).resolve()
+    repo_root_path = Path(repo_root).resolve() if repo_root is not None else REPO_ROOT
     manifest_path = run_path / "run_manifest.json"
     manifest = read_json(str(manifest_path))
     if not manifest:
@@ -251,8 +256,8 @@ def derive_operator_artifacts(
     feedback_logs = read_jsonl(str(feedback_path)) if feedback_path else []
     kpi_payload = read_json(str(kpi_path)) if kpi_path else {}
 
-    cards_dir = REPO_ROOT / "data" / "operator_cards" / run_id
-    reports_dir = REPO_ROOT / "data" / "operator_reports" / run_id
+    cards_dir = repo_root_path / "data" / "operator_cards" / run_id
+    reports_dir = repo_root_path / "data" / "operator_reports" / run_id
     cards_path = cards_dir / "operator_cards.jsonl"
     summary_json_path = reports_dir / "operator_summary.json"
     summary_md_path = reports_dir / "operator_summary.md"

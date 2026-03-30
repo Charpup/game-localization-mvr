@@ -165,3 +165,24 @@ def test_load_workspace_cards_filters_and_overview_counts(tmp_path):
     assert overview.runs_with_drift == 1
     assert overview.open_review_tickets == 1
     assert overview.recent_runs[0].run_id == "workspace_run_new"
+
+
+def test_workspace_derivation_respects_repo_root_and_counts_open_review_cards_without_kpi(tmp_path):
+    _write_workspace_run_fixture(
+        tmp_path,
+        "workspace_run_repo_root",
+        with_tickets=True,
+        with_kpi=False,
+        with_kpi_drift=False,
+        started_at="2026-03-28T03:00:00+00:00",
+    )
+
+    detail = models.load_workspace_run_detail(tmp_path, "workspace_run_repo_root")
+    overview = models.load_workspace_overview(tmp_path, limit_runs=5)
+
+    expected_cards_path = tmp_path / "data" / "operator_cards" / "workspace_run_repo_root" / "operator_cards.jsonl"
+    expected_summary_path = tmp_path / "data" / "operator_reports" / "workspace_run_repo_root" / "operator_summary.json"
+
+    assert Path(detail.operator_summary["artifact_refs"]["operator_cards"]) == expected_cards_path
+    assert Path(detail.operator_summary["artifact_refs"]["operator_summary_json"]) == expected_summary_path
+    assert overview.open_review_tickets == 1

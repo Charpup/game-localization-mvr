@@ -247,13 +247,17 @@ def test_phase6_acceptance_gate_real_workspace_http_and_side_effect_free_reads()
         _wait_for_http_ready(base_url, process)
 
         html = urllib.request.urlopen(base_url + "/", timeout=10).read().decode("utf-8")
-        assert "Runtime Shell" in html
-        assert "Operator Workspace" in html
-        assert "Operator Inbox" in html
-        assert "Decision Context" in html
-        assert "Review Workload" in html
-        assert "KPI Snapshot" in html
-        assert "Governance Drift" in html
+        assert "运行态 Shell" in html
+        assert "运营工作台" in html
+        assert "运营收件箱" in html
+        assert "决策上下文" in html
+        assert "复核负载" in html
+        assert "KPI 快照" in html
+        assert "治理漂移" in html
+        assert 'id="lang-zh"' in html
+        assert 'id="lang-en"' in html
+        assert "中文" in html
+        assert "EN" in html
 
         app_js = urllib.request.urlopen(base_url + "/app.js", timeout=10).read().decode("utf-8")
         assert "/api/workspace/overview" in app_js
@@ -263,6 +267,8 @@ def test_phase6_acceptance_gate_real_workspace_http_and_side_effect_free_reads()
         assert "artifact_refs" in app_js
         assert "evidence_refs" in app_js
         assert "adr_refs" in app_js
+        assert "localStorage" in app_js
+        assert "LANG_STORAGE_KEY" in app_js
 
         status, overview = _http_json(base_url, "/api/workspace/overview?limit_runs=10")
         assert status == 200

@@ -1,5 +1,24 @@
 # Progress Log
 
+## 2026-03-28 Human UI Acceptance Prep
+- Started a dedicated human UAT prep scope for the current merged Phase 5 + 6 UI surface.
+- Confirmed `phase6_dashboard_worktree` is the correct target for human acceptance; local `main` is behind remote and not suitable for this pass.
+- Added `scripts/seed_phase6_manual_uat.py` to create deterministic workspace/runtime data for manual browser validation.
+- Added `tests/test_seed_phase6_manual_uat.py` to lock the seed utility shape.
+- Added a dated human UAT checklist and PLC prep records under `docs/project_lifecycle/run_records/2026-03/2026-03-28/`.
+- Re-ran the targeted human-UAT prep checks successfully:
+  - `python -m pytest tests/test_phase5_acceptance_gate.py -q` -> `1 passed`
+  - `python -m pytest tests/test_phase6_acceptance_gate.py -q` -> `1 passed`
+  - `python -m pytest tests/test_seed_phase6_manual_uat.py -q` -> `1 passed`
+- Seeded deterministic manual-UAT data successfully:
+  - `phase6_manual_uat_derived`
+  - `phase6_manual_uat_persisted`
+- Verified live-launch env readiness:
+  - `python scripts/llm_ping.py` -> `SUCCESS / PONG`
+- Started the local UI server successfully on `http://127.0.0.1:8765/`.
+- Verified the running server sees both seeded runs through `/api/workspace/overview`.
+- Remaining work in this scope is now only the human browser walkthrough and evidence capture.
+
 ## 2026-03-28
 - Started the bounded Phase 6 acceptance pass instead of extending implementation scope.
 - Added `tests/test_phase6_acceptance_gate.py` to exercise the documented `python scripts/operator_ui_server.py` entrypoint with live HTTP rather than import-only checks.

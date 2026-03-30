@@ -40,6 +40,74 @@ LLM_TRACE_PATH=data/llm_trace.jsonl
 
 ---
 
+## 🔄 Handoff
+
+Use this section when a new machine or a new agent needs to continue the current UI/operator roadmap without local context from the previous workstation.
+
+**Roadmap status**
+
+- Phase 5 `frontend_runtime_shell`: implemented and merged
+- Phase 6 `operator_workspace_dashboard`: implemented and merged
+- Latest local follow-up scope: dashboard redesign, Chinese UI toggle, manual UAT seed/helper, and migration closeout docs
+
+**Recommended starting point**
+
+```bash
+git clone https://github.com/Charpup/game-localization-mvr.git
+cd game-localization-mvr
+git checkout main
+```
+
+- Start from a fresh `main`
+- Create a new `codex/*` branch for any follow-up work instead of reviving old merged feature branches
+- Treat `task_plan.md`, `progress.md`, and the latest `docs/project_lifecycle/run_records/...` chain as the continuity trail
+
+**UI/operator runtime entrypoints**
+
+```bash
+python scripts/seed_phase6_manual_uat.py
+python scripts/operator_ui_server.py --host 127.0.0.1 --port 8765
+```
+
+- Manual UI entry: `http://127.0.0.1:8765/`
+- Seeded manual UAT fixtures create:
+  - `phase6_manual_uat_derived`
+  - `phase6_manual_uat_persisted`
+
+**Required preflight**
+
+```bash
+python scripts/llm_ping.py
+```
+
+- Required env:
+  - `LLM_BASE_URL`
+  - `LLM_API_KEY`
+  - `LLM_MODEL`
+- Do not start smoke runs or UI live-launch validation until `llm_ping.py` passes
+
+**Current truth sources**
+
+- Runtime truth:
+  - `run_manifest.json`
+  - `smoke_verify_<run_id>.json`
+  - `smoke_issues.json`
+- Operator/workspace truth:
+  - `data/operator_cards/<run_id>/operator_cards.jsonl`
+  - `data/operator_reports/<run_id>/operator_summary.json`
+- Governance continuity:
+  - `docs/project_lifecycle/run_records/...`
+  - `task_plan.md`
+  - `progress.md`
+
+**Recommended next step**
+
+- Finish or re-run human UI acceptance on the latest dashboard build
+- Address any follow-up UX/runtime defects found in manual UAT
+- Then open the next roadmap scope from fresh `main`
+
+---
+
 ## 🚀 Pipeline Overview
 
 ```
