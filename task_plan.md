@@ -4,6 +4,41 @@
 > The legacy M4 goal/phases below remain for traceability only.
 > The current active scope is `phase6_operator_workspace_dashboard` on branch `codex/phase6-operator-workspace-dashboard`.
 
+## 2026-03-28 Phase 5 + 6 Human UI Acceptance
+
+### Goal
+Prepare a human-runnable UI acceptance pass over the current Phase 5 + 6 surface by seeding
+deterministic workspace data, verifying local entrypoints, and handing off one concrete
+Wave A + Wave B browser checklist.
+
+### Scope
+- add a deterministic seed utility for manual UI acceptance
+- run gate-style prechecks for the Phase 5 and Phase 6 UI entrypoints
+- start the local operator UI server on the documented port
+- record PLC/TriadDev preparation artifacts and the human UAT checklist
+- do not finalize acceptance until the human operator performs the UI walkthrough
+
+### Planned Validation
+- `python -m pytest tests/test_phase5_acceptance_gate.py -q`
+- `python -m pytest tests/test_phase6_acceptance_gate.py -q`
+- `python -m pytest tests/test_seed_phase6_manual_uat.py -q`
+- `python scripts/seed_phase6_manual_uat.py`
+- `python scripts/llm_ping.py`
+
+### Current Result
+- deterministic seed utility is present in `scripts/seed_phase6_manual_uat.py`
+- manual UAT checklist is present in the dated PLC run-record folder
+- prechecks are green:
+  - `tests/test_phase5_acceptance_gate.py` -> `1 passed`
+  - `tests/test_phase6_acceptance_gate.py` -> `1 passed`
+  - `tests/test_seed_phase6_manual_uat.py` -> `1 passed`
+- deterministic UAT data is seeded for:
+  - `phase6_manual_uat_derived`
+  - `phase6_manual_uat_persisted`
+- `python scripts/llm_ping.py` is green with process-scoped live-launch credentials
+- the local UI server is running on `http://127.0.0.1:8765/`
+- the remaining step is the human browser walkthrough, not more machine-side setup
+
 ## 2026-03-28 Phase 6 Operator Workspace Dashboard Acceptance
 
 ### Goal

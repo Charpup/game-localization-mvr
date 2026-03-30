@@ -1,0 +1,22 @@
+{
+  "run_id": "plc_phase5_phase6_human_ui_acceptance_20260328",
+  "scope": "phase5_phase6_human_ui_acceptance",
+  "branch": "codex/phase6-operator-workspace-dashboard",
+  "route": "extended",
+  "status": "in_progress",
+  "server_entrypoint": "python scripts/operator_ui_server.py --host 127.0.0.1 --port 8765",
+  "seed_command": "python scripts/seed_phase6_manual_uat.py",
+  "artifacts": [
+    "scripts/seed_phase6_manual_uat.py",
+    "tests/test_seed_phase6_manual_uat.py",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-28/phase5_phase6_human_ui_uat_checklist_20260328.md",
+    "data/operator_ui_runs/phase6_manual_uat_derived/run_manifest.json",
+    "data/operator_ui_runs/phase6_manual_uat_persisted/run_manifest.json"
+  ],
+  "checks": [
+    "python -m pytest tests/test_phase5_acceptance_gate.py -q",
+    "python -m pytest tests/test_phase6_acceptance_gate.py -q",
+    "python -m pytest tests/test_seed_phase6_manual_uat.py -q",
+    "python scripts/llm_ping.py"
+  ]
+}

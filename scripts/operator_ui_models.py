@@ -541,7 +541,7 @@ def _load_or_derive_operator_payload(repo_root: Path, run_detail: RunDetail) -> 
             "report": persisted_summary,
             "cards": persisted_cards,
         }
-    return derive_operator_artifacts(run_dir=run_detail.run_dir)
+    return derive_operator_artifacts(run_dir=run_detail.run_dir, repo_root=repo_root)
 
 
 def _priority_rank(priority: str) -> int:
@@ -676,8 +676,7 @@ def load_workspace_overview(repo_root: Path | str, limit_runs: int = 10) -> Work
             runs_with_open_cards += 1
         if any(card.card_type == "governance_drift" and card.status == "open" for card in cards):
             runs_with_drift += 1
-        report = dict(payload["report"])
-        open_review_tickets += int(((report.get("open_review_workload") or {}).get("pending_review_tickets")) or 0)
+        open_review_tickets += sum(1 for card in open_cards if card.card_type == "review_ticket")
     overview = WorkspaceOverview(
         open_card_count=open_card_count,
         runs_with_open_cards=runs_with_open_cards,

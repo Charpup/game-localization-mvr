@@ -1,0 +1,22 @@
+{
+  "run_id": "plc_phase5_frontend_runtime_shell_merge_closeout_20260327",
+  "scope": "phase5_frontend_runtime_shell_merge_closeout",
+  "branch": "codex/phase5-frontend-runtime-shell",
+  "route": "extended",
+  "status": "merged",
+  "pr_number": 19,
+  "pr_url": "https://github.com/Charpup/game-localization-mvr/pull/19",
+  "merge_commit": "48fd027f40b44dfe0b48888af03731f37b9cac02",
+  "merged_at": "2026-03-27T05:52:44Z",
+  "base_ref": "main",
+  "head_ref": "codex/phase5-frontend-runtime-shell",
+  "artifacts": [
+    "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_pr_closeout_20260327.md",
+    "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase5_frontend_runtime_shell_merge_closeout_20260327.md"
+  ],
+  "post_merge_verification": [
+    "gh pr view 19 --json number,state,mergedAt,mergeCommit,url,baseRefName,headRefName",
+    "git fetch origin",
+    "git rev-parse origin/main"
+  ]
+}

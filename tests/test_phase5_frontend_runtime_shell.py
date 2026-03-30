@@ -61,10 +61,10 @@ def test_runtime_shell_serves_page_and_exposes_run_inspection_flow(tmp_path):
 
     try:
         html = urllib.request.urlopen(base_url + "/").read().decode("utf-8")
-        assert "Launch Run" in html
-        assert "Recent Runs" in html
-        assert "Run Timeline" in html
-        assert "Artifacts" in html
+        assert "启动 Run" in html
+        assert "最近 Run" in html
+        assert "Run 时间线" in html
+        assert "产物" in html
 
         app_js = urllib.request.urlopen(base_url + "/app.js").read().decode("utf-8")
         assert "/api/runs" in app_js
