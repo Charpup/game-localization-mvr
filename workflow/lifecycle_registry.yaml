@@ -12,6 +12,18 @@ entries:
     supersedes: "none"
     deprecated_by: "none"
     required_runtime_gate: true
+  - asset_id: "style-profile-generated-ru"
+    asset_kind: "style_profile"
+    asset_path: "workflow/style_profile.generated.yaml"
+    target_locale: "ru-RU"
+    status: "approved"
+    approval_ref: "docs/decisions/ADR-0002-skill-governance-framework.md"
+    adr_refs:
+      - "docs/decisions/ADR-0001-project-continuity-framework.md"
+      - "docs/decisions/ADR-0002-skill-governance-framework.md"
+    supersedes: "none"
+    deprecated_by: "none"
+    required_runtime_gate: true
   - asset_id: "glossary-compiled-ru"
     asset_kind: "glossary"
     asset_path: "glossary/compiled.yaml"

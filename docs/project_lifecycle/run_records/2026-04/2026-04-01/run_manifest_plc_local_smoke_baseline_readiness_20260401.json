@@ -1,0 +1,78 @@
+{
+  "manifest_version": "plc-run-manifest-v1",
+  "run_id": "plc_local_smoke_baseline_readiness_20260401",
+  "run_scope": "local_smoke_baseline_readiness",
+  "status": "blocked",
+  "started_at": "2026-04-01T02:11:36+08:00",
+  "finished_at": "2026-04-01T02:30:39+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-04/2026-04-01/session_start_202604010215.md",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_issue_plc_local_smoke_baseline_readiness_20260401.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_verify_plc_local_smoke_baseline_readiness_20260401.md",
+  "artifacts": [
+    ".python-version",
+    "workflow/style_profile.generated.yaml",
+    "workflow/style_guide.generated.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/session_start_202604010215.md",
+    "scripts/style_guide_bootstrap.py",
+    "scripts/normalize_guard.py",
+    "scripts/rehydrate_export.py",
+    "scripts/test_normalize.py",
+    "scripts/test_qa_hard.py",
+    "scripts/test_rehydrate.py",
+    "scripts/test_e2e_workflow.py"
+  ],
+  "blockers": [
+    "LLM_BASE_URL is not configured in the current session",
+    "LLM_API_KEY is not configured in the current session",
+    "LLM_MODEL is not configured in the current session",
+    "live llm_ping, smoke preflight, and full smoke are intentionally deferred until credentials are supplied"
+  ],
+  "changed_files": [
+    ".gitignore",
+    ".python-version",
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/session_start_202604010215.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_manifest_plc_local_smoke_baseline_readiness_20260401.json",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_issue_plc_local_smoke_baseline_readiness_20260401.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_verify_plc_local_smoke_baseline_readiness_20260401.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/session_end_20260401_local_smoke_baseline_readiness.md",
+    "findings.md",
+    "progress.md",
+    "scripts/normalize_guard.py",
+    "scripts/qa_hard.py",
+    "scripts/rehydrate_export.py",
+    "scripts/style_guide_bootstrap.py",
+    "scripts/test_e2e_workflow.py",
+    "scripts/test_normalize.py",
+    "scripts/test_qa_hard.py",
+    "scripts/test_rehydrate.py",
+    "task_plan.md",
+    "workflow/style_guide.generated.md",
+    "workflow/style_profile.generated.yaml"
+  ],
+  "evidence_refs": [
+    "command:winget install --id astral-sh.uv -e --silent --accept-package-agreements --accept-source-agreements",
+    "command:.\\.venv\\Scripts\\python.exe -m pip install -r requirements.txt numpy",
+    "command:.\\.venv\\Scripts\\python.exe scripts\\style_guide_bootstrap.py --dry-run",
+    "command:.\\.venv\\Scripts\\python.exe scripts\\test_normalize.py",
+    "command:.\\.venv\\Scripts\\python.exe scripts\\test_qa_hard.py",
+    "command:.\\.venv\\Scripts\\python.exe scripts\\test_rehydrate.py",
+    "command:.\\.venv\\Scripts\\python.exe scripts\\test_e2e_workflow.py",
+    "workflow/style_profile.generated.yaml",
+    "workflow/style_guide.generated.md"
+  ],
+  "adr_refs": [
+    "docs/decisions/ADR-0001-project-continuity-framework.md",
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "decision_refs": [
+    "continue fresh-main local baseline instead of reviving historical Phase 6 feature branches",
+    "treat missing live credentials as a blocking external dependency rather than forcing synthetic smoke"
+  ],
+  "evidence_ready": true,
+  "next_step_owner": "Codex",
+  "next_step_scope": "local_smoke_live_preflight",
+  "gate_result": "blocked"
+}

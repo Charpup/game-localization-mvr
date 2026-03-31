@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "change_id": "phase6-operator-workspace-dashboard",
+  "change_id": "local-smoke-baseline-readiness",
   "route": "extended",
   "authority": {
     "primary": "scripts",
@@ -8,109 +8,96 @@
   },
   "stages": [
     {
-      "id": "phase4-operator-control-plane",
-      "name": "Phase 4 Operator Control Plane",
+      "id": "fresh-main-clone",
+      "name": "Fresh Main Clone",
       "status": "completed",
       "outputs": [
-        "workflow/operator_card_contract.yaml",
-        "scripts/operator_control_plane.py",
-        "docs/decisions/ADR-0003-operator-control-plane-operating-model.md"
+        ".git",
+        "README.md",
+        "task_plan.md",
+        "docs/project_lifecycle/roadmap_index.md",
+        "handoff/m4_session_transfer/README_HANDOFF.md"
       ]
     },
     {
-      "id": "phase5-runtime-shell",
-      "name": "Phase 5 Frontend Runtime Shell",
+      "id": "session-baseline-records",
+      "name": "PLC Session Baseline Records",
       "status": "completed",
       "outputs": [
-        "scripts/operator_ui_models.py",
-        "scripts/operator_ui_launcher.py",
-        "scripts/operator_ui_server.py",
-        "operator_ui/index.html",
-        "operator_ui/styles.css",
-        "operator_ui/app.js"
+        "task_plan.md",
+        "findings.md",
+        "progress.md",
+        "docs/project_lifecycle/run_records/2026-04/2026-04-01/session_start_202604010215.md"
       ]
     },
     {
-      "id": "phase6-freeze-contracts",
-      "name": "Phase 6 Contract Freeze",
+      "id": "python-version-management",
+      "name": "Managed Python 3.11 Baseline",
       "status": "completed",
       "outputs": [
-        "SPEC-delta.yaml",
-        "artifacts/design.md",
-        "artifacts/tasks.md"
+        ".python-version",
+        ".gitignore"
       ]
     },
     {
-      "id": "phase6-red-tests",
-      "name": "Phase 6 RED Tests",
+      "id": "offline-validation-floor",
+      "name": "Offline Validation Floor",
       "status": "completed",
       "outputs": [
-        "tests/test_operator_ui_workspace_models.py",
-        "tests/test_operator_ui_workspace_server.py",
-        "tests/test_phase6_operator_workspace_dashboard.py"
+        ".venv/",
+        "reports/",
+        "docs/project_lifecycle/run_records/2026-04/2026-04-01/"
       ]
     },
     {
-      "id": "phase6-implementation",
-      "name": "Phase 6 Workspace Dashboard Implementation",
+      "id": "live-smoke-readiness",
+      "name": "Live Smoke Readiness",
       "status": "completed",
       "outputs": [
-        "scripts/operator_control_plane.py",
-        "scripts/operator_ui_models.py",
-        "scripts/operator_ui_server.py",
-        "operator_ui/index.html",
-        "operator_ui/styles.css",
-        "operator_ui/app.js"
+        "data/smoke_run_20260331_184226/",
+        "data/smoke_run_20260331_184401/",
+        "data/smoke_run_20260331_184605/",
+        "docs/project_lifecycle/run_records/2026-04/2026-04-01/"
       ]
     },
     {
-      "id": "phase6-regression-evidence",
-      "name": "Phase 6 Regression And Evidence",
-      "status": "completed",
+      "id": "post-smoke-quality-followup",
+      "name": "Post-Smoke Quality Follow-up",
+      "status": "pending",
       "outputs": [
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_manifest_plc_phase6_operator_workspace_dashboard_20260327.json",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_issue_plc_phase6_operator_workspace_dashboard_20260327.md",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-27/run_verify_plc_phase6_operator_workspace_dashboard_20260327.md"
-      ]
-    },
-    {
-      "id": "phase6-acceptance",
-      "name": "Phase 6 Acceptance",
-      "status": "completed",
-      "outputs": [
-        "tests/test_phase6_acceptance_gate.py",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-28/run_manifest_plc_phase6_operator_workspace_dashboard_acceptance_20260328.json",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-28/run_issue_plc_phase6_operator_workspace_dashboard_acceptance_20260328.md",
-        "docs/project_lifecycle/run_records/2026-03/2026-03-28/run_verify_plc_phase6_operator_workspace_dashboard_acceptance_20260328.md"
+        "smoke_review_queue.csv",
+        "docs/project_lifecycle/run_records/2026-04/2026-04-01/",
+        "task_plan.md",
+        "findings.md",
+        "progress.md"
       ]
     }
   ],
   "notes": [
-    "Authority stays on scripts/ for the active smoke runtime and operator adapter surfaces.",
-    "Phase 6 extends the accepted Phase 5 shell instead of replacing it.",
-    "Workspace APIs are read-only and must not write operator artifacts during GET requests.",
-    "Artifact preview remains manifest-scoped and allow-list based exactly as established in Phase 5.",
-    "Pending runs remain in the runtime lane only until manifest-backed operator context exists."
+    "Authority stays on scripts/ for the retained smoke runtime and keep-chain surfaces.",
+    "This slice is enablement-only and must not change keep-chain order or semantics.",
+    "Live llm_ping, preflight, and full smoke succeeded on the 10-row baseline fixture using process-scoped credentials.",
+    "A fresh main baseline is preferred over reviving historical Phase 6 feature branches."
   ],
   "post_e_roadmap": {
-    "status": "phase6-operator-workspace-dashboard-accepted",
-    "recommended_next_scope": "phase6_operator_workspace_dashboard_pr_closeout",
-    "parallel_planning_sidecar": "none"
+    "status": "local-smoke-live-green-with-review-handoff",
+    "recommended_next_scope": "m4_5_quality_closure_followup",
+    "parallel_planning_sidecar": "review_queue_followup"
   },
   "active_phase4_slice": {
-    "status": "completed",
+    "status": "historical-complete",
     "scope": "phase 4 operator control plane batch",
     "branch": "main",
     "next_action": "consume operator cards and summaries through the Phase 6 workspace shell"
   },
   "active_phase5_slice": {
-    "status": "completed",
+    "status": "historical-complete",
     "scope": "phase 5 frontend runtime shell",
     "branch": "main",
     "next_action": "preserve runtime shell behavior while Phase 6 adds workspace panels"
   },
   "active_phase6_slice": {
-    "status": "accepted",
+    "status": "historical-accepted",
     "implement_status": "complete",
     "scope": "phase 6 operator workspace dashboard",
     "branch": "codex/phase6-operator-workspace-dashboard",
@@ -147,5 +134,34 @@
       "acceptance_summary": "79 passed; PLC validator presets pass; live Phase 6 acceptance gate passes."
     },
     "next_action": "package this branch for PR review absorption and merge"
+  },
+  "active_local_baseline_slice": {
+    "status": "completed_with_warn",
+    "scope": "fresh-main local smoke baseline and readiness",
+    "branch": "main",
+    "bounded_surfaces": [
+      ".python-version",
+      ".gitignore",
+      "task_plan.md",
+      "findings.md",
+      "progress.md",
+      ".triadev/state.json",
+      ".triadev/workflow.json",
+      "docs/project_lifecycle/run_records/2026-04/2026-04-01/"
+    ],
+    "explicit_non_goals": [
+      "keep-chain semantic changes",
+      "docker parity changes",
+      "operator UI follow-up implementation",
+      "broad post-smoke product changes in the same slice"
+    ],
+    "validation_strategy": {
+      "mode": "offline-plus-live-smoke",
+      "smoke_required": true,
+      "rationale": "With live credentials available, the correct acceptance floor is direct llm_ping plus preflight and full smoke on the retained 10-row baseline fixture.",
+      "result": "live_pass_with_review_handoff",
+      "acceptance_command": ".\\.venv\\Scripts\\python.exe scripts\\llm_ping.py && .\\.venv\\Scripts\\python.exe scripts\\run_smoke_pipeline.py --input docs/project_lifecycle/run_records/2026-03/2026-03-21/validation_10_d_plc_run_d_prepare_baseline.csv --target-lang en-US --verify-mode preflight --model gpt-4.1-mini && .\\.venv\\Scripts\\python.exe scripts\\run_smoke_pipeline.py --input docs/project_lifecycle/run_records/2026-03/2026-03-21/validation_10_d_plc_run_d_prepare_baseline.csv --target-lang en-US --verify-mode full --model gpt-4.1-mini"
+    },
+    "next_action": "carry the remaining warn-level review handoff into the next M4-5 quality-closure scope and decide whether to cut a fresh codex branch from main for follow-up work"
   }
 }

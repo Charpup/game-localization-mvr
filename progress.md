@@ -1,5 +1,75 @@
 # Progress Log
 
+## 2026-04-01 Local Baseline + Smoke Readiness
+- Cloned a fresh local `main` worktree into `D:\CodexWorkspace\game-localization-mvr` instead of continuing the historical `codex/phase6-operator-workspace-dashboard` branch.
+- Re-read the local continuity anchors and current handoff trail:
+  - `docs/HANDOFF_MAINLINE_GUARDRAILS.md`
+  - `task_plan.md`
+  - `docs/project_lifecycle/roadmap_index.md`
+  - `README.md`
+  - `handoff/m4_session_transfer/*`
+- Confirmed the machine did not have an immediately usable Python 3.11 baseline:
+  - system Python was `3.14.2`
+  - `py -0p` exposed `3.14` and `3.12`, but not `3.11`
+- Installed managed tooling for project-local version control:
+  - `winget install astral-sh.uv`
+  - `uv python install 3.11` -> `Python 3.11.15`
+- Added `.python-version` with `3.11` and expanded `.gitignore` to ignore `.venv/`.
+- Wrote a new PLC continuity record at `docs/project_lifecycle/run_records/2026-04/2026-04-01/session_start_202604010215.md`.
+- Confirmed current hard blocker before any live smoke:
+  - `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, and `LLM_TRACE_PATH` are not set in this session
+  - no `.llm_credentials` file is present in the repo root
+- Next runtime step is now environment materialization:
+  - run the offline validation floor
+  - record exact live-smoke follow-up commands for the credential handoff
+- Verified the repo-local environment is usable:
+  - existing `.venv` resolves to `Python 3.11.9`
+  - runtime dependencies plus `numpy` now import successfully from `.venv`
+- Closed a real Windows local-baseline blocker:
+  - `python scripts/style_guide_bootstrap.py --dry-run` originally failed with `UnicodeEncodeError` because the script printed emoji to a GBK console
+  - patched `scripts/style_guide_bootstrap.py` to emit ASCII success lines instead
+- Closed a real placeholder-integrity bug in the keep-chain baseline:
+  - `normalize_guard.py` was letting jieba split printf placeholders, turning `%d` into `% d`
+  - updated the segmentation skip-regex so printf-style placeholders remain intact in `placeholder_map`
+- Hardened the local regression harness for fresh clones:
+  - `scripts/test_normalize.py`, `scripts/test_qa_hard.py`, `scripts/test_rehydrate.py`, and `scripts/test_e2e_workflow.py` now create parent temp directories and invoke the current interpreter explicitly
+  - `scripts/test_qa_hard.py` now self-generates its QA reports from fixture inputs
+  - `scripts/test_rehydrate.py` now self-generates valid/invalid placeholder maps instead of relying on stale fixture assumptions
+- Offline validation floor is green:
+  - `python scripts/test_normalize.py` -> pass
+  - `python scripts/test_qa_hard.py` -> pass
+  - `python scripts/test_rehydrate.py` -> pass
+  - `python scripts/test_e2e_workflow.py` -> pass
+- Live `llm_ping` and smoke remain intentionally pending until credentials are provided.
+
+## 2026-04-01 Live Smoke Execution
+- Loaded process-scoped live credentials for `https://api.apiyi.com/v1` and re-verified connectivity with `.\\.venv\\Scripts\\python.exe scripts\\llm_ping.py`.
+- Confirmed the router still selects `gpt-4.1-nano` for `llm_ping`; the smoke translation override stayed on `gpt-4.1-mini` to control cost.
+- First `preflight` attempt failed fast at `style_governance_gate`:
+  - run dir: `data/smoke_run_20260331_184226`
+  - issue: `STYLE_GOVERNANCE_GATE_FAIL`
+  - root cause: `workflow/style_profile.generated.yaml` was missing from `workflow/lifecycle_registry.yaml`
+- Patched `workflow/lifecycle_registry.yaml` to register `workflow/style_profile.generated.yaml` as an approved runtime-gated `style_profile`.
+- Re-ran `preflight` successfully:
+  - run dir: `data/smoke_run_20260331_184401`
+  - verify artifact: `smoke_verify_smoke_run_20260331_184401.json`
+  - final authority: `overall=PASS`
+- Re-ran `full` successfully:
+  - run dir: `data/smoke_run_20260331_184605`
+  - verify artifact: `smoke_verify_smoke_run_20260331_184605.json`
+  - final authority: `overall=PASS`
+- Live smoke behavior on the 10-row baseline is now characterized:
+  - `target_lang_effective` stayed `en-US`
+  - no RU fallback was triggered
+  - row counts stayed aligned at `10 input / 10 translated / 10 final`
+  - `QA Hard` produced `5` initial errors, all cleared by `Repair Hard`
+  - `Soft QA` produced `8` repair tasks; `Repair Soft` repaired `7` and escalated `1`
+- The pipeline is therefore runnable end-to-end on fresh `main`, but not perfectly clean:
+  - manifest `gate_summary.status` is `passed`
+  - manifest `overall_status` is `warn`
+  - one review handoff remains queued for `string_id=10007436`
+- Closed the live-smoke execution slice by retiring the exploration subagent after integrating its artifact/PASS-authority findings.
+
 ## 2026-03-28 Human UI Acceptance Prep
 - Started a dedicated human UAT prep scope for the current merged Phase 5 + 6 UI surface.
 - Confirmed `phase6_dashboard_worktree` is the correct target for human acceptance; local `main` is behind remote and not suitable for this pass.

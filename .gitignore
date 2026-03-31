@@ -15,6 +15,7 @@ config/llm_credentials.env
 .Python
 venv/
 env/
+.venv/
 .venv_main/
 .venv_smoke/
 .pytest_cache/

@@ -149,7 +149,9 @@ class RehydrateExporter:
             
         old_text = text
         new_text = sanitize_punctuation(text, self.punctuation_mappings)
-        
+        # Keep printf-style placeholders intact after punctuation spacing rules.
+        new_text = re.sub(r"%\s+((?:\d+\$)?[a-zA-Z])", r"%\1", new_text)
+
         # Count changes (imperfect but sufficient)
         if old_text != new_text:
             self.punctuation_converted += 1

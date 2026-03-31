@@ -1,0 +1,118 @@
+version: '1.2'
+generated_at: '2026-04-01T02:24:03'
+project:
+  source_language: zh-CN
+  target_language: ru-RU
+  target_locale: ru-RU
+  project_id: naruto_localization_demo
+  franchise: Naruto
+  title_zh: 火影忍者
+  title_ru: Наруто
+  genre: 动作 RPG
+  audience: 12-35 岁
+  key_themes:
+  - 冒险
+  - 团队作战
+  - 升华成长
+  - 能力解锁
+  - 任务系统
+  domain_hint: ui
+style_contract:
+  tone:
+    official_ratio: 70
+    anime_ratio: 30
+    register: neutral_formal
+    forbidden_patterns:
+    - 符合:...
+    - 不要使用:...
+  language_policy:
+    no_over_localization: true
+    no_over_literal: true
+  placeholder_protection:
+    preserve_ph_tokens: true
+    preserve_markup: true
+    variables:
+    - ⟦PH_xx⟧
+    - ⟦TAG_xx⟧
+    - '{0}'
+    - '%s'
+    - '%d'
+  style_guard:
+    no_humor_overreach: true
+    avoid_wordplay_distortion: true
+    keep_named_entities: true
+    character_name_policy: keep_transliterated
+    proper_noun_strategy: hybrid
+segmentation:
+  backend_chain: pkuseg,thulac,lac,jieba
+  domain_hint: ui
+  named_entities: []
+terminology:
+  forbidden_terms:
+  - 奶妈
+  - 副本
+  - 攻略
+  - bug
+  - issue
+  preferred_terms:
+  - term_zh: 忍术
+    term_ru: Ниндзюцу
+    targets:
+      ru-RU: Ниндзюцу
+  - term_zh: 木叶
+    term_ru: Коноха
+    targets:
+      ru-RU: Коноха
+  - term_zh: 忍者
+    term_ru: ниндзя
+    targets:
+      ru-RU: ниндзя
+  prohibited_aliases:
+  - 不允许把「木叶」改写为「деревня_树叶」
+  banned_terms:
+  - 随机翻译
+  - 直译
+  - 机翻
+ui:
+  length_constraints:
+    button_max_chars: 18
+    dialogue_max_chars: 120
+    max_expansion_pct: 30
+  abbreviation_policy: moderate
+  strictness: balanced
+units:
+  time:
+    source_unit: 秒
+    target_unit: секунд
+  currency:
+    source_unit: 原石
+    target_unit: алмазы
+evidence_hints:
+  source_fields:
+  - module_tag
+  - max_length_target
+  placeholder_fields:
+  - source_zh
+  - tokenized_zh
+style_governance:
+  style_guide_id: naruto_localization_demo-ru-RU-style-v1.2
+  owner: Codex
+  status: approved
+  approval_ref: docs/decisions/ADR-0002-skill-governance-framework.md
+  adr_refs:
+  - docs/decisions/ADR-0001-project-continuity-framework.md
+  - docs/decisions/ADR-0002-skill-governance-framework.md
+  generated_from_script: scripts/style_guide_bootstrap.py
+  source_questionnaire: workflow/style_guide_questionnaire.md
+  supersedes: none
+  deprecated_by: none
+  entry_audit:
+    loadable: true
+    approved: true
+    deprecated: false
+  lineage:
+    canonical_profile: data/style_profile.yaml
+    generated_guide: workflow/style_guide.generated.md
+    mirror_guides:
+    - workflow/style_guide.md
+    - .agent/workflows/style-guide.md

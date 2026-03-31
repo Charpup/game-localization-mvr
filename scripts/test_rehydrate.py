@@ -8,10 +8,54 @@ All file operations use explicit UTF-8 encoding for Windows compatibility.
 """
 
 import csv
+import io
 import subprocess
 import sys
 import shutil
 from pathlib import Path
+
+PYTHON = sys.executable
+
+
+def configure_standard_streams() -> None:
+    """Best-effort UTF-8 console setup for Windows CLI execution."""
+    if sys.platform != 'win32':
+        return
+
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if stream is None:
+            continue
+        try:
+            if hasattr(stream, "reconfigure"):
+                stream.reconfigure(encoding='utf-8', errors='replace')
+                continue
+            buffer = getattr(stream, "buffer", None)
+            if buffer is not None:
+                wrapped = io.TextIOWrapper(buffer, encoding='utf-8', errors='replace')
+                setattr(sys, stream_name, wrapped)
+        except Exception:
+            continue
+
+
+def generate_placeholder_map(fixtures_dir: Path, temp_dir: Path) -> Path:
+    map_path = temp_dir / "placeholder_map_generated.json"
+    result = subprocess.run(
+        [
+            PYTHON, "scripts/normalize_guard.py",
+            str(fixtures_dir / "input_valid.csv"),
+            str(temp_dir / "draft.csv"),
+            str(map_path),
+            "workflow/placeholder_schema.yaml",
+        ],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    if result.returncode != 0 or not map_path.exists():
+        raise RuntimeError(result.stderr or result.stdout or "normalize_guard failed to generate placeholder map")
+    return map_path
 
 
 def test_rehydrate_valid():
@@ -24,15 +68,16 @@ def test_rehydrate_valid():
     
     fixtures_dir = Path("data/fixtures")
     temp_dir = Path("data/temp_rehydrate_test")
-    temp_dir.mkdir(exist_ok=True)
+    temp_dir.mkdir(parents=True, exist_ok=True)
     
     try:
+        generated_map = generate_placeholder_map(fixtures_dir, temp_dir)
         # Run rehydrate with valid fixture
         result = subprocess.run(
             [
-                "python", "scripts/rehydrate_export.py",
+                PYTHON, "scripts/rehydrate_export.py",
                 str(fixtures_dir / "translated_valid.csv"),
-                str(fixtures_dir / "placeholder_map.json"),
+                str(generated_map),
                 str(temp_dir / "final.csv")
             ],
             capture_output=True,
@@ -55,61 +100,39 @@ def test_rehydrate_valid():
         
         print(f"[OK] Generated {len(rows)} rows")
         
-        # Verify tokens were replaced with original placeholders
+        rows_by_id = {row.get('string_id', ''): row for row in rows}
         test_cases = [
-            {
-                'string_id': 'welcome_msg',
-                'expected_contains': '{0}',
-                'description': 'C# numbered placeholder'
-            },
-            {
-                'string_id': 'level_up',
-                'expected_contains': '{level}',
-                'description': 'C# named placeholder'
-            },
-            {
-                'string_id': 'color_text',
-                'expected_contains': '<color=#FF00FF>',
-                'description': 'Unity color tag'
-            },
-            {
-                'string_id': 'printf_test',
-                'expected_contains': '%d',
-                'description': 'Printf placeholder'
-            }
+            ('welcome_msg', '{0}', 'C# numbered placeholder'),
+            ('level_up', '{level}', 'C# named placeholder'),
+            ('color_text', '<color=#FF00FF>', 'Unity color tag'),
+            ('printf_test', '%d', 'Printf placeholder'),
         ]
-        
+
         all_passed = True
-        
-        for test in test_cases:
-            string_id = test['string_id']
-            expected = test['expected_contains']
-            desc = test['description']
-            
-            row = next((r for r in rows if r.get('string_id') == string_id), None)
-            
+
+        for string_id, expected, desc in test_cases:
+            row = rows_by_id.get(string_id)
             if not row:
                 print(f"[FAIL] {string_id}: not found")
                 all_passed = False
                 continue
-            
+
             rehydrated = row.get('rehydrated_text', '')
-            
-            # Check token was replaced
+
             if '⟦' in rehydrated or '⟧' in rehydrated:
                 print(f"[FAIL] {string_id}: tokens still present")
+                print(f"       Rehydrated repr: {rehydrated!r}")
                 all_passed = False
                 continue
-            
-            # Check original placeholder restored
+
             if expected not in rehydrated:
                 print(f"[FAIL] {string_id}: expected '{expected}' not found")
-                print(f"       Got: {rehydrated}")
+                print(f"       Got repr: {rehydrated!r}")
                 all_passed = False
                 continue
-            
+
             print(f"[OK] {string_id}: {desc}")
-            print(f"     Rehydrated: {rehydrated[:60]}")
+            print(f"     Rehydrated repr: {rehydrated[:60]!r}")
         
         print()
         
@@ -136,15 +159,25 @@ def test_rehydrate_unknown_token():
     
     fixtures_dir = Path("data/fixtures")
     temp_dir = Path("data/temp_rehydrate_fail_test")
-    temp_dir.mkdir(exist_ok=True)
+    temp_dir.mkdir(parents=True, exist_ok=True)
     
     try:
+        generated_map = generate_placeholder_map(fixtures_dir, temp_dir)
+        invalid_csv = temp_dir / "translated_invalid.csv"
+        shutil.copy(fixtures_dir / "translated_valid.csv", invalid_csv)
+        with open(invalid_csv, "r", encoding="utf-8-sig", newline="") as f:
+            rows = list(csv.DictReader(f))
+        rows[0]["target_text"] = rows[0].get("target_text", "").replace("PH_1", "PH_99")
+        with open(invalid_csv, "w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+            writer.writeheader()
+            writer.writerows(rows)
         # Run rehydrate with invalid fixture (contains PH_99)
         result = subprocess.run(
             [
-                "python", "scripts/rehydrate_export.py",
-                str(fixtures_dir / "translated_invalid.csv"),
-                str(fixtures_dir / "placeholder_map.json"),
+                PYTHON, "scripts/rehydrate_export.py",
+                str(invalid_csv),
+                str(generated_map),
                 str(temp_dir / "final.csv")
             ],
             capture_output=True,
@@ -193,10 +226,11 @@ def test_rehydrate_empty_input():
     print()
     
     temp_dir = Path("data/temp_rehydrate_edge_test")
-    temp_dir.mkdir(exist_ok=True)
+    temp_dir.mkdir(parents=True, exist_ok=True)
     
     try:
         fixtures_dir = Path("data/fixtures")
+        generated_map = generate_placeholder_map(fixtures_dir, temp_dir)
         
         # Create a minimal valid input (1 row, no placeholders)
         minimal_csv = temp_dir / "minimal.csv"
@@ -206,9 +240,9 @@ def test_rehydrate_empty_input():
         
         result = subprocess.run(
             [
-                "python", "scripts/rehydrate_export.py",
+                PYTHON, "scripts/rehydrate_export.py",
                 str(minimal_csv),
-                str(fixtures_dir / "placeholder_map.json"),
+                str(generated_map),
                 str(temp_dir / "final.csv")
             ],
             capture_output=True,
@@ -231,6 +265,7 @@ def test_rehydrate_empty_input():
 
 
 if __name__ == "__main__":
+    configure_standard_streams()
     print()
     print("#" * 60)
     print("# rehydrate_export.py Test Suite")

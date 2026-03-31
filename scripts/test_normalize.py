@@ -8,12 +8,36 @@ All file operations use explicit UTF-8 encoding for Windows compatibility.
 """
 
 import csv
+import io
 import json
 import subprocess
 import sys
 import tempfile
 import shutil
 from pathlib import Path
+
+PYTHON = sys.executable
+
+
+def configure_standard_streams() -> None:
+    """Best-effort UTF-8 console setup for Windows CLI execution."""
+    if sys.platform != 'win32':
+        return
+
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if stream is None:
+            continue
+        try:
+            if hasattr(stream, "reconfigure"):
+                stream.reconfigure(encoding='utf-8', errors='replace')
+                continue
+            buffer = getattr(stream, "buffer", None)
+            if buffer is not None:
+                wrapped = io.TextIOWrapper(buffer, encoding='utf-8', errors='replace')
+                setattr(sys, stream_name, wrapped)
+        except Exception:
+            continue
 
 
 def test_normalize_with_fixtures():
@@ -26,13 +50,13 @@ def test_normalize_with_fixtures():
     
     fixtures_dir = Path("data/fixtures")
     temp_dir = Path("data/temp_normalize_test")
-    temp_dir.mkdir(exist_ok=True)
+    temp_dir.mkdir(parents=True, exist_ok=True)
     
     try:
         # Run normalize on fixture input
         result = subprocess.run(
             [
-                "python", "scripts/normalize_guard.py",
+                PYTHON, "scripts/normalize_guard.py",
                 str(fixtures_dir / "input_valid.csv"),
                 str(temp_dir / "draft.csv"),
                 str(temp_dir / "placeholder_map.json"),
@@ -107,7 +131,7 @@ def test_normalize_with_fixtures():
                 continue
             
             print(f"[OK] {string_id}: tokens present")
-            print(f"     Tokenized: {tokenized[:60]}...")
+            print(f"     Token count: {tokenized.count('PH_') + tokenized.count('TAG_')}")
         
         print()
         
@@ -155,13 +179,13 @@ def test_normalize_roundtrip():
     
     fixtures_dir = Path("data/fixtures")
     temp_dir = Path("data/temp_roundtrip_test")
-    temp_dir.mkdir(exist_ok=True)
+    temp_dir.mkdir(parents=True, exist_ok=True)
     
     try:
         # Step 1: Normalize
         subprocess.run(
             [
-                "python", "scripts/normalize_guard.py",
+                PYTHON, "scripts/normalize_guard.py",
                 str(fixtures_dir / "input_valid.csv"),
                 str(temp_dir / "draft.csv"),
                 str(temp_dir / "placeholder_map.json"),
@@ -169,7 +193,8 @@ def test_normalize_roundtrip():
             ],
             capture_output=True,
             text=True,
-            encoding='utf-8'
+            encoding='utf-8',
+            errors='replace'
         )
         
         # Step 2: Create a "translated" version (just copy tokenized to target)
@@ -191,14 +216,15 @@ def test_normalize_roundtrip():
         # Step 3: Rehydrate
         result = subprocess.run(
             [
-                "python", "scripts/rehydrate_export.py",
+                PYTHON, "scripts/rehydrate_export.py",
                 str(temp_dir / "translated.csv"),
                 str(temp_dir / "placeholder_map.json"),
                 str(temp_dir / "final.csv")
             ],
             capture_output=True,
             text=True,
-            encoding='utf-8'
+            encoding='utf-8',
+            errors='replace'
         )
         
         if result.returncode != 0:
@@ -226,6 +252,7 @@ def test_normalize_roundtrip():
 
 
 if __name__ == "__main__":
+    configure_standard_streams()
     print()
     print("#" * 60)
     print("# normalize_guard.py Test Suite")
