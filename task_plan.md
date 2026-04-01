@@ -2,7 +2,104 @@
 
 > Historical ledger note:
 > The legacy M4 goal/phases below remain for traceability only.
-> The current active scope is `phase6_operator_workspace_dashboard` on branch `codex/phase6-operator-workspace-dashboard`.
+> The current active scope is `local_smoke_baseline_readiness` on branch `main`.
+
+## 2026-04-01 Local Baseline + Smoke Readiness
+
+### Goal
+Prepare a fresh-main local Windows baseline that can run the retained smoke pipeline as soon as
+live credentials are provided, without reviving old Phase 6 implementation branches or changing
+keep-chain semantics.
+
+### Scope
+- clone and verify a fresh `main` worktree
+- switch local environment management to a repo-pinned Python 3.11 baseline
+- create PLC/TriadDev continuity records for the new local bring-up slice
+- run offline dependency and regression checks that do not require live LLM credentials
+- stop before `llm_ping` / live smoke until credentials are available
+
+### Planned Validation
+- managed Python 3.11 install via `uv`
+- repo-local virtual environment creation plus dependency import checks
+- `python scripts/test_normalize.py`
+- `python scripts/test_qa_hard.py`
+- `python scripts/test_rehydrate.py`
+- `python scripts/test_e2e_workflow.py`
+
+### Current Result
+- fresh `main` was cloned into `D:\CodexWorkspace\game-localization-mvr`
+- continuity sources were re-read from local disk:
+  - `docs/HANDOFF_MAINLINE_GUARDRAILS.md`
+  - `task_plan.md`
+  - `docs/project_lifecycle/roadmap_index.md`
+  - `README.md`
+  - `handoff/m4_session_transfer/*`
+- local managed Python tooling is now present:
+  - `uv 0.11.2` installed via `winget`
+  - `Python 3.11.15` installed via `uv python install 3.11`
+- `.python-version` now pins the repo to `3.11`
+- repo-local environment baseline is now ready:
+  - existing `.venv` was verified as Python `3.11.9`
+  - runtime dependencies plus `numpy` were installed successfully
+  - `workflow/style_profile.generated.yaml` was generated via `python scripts/style_guide_bootstrap.py --dry-run`
+- offline validation floor is green:
+  - `python scripts/test_normalize.py`
+  - `python scripts/test_qa_hard.py`
+  - `python scripts/test_rehydrate.py`
+  - `python scripts/test_e2e_workflow.py`
+- fresh-main Windows compatibility fixes were required and are now applied:
+  - `style_guide_bootstrap.py` no longer emits emoji-only success lines
+  - `normalize_guard.py` preserves printf placeholders like `%d` during segmentation
+  - local smoke-adjacent test scripts now create parent temp directories, use the active interpreter, and avoid GBK console crashes
+- current blocker is explicit and unchanged:
+  - live `LLM_BASE_URL` / `LLM_API_KEY` / `LLM_MODEL` are not available yet
+  - `llm_ping.py`, preflight smoke, and full smoke remain pending on those credentials
+  - no branch cut has been made yet because the baseline is environment-ready but not live-smoke-green
+
+## 2026-04-01 Live Smoke Execution
+
+### Goal
+Run the retained smoke pipeline end-to-end on fresh `main` with live credentials, stop on the
+first real gate failure, and record enough evidence to move cleanly into the next brownfield
+development slice.
+
+### Scope
+- verify live connectivity with process-scoped credentials only
+- run `run_smoke_pipeline.py` against the 10-row baseline fixture in `preflight` first, then `full`
+- fix only the minimal local blocker discovered during execution
+- update PLC/TriadDev records with authoritative smoke outputs and next-scope guidance
+
+### Planned Validation
+- `.\\.venv\\Scripts\\python.exe scripts\\llm_ping.py`
+- `.\\.venv\\Scripts\\python.exe scripts\\run_smoke_pipeline.py --input docs/project_lifecycle/run_records/2026-03/2026-03-21/validation_10_d_plc_run_d_prepare_baseline.csv --target-lang en-US --verify-mode preflight --model gpt-4.1-mini`
+- `.\\.venv\\Scripts\\python.exe scripts\\run_smoke_pipeline.py --input docs/project_lifecycle/run_records/2026-03/2026-03-21/validation_10_d_plc_run_d_prepare_baseline.csv --target-lang en-US --verify-mode full --model gpt-4.1-mini`
+- `python scripts/plc_validate_records.py --preset representative --preset templates`
+
+### Current Result
+- live connectivity is confirmed:
+  - `.\\.venv\\Scripts\\python.exe scripts\\llm_ping.py` returned `PONG`
+  - provider base URL is `https://api.apiyi.com/v1`
+  - router-selected connectivity model remained `gpt-4.1-nano`
+- the first live `preflight` attempt exposed a real local governance blocker:
+  - `run_id=smoke_run_20260331_184226`
+  - failure stage: `style_governance_gate`
+  - root cause: missing lifecycle registry entry for `workflow/style_profile.generated.yaml`
+- the blocker is fixed locally:
+  - `workflow/lifecycle_registry.yaml` now registers `workflow/style_profile.generated.yaml` as an approved runtime-gated `style_profile`
+- retained smoke pipeline is now green on the 10-row baseline fixture:
+  - `preflight` run `smoke_run_20260331_184401` -> `smoke_verify_smoke_run_20260331_184401.json.overall = PASS`
+  - `full` run `smoke_run_20260331_184605` -> `smoke_verify_smoke_run_20260331_184605.json.overall = PASS`
+- both successful runs share the same non-blocking runtime shape:
+  - `target_lang_effective = en-US`
+  - `used_fallback = false`
+  - row counts stayed aligned at `10 -> 10 -> 10`
+  - `QA Hard` initially found `5` errors, `Repair Hard` cleared them, and `QA Hard Recheck` returned `0` errors
+  - `Soft QA` produced `8` repair tasks; `Repair Soft` repaired `7` and escalated `1`
+  - manifest `gate_summary.status = passed`, while manifest `overall_status = warn` because one review handoff remains pending
+- current post-smoke follow-up is explicit:
+  - one manual review handoff remains for `string_id=10007436`
+  - no new feature branch has been created yet
+  - next development priority stays aligned with handoff: M4-5 quality closure / warn semantics / review queue follow-up
 
 ## 2026-03-28 Phase 5 + 6 Human UI Acceptance
 

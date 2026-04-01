@@ -63,7 +63,9 @@ class PlaceholderFreezer:
         self.schema_path = Path(schema_path)
         self.patterns: List[Dict] = []
         self.token_format: Dict[str, str] = {}
-        self._skip_segmentation_re = re.compile(r"(<[^>]+>|\{[^{}]*\}|\[[^\[\]]+\]|\\[ntr]|【|】)")
+        self._skip_segmentation_re = re.compile(
+            r"(<[^>]+>|\{[^{}]*\}|\[[^\[\]]+\]|\\[ntr]|%(?:\d+\$)?[A-Za-z]|【|】)"
+        )
         
         # 计数器
         self.ph_counter = 0

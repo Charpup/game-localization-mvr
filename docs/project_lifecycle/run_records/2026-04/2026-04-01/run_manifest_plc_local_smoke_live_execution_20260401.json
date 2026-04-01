@@ -1,0 +1,57 @@
+{
+  "manifest_version": "plc-run-manifest-v1",
+  "run_id": "plc_local_smoke_live_execution_20260401",
+  "run_scope": "local_smoke_live_execution",
+  "status": "warn",
+  "started_at": "2026-04-01T02:38:20+08:00",
+  "finished_at": "2026-04-01T02:47:24+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-04/2026-04-01/session_start_202604010215.md",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_issue_plc_local_smoke_live_execution_20260401.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_verify_plc_local_smoke_live_execution_20260401.md",
+  "artifacts": [
+    "workflow/lifecycle_registry.yaml",
+    "data/smoke_run_20260331_184226/run_manifest.json",
+    "data/smoke_run_20260331_184226/smoke_issues.json",
+    "data/smoke_run_20260331_184401/run_manifest.json",
+    "data/smoke_run_20260331_184401/smoke_verify_smoke_run_20260331_184401.json",
+    "data/smoke_run_20260331_184605/run_manifest.json",
+    "data/smoke_run_20260331_184605/smoke_verify_smoke_run_20260331_184605.json",
+    "data/smoke_run_20260331_184605/smoke_review_queue.csv"
+  ],
+  "blockers": [
+    "non-blocking review handoff remains for string_id 10007436 after soft repair"
+  ],
+  "changed_files": [
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_manifest_plc_local_smoke_live_execution_20260401.json",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_issue_plc_local_smoke_live_execution_20260401.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/run_verify_plc_local_smoke_live_execution_20260401.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-01/session_end_20260401_local_smoke_live_execution.md",
+    "findings.md",
+    "progress.md",
+    "task_plan.md",
+    "workflow/lifecycle_registry.yaml"
+  ],
+  "evidence_refs": [
+    "command:.\\.venv\\Scripts\\python.exe scripts\\llm_ping.py",
+    "command:.\\.venv\\Scripts\\python.exe scripts\\run_smoke_pipeline.py --input docs/project_lifecycle/run_records/2026-03/2026-03-21/validation_10_d_plc_run_d_prepare_baseline.csv --target-lang en-US --verify-mode preflight --model gpt-4.1-mini",
+    "command:.\\.venv\\Scripts\\python.exe scripts\\run_smoke_pipeline.py --input docs/project_lifecycle/run_records/2026-03/2026-03-21/validation_10_d_plc_run_d_prepare_baseline.csv --target-lang en-US --verify-mode full --model gpt-4.1-mini",
+    "path:data/smoke_run_20260331_184401/smoke_verify_smoke_run_20260331_184401.json",
+    "path:data/smoke_run_20260331_184605/smoke_verify_smoke_run_20260331_184605.json"
+  ],
+  "adr_refs": [
+    "docs/decisions/ADR-0001-project-continuity-framework.md",
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "decision_refs": [
+    "treat smoke_verify_<run_id>.json.overall as the final PASS authority",
+    "repair the missing lifecycle entry locally before retrying smoke",
+    "keep the first live run on the 10-row baseline fixture to control cost and diagnosis scope"
+  ],
+  "evidence_ready": true,
+  "next_step_owner": "Codex",
+  "next_step_scope": "m4_5_quality_closure_followup",
+  "gate_result": "passed"
+}

@@ -471,6 +471,19 @@ class QAHardValidator:
         if not target_text:
             return
         
+        for token_name in self.extract_tokens(target_text):
+            if token_name in self.placeholder_map:
+                continue
+            self.errors.append({
+                'row': row_num,
+                'string_id': string_id,
+                'type': 'new_placeholder_found',
+                'detail': f"found unknown token placeholder: ⟦{token_name}⟧",
+                'target': target_text,
+                'pattern': 'token_format'
+            })
+            self.error_counts['new_placeholder_found'] += 1
+
         # 使用从 schema 加载的模式
         for pattern in self.compiled_patterns:
             try:

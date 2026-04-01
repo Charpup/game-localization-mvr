@@ -18,6 +18,13 @@ import tempfile
 import shutil
 from pathlib import Path
 
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
+PYTHON = sys.executable
+
 
 def run_command(cmd: list, description: str) -> bool:
     """Run command with UTF-8 encoding and check result."""
@@ -52,7 +59,7 @@ def run_command(cmd: list, description: str) -> bool:
 def setup_test_environment():
     """Create temporary test directory with consistent fixtures."""
     temp_dir = Path("data/temp_e2e")
-    temp_dir.mkdir(exist_ok=True)
+    temp_dir.mkdir(parents=True, exist_ok=True)
     
     # Copy fixtures to temp directory
     fixtures_dir = Path("data/fixtures")
@@ -60,8 +67,6 @@ def setup_test_environment():
     # Use fixture input
     shutil.copy(fixtures_dir / "input_valid.csv", temp_dir / "input.csv")
     shutil.copy(fixtures_dir / "translated_valid.csv", temp_dir / "translated.csv")
-    shutil.copy(fixtures_dir / "placeholder_map.json", temp_dir / "placeholder_map.json")
-    
     return temp_dir
 
 
@@ -88,7 +93,7 @@ def test_end_to_end_workflow():
         # Step 1: Normalize (generate fresh placeholder map from input)
         if not run_command(
             [
-                "python", "scripts/normalize_guard.py",
+                PYTHON, "scripts/normalize_guard.py",
                 str(temp_dir / "input.csv"),
                 str(temp_dir / "draft.csv"),
                 str(temp_dir / "placeholder_map_generated.json"),
@@ -111,9 +116,9 @@ def test_end_to_end_workflow():
         # Step 3: QA Hard - Use the generated placeholder map for consistency
         if not run_command(
             [
-                "python", "scripts/qa_hard.py",
+                PYTHON, "scripts/qa_hard.py",
                 str(temp_dir / "translated.csv"),
-                str(temp_dir / "placeholder_map.json"),  # Use fixture map (matches translated.csv)
+                str(temp_dir / "placeholder_map_generated.json"),
                 "workflow/placeholder_schema.yaml",
                 "workflow/forbidden_patterns.txt",
                 str(temp_dir / "qa_report.json")
@@ -136,9 +141,9 @@ def test_end_to_end_workflow():
         # Step 4: Rehydrate
         if not run_command(
             [
-                "python", "scripts/rehydrate_export.py",
+                PYTHON, "scripts/rehydrate_export.py",
                 str(temp_dir / "translated.csv"),
-                str(temp_dir / "placeholder_map.json"),
+                str(temp_dir / "placeholder_map_generated.json"),
                 str(temp_dir / "final.csv")
             ],
             "4. Rehydrate - Restore placeholders"
@@ -202,17 +207,34 @@ def test_qa_error_detection():
     print()
     
     temp_dir = Path("data/temp_qa_test")
-    temp_dir.mkdir(exist_ok=True)
+    temp_dir.mkdir(parents=True, exist_ok=True)
     
     try:
         fixtures_dir = Path("data/fixtures")
+        invalid_csv = temp_dir / "translated_invalid.csv"
+        map_path = temp_dir / "placeholder_map_generated.json"
+        shutil.copy(fixtures_dir / "translated_bad.csv", invalid_csv)
+        subprocess.run(
+            [
+                PYTHON, "scripts/normalize_guard.py",
+                str(fixtures_dir / "input_valid.csv"),
+                str(temp_dir / "draft.csv"),
+                str(map_path),
+                "workflow/placeholder_schema.yaml",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
         
         # Run QA on invalid translations
         result = subprocess.run(
             [
-                "python", "scripts/qa_hard.py",
-                str(fixtures_dir / "translated_invalid.csv"),
-                str(fixtures_dir / "placeholder_map.json"),
+                PYTHON, "scripts/qa_hard.py",
+                str(invalid_csv),
+                str(map_path),
                 "workflow/placeholder_schema.yaml",
                 "workflow/forbidden_patterns.txt",
                 str(temp_dir / "qa_report.json")

@@ -1,5 +1,49 @@
 # Findings
 
+## 2026-04-01 Local Baseline + Smoke Readiness
+- The freshly cloned repo already contains PLC/TriadDev continuity artifacts (`task_plan.md`, `progress.md`, `findings.md`, `.triadev/state.json`, `.triadev/workflow.json`, `docs/project_lifecycle/run_records/...`), so local bring-up should extend those instead of creating a parallel ledger.
+- This machine did not start with a suitable Python 3.11 interpreter:
+  - `python --version` -> `3.14.2`
+  - `py -0p` listed `3.14` and `3.12`, but not `3.11`
+- `winget` can install both `astral-sh.uv` and `Python.Python.3.11`; `uv` installation succeeded and then installed `Python 3.11.15` successfully.
+- The repo did not yet ignore `.venv/`, so a standard repo-local virtual environment needed an ignore-rule update.
+- No live credentials are available in the current shell or repo-local fallback paths:
+  - `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, `LLM_TRACE_PATH` are all missing
+  - `.llm_credentials`, `.llm_env`, and `config/llm_credentials.env` are absent
+- Because credentials are missing, the safe execution floor for this session is:
+  - environment setup
+  - dependency verification
+  - offline tests
+  - smoke command preparation only
+- The repo contains a few CSV fixtures, but they are mixed between historical artifacts and reports; a separate read-only pass is still useful to identify the best candidate when live smoke resumes.
+- `style_guide_bootstrap.py` was not fresh-Windows-safe: `--dry-run` failed in PowerShell with `UnicodeEncodeError` because success logs used emoji.
+- `normalize_guard.py` had a real placeholder-preservation defect on fresh runs: jieba segmentation could split printf placeholders such as `%d` into `% d`, which then propagated into generated placeholder maps and rehydrate outputs.
+- The smoke-adjacent script tests had several fresh-clone assumptions that are now known:
+  - some tests assumed `data/temp_*` parents already existed
+  - some tests assumed `python` on PATH matched the active venv
+  - some tests depended on pre-generated QA reports or stale placeholder-map fixtures instead of generating their own artifacts
+- After fixing those assumptions, the offline validation floor passed end-to-end on Windows with Python 3.11.
+
+## 2026-04-01 Live Smoke Execution
+- Live connectivity through `https://api.apiyi.com/v1` is valid in the current environment; direct `.\\.venv\\Scripts\\python.exe scripts\\llm_ping.py` returned `PONG`.
+- The first real smoke blocker was not provider auth or model compatibility; it was a local governance gap:
+  - `run_smoke_pipeline.py` failed at `style_governance_gate`
+  - `smoke_issues.json` reported `STYLE_GOVERNANCE_GATE_FAIL`
+  - the concrete missing asset was `workflow/style_profile.generated.yaml`
+- Registering `workflow/style_profile.generated.yaml` in `workflow/lifecycle_registry.yaml` is sufficient to unblock runtime governance on fresh `main`.
+- After that registry fix, both `preflight` and `full` smoke passes completed successfully on the 10-row baseline fixture:
+  - `data/smoke_run_20260331_184401/smoke_verify_smoke_run_20260331_184401.json` -> `overall = PASS`
+  - `data/smoke_run_20260331_184605/smoke_verify_smoke_run_20260331_184605.json` -> `overall = PASS`
+- The authoritative smoke pass/fail field is `smoke_verify_<run_id>.json.overall`, not manifest `status`.
+- Manifest status remains `warn` even when verify is `PASS` because review handoff metadata is preserved separately from blocking gates.
+- The retained 10-row baseline currently exhibits one non-blocking review handoff after soft repair:
+  - `string_id=10007436`
+  - queued in `smoke_review_queue.csv`
+- No evidence of row-count drift was observed in the successful live runs:
+  - input rows: `10`
+  - translated rows: `10`
+  - final rows: `10`
+
 ## Current task
 - Planning files were missing and have been created.
 - Core scripts are present: `scripts/run_smoke_pipeline.py`, `scripts/smoke_verify.py`, `scripts/llm_ping.py`.

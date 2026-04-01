@@ -1,0 +1,23 @@
+# run_verify
+
+- run_id: `plc_local_smoke_baseline_readiness_20260401`
+- scope: `local_smoke_baseline_readiness`
+- verification_result: `blocked`
+- environment_result: `pass`
+- offline_validation_result: `pass`
+- live_smoke_result: `blocked`
+- decision: `READY_FOR_LIVE_SMOKE_ONCE_CREDENTIALS_EXIST`
+- verified:
+  - `.venv` resolves to Python `3.11.9`
+  - `python scripts/style_guide_bootstrap.py --dry-run` -> `pass`
+  - `python scripts/test_normalize.py` -> `pass`
+  - `python scripts/test_qa_hard.py` -> `pass`
+  - `python scripts/test_rehydrate.py` -> `pass`
+  - `python scripts/test_e2e_workflow.py` -> `pass`
+- not_yet_verified:
+  - `python scripts/llm_ping.py`
+  - `python scripts/run_smoke_pipeline.py --input <local_csv> --target-lang en-US --verify-mode preflight`
+  - `python scripts/run_smoke_pipeline.py --input <same_local_csv> --target-lang en-US --verify-mode full`
+- residual_risks:
+  - live smoke remains unverified because the session has no active LLM credentials
+  - the actual smoke input CSV still needs to be chosen from a local file once live smoke resumes

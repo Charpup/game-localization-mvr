@@ -425,8 +425,8 @@ def main():
     with open(args.guide_output, "w", encoding="utf-8") as f:
         f.write(guide + "\n")
 
-    print(f"✅ wrote style profile: {args.profile_output}")
-    print(f"✅ wrote generated style guide: {args.guide_output}")
+    print(f"[OK] wrote style profile: {args.profile_output}")
+    print(f"[OK] wrote generated style guide: {args.guide_output}")
 
 
 if __name__ == "__main__":
