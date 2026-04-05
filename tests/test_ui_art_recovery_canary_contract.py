@@ -117,6 +117,11 @@ def test_run_ui_art_live_batch_generic_batch_metadata_and_glossary_inputs(tmp_pa
     assert approved == ["glossary/approved.yaml", "glossary/zhCN_ruRU/project_ui_art_short.yaml"]
 
 
+def test_ui_art_canary_compare_python_falls_back_to_sys_executable(tmp_path):
+    python_path = ui_art_canary_compare.ensure_python(tmp_path)
+    assert python_path == Path(sys.executable)
+
+
 def test_run_ui_art_live_batch_defers_compact_review_errors(tmp_path):
     report_path = tmp_path / "qa_report.json"
     actionable_path = tmp_path / "qa_actionable.json"

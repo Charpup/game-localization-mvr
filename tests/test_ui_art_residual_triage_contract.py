@@ -173,6 +173,17 @@ def test_merge_patch_rows_preserves_row_count_and_updates_target():
     assert merged_rows[1]["target_text"] == "B2"
 
 
+def test_choose_base_translation_path_prefers_repaired_output(tmp_path):
+    base_run_dir = tmp_path / "base_run"
+    base_run_dir.mkdir(parents=True)
+    translated = base_run_dir / "ui_art_translated.csv"
+    repaired = base_run_dir / "ui_art_repaired_hard.csv"
+    translated.write_text("string_id,target_text\nUIART_1,A\n", encoding="utf-8")
+    repaired.write_text("string_id,target_text\nUIART_1,B\n", encoding="utf-8")
+
+    assert run_ui_art_residual_triage.choose_base_translation_path(base_run_dir) == repaired
+
+
 def test_residual_assessment_reports_delta(tmp_path):
     base_run = tmp_path / "base"
     slice_run = tmp_path / "slice"

@@ -173,6 +173,14 @@ def merge_patch_rows(base_rows: List[Dict[str, str]], patched_rows: List[Dict[st
     return merged, changed
 
 
+def choose_base_translation_path(base_run_dir: Path) -> Path:
+    for name in ("ui_art_repaired_hard.csv", "ui_art_repaired_hard_v2.csv", "ui_art_translated.csv"):
+        candidate = base_run_dir / name
+        if candidate.exists():
+            return candidate
+    return base_run_dir / "ui_art_translated.csv"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Run a UI-art residual triage slice.")
     ap.add_argument("--base-run-dir", default=str(DEFAULT_BASE_RUN_DIR))
@@ -316,7 +324,7 @@ def main() -> int:
             write_json(manifest_path, manifest)
 
     if not paths["merged_translated"].exists():
-        base_translated = read_csv(base_run_dir / "ui_art_translated.csv")
+        base_translated = read_csv(choose_base_translation_path(base_run_dir))
         patched_rows = read_csv(paths["repaired_subset"]) if paths["repaired_subset"].exists() and paths["repaired_subset"].stat().st_size > 0 else []
         merged_rows = merge_repaired_rows(base_translated, patched_rows)
         write_csv(paths["merged_translated"], merged_rows, select_fieldnames(merged_rows))

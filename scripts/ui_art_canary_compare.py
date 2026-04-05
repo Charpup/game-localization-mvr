@@ -52,6 +52,11 @@ def write_json(path: Path, payload: Dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def ensure_python(repo_root: Path) -> Path:
+    candidate = repo_root / ".venv" / "Scripts" / "python.exe"
+    return candidate if candidate.exists() else Path(sys.executable)
+
+
 def read_jsonl(path: Path) -> List[Dict[str, Any]]:
     if not path.exists():
         return []
@@ -331,7 +336,7 @@ def main() -> int:
     args = ap.parse_args()
 
     repo_root = Path(__file__).resolve().parent.parent
-    python_exe = repo_root / ".venv" / "Scripts" / "python.exe"
+    python_exe = ensure_python(repo_root)
     sample_rows, sample_fields = read_csv(Path(args.sample_prepared))
     category_by_id, source_by_id, denominators = build_sample_maps(sample_rows)
 
