@@ -16,6 +16,7 @@ Review dimensions:
 import argparse
 import csv
 import json
+import math
 import os
 import re
 import sys
@@ -61,7 +62,7 @@ try:
 except Exception:
     HAS_SEMANTIC = False
 
-from translate_llm import GlossaryEntry, load_glossary
+from translate_llm import GlossaryEntry, build_glossary_preferences, is_ui_art_row, load_glossary
 from style_governance_runtime import evaluate_runtime_governance, format_runtime_governance_issues
 
 TOKEN_RE = re.compile(r"⟦(PH_\d+|TAG_\d+)⟧")
@@ -114,17 +115,60 @@ RULE_CATALOG = {
         "issue_type": "style_contract",
         "suggestion": "修复 style governance / lifecycle gate 后重跑软质检。",
     },
+    "D-SQA-010": {
+        "version": RULE_VERSION,
+        "issue_type": "compact_term_miss",
+        "suggestion": "UI-art 行必须优先使用 compact glossary 短译，不要回退到通用长译。",
+    },
+    "D-SQA-011": {
+        "version": RULE_VERSION,
+        "issue_type": "compact_mapping_missing",
+        "suggestion": "badge / micro label 只能使用已批准的极短译法；没有 compact mapping 时直接进入人工复核。",
+    },
+    "D-SQA-012": {
+        "version": RULE_VERSION,
+        "issue_type": "line_budget_overflow",
+        "suggestion": "banner / slogan 保持原始行数预算，必要时压缩成更短标题式表达。",
+    },
+    "D-SQA-013": {
+        "version": RULE_VERSION,
+        "issue_type": "headline_budget_overflow",
+        "suggestion": "headline 类美术字只能保留标题核心，不得扩写成完整说明句。",
+    },
+    "D-SQA-014": {
+        "version": RULE_VERSION,
+        "issue_type": "promo_expansion_forbidden",
+        "suggestion": "promo compact 标题禁止补 Превью / Выбор / Ниндзя 等冗余扩写。",
+    },
 }
 
 ISSUE_PRIORITY = {
     "placeholder": 0,
-    "style_contract": 1,
-    "terminology": 2,
-    "ambiguity_high_risk": 3,
-    "mistranslation": 4,
-    "punctuation": 5,
-    "length": 6,
+    "compact_mapping_missing": 1,
+    "line_budget_overflow": 2,
+    "headline_budget_overflow": 3,
+    "promo_expansion_forbidden": 4,
+    "compact_term_miss": 5,
+    "style_contract": 6,
+    "terminology": 7,
+    "ambiguity_high_risk": 8,
+    "mistranslation": 9,
+    "punctuation": 10,
+    "length": 11,
 }
+
+UI_ART_POLICY_TABLE = {
+    "badge_micro_1c": {"hard_floor": 4, "review_floor": 6, "review_only": False},
+    "badge_micro_2c": {"hard_floor": 6, "review_floor": 8, "review_only": False},
+    "label_generic_short": {"hard_floor": 8, "review_floor": 10, "review_ratio": 2.5, "review_only": False},
+    "title_name_short": {"hard_floor": 10, "review_floor": 12, "review_ratio": 2.5, "review_only": False},
+    "promo_short": {"hard_floor": 10, "review_floor": 12, "review_ratio": 2.6, "review_only": False},
+    "item_skill_name": {"hard_floor": 10, "hard_ratio": 2.6, "review_floor": 12, "review_ratio": 3.0, "review_only": False},
+    "slogan_long": {"hard_floor": 10, "hard_ratio": 2.6, "review_floor": 12, "review_ratio": 3.2, "review_only": False},
+    "other_review": {"hard_floor": 10, "review_floor": 14, "review_ratio": 2.6, "review_only": False},
+}
+PROMO_BANNED_EXPANSIONS = ("превью", "выбор", "ниндзя")
+WORD_RE = re.compile(r"[A-Za-zА-Яа-яЁё0-9]+", re.UNICODE)
 
 
 def load_text(p: str) -> str:
@@ -179,7 +223,58 @@ def infer_rule_id(issue_type: str) -> str:
         "ambiguity_high_risk": "D-SQA-005",
         "punctuation": "D-SQA-007",
         "mistranslation": "D-SQA-008",
+        "compact_term_miss": "D-SQA-010",
+        "compact_mapping_missing": "D-SQA-011",
+        "line_budget_overflow": "D-SQA-012",
+        "headline_budget_overflow": "D-SQA-013",
+        "promo_expansion_forbidden": "D-SQA-014",
     }.get(issue_type, "D-SQA-006")
+
+
+def _parse_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(float(value))
+    except Exception:
+        return default
+
+
+def _count_visual_lines(text: str) -> int:
+    if not text:
+        return 1
+    return max(1, len(re.split(r"(?:\\n|\n)", text)))
+
+
+def _ui_art_length_policy(row: Dict[str, str]) -> Dict[str, Any]:
+    category = str(row.get("ui_art_category") or "other_review").strip() or "other_review"
+    spec = UI_ART_POLICY_TABLE.get(category, UI_ART_POLICY_TABLE["other_review"])
+    source_len = _parse_int(row.get("source_len_clean") or len((row.get("source_zh") or "").strip()))
+    placeholder_budget = _parse_int(row.get("placeholder_budget") or 0)
+    base_target = _parse_int(row.get("max_length_target") or row.get("max_len_target") or 0)
+    base_review = _parse_int(row.get("max_len_review_limit") or 0)
+    hard_ratio = spec.get("hard_ratio")
+    hard_ratio_limit = math.floor(source_len * float(hard_ratio)) + placeholder_budget if hard_ratio else 0
+    review_ratio = spec.get("review_ratio")
+    ratio_limit = math.floor(source_len * float(review_ratio)) + placeholder_budget if review_ratio else 0
+    target_limit = max(base_target, int(spec.get("hard_floor", 0)) + placeholder_budget, hard_ratio_limit)
+    review_limit = max(base_review, int(spec.get("review_floor", 0)) + placeholder_budget, ratio_limit)
+    return {
+        "category": category,
+        "target_limit": target_limit,
+        "review_limit": review_limit,
+        "review_only": bool(spec.get("review_only", False)),
+        "source_lines": _count_visual_lines(row.get("source_zh") or row.get("tokenized_zh") or ""),
+        "strategy_hint": str(row.get("ui_art_strategy_hint") or "").strip(),
+    }
+
+
+def _contains_promo_expansion(text: str) -> bool:
+    normalized = str(text or "").lower()
+    return any(term in normalized for term in PROMO_BANNED_EXPANSIONS)
+
+
+def _content_word_count(text: str) -> int:
+    words = [token for token in WORD_RE.findall(text or "") if not token.isdigit()]
+    return len(words)
 
 
 def read_csv(p: str) -> List[Dict[str, str]]:
@@ -232,6 +327,7 @@ def build_style_contract_block(profile: dict) -> str:
     style = profile.get("style_contract", {}) or {}
     ui = profile.get("ui", {}) or {}
     limits = ui.get("length_constraints", {}) or {}
+    ui_art_policies = ui.get("ui_art_category_policies", {}) or {}
     guard = style.get("style_guard", {}) or {}
     terms = profile.get("terminology", {}) or {}
     lines = [
@@ -239,6 +335,7 @@ def build_style_contract_block(profile: dict) -> str:
         f"- Style policy: over_localization={style.get('language_policy', {}).get('no_over_localization', True)}, over_literal={style.get('language_policy', {}).get('no_over_literal', True)}",
         f"- Placeholder hard protection: {style.get('placeholder_protection', {}).get('preserve_ph_tokens', True)}",
         f"- UI length: button≤{limits.get('button_max_chars', 18)}; dialogue≤{limits.get('dialogue_max_chars', 120)}",
+        f"- UI-art target/review ratio: {limits.get('ui_art_target_ratio', 2.3)} / {limits.get('ui_art_review_ratio', 2.5)}",
         f"- Character name policy: {guard.get('character_name_policy', 'keep')}",
         f"- Proper noun strategy: {guard.get('proper_noun_strategy', 'hybrid')}",
         f"- Humor restraint: {guard.get('no_humor_overreach', True)}",
@@ -249,6 +346,12 @@ def build_style_contract_block(profile: dict) -> str:
         lines.append(f"- Banned term: {t}")
     for alias in _prohibited_aliases(profile)[:10]:
         lines.append(f"- Prohibited alias: {alias}")
+    for category, policy in list(ui_art_policies.items())[:8]:
+        if isinstance(policy, dict):
+            lines.append(
+                f"- UI-art {category}: {policy.get('translation_rule', 'compact')} / "
+                f"hard<={policy.get('hard_limit', '')} / review<={policy.get('review_limit', '')}"
+            )
     return "\n".join(lines)
 
 
@@ -258,9 +361,11 @@ def build_system_batch(style: str, glossary_summary: str, style_profile: Optiona
         "任务：分析翻译质量，仅列出有问题的项。\n\n"
         "检查维度（只报问题，不要夸）：\n"
         "- 术语一致性（glossary）\n"
+        "- compact glossary 是否优先于通用长译\n"
         "- 术语歧义高风险（同一中文术语映射不稳定）\n"
         "- style_contract（禁用语体、角色名策略、变量保护）\n"
         "- UI 长度（按钮/文本上限）\n"
+        "- UI-art 分类长度/行数预算\n"
         "- 占位符保护\n"
         "- 标点与符号（中文括号、引号、变量语义）\n\n"
         "输出格式（硬性，仅输出 JSON）：\n"
@@ -269,7 +374,7 @@ def build_system_batch(style: str, glossary_summary: str, style_profile: Optiona
         "    {\n"
         '      "id": "<id>",\n'
         '      "severity": "minor|major",\n'
-        '      "issue_type": "terminology|style_contract|length|placeholder|ambiguity_high_risk|punctuation|mistranslation",\n'
+        '      "issue_type": "terminology|style_contract|length|placeholder|ambiguity_high_risk|punctuation|mistranslation|compact_term_miss|compact_mapping_missing|line_budget_overflow|headline_budget_overflow|promo_expansion_forbidden",\n'
         '      "problem": "<一句话描述问题>",\n'
         '      "suggestion": "<一句话给出修复方向>",\n'
         '      "preferred_fix_ru": "<可选：建议的修复后俄文>"\n'
@@ -280,6 +385,9 @@ def build_system_batch(style: str, glossary_summary: str, style_profile: Optiona
         "- 没问题则项目不出现在 items 中。\n"
         "- problem/suggestion 为短句。\n"
         "- 每个 id 只输出一条最严重项。\n\n"
+        "- 对 UI 美术字：compact glossary 优先级高于通用 glossary。\n"
+        "- badge_micro_* 若未使用批准短译，优先报 compact_mapping_missing。\n"
+        "- slogan_long 若扩成说明句或增加行数，优先报 line_budget_overflow。\n\n"
         f"术语表摘要（前 50 条）：\n{glossary_summary[:1500]}\n\n"
         f"style_guide（节选）：\n{style[:1000]}\n"
         f"style_contract：\n{build_style_contract_block(style_profile or {})}\n"
@@ -291,10 +399,19 @@ def build_user_prompt(items: List[Dict]) -> str:
 
 
 def build_glossary_summary(entries: List[GlossaryEntry], max_entries: int = 50) -> str:
-    approved = [e for e in entries if e.status.lower() == "approved"][:max_entries]
+    approved = [e for e in entries if e.status.lower() == "approved"]
     if not approved:
         return "(无)"
-    return "\n".join([f"- {e.term_zh} → {e.term_ru}" for e in approved])
+    compact = [e for e in approved if e.preferred_compact][: max_entries // 2 or 1]
+    standard = [e for e in approved if not e.preferred_compact][: max_entries - len(compact)]
+    lines: List[str] = []
+    if compact:
+        lines.append("[Compact UI-art terms]")
+        lines.extend(f"- {e.term_zh} → {e.term_ru}" for e in compact)
+    if standard:
+        lines.append("[General approved terms]")
+        lines.extend(f"- {e.term_zh} → {e.term_ru}" for e in standard)
+    return "\n".join(lines)
 
 
 def _pick_terms(seq: Any) -> List[str]:
@@ -343,10 +460,7 @@ def preflight_tasks(rows: List[Dict[str, str]], style_profile: dict, glossary_en
     preferred = style_profile.get("terminology", {}).get("preferred_terms", []) or []
     preferred_map = {str(p.get("term_zh", "")).strip(): str(p.get("term_ru", "")).strip() for p in preferred if isinstance(p, dict)}
 
-    glossary_map = {}
-    for e in glossary_entries:
-        if e.status == "approved" and e.term_zh:
-            glossary_map[e.term_zh] = e.term_ru
+    glossary_map, compact_map, avoid_long_forms = build_glossary_preferences(glossary_entries)
 
     for r in rows:
         sid = str(r.get("string_id") or r.get("id") or "")
@@ -356,26 +470,135 @@ def preflight_tasks(rows: List[Dict[str, str]], style_profile: dict, glossary_en
         src = r.get("source_zh") or r.get("tokenized_zh") or ""
         tgt = r.get("target_text") or ""
         module = (r.get("module_tag") or "").strip().lower()
-        max_len = r.get("max_length_target") or r.get("max_len_target")
-        if max_len:
-            try:
-                ml = int(max_len)
-                if ml > 0 and len(tgt) > ml:
-                    tasks.append({
-                        "string_id": sid,
-                        "type": "length",
-                        "severity": "major",
-                        "note": "target length exceeds module limit",
-                        "problem": "长度超限",
-                        "suggestion": RULE_CATALOG["D-SQA-001"]["suggestion"],
-                        "suggested_fix": tgt,
-                        "rule_id": "D-SQA-001",
-                        "rule_version": RULE_VERSION,
-                        "remediation": RULE_CATALOG["D-SQA-001"]["suggestion"],
-                    })
-                    seen.add((sid, "length"))
-            except Exception:
+        if is_ui_art_row(r):
+            policy = _ui_art_length_policy(r)
+            target_limit = int(policy["target_limit"] or 0)
+            review_limit = int(policy["review_limit"] or 0)
+            target_lines = _count_visual_lines(tgt)
+            strategy_hint = str(policy.get("strategy_hint") or "")
+            compact_rule = str(r.get("compact_rule") or "")
+            compact_term = str(r.get("ui_art_compact_term") or "").strip()
+            compact_mapping_status = str(r.get("compact_mapping_status") or "")
+            exact_compact_pass = compact_term and tgt.strip() == compact_term and (
+                compact_rule == "dictionary_only" or strategy_hint in {"promo_exact_head", "headline_nameplate"}
+            )
+            if (
+                str(policy["category"]) == "slogan_long"
+                and strategy_hint in {"", "headline_multiline"}
+                and target_lines > int(policy["source_lines"] or 1)
+            ):
+                tasks.append({
+                    "string_id": sid,
+                    "type": "line_budget_overflow",
+                    "severity": "critical",
+                    "note": "target line count exceeds source line budget",
+                    "problem": "美术字行数预算超限",
+                    "suggestion": RULE_CATALOG["D-SQA-012"]["suggestion"],
+                    "suggested_fix": tgt,
+                    "rule_id": "D-SQA-012",
+                    "rule_version": RULE_VERSION,
+                    "remediation": RULE_CATALOG["D-SQA-012"]["suggestion"],
+                })
+                seen.add((sid, "line_budget_overflow"))
+            elif compact_rule == "dictionary_only" and compact_mapping_status == "manual_review_required":
+                tasks.append({
+                    "string_id": sid,
+                    "type": "compact_mapping_missing",
+                    "severity": "major",
+                    "note": "compact-only badge has no approved mapping",
+                    "problem": "badge 缺少批准短译",
+                    "suggestion": RULE_CATALOG["D-SQA-011"]["suggestion"],
+                    "suggested_fix": tgt,
+                    "rule_id": "D-SQA-011",
+                    "rule_version": RULE_VERSION,
+                    "remediation": RULE_CATALOG["D-SQA-011"]["suggestion"],
+                })
+                seen.add((sid, "compact_mapping_missing"))
+            elif exact_compact_pass:
                 pass
+            elif (
+                (compact_rule == "dictionary_only" or strategy_hint == "promo_exact_head")
+                and compact_term
+                and tgt.strip() != compact_term
+            ):
+                tasks.append({
+                    "string_id": sid,
+                    "type": "compact_term_miss",
+                    "severity": "major",
+                    "note": f"compact-constrained row expects {compact_term}",
+                    "problem": "未使用批准短译",
+                    "suggestion": f"{RULE_CATALOG['D-SQA-010']['suggestion']} 优先使用 {compact_term}",
+                    "suggested_fix": compact_term,
+                    "rule_id": "D-SQA-010",
+                    "rule_version": RULE_VERSION,
+                    "remediation": RULE_CATALOG["D-SQA-010"]["suggestion"],
+                })
+                seen.add((sid, "compact_term_miss"))
+            elif strategy_hint == "promo_compound_pack" and _contains_promo_expansion(tgt):
+                tasks.append({
+                    "string_id": sid,
+                    "type": "promo_expansion_forbidden",
+                    "severity": "major",
+                    "note": "promo compact title contains banned expansion tail",
+                    "problem": "promo 短标题出现冗余扩写",
+                    "suggestion": RULE_CATALOG["D-SQA-014"]["suggestion"],
+                    "suggested_fix": compact_term or tgt,
+                    "rule_id": "D-SQA-014",
+                    "rule_version": RULE_VERSION,
+                    "remediation": RULE_CATALOG["D-SQA-014"]["suggestion"],
+                })
+                seen.add((sid, "promo_expansion_forbidden"))
+            elif (
+                str(policy["category"]) == "item_skill_name"
+                and compact_term
+                and tgt.strip() != compact_term
+                and _content_word_count(tgt) > 2
+            ):
+                tasks.append({
+                    "string_id": sid,
+                    "type": "compact_term_miss",
+                    "severity": "major",
+                    "note": f"item compact noun should prefer {compact_term} and stay within 2 content words",
+                    "problem": "item/skill 名称结构过长",
+                    "suggestion": f"{RULE_CATALOG['D-SQA-010']['suggestion']} 优先使用 {compact_term}",
+                    "suggested_fix": compact_term,
+                    "rule_id": "D-SQA-010",
+                    "rule_version": RULE_VERSION,
+                    "remediation": RULE_CATALOG["D-SQA-010"]["suggestion"],
+                })
+                seen.add((sid, "compact_term_miss"))
+            elif review_limit > 0 and len(tgt) > review_limit:
+                overflow_type = "headline_budget_overflow" if strategy_hint.startswith("headline_") else "length"
+                rule_id = infer_rule_id(overflow_type)
+                tasks.append({
+                    "string_id": sid,
+                    "type": overflow_type,
+                    "severity": "critical",
+                    "note": "target length exceeds category review limit",
+                    "problem": "headline 预算超出人工复核红线" if overflow_type == "headline_budget_overflow" else "长度超过人工复核红线",
+                    "suggestion": RULE_CATALOG[rule_id]["suggestion"],
+                    "suggested_fix": tgt,
+                    "rule_id": rule_id,
+                    "rule_version": RULE_VERSION,
+                    "remediation": RULE_CATALOG[rule_id]["suggestion"],
+                })
+                seen.add((sid, overflow_type))
+            elif target_limit > 0 and len(tgt) > target_limit:
+                overflow_type = "headline_budget_overflow" if strategy_hint.startswith("headline_") else "length"
+                rule_id = infer_rule_id(overflow_type)
+                tasks.append({
+                    "string_id": sid,
+                    "type": overflow_type,
+                    "severity": "major",
+                    "note": "target length exceeds category target limit",
+                    "problem": "headline 超出类别目标上限" if overflow_type == "headline_budget_overflow" else "长度超出类别目标上限",
+                    "suggestion": RULE_CATALOG[rule_id]["suggestion"],
+                    "suggested_fix": tgt,
+                    "rule_id": rule_id,
+                    "rule_version": RULE_VERSION,
+                    "remediation": RULE_CATALOG[rule_id]["suggestion"],
+                })
+                seen.add((sid, overflow_type))
         else:
             limit = btn_max if module in {"ui_button", "button", "tab"} else dlg_max
             if limit and len(tgt) > limit:
@@ -446,8 +669,37 @@ def preflight_tasks(rows: List[Dict[str, str]], style_profile: dict, glossary_en
                     })
                     seen.add(key)
 
+        if is_ui_art_row(r):
+            category = str(r.get("ui_art_category") or "other_review")
+            for zh, ru in compact_map.items():
+                if zh not in src or not ru:
+                    continue
+                long_forms = avoid_long_forms.get(zh, [])
+                long_form_hit = any(term and term in tgt for term in long_forms)
+                if ru not in tgt or long_form_hit:
+                    issue_type = "compact_mapping_missing" if category.startswith("badge_micro_") else "compact_term_miss"
+                    key = (sid, issue_type)
+                    if key in seen:
+                        continue
+                    catalog = RULE_CATALOG["D-SQA-011" if issue_type == "compact_mapping_missing" else "D-SQA-010"]
+                    tasks.append({
+                        "string_id": sid,
+                        "type": issue_type,
+                        "severity": "major" if issue_type == "compact_mapping_missing" else "minor",
+                        "note": f"missing compact glossary term {zh}->{ru}",
+                        "problem": "UI-art 未使用批准短译",
+                        "suggestion": f"{catalog['suggestion']} 优先使用 {ru}",
+                        "suggested_fix": tgt,
+                        "rule_id": "D-SQA-011" if issue_type == "compact_mapping_missing" else "D-SQA-010",
+                        "rule_version": RULE_VERSION,
+                        "remediation": catalog["suggestion"],
+                    })
+                    seen.add(key)
+
         for zh, ru in glossary_map.items():
             if zh in src and ru and ru not in tgt:
+                if is_ui_art_row(r) and zh in compact_map:
+                    continue
                 if (sid, "term") not in seen:
                     tasks.append({
                         "string_id": sid,
@@ -464,6 +716,8 @@ def preflight_tasks(rows: List[Dict[str, str]], style_profile: dict, glossary_en
                     seen.add((sid, "term"))
 
         for zh, ru in preferred_map.items():
+            if is_ui_art_row(r) and zh in compact_map:
+                continue
             if zh and ru and zh in src and ru not in tgt and (sid, "style_pref") not in seen:
                 tasks.append({
                     "string_id": sid,

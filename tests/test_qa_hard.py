@@ -64,3 +64,136 @@ def test_token_mismatch_soft_only_for_single_extra_copy(tmp_path):
 
     assert validator.warning_counts["token_mismatch_soft"] == 0
     assert validator.error_counts["token_mismatch"] == 1
+
+
+def test_check_length_overflow_uses_major_vs_critical_review_limits(tmp_path):
+    validator = QAHardValidator(
+        translated_csv=str(tmp_path / "translated.csv"),
+        placeholder_map=str(tmp_path / "placeholder_map.json"),
+        schema_yaml=str(tmp_path / "schema.yaml"),
+        forbidden_txt=str(tmp_path / "forbidden.txt"),
+        report_json=str(tmp_path / "qa_report.json"),
+    )
+
+    validator.check_length_overflow(
+        "s1",
+        "123456789",
+        {
+            "source_zh": "奖励",
+            "source_len_clean": "2",
+            "max_len_target": "8",
+            "max_len_review_limit": "10",
+            "ui_art_category": "label_generic_short",
+        },
+        2,
+    )
+
+    assert validator.errors[0]["type"] == "length_overflow"
+    assert validator.errors[0]["severity"] == "major"
+
+
+def test_check_length_overflow_flags_badge_without_compact_mapping(tmp_path):
+    validator = QAHardValidator(
+        translated_csv=str(tmp_path / "translated.csv"),
+        placeholder_map=str(tmp_path / "placeholder_map.json"),
+        schema_yaml=str(tmp_path / "schema.yaml"),
+        forbidden_txt=str(tmp_path / "forbidden.txt"),
+        report_json=str(tmp_path / "qa_report.json"),
+    )
+
+    validator.check_length_overflow(
+        "s2",
+        "Рекомендуется",
+        {
+            "source_zh": "推荐",
+            "source_len_clean": "2",
+            "max_len_target": "6",
+            "max_len_review_limit": "8",
+            "ui_art_category": "badge_micro_2c",
+            "compact_rule": "dictionary_only",
+            "compact_mapping_status": "manual_review_required",
+        },
+        3,
+    )
+
+    assert validator.errors[0]["type"] == "compact_mapping_missing"
+    assert validator.errors[0]["severity"] == "critical"
+
+
+def test_check_length_overflow_accepts_item_skill_ratio_but_flags_structure(tmp_path):
+    validator = QAHardValidator(
+        translated_csv=str(tmp_path / "translated.csv"),
+        placeholder_map=str(tmp_path / "placeholder_map.json"),
+        schema_yaml=str(tmp_path / "schema.yaml"),
+        forbidden_txt=str(tmp_path / "forbidden.txt"),
+        report_json=str(tmp_path / "qa_report.json"),
+    )
+
+    validator.check_length_overflow(
+        "s3",
+        "Сила великого мудреца",
+        {
+            "source_zh": "仙人之力",
+            "source_len_clean": "4",
+            "max_len_target": "9",
+            "max_len_review_limit": "10",
+            "ui_art_category": "item_skill_name",
+            "ui_art_compact_term": "Сила Сэн.",
+        },
+        4,
+    )
+
+    assert validator.errors[0]["type"] == "length_overflow"
+    assert "at most 2" in validator.errors[0]["detail"]
+
+
+def test_check_length_overflow_flags_promo_expansion_forbidden(tmp_path):
+    validator = QAHardValidator(
+        translated_csv=str(tmp_path / "translated.csv"),
+        placeholder_map=str(tmp_path / "placeholder_map.json"),
+        schema_yaml=str(tmp_path / "schema.yaml"),
+        forbidden_txt=str(tmp_path / "forbidden.txt"),
+        report_json=str(tmp_path / "qa_report.json"),
+    )
+
+    validator.check_length_overflow(
+        "s4",
+        "Нагр. Превью",
+        {
+            "source_zh": "奖励预览",
+            "source_len_clean": "4",
+            "max_len_target": "9",
+            "max_len_review_limit": "10",
+            "ui_art_category": "promo_short",
+            "ui_art_strategy_hint": "promo_compound_pack",
+        },
+        5,
+    )
+
+    assert validator.errors[0]["type"] == "promo_expansion_forbidden"
+
+
+def test_check_length_overflow_uses_headline_budget_for_slogan_nameplate(tmp_path):
+    validator = QAHardValidator(
+        translated_csv=str(tmp_path / "translated.csv"),
+        placeholder_map=str(tmp_path / "placeholder_map.json"),
+        schema_yaml=str(tmp_path / "schema.yaml"),
+        forbidden_txt=str(tmp_path / "forbidden.txt"),
+        report_json=str(tmp_path / "qa_report.json"),
+    )
+
+    validator.check_length_overflow(
+        "s5",
+        "5★ Ниндзя · Хинаты Хьюга",
+        {
+            "source_zh": "五星忍者·日向雏田",
+            "source_len_clean": "9",
+            "max_len_target": "20",
+            "max_len_review_limit": "24",
+            "ui_art_category": "slogan_long",
+            "ui_art_strategy_hint": "headline_nameplate",
+        },
+        6,
+    )
+
+    assert validator.errors[0]["type"] == "headline_budget_overflow"

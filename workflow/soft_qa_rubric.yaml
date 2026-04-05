@@ -23,11 +23,13 @@ dimensions:
       - "角色名处理与约定冲突"
 
   - key: length
-    description: "UI 按钮/长文长度约束"
+    description: "UI 按钮/长文长度约束，以及 UI-art 分类长度/行数预算"
     severity: ["minor", "major"]
     examples:
       - "行内文本超出 length 限制"
       - "未按模块上下文应用缩短策略"
+      - "badge_micro_* 未压到 compact 预算"
+      - "slogan_long 增加了行数预算"
 
   - key: placeholder
     description: "占位符与 token 完整性"

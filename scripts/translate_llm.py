@@ -102,6 +102,9 @@ class GlossaryEntry:
     status: str
     notes: str = ""
     targets: Optional[Dict[str, str]] = None
+    tags: Optional[List[str]] = None
+    preferred_compact: bool = False
+    avoid_long_form: Optional[List[str]] = None
 
 
 DEFAULT_GLOSSARY_CANDIDATES = [
@@ -197,6 +200,10 @@ def load_glossary(path: str, target_locale: str = "ru-RU") -> Tuple[List[Glossar
         if not status and is_compiled:
             status = "approved"
         notes = (it.get("notes") or "").strip()
+        if not notes:
+            notes = str(it.get("note") or "").strip()
+        tags = [str(tag).strip() for tag in (it.get("tags") or []) if str(tag).strip()]
+        avoid_long_form = [str(term).strip() for term in (it.get("avoid_long_form") or []) if str(term).strip()]
         if term_zh and resolved_target and status in {"approved", "proposed", "banned"}:
             entries.append(
                 GlossaryEntry(
@@ -205,10 +212,43 @@ def load_glossary(path: str, target_locale: str = "ru-RU") -> Tuple[List[Glossar
                     status=status,
                     notes=notes,
                     targets=targets or None,
+                    tags=tags or None,
+                    preferred_compact=bool(it.get("preferred_compact")),
+                    avoid_long_form=avoid_long_form or None,
                 )
             )
 
     return entries, meta.get("compiled_hash")
+
+
+def is_ui_art_row(row: Dict[str, Any]) -> bool:
+    module_tag = str(row.get("module_tag") or "").strip().lower()
+    category = str(row.get("ui_art_category") or "").strip().lower()
+    return module_tag == "ui_art_label" or bool(category)
+
+
+def glossary_is_compact(entry: GlossaryEntry) -> bool:
+    tags = {str(tag).strip().lower() for tag in (entry.tags or []) if str(tag).strip()}
+    compact_tags = {"ui", "art", "short", "mobile"}
+    return bool(entry.preferred_compact or (tags & compact_tags))
+
+
+def build_glossary_preferences(entries: List[GlossaryEntry]) -> Tuple[Dict[str, str], Dict[str, str], Dict[str, List[str]]]:
+    standard_map: Dict[str, str] = {}
+    compact_map: Dict[str, str] = {}
+    avoid_long_forms: Dict[str, List[str]] = {}
+    for entry in entries:
+        if entry.status != "approved" or not entry.term_zh or not entry.term_ru:
+            continue
+        standard_map.setdefault(entry.term_zh, entry.term_ru)
+        if glossary_is_compact(entry):
+            compact_map.setdefault(entry.term_zh, entry.term_ru)
+            if entry.avoid_long_form:
+                avoid_long_forms.setdefault(entry.term_zh, [])
+                for term in entry.avoid_long_form:
+                    if term not in avoid_long_forms[entry.term_zh]:
+                        avoid_long_forms[entry.term_zh].append(term)
+    return standard_map, compact_map, avoid_long_forms
 
 
 def load_style_profile(path: str) -> Dict[str, Any]:
@@ -341,7 +381,16 @@ def _format_gate_report(issues: List[str]) -> str:
 def build_glossary_summary(glossary: List[GlossaryEntry]) -> str:
     if not glossary:
         return "(无)"
-    return "\n".join([f"- {e.term_zh} → {e.term_ru}" for e in glossary[:80] if e.status == "approved"])
+    compact = [e for e in glossary if e.status == "approved" and glossary_is_compact(e)]
+    standard = [e for e in glossary if e.status == "approved" and not glossary_is_compact(e)]
+    lines: List[str] = []
+    if compact:
+        lines.append("[Compact UI-art priority terms]")
+        lines.extend(f"- {e.term_zh} → {e.term_ru}" for e in compact[:40])
+    if standard:
+        lines.append("[General approved terms]")
+        lines.extend(f"- {e.term_zh} → {e.term_ru}" for e in standard[:40])
+    return "\n".join(lines) if lines else "(无)"
 
 
 def build_style_contract(profile: Dict[str, Any]) -> str:
@@ -358,6 +407,7 @@ def build_style_contract(profile: Dict[str, Any]) -> str:
     segments = profile.get("segmentation", {}) or {}
     units = profile.get("units", {}) or {}
     char_policy = ui.get("length_constraints", {}) or {}
+    ui_art_policies = ui.get("ui_art_category_policies", {}) or {}
 
     forbidden_terms = terminology.get("forbidden_terms", []) or []
     preferred_terms = terminology.get("preferred_terms", []) or []
@@ -380,6 +430,8 @@ def build_style_contract(profile: Dict[str, Any]) -> str:
         f"- No over-literal: {language_policy.get('no_over_literal', True)}",
         f"- Max UI button chars: {char_policy.get('button_max_chars', 18)}",
         f"- Max dialogue chars: {char_policy.get('dialogue_max_chars', 120)}",
+        f"- UI-art target ratio: {char_policy.get('ui_art_target_ratio', 2.3)}",
+        f"- UI-art review ratio: {char_policy.get('ui_art_review_ratio', 2.5)}",
         f"- Time unit mapping: {units.get('time', {}).get('source_unit', '秒')} -> {units.get('time', {}).get('target_unit', 'секунд')}",
         f"- Currency mapping: {units.get('currency', {}).get('source_unit', '原石')} -> {units.get('currency', {}).get('target_unit', 'алмазы')}",
         f"- Character name policy: {style_guard.get('character_name_policy', 'keep')}",
@@ -415,6 +467,17 @@ def build_style_contract(profile: Dict[str, Any]) -> str:
         lines.append("- Banned terms:")
         for item in banned_items[:25]:
             lines.append(f"  - {item}")
+    if ui_art_policies:
+        lines.append("- UI-art category contract:")
+        for category, policy in ui_art_policies.items():
+            if not isinstance(policy, dict):
+                continue
+            rule = str(policy.get("translation_rule") or "").strip()
+            hard_limit = policy.get("hard_limit")
+            review_limit = policy.get("review_limit")
+            lines.append(
+                f"  - {category}: rule={rule or 'compact'}; hard<={hard_limit}; review<={review_limit}"
+            )
 
     return "\n".join(lines)
 
@@ -428,10 +491,27 @@ def build_system_prompt_factory(
 ):
     def _builder(rows: List[Dict]) -> str:
         constraints = ""
+        residual_lanes = set()
+        has_residual_reference = False
         for r in rows:
             max_len = r.get("max_length_target") or r.get("max_len_target")
+            review_len = r.get("max_len_review_limit")
+            category = str(r.get("ui_art_category") or "default").strip()
+            strategy_hint = str(r.get("ui_art_strategy_hint") or "").strip()
+            residual_lane = str(r.get("residual_lane") or "").strip()
+            residual_prompt_hint = str(r.get("residual_prompt_hint") or "").strip()
+            if residual_lane:
+                residual_lanes.add(residual_lane)
+            if str(r.get("current_target_text") or "").strip():
+                has_residual_reference = True
             if max_len and int(max_len) > 0:
-                constraints += f"- Row {r.get('string_id')}: max {max_len} chars\n"
+                constraints += (
+                    f"- Row {r.get('id') or r.get('string_id')}: category={category}; "
+                    f"hint={strategy_hint or 'default'}; "
+                    f"lane={residual_lane or 'default'}; "
+                    f"repair={residual_prompt_hint or 'default'}; "
+                    f"target<={max_len}; review<={review_len or 'n/a'} chars\n"
+                )
 
         constraint_section = ""
         if constraints:
@@ -439,6 +519,34 @@ def build_system_prompt_factory(
                 "\n【Length Constraints】\n"
                 f"Each translation MUST NOT exceed its limit:\n{constraints}"
             )
+
+        residual_section = ""
+        if residual_lanes or has_residual_reference:
+            lane_rules = []
+            if "promo_exact_or_compound" in residual_lanes:
+                lane_rules.append("- residual_lane=promo_exact_or_compound: keep only the shortest promo head or qualifier + pack noun; forbid explanatory tails like Превью / Выбор / Ниндзя / Обзор.")
+            if "item_skill_family_compact" in residual_lanes:
+                lane_rules.append("- residual_lane=item_skill_family_compact: produce a compact canonical title in at most 1-2 content words; prefer approved compact family forms over literal explanations.")
+            if "headline_slogan_repair" in residual_lanes:
+                lane_rules.append("- residual_lane=headline_slogan_repair: output headline-only RU, not a sentence; preserve line budget and keep existing line count unless the source itself is multiline.")
+            if "canonical_title_compact" in residual_lanes:
+                lane_rules.append("- residual_lane=canonical_title_compact: repair repeated short titles only; keep proper nouns, use 1-2 content words max, and prefer stable compact noun titles over decorative phrasing.")
+            if "lore_skill_compact" in residual_lanes:
+                lane_rules.append("- residual_lane=lore_skill_compact: repair lore/skill names conservatively; preserve canonical meaning, keep at most 1-2 content words, and never expand into an explanation.")
+            if "warning_family_compact" in residual_lanes:
+                lane_rules.append("- residual_lane=warning_family_compact: this is a near-limit compaction pass; shorten carefully without changing meaning or inventing new lore.")
+            if "badge_micro_gap_cleanup" in residual_lanes:
+                lane_rules.append("- residual_lane=badge_micro_gap_cleanup: exact approved short form only; no free expansion, no punctuation flourish.")
+            if "creative_title_manual" in residual_lanes:
+                lane_rules.append("- residual_lane=creative_title_manual should normally be skipped; if present, keep the current target conservative and do not invent lore meaning.")
+            residual_section = (
+                "\n【Residual Repair Mode】\n"
+                "- This is targeted residual repair against an existing Russian output, not a broad retranslation pass.\n"
+                "- If current_target_text is present, use it as the baseline and change only what is necessary to fix length, ambiguity, or headline/compact issues.\n"
+                "- Do not broaden the meaning or add explanatory wording during repair.\n"
+            )
+            if lane_rules:
+                residual_section += "\n".join(lane_rules) + "\n"
 
         return (
             f'你是严谨的手游本地化译者（zh-CN → {target_lang}）。\n\n'
@@ -450,7 +558,16 @@ def build_system_prompt_factory(
             '- 术语匹配必须一致。\n'
             '- 占位符 ⟦PH_xx⟧ / ⟦TAG_xx⟧ / {0} / %s / %d 必须保留。\n'
             '- 保留中文方括号【】、\\n 与所有 markup，不得删除或重排。\n'
+            '- UI 美术字必须优先采用 compact glossary；若存在短译，不得回退到解释性长译。\n'
+            '- 若行带 ui_art_category，则该 category 视为硬约束：badge 只允许短词/缩写；slogan_long 必须压成 banner headline，不得展开成说明句。\n'
+            '- 若 residual_prompt_hint 存在，必须把它视为本行额外硬约束。\n'
+            '- 若 hint=badge_exact_map，仅允许批准短译，不允许自由发挥。\n'
+            '- 若 hint=promo_exact_head，仅保留最短 promo 头词，不得补 Превью / 预览类解释尾巴。\n'
+            '- 若 hint=promo_compound_pack，压成 qualifier + 核心礼包词，不得补 Выбор / Ниндзя 等泛词。\n'
+            '- 若 hint=item_compact_noun，仅允许 1-2 个实词，不得写解释性属格链。\n'
+            '- 若 hint=headline_singleline/headline_multiline/headline_nameplate，只写标题式 headline，不写完整说明句。\n'
             f'{build_style_contract(style_profile or {})}\n\n'
+            f'{residual_section}'
             f'{constraint_section}\n'
             f'术语表摘要:\n{glossary_summary}\n\n'
             f'style_guide:\n{style_guide}\n'
@@ -536,6 +653,22 @@ def save_checkpoint(path: str, done_ids: set):
         json.dump({"done_ids": list(done_ids)}, f)
 
 
+def build_batch_row_payload(row: Dict[str, str]) -> Dict[str, str]:
+    return {
+        "id": str(row.get("string_id") or row.get("id") or ""),
+        "source_text": row.get("tokenized_zh") or row.get("source_zh") or "",
+        "current_target_text": str(row.get("current_target_text") or row.get("target_text") or ""),
+        "ui_art_category": str(row.get("ui_art_category") or ""),
+        "ui_art_strategy_hint": str(row.get("ui_art_strategy_hint") or ""),
+        "ui_art_compact_term": str(row.get("ui_art_compact_term") or ""),
+        "max_len_target": str(row.get("max_length_target") or row.get("max_len_target") or ""),
+        "max_len_review_limit": str(row.get("max_len_review_limit") or ""),
+        "translation_mode": str(row.get("translation_mode") or "llm"),
+        "residual_lane": str(row.get("residual_lane") or ""),
+        "residual_prompt_hint": str(row.get("residual_prompt_hint") or ""),
+    }
+
+
 def _batch_translate(
     rows: List[Dict],
     args: argparse.Namespace,
@@ -581,7 +714,10 @@ def _single_row_retry(
 ) -> Tuple[str, bool, str]:
     sid = str(row.get("string_id") or row.get("id") or "")
     src = row.get("tokenized_zh") or row.get("source_zh") or ""
-    repair_row = {"id": sid, "source_text": src}
+    repair_row = build_batch_row_payload(row)
+    repair_row["id"] = sid
+    repair_row["source_text"] = src
+    repair_row["current_target_text"] = str(row.get("target_text") or row.get("current_target_text") or "")
     repair_prompt = build_repair_system_prompt_factory(
         style_guide=style_guide,
         glossary_summary=glossary_summary,
@@ -698,11 +834,17 @@ def main():
 
     print(f"   Total rows: {len(all_rows)}, Pending: {len(pending_rows)}")
 
-    long_rows = [r for r in pending_rows if str(r.get("is_long_text", "")).lower() == "true"]
-    normal_rows = [r for r in pending_rows if r not in long_rows]
+    exact_rows = [
+        r for r in pending_rows
+        if str(r.get("translation_mode") or "").strip().lower() == "prefill_exact"
+        and str(r.get("prefill_target_ru") or "").strip()
+    ]
+    llm_rows = [r for r in pending_rows if r not in exact_rows]
+    long_rows = [r for r in llm_rows if str(r.get("is_long_text", "")).lower() == "true"]
+    normal_rows = [r for r in llm_rows if r not in long_rows]
 
-    batch_inputs_normal = [{"id": r.get("string_id"), "source_text": r.get("tokenized_zh") or r.get("source_zh") or ""} for r in normal_rows]
-    batch_inputs_long = [{"id": r.get("string_id"), "source_text": r.get("tokenized_zh") or r.get("source_zh") or ""} for r in long_rows]
+    batch_inputs_normal = [build_batch_row_payload(r) for r in normal_rows]
+    batch_inputs_long = [build_batch_row_payload(r) for r in long_rows]
 
     try:
         system_prompt_builder = build_system_prompt_factory(
@@ -714,6 +856,21 @@ def main():
         )
 
         res_map = {}
+        prefilled = 0
+        for row in exact_rows:
+            sid = str(row.get("string_id") or "")
+            target_text = str(row.get("prefill_target_ru") or "").strip()
+            ok, err = validate_translation(row.get("tokenized_zh") or row.get("source_zh") or "", target_text)
+            if ok:
+                res_map[sid] = target_text
+                prefilled += 1
+            else:
+                print(f"⚠️ Prefill validation failed for {sid}: {err}; falling back to LLM.")
+                batch_row = build_batch_row_payload(row)
+                if str(row.get("is_long_text", "")).lower() == "true":
+                    batch_inputs_long.append(batch_row)
+                else:
+                    batch_inputs_normal.append(batch_row)
         res_map.update(_batch_translate(
             rows=batch_inputs_normal,
             args=args,
@@ -799,7 +956,7 @@ def main():
 
         done_ids.update(new_done)
         save_checkpoint(args.checkpoint, done_ids)
-        print(f"✅ Translated {len(new_done)} / {len(pending_rows)} rows.")
+        print(f"✅ Translated {len(new_done)} / {len(pending_rows)} rows (prefill_exact={prefilled}).")
     except Exception as e:
         print(f"❌ Translation failed: {e}")
         sys.exit(1)
