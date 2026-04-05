@@ -35,12 +35,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
-# Ensure UTF-8 output on Windows
-if sys.platform == 'win32':
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
-
 try:
     import yaml
 except ImportError:
@@ -56,17 +50,75 @@ SCOPE_PRIORITY = {
     "base": 1,
     "": 0
 }
+COMPILED_PASSTHROUGH_FIELDS = [
+    "targets",
+    "status",
+    "language_pair",
+    "tags",
+    "confidence",
+    "preferred_compact",
+    "avoid_long_form",
+    "note",
+    "notes",
+    "source",
+    "source_file",
+]
+
+
+def configure_standard_streams() -> None:
+    if sys.platform != 'win32':
+        return
+    import io
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if not stream or not hasattr(stream, "buffer"):
+            continue
+        try:
+            wrapped = io.TextIOWrapper(stream.buffer, encoding='utf-8', errors='replace')
+            setattr(sys, stream_name, wrapped)
+        except Exception:
+            pass
 
 
 def load_approved(path: str) -> List[Dict[str, Any]]:
-    """Load approved entries from YAML."""
-    if not Path(path).exists():
+    """Load approved entries from a single YAML and inherit file-level metadata when useful."""
+    yaml_path = Path(path)
+    if not yaml_path.exists():
         return []
-    
-    with open(path, 'r', encoding='utf-8') as f:
+
+    with open(yaml_path, 'r', encoding='utf-8') as f:
         data = yaml.safe_load(f) or {}
-    
-    return data.get("entries", [])
+
+    meta = data.get("meta", {}) if isinstance(data, dict) else {}
+    inherited_scope = str(meta.get("scope", "")).strip()
+    inherited_language_pair = str(meta.get("language_pair", "")).strip()
+    inherited_source = str(meta.get("source", yaml_path.as_posix())).strip() or yaml_path.as_posix()
+
+    entries: List[Dict[str, Any]] = []
+    raw_entries = data.get("entries", []) if isinstance(data, dict) else []
+    for raw_entry in raw_entries:
+        if not isinstance(raw_entry, dict):
+            continue
+        entry = dict(raw_entry)
+        if inherited_scope and not str(entry.get("scope", "")).strip():
+            entry["scope"] = inherited_scope
+        if inherited_language_pair and not str(entry.get("language_pair", "")).strip():
+            entry["language_pair"] = inherited_language_pair
+        if not str(entry.get("source_file", "")).strip():
+            entry["source_file"] = yaml_path.as_posix()
+        if not str(entry.get("source", "")).strip():
+            entry["source"] = inherited_source
+        entries.append(entry)
+
+    return entries
+
+
+def load_approved_sources(paths: List[str]) -> List[Dict[str, Any]]:
+    """Load and concatenate entries from multiple approved YAML files."""
+    merged: List[Dict[str, Any]] = []
+    for path in paths:
+        merged.extend(load_approved(path))
+    return merged
 
 
 def detect_conflicts(entries: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
@@ -107,6 +159,20 @@ def resolve_by_scope(entries: List[Dict[str, Any]]) -> Dict[str, Any]:
     # Sort by scope priority descending
     sorted_entries = sorted(entries, key=scope_key, reverse=True)
     return sorted_entries[0]
+
+
+def build_compiled_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
+    compiled = {
+        "term_zh": (entry.get("term_zh") or "").strip(),
+        "term_ru": (entry.get("term_ru") or "").strip(),
+        "scope": entry.get("scope", "base"),
+    }
+    for field in COMPILED_PASSTHROUGH_FIELDS:
+        value = entry.get(field)
+        if value in (None, "", [], {}):
+            continue
+        compiled[field] = value
+    return compiled
 
 
 def compile_entries(entries: List[Dict[str, Any]], 
@@ -162,19 +228,11 @@ def compile_entries(entries: List[Dict[str, Any]],
             if resolve_conflicts:
                 # Use resolved winner
                 winner = resolve_by_scope(conflicts[term_zh])
-                compiled[term_zh] = {
-                    "term_zh": term_zh,
-                    "term_ru": winner.get("term_ru", ""),
-                    "scope": winner.get("scope", "base")
-                }
+                compiled[term_zh] = build_compiled_entry(winner)
         else:
             # No conflict, use as-is (first wins if duplicate)
             if term_zh not in compiled:
-                compiled[term_zh] = {
-                    "term_zh": term_zh,
-                    "term_ru": e.get("term_ru", ""),
-                    "scope": e.get("scope", "base")
-                }
+                compiled[term_zh] = build_compiled_entry(e)
     
     return list(compiled.values()), conflicts_report
 
@@ -261,11 +319,16 @@ def save_conflicts_report(path: str, report: Dict) -> None:
 
 
 def main():
+    configure_standard_streams()
     ap = argparse.ArgumentParser(
         description="Compile approved glossary into runtime artifact"
     )
-    ap.add_argument("--approved", default="glossary/approved.yaml",
-                    help="Input approved YAML (default: glossary/approved.yaml)")
+    ap.add_argument(
+        "--approved",
+        action="append",
+        default=None,
+        help="Input approved YAML. Repeat to merge multiple sources (default: glossary/approved.yaml)",
+    )
     ap.add_argument("--out_compiled", default="glossary/compiled.yaml",
                     help="Output compiled YAML (default: glossary/compiled.yaml)")
     ap.add_argument("--language_pair", default="zh-CN->ru-RU",
@@ -281,9 +344,11 @@ def main():
     ap.add_argument("--dry-run", action="store_true",
                     help="Validate without writing output")
     args = ap.parse_args()
-    
+
+    approved_paths = args.approved or ["glossary/approved.yaml"]
+
     print("🔧 Glossary Compile")
-    print(f"   Input: {args.approved}")
+    print(f"   Input: {', '.join(approved_paths)}")
     print(f"   Output: {args.out_compiled}")
     print(f"   Language pair: {args.language_pair}")
     if args.genre:
@@ -294,11 +359,12 @@ def main():
     print()
     
     # Load approved
-    if not Path(args.approved).exists():
-        print(f"❌ Approved file not found: {args.approved}")
+    missing_paths = [path for path in approved_paths if not Path(path).exists()]
+    if missing_paths:
+        print(f"❌ Approved file not found: {missing_paths[0]}")
         return 1
-    
-    entries = load_approved(args.approved)
+
+    entries = load_approved_sources(approved_paths)
     print(f"✅ Loaded {len(entries)} approved entries")
     
     if not entries:
@@ -369,7 +435,7 @@ def main():
     save_lock(
         lock_path, version, hash_val, len(compiled),
         args.language_pair, args.genre, args.franchise,
-        args.approved, args.tag
+        ",".join(approved_paths), args.tag
     )
     
     print()

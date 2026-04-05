@@ -284,3 +284,216 @@ def test_style_contract_block_lists_aliases_and_banned_terms():
 
     assert "- Banned term: Нежелательный термин" in block
     assert "- Prohibited alias: Запретный вариант" in block
+
+
+def test_preflight_tasks_prefers_compact_glossary_for_ui_art():
+    tasks = soft_qa_llm.preflight_tasks(
+        rows=[
+            {
+                "string_id": "id3",
+                "source_zh": "挑战",
+                "target_text": "Вызов",
+                "ui_art_category": "label_generic_short",
+                "module_tag": "ui_art_label",
+                "max_len_target": "8",
+                "max_len_review_limit": "10",
+            }
+        ],
+        style_profile={"terminology": {}},
+        glossary_entries=[
+            soft_qa_llm.GlossaryEntry(
+                term_zh="挑战",
+                term_ru="Чел.",
+                status="approved",
+                preferred_compact=True,
+                avoid_long_form=["Вызов"],
+            )
+        ],
+    )
+
+    assert any(task["type"] == "compact_term_miss" for task in tasks)
+
+
+def test_preflight_tasks_flags_badge_without_compact_mapping():
+    tasks = soft_qa_llm.preflight_tasks(
+        rows=[
+            {
+                "string_id": "id4",
+                "source_zh": "推荐",
+                "target_text": "Рекомендуется",
+                "ui_art_category": "badge_micro_2c",
+                "module_tag": "ui_art_label",
+                "compact_rule": "dictionary_only",
+                "compact_mapping_status": "manual_review_required",
+                "max_len_target": "6",
+                "max_len_review_limit": "8",
+            }
+        ],
+        style_profile={"terminology": {}},
+        glossary_entries=[],
+    )
+
+    assert tasks[0]["type"] == "compact_mapping_missing"
+    assert tasks[0]["severity"] == "major"
+
+
+def test_style_contract_block_includes_ui_art_category_policies():
+    block = soft_qa_llm.build_style_contract_block(
+        {
+            "project": {"source_language": "zh-CN", "target_language": "ru-RU"},
+            "style_contract": {
+                "language_policy": {},
+                "placeholder_protection": {},
+                "style_guard": {},
+            },
+            "ui": {
+                "length_constraints": {"ui_art_target_ratio": 2.3, "ui_art_review_ratio": 2.5},
+                "ui_art_category_policies": {
+                    "badge_micro_1c": {"translation_rule": "dictionary_only", "hard_limit": 4, "review_limit": 6}
+                },
+            },
+            "terminology": {},
+        }
+    )
+
+    assert "UI-art badge_micro_1c: dictionary_only / hard<=4 / review<=6" in block
+
+
+def test_preflight_tasks_prioritize_compact_glossary_for_ui_art():
+    tasks = soft_qa_llm.preflight_tasks(
+        rows=[
+            {
+                "string_id": "id1",
+                "source_zh": "商店",
+                "target_text": "Магазин",
+                "ui_art_category": "label_generic_short",
+                "module_tag": "ui_art_label",
+                "source_len_clean": "2",
+                "max_len_target": "4",
+                "max_len_review_limit": "5",
+            }
+        ],
+        style_profile={"ui": {"length_constraints": {"ui_art_target_ratio": 2.3, "ui_art_review_ratio": 2.5}}},
+        glossary_entries=[
+            soft_qa_llm.GlossaryEntry(
+                term_zh="商店",
+                term_ru="Маг.",
+                status="approved",
+                tags=["ui", "art", "short"],
+                preferred_compact=True,
+                avoid_long_form=["Магазин"],
+            ),
+            soft_qa_llm.GlossaryEntry(term_zh="商店", term_ru="Магазин", status="approved"),
+        ],
+    )
+
+    assert any(task["type"] == "compact_term_miss" for task in tasks)
+    assert not any(task["type"] == "terminology" for task in tasks)
+
+
+def test_preflight_tasks_use_major_and_critical_length_bands_for_ui_art():
+    tasks = soft_qa_llm.preflight_tasks(
+        rows=[
+                {
+                    "string_id": "major_id",
+                    "source_zh": "巅峰列传",
+                    "target_text": "Название+++",
+                    "ui_art_category": "title_name_short",
+                    "module_tag": "ui_art_label",
+                    "source_len_clean": "4",
+                "max_len_target": "9",
+                "max_len_review_limit": "10",
+            },
+            {
+                "string_id": "critical_id",
+                "source_zh": "巅峰列传",
+                "target_text": "Сверхдлинное название",
+                "ui_art_category": "title_name_short",
+                "module_tag": "ui_art_label",
+                "source_len_clean": "4",
+                "max_len_target": "9",
+                "max_len_review_limit": "10",
+            },
+        ],
+        style_profile={"ui": {"length_constraints": {"ui_art_target_ratio": 2.3, "ui_art_review_ratio": 2.5}}},
+        glossary_entries=[],
+    )
+
+    task_map = {task["string_id"]: task for task in tasks if task["type"] == "length"}
+    assert task_map["major_id"]["severity"] == "major"
+    assert task_map["critical_id"]["severity"] == "critical"
+
+
+def test_preflight_tasks_flag_badge_compact_mapping_and_slogan_line_budget():
+    tasks = soft_qa_llm.preflight_tasks(
+        rows=[
+            {
+                "string_id": "badge_id",
+                "source_zh": "胜",
+                "target_text": "Победа",
+                "ui_art_category": "badge_micro_1c",
+                "module_tag": "ui_art_label",
+                "source_len_clean": "1",
+                "max_len_target": "2",
+                "max_len_review_limit": "2",
+            },
+            {
+                "string_id": "slogan_id",
+                "source_zh": "赢得大奖",
+                "target_text": "Крупный\nприз",
+                "ui_art_category": "slogan_long",
+                "module_tag": "ui_art_label",
+                "source_len_clean": "4",
+                "max_len_target": "9",
+                "max_len_review_limit": "10",
+            },
+        ],
+        style_profile={"ui": {"length_constraints": {"ui_art_target_ratio": 2.3, "ui_art_review_ratio": 2.5}}},
+        glossary_entries=[
+            soft_qa_llm.GlossaryEntry(
+                term_zh="胜",
+                term_ru="Поб.",
+                status="approved",
+                tags=["ui", "art", "short"],
+                preferred_compact=True,
+                avoid_long_form=["Победа"],
+            ),
+        ],
+    )
+
+    task_map = {(task["string_id"], task["type"]): task for task in tasks}
+    assert ("badge_id", "compact_mapping_missing") in task_map
+    assert ("slogan_id", "line_budget_overflow") in task_map
+
+
+def test_preflight_tasks_emit_focused_slice_subtype_issues():
+    tasks = soft_qa_llm.preflight_tasks(
+        rows=[
+            {
+                "string_id": "promo_id",
+                "source_zh": "奖励预览",
+                "target_text": "Нагр. Превью",
+                "ui_art_category": "promo_short",
+                "ui_art_strategy_hint": "promo_compound_pack",
+                "source_len_clean": "4",
+                "max_len_target": "9",
+                "max_len_review_limit": "10",
+            },
+            {
+                "string_id": "headline_id",
+                "source_zh": "五星忍者·日向雏田",
+                "target_text": "5★ Ниндзя · Хинаты Хьюга",
+                "ui_art_category": "slogan_long",
+                "ui_art_strategy_hint": "headline_nameplate",
+                "source_len_clean": "9",
+                "max_len_target": "20",
+                "max_len_review_limit": "24",
+            },
+        ],
+        style_profile={"ui": {"length_constraints": {"ui_art_target_ratio": 2.3, "ui_art_review_ratio": 2.5}}},
+        glossary_entries=[],
+    )
+
+    task_map = {(task["string_id"], task["type"]): task for task in tasks}
+    assert ("promo_id", "promo_expansion_forbidden") in task_map
+    assert ("headline_id", "headline_budget_overflow") in task_map

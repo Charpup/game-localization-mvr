@@ -22,12 +22,78 @@ Features:
 import csv
 import io
 import json
+import math
 import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
 from datetime import datetime
 from collections import Counter
+
+UI_ART_POLICY_TABLE = {
+    "badge_micro_1c": {"hard_floor": 4, "review_floor": 6, "issue_type": "compact_mapping_missing"},
+    "badge_micro_2c": {"hard_floor": 6, "review_floor": 8, "issue_type": "compact_mapping_missing"},
+    "label_generic_short": {"hard_floor": 8, "review_floor": 10, "review_ratio": 2.5, "issue_type": "length_overflow"},
+    "title_name_short": {"hard_floor": 10, "review_floor": 12, "review_ratio": 2.5, "issue_type": "length_overflow"},
+    "promo_short": {"hard_floor": 10, "review_floor": 12, "review_ratio": 2.6, "issue_type": "length_overflow"},
+    "item_skill_name": {"hard_floor": 10, "hard_ratio": 2.6, "review_floor": 12, "review_ratio": 3.0, "issue_type": "length_overflow"},
+    "slogan_long": {"hard_floor": 10, "hard_ratio": 2.6, "review_floor": 12, "review_ratio": 3.2, "issue_type": "headline_budget_overflow"},
+    "other_review": {"hard_floor": 10, "review_floor": 14, "review_ratio": 2.6, "issue_type": "length_overflow"},
+}
+
+PROMO_BANNED_EXPANSIONS = ("превью", "выбор", "ниндзя")
+WORD_RE = re.compile(r"[A-Za-zА-Яа-яЁё0-9]+", re.UNICODE)
+
+
+def _parse_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(float(value))
+    except Exception:
+        return default
+
+
+def _count_visual_lines(text: str) -> int:
+    if not text:
+        return 1
+    return max(1, len(re.split(r"(?:\\n|\n)", text)))
+
+
+def _build_ui_art_length_policy(row: Dict[str, Any]) -> Dict[str, Any]:
+    category = str(row.get("ui_art_category") or "other_review").strip() or "other_review"
+    spec = UI_ART_POLICY_TABLE.get(category, UI_ART_POLICY_TABLE["other_review"])
+    source_len = _parse_int(row.get("source_len_clean") or 0)
+    placeholder_budget = _parse_int(row.get("placeholder_budget") or 0)
+    base_target = _parse_int(row.get("max_length_target") or row.get("max_len_target") or 0)
+    base_review = _parse_int(row.get("max_len_review_limit") or 0)
+
+    hard_ratio = spec.get("hard_ratio")
+    hard_ratio_limit = math.floor(source_len * float(hard_ratio)) + placeholder_budget if hard_ratio else 0
+    hard_limit = max(base_target, int(spec.get("hard_floor", 0)) + placeholder_budget, hard_ratio_limit)
+    review_ratio = spec.get("review_ratio")
+    review_ratio_limit = math.floor(source_len * float(review_ratio)) + placeholder_budget if review_ratio else 0
+    review_limit = max(base_review, int(spec.get("review_floor", 0)) + placeholder_budget, review_ratio_limit)
+
+    return {
+        "category": category,
+        "hard_limit": hard_limit,
+        "review_limit": review_limit,
+        "issue_type": str(spec.get("issue_type") or "length_overflow"),
+        "source_lines": _count_visual_lines((row.get("source_zh") or row.get("tokenized_zh") or "")),
+        "compact_rule": str(row.get("compact_rule") or ""),
+        "compact_term": str(row.get("ui_art_compact_term") or "").strip(),
+        "compact_mapping_status": str(row.get("compact_mapping_status") or ""),
+        "strategy_hint": str(row.get("ui_art_strategy_hint") or "").strip(),
+    }
+
+
+def _contains_promo_expansion(text: str) -> bool:
+    normalized = str(text or "").lower()
+    return any(term in normalized for term in PROMO_BANNED_EXPANSIONS)
+
+
+def _content_word_count(text: str) -> int:
+    words = [token for token in WORD_RE.findall(text or "") if not token.isdigit()]
+    return len(words)
 
 def configure_standard_streams() -> None:
     """Best-effort UTF-8 console setup for CLI execution only."""
@@ -92,6 +158,10 @@ class QAHardValidator:
             'source_tag_unbalanced': 0,
             'empty_source_translation': 0,
             'token_mismatch_soft': 0,
+            'length_overflow': 0,
+            'line_budget_overflow': 0,
+            'headline_budget_overflow': 0,
+            'promo_expansion_forbidden': 0,
         }
         self.total_rows = 0
         
@@ -104,13 +174,13 @@ class QAHardValidator:
             with open(self.placeholder_map_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 self.placeholder_map = data.get('mappings', {})
-            print(f"✅ Loaded {len(self.placeholder_map)} placeholder mappings")
+            print(f"[OK] Loaded {len(self.placeholder_map)} placeholder mappings")
             return True
         except FileNotFoundError:
-            print(f"❌ Error: Placeholder map not found: {self.placeholder_map_path}")
+            print(f"[ERROR] Placeholder map not found: {self.placeholder_map_path}")
             return False
         except Exception as e:
-            print(f"❌ Error loading placeholder map: {str(e)}")
+            print(f"[ERROR] Error loading placeholder map: {str(e)}")
             return False
     
     def load_schema(self) -> bool:
@@ -119,7 +189,7 @@ class QAHardValidator:
             with open(self.schema_yaml, 'r', encoding='utf-8') as f:
                 schema = yaml.safe_load(f)
                 if not isinstance(schema, dict):
-                    print(f"❌ Error: Invalid schema format, expected mapping in {self.schema_yaml}")
+                    print(f"[ERROR] Invalid schema format, expected mapping in {self.schema_yaml}")
                     return False
 
                 schema_version = schema.get('version', 1)
@@ -130,11 +200,11 @@ class QAHardValidator:
                     # Fallback 到 v1.0 格式
                     patterns = schema.get('placeholder_patterns', [])
                     if not patterns:
-                        print(f"⚠️  schema missing both 'patterns' and 'placeholder_patterns', skipping placeholder checks.")
+                        print("[WARN] schema missing both 'patterns' and 'placeholder_patterns', skipping placeholder checks.")
                         return True
-                    print(f"⚠️  Using schema v1.0 format (placeholder_patterns)")
+                    print("[WARN] Using schema v1.0 format (placeholder_patterns)")
                 else:
-                    print(f"✅ Using schema v2.0 format (patterns)")
+                    print("[OK] Using schema v2.0 format (patterns)")
                 
                 # 编译所有模式用于新占位符检测
                 for pattern_def in patterns:
@@ -143,22 +213,22 @@ class QAHardValidator:
                         if regex:
                             self.compiled_patterns.append(re.compile(regex))
                     except re.error as e:
-                        print(f"⚠️  Warning: Invalid regex in pattern '{pattern_def.get('name')}': {e}")
+                        print(f"[WARN] Invalid regex in pattern '{pattern_def.get('name')}': {e}")
                 
                 # 加载 paired_tags（v2.0 新特性）
                 self.paired_tags = schema.get('paired_tags', [])
                 
-                print(f"✅ Loaded schema with {len(self.compiled_patterns)} patterns")
+                print(f"[OK] Loaded schema with {len(self.compiled_patterns)} patterns")
                 if self.paired_tags:
-                    print(f"✅ Loaded {len(self.paired_tags)} paired tag rules")
+                    print(f"[OK] Loaded {len(self.paired_tags)} paired tag rules")
                 
                 return True
                 
         except FileNotFoundError:
-            print(f"❌ Error: Schema not found: {self.schema_yaml}")
+            print(f"[ERROR] Schema not found: {self.schema_yaml}")
             return False
         except Exception as e:
-            print(f"❌ Error loading schema: {str(e)}")
+            print(f"[ERROR] Error loading schema: {str(e)}")
             return False
     
     def load_forbidden_patterns(self) -> bool:
@@ -171,15 +241,15 @@ class QAHardValidator:
                         try:
                             self.compiled_forbidden.append(re.compile(line))
                         except re.error as e:
-                            print(f"⚠️  Warning: Invalid forbidden pattern '{line}': {e}")
+                            print(f"[WARN] Invalid forbidden pattern '{line}': {e}")
             
-            print(f"✅ Loaded {len(self.compiled_forbidden)} forbidden patterns")
+            print(f"[OK] Loaded {len(self.compiled_forbidden)} forbidden patterns")
             return True
         except FileNotFoundError:
-            print(f"⚠️  Warning: Forbidden patterns file not found")
+            print("[WARN] Forbidden patterns file not found")
             return True
         except Exception as e:
-            print(f"⚠️  Warning: Error loading forbidden patterns: {str(e)}")
+            print(f"[WARN] Error loading forbidden patterns: {str(e)}")
             return True
     
     def extract_tokens(self, text: str) -> List[str]:
@@ -524,7 +594,7 @@ class QAHardValidator:
                 # 检查必需字段
                 required_fields = ['string_id', 'tokenized_zh']
                 if not all(field in reader.fieldnames for field in required_fields):
-                    print(f"❌ Error: Missing required fields. Need: {required_fields}")
+                    print(f"[ERROR] Missing required fields. Need: {required_fields}")
                     return False
                 
                 # 检查是否有翻译列
@@ -542,11 +612,11 @@ class QAHardValidator:
                         break
                 
                 if not target_field:
-                    print(f"❌ Error: No target translation field found")
+                    print("[ERROR] No target translation field found")
                     print(f"   Available fields: {reader.fieldnames}")
                     return False
                 
-                print(f"✅ Using '{target_field}' as target translation field")
+                print(f"[OK] Using '{target_field}' as target translation field")
                 print()
                 
                 # 逐行验证
@@ -596,41 +666,112 @@ class QAHardValidator:
 
                 
         except FileNotFoundError:
-            print(f"❌ Error: Translated CSV not found: {self.translated_csv}")
+            print(f"[ERROR] Translated CSV not found: {self.translated_csv}")
             return False
         except Exception as e:
-            print(f"❌ Error validating CSV: {str(e)}")
+            print(f"[ERROR] Error validating CSV: {str(e)}")
             import traceback
             traceback.print_exc()
             return False
     
     def check_length_overflow(self, string_id: str, target_text: str, row: Dict, row_num: int):
         """检查长度溢出"""
-        max_len = row.get("max_length_target") or row.get("max_len_target")
-        if not max_len:
-            return
-            
-        try:
-            limit = int(float(max_len))
-            if limit <= 0: return
-        except ValueError:
+        policy = _build_ui_art_length_policy(row)
+        limit = int(policy.get("hard_limit") or 0)
+        review_limit = int(policy.get("review_limit") or 0)
+        if limit <= 0:
             return
 
         actual_len = len(target_text)
-        if actual_len > limit:
-            overflow_ratio = actual_len / limit
-            severity = "critical" if overflow_ratio > 1.5 else "major"
-            
+        target_lines = _count_visual_lines(target_text)
+        strategy_hint = str(policy.get("strategy_hint") or "")
+        if (
+            policy["category"] == "slogan_long"
+            and strategy_hint in {"", "headline_multiline"}
+            and target_lines > int(policy["source_lines"] or 1)
+        ):
             self.errors.append({
                 "row": row_num,
                 "string_id": string_id,
-                "type": "length_overflow",
-                "severity": severity,
-                "detail": f"Length {actual_len} > {limit} (ratio: {overflow_ratio:.2f})",
-                "source": row.get('tokenized_zh', '')[:50],
+                "type": "line_budget_overflow",
+                "severity": "critical",
+                "detail": f"line count {target_lines} > source line budget {policy['source_lines']}",
+                "source": (row.get('source_zh') or row.get('tokenized_zh') or '')[:50],
                 "target": target_text[:50]
             })
-            self.error_counts['length_overflow'] = self.error_counts.get('length_overflow', 0) + 1
+            self.error_counts['line_budget_overflow'] = self.error_counts.get('line_budget_overflow', 0) + 1
+            return
+
+        compact_rule = str(policy.get("compact_rule") or "")
+        compact_term = str(policy.get("compact_term") or "")
+        compact_mapping_status = str(policy.get("compact_mapping_status") or "")
+        compact_violation = ""
+        normalized_target = target_text.strip()
+        if compact_rule == "dictionary_only":
+            if compact_mapping_status == "manual_review_required" and actual_len > 0:
+                compact_violation = "compact_mapping_missing"
+            elif compact_term and normalized_target != compact_term:
+                compact_violation = "compact_term_miss"
+        elif strategy_hint == "promo_exact_head" and compact_term and normalized_target != compact_term:
+            compact_violation = "compact_term_miss"
+
+        if compact_term and normalized_target == compact_term and (
+            compact_rule == "dictionary_only" or strategy_hint in {"promo_exact_head", "headline_nameplate"}
+        ):
+            return
+
+        content_violation = ""
+        if not compact_violation and strategy_hint == "promo_compound_pack" and _contains_promo_expansion(normalized_target):
+            content_violation = "promo_expansion_forbidden"
+        elif (
+            not compact_violation
+            and policy["category"] == "item_skill_name"
+            and compact_term
+            and normalized_target != compact_term
+            and _content_word_count(normalized_target) > 2
+        ):
+            content_violation = "length_overflow"
+
+        if actual_len <= limit and not compact_violation and not content_violation:
+            return
+
+        issue_type = compact_violation or content_violation or str(policy["issue_type"] or "length_overflow")
+        source_preview = (row.get('source_zh') or row.get('tokenized_zh') or '')[:50]
+        severity = "critical" if ((review_limit and actual_len > review_limit) or issue_type == "line_budget_overflow") else "major"
+        if issue_type == "compact_mapping_missing":
+            detail = "No approved compact mapping for compact-only badge category"
+        elif issue_type == "compact_term_miss":
+            detail = f"Expected approved compact term '{compact_term}' for compact-constrained category"
+        elif issue_type == "promo_expansion_forbidden":
+            detail = "Promo compact title contains banned expansion tail (Превью / Выбор / Ниндзя)"
+        elif issue_type == "headline_budget_overflow":
+            detail = (
+                f"Headline length {actual_len} > target {limit}"
+                if severity == "major"
+                else f"Headline length {actual_len} > review limit {review_limit}"
+            )
+        elif issue_type == "length_overflow" and policy["category"] == "item_skill_name" and _content_word_count(normalized_target) > 2:
+            detail = f"Item/skill name uses {_content_word_count(normalized_target)} content words; compact noun rule allows at most 2"
+        else:
+            detail = (
+                f"Length {actual_len} > target {limit}"
+                if severity == "major"
+                else f"Length {actual_len} > review limit {review_limit}"
+            )
+
+        self.errors.append({
+            "row": row_num,
+            "string_id": string_id,
+            "type": issue_type,
+            "severity": severity,
+            "detail": detail,
+            "source": source_preview,
+            "target": target_text[:50],
+            "ui_art_category": policy["category"],
+            "max_len_target": limit,
+            "max_len_review_limit": review_limit,
+        })
+        self.error_counts[issue_type] = self.error_counts.get(issue_type, 0) + 1
 
     def generate_report(self) -> None:
         """生成 JSON 报告（限制错误数量）"""
@@ -670,55 +811,55 @@ class QAHardValidator:
     
     def print_summary(self) -> None:
         """打印验证总结"""
-        print(f"\n📊 QA Validation Summary:")
+        print("\n[INFO] QA Validation Summary:")
         print(f"   Total rows checked: {self.total_rows}")
         print(f"   Total errors: {len(self.errors)}")
         print()
         
         if self.error_counts['token_mismatch'] > 0:
-            print(f"   ❌ Token mismatch: {self.error_counts['token_mismatch']}")
+            print(f"   [ERROR] Token mismatch: {self.error_counts['token_mismatch']}")
         
         if self.error_counts['tag_unbalanced'] > 0:
-            print(f"   ❌ Tag unbalanced: {self.error_counts['tag_unbalanced']}")
+            print(f"   [ERROR] Tag unbalanced: {self.error_counts['tag_unbalanced']}")
         
         if self.error_counts['forbidden_hit'] > 0:
-            print(f"   ❌ Forbidden patterns: {self.error_counts['forbidden_hit']}")
+            print(f"   [ERROR] Forbidden patterns: {self.error_counts['forbidden_hit']}")
         
         if self.error_counts['new_placeholder_found'] > 0:
-            print(f"   ❌ New placeholders found: {self.error_counts['new_placeholder_found']}")
+            print(f"   [ERROR] New placeholders found: {self.error_counts['new_placeholder_found']}")
 
         if self.error_counts['empty_translation'] > 0:
-            print(f"   ❌ Empty translations: {self.error_counts['empty_translation']}")
+            print(f"   [ERROR] Empty translations: {self.error_counts['empty_translation']}")
         if self.warning_counts['empty_source_translation'] > 0:
-            print(f"   ⚠️  Empty source rows (non-blocking): {self.warning_counts['empty_source_translation']}")
+            print(f"   [WARN] Empty source rows (non-blocking): {self.warning_counts['empty_source_translation']}")
         if self.warning_counts['source_tag_unbalanced'] > 0:
-            print(f"   ⚠️  Source tag imbalance (non-blocking): {self.warning_counts['source_tag_unbalanced']}")
+            print(f"   [WARN] Source tag imbalance (non-blocking): {self.warning_counts['source_tag_unbalanced']}")
         if self.warning_counts['token_mismatch_soft'] > 0:
-            print(f"   ⚠️  Soft token mismatch: {self.warning_counts['token_mismatch_soft']}")
+            print(f"   [WARN] Soft token mismatch: {self.warning_counts['token_mismatch_soft']}")
         if self.warnings:
             approved_total = sum(1 for w in self.warnings if w.get('type') in self.APPROVED_WARNING_TYPES)
             actionable_total = len(self.warnings) - approved_total
-            print(f"   ℹ️  Approved non-blocking warnings: {approved_total}")
-            print(f"   ⚠️  Actionable warnings: {actionable_total}")
+            print(f"   [INFO] Approved non-blocking warnings: {approved_total}")
+            print(f"   [WARN] Actionable warnings: {actionable_total}")
         
         print()
         
         if len(self.errors) > 0:
-            print(f"❌ Validation FAILED with {len(self.errors)} errors")
+            print(f"[ERROR] Validation FAILED with {len(self.errors)} errors")
             if len(self.errors) > 2000:
-                print(f"   ⚠️  Report truncated to 2000 errors (total: {len(self.errors)})")
+                print(f"   [WARN] Report truncated to 2000 errors (total: {len(self.errors)})")
             print(f"   See detailed report: {self.report_json}")
             print()
             print("   Sample errors:")
             for error in self.errors[:5]:
                 print(f"   - [{error['type']}] {error['string_id']}: {error['detail']}")
         else:
-            print(f"✅ All checks passed!")
+            print("[OK] All checks passed!")
             print(f"   Report saved to: {self.report_json}")
     
     def run(self) -> bool:
         """运行 QA 验证"""
-        print(f"🚀 Starting QA Hard validation v2.0...")
+        print("[INFO] Starting QA Hard validation v2.0...")
         print(f"   Input CSV: {self.translated_csv}")
         print(f"   Placeholder map: {self.placeholder_map_path}")
         print(f"   Schema: {self.schema_yaml}")
