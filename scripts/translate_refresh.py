@@ -578,18 +578,38 @@ def select_result_text(item: Dict[str, Any], target_key: str) -> str:
     return ""
 
 
+def exact_glossary_refresh_candidate(task: Dict[str, Any], glossary_map: Dict[str, str]) -> str:
+    source_zh = str(task.get("source_zh") or "").strip()
+    if not source_zh:
+        return ""
+    candidate = str(glossary_map.get(source_zh) or "").strip()
+    if not candidate:
+        return ""
+    source_text = str(task.get("source_text") or source_zh)
+    if tokens_signature(source_text) != tokens_signature(candidate):
+        return ""
+    return candidate
+
+
 def run_refresh_llm(
     tasks: List[Dict[str, Any]],
     model: str,
     style_text: str,
+    glossary_maps_by_locale: Dict[str, Dict[str, str]],
 ) -> Tuple[Dict[str, str], Dict[str, str]]:
     if not tasks:
         return {}, {}
     updates: Dict[str, str] = {}
     failures: Dict[str, str] = {}
     for locale, locale_tasks in group_tasks_by_locale(tasks).items():
+        glossary_map = glossary_maps_by_locale.get(locale, {})
         llm_rows: List[Dict[str, str]] = []
+        llm_locale_tasks: List[Dict[str, Any]] = []
         for task in locale_tasks:
+            direct_candidate = exact_glossary_refresh_candidate(task, glossary_map)
+            if direct_candidate:
+                updates[task["string_id"]] = direct_candidate
+                continue
             payload = {
                 "id": task["string_id"],
                 "source_zh": task.get("source_zh") or task.get("source_text") or "",
@@ -597,7 +617,11 @@ def run_refresh_llm(
                 "glossary_hints": task.get("relevant_glossary_terms") or [],
                 "reason_codes": task.get("reason_codes") or [],
             }
+            llm_locale_tasks.append(task)
             llm_rows.append({"id": task["string_id"], "source_text": json.dumps(payload, ensure_ascii=False)})
+
+        if not llm_rows:
+            continue
 
         results = batch_llm_call(
             step="translate_refresh_incremental",
@@ -610,7 +634,7 @@ def run_refresh_llm(
             allow_fallback=True,
         )
         target_key = derive_target_key(locale)
-        by_id = {task["string_id"]: task for task in locale_tasks}
+        by_id = {task["string_id"]: task for task in llm_locale_tasks}
         for result in results:
             string_id = str(result.get("id") or "")
             if not string_id or string_id not in by_id:
@@ -624,7 +648,7 @@ def run_refresh_llm(
                 continue
             updates[string_id] = candidate
 
-        for task in locale_tasks:
+        for task in llm_locale_tasks:
             if task["string_id"] not in updates and task["string_id"] not in failures:
                 failures[task["string_id"]] = "missing_llm_result"
     return updates, failures
@@ -867,6 +891,7 @@ def execute_tasks(
     out_csv: str,
     model: str,
     style_text: str,
+    glossary_maps_by_locale: Dict[str, Dict[str, str]],
     glossary_summaries_by_locale: Dict[str, str],
     style_profile: Optional[Dict[str, Any]],
     review_queue_path: str,
@@ -886,7 +911,7 @@ def execute_tasks(
     refresh_tasks = [task for task in tasks if task["task_type"] == "refresh"]
     retranslate_tasks = [task for task in tasks if task["task_type"] == "retranslate"]
 
-    refresh_updates, refresh_failures = run_refresh_llm(refresh_tasks, model, style_text)
+    refresh_updates, refresh_failures = run_refresh_llm(refresh_tasks, model, style_text, glossary_maps_by_locale)
     retranslate_updates, retranslate_failures = run_retranslate_llm(
         retranslate_tasks,
         model,
@@ -1113,7 +1138,11 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser.add_argument("--translated", required=True, help="Current translated CSV")
     parser.add_argument("--glossary", default="glossary/compiled.yaml")
     parser.add_argument("--style", required=True, help="Style guide markdown")
-    parser.add_argument("--style-profile", default="data/style_profile.yaml", help="Governed style profile path")
+    parser.add_argument(
+        "--style-profile",
+        default="workflow/style_profile.generated.yaml",
+        help="Governed style profile path",
+    )
     parser.add_argument("--lifecycle-registry", default="workflow/lifecycle_registry.yaml", help="Lifecycle registry for governed assets")
     parser.add_argument("--target-locale", default="ru-RU")
     parser.add_argument("--tasks-out", default="data/incremental_tasks.jsonl")
@@ -1177,7 +1206,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         tasks = generate_tasks(delta_rows, translated_rows, source_artifacts, glossary_maps_by_locale)
 
     task_locales = [str(task.get("target_locale") or args.target_locale) for task in tasks]
-    _, glossary_summaries_by_locale = build_glossary_resources(args.glossary, task_locales)
+    glossary_maps_by_locale, glossary_summaries_by_locale = build_glossary_resources(args.glossary, task_locales)
 
     initialize_task_statuses(tasks)
     write_jsonl(args.tasks_out, tasks)
@@ -1237,6 +1266,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         out_csv=args.out_csv,
         model=args.model,
         style_text=style_text,
+        glossary_maps_by_locale=glossary_maps_by_locale,
         glossary_summaries_by_locale=glossary_summaries_by_locale,
         style_profile=style_profile,
         review_queue_path=args.review_queue,
