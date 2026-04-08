@@ -24,6 +24,15 @@ from scripts.operator_ui_launcher import (
     OperatorUILauncher,
     PendingRunView,
 )
+from scripts.operator_ui_llm import (
+    LLMGateError,
+    ensure_llm_launch_ready,
+    ensure_llm_task_ready,
+    get_llm_launch_env,
+    load_llm_setup_view,
+    save_llm_setup,
+    test_llm_setup,
+)
 from scripts.operator_ui_models import (
     ArtifactRecord,
     WORKSPACE_CASE_LANES,
@@ -67,6 +76,8 @@ class OperatorUIApp:
         if not self.frontend_root.exists():
             self.frontend_root = Path(__file__).resolve().parents[1] / "operator_ui"
         self.launcher = launcher or OperatorUILauncher(self.repo_root)
+        if hasattr(self.launcher, "env_provider"):
+            self.launcher.env_provider = lambda: get_llm_launch_env(self.repo_root)
 
     def _pending_runs_payload(self) -> list[dict[str, Any]]:
         payloads: list[dict[str, Any]] = []
@@ -95,12 +106,33 @@ class OperatorUIApp:
     def get_run_detail(self, run_id: str) -> Dict[str, Any]:
         return self._get_run_detail_object(run_id).to_dict()
 
-    def start_run(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+    def get_llm_config(self) -> Dict[str, Any]:
+        return load_llm_setup_view(self.repo_root)
+
+    def save_llm_config(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        return save_llm_setup(
+            self.repo_root,
+            base_url=payload.get("base_url"),
+            api_key=payload.get("api_key"),
+            model=payload.get("model"),
+        )
+
+    def test_llm_config(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        return test_llm_setup(
+            self.repo_root,
+            base_url=payload.get("base_url"),
+            api_key=payload.get("api_key"),
+            model=payload.get("model"),
+        )
+
+    def start_run(self, payload: Dict[str, Any], *, require_gate: bool = True) -> Dict[str, Any]:
         input_path = str(payload.get("input", "")).strip()
         target_lang = str(payload.get("target_lang", "")).strip()
         verify_mode = str(payload.get("verify_mode", "")).strip()
         if not input_path or not target_lang or not verify_mode:
             raise ValueError("input, target_lang, and verify_mode are required")
+        if require_gate:
+            ensure_llm_launch_ready(self.repo_root)
         launched = self.launcher.launch_run(input_path, target_lang, verify_mode)
         return launched.to_dict() if hasattr(launched, "to_dict") else dict(launched)
 
@@ -195,13 +227,17 @@ class OperatorUIApp:
         }
 
     def start_task(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        ensure_llm_task_ready(self.repo_root)
         launch = self._resolve_task_launch_payload(payload)
         input_path = str(launch.get("input_path", "")).strip()
         target_locale = str(launch.get("target_locale", "")).strip()
         verify_mode = str(launch.get("verify_mode", "")).strip()
         if not input_path or not target_locale or not verify_mode:
             raise ValueError("input_path/upload_id, target_locale, and verify_mode are required")
-        launched = self.start_run({"input": input_path, "target_lang": target_locale, "verify_mode": verify_mode})
+        launched = self.start_run(
+            {"input": input_path, "target_lang": target_locale, "verify_mode": verify_mode},
+            require_gate=False,
+        )
         title = str(launch.get("title", "")).strip() or str(launch.get("input_label", "")).strip() or Path(input_path).name
         record = create_human_task_record(
             self.repo_root,
@@ -299,6 +335,7 @@ class OperatorUIApp:
                     "task": self.get_task_detail(task_id),
                 }
             try:
+                ensure_llm_task_ready(self.repo_root)
                 launched = self.launcher.launch_run(input_path, target_locale, verify_mode)
                 launched_payload = launched.to_dict() if hasattr(launched, "to_dict") else dict(launched)
                 request_human_task_changes(
@@ -333,6 +370,7 @@ class OperatorUIApp:
             verify_mode = str(task_detail.get("verify_mode", "")).strip()
             if not input_path or not target_locale or not verify_mode:
                 raise ValueError("task does not contain enough launch metadata to rerun")
+            ensure_llm_task_ready(self.repo_root)
             launched = self.launcher.launch_run(input_path, target_locale, verify_mode)
             launched_payload = launched.to_dict() if hasattr(launched, "to_dict") else dict(launched)
             append_human_task_run(
@@ -494,7 +532,7 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
             if parsed.path == "/api/task_uploads":
                 self._handle_task_upload()
                 return
-            if parsed.path not in {"/api/runs", "/api/tasks"} and not (
+            if parsed.path not in {"/api/runs", "/api/tasks", "/api/llm/config", "/api/llm/test"} and not (
                 len(segments) == 5 and segments[:2] == ["api", "tasks"] and segments[3] == "actions"
             ):
                 self._write_json({"error": "not_found"}, status=HTTPStatus.NOT_FOUND)
@@ -508,9 +546,30 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
                 self._write_json({"error": "invalid_json"}, status=HTTPStatus.BAD_REQUEST)
                 return
 
+            if parsed.path == "/api/llm/config":
+                try:
+                    llm = app.save_llm_config(payload)
+                except ValueError as exc:
+                    self._write_json({"error": "bad_request", "detail": str(exc)}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                self._write_json({"llm": llm})
+                return
+
+            if parsed.path == "/api/llm/test":
+                try:
+                    result = app.test_llm_config(payload)
+                except ValueError as exc:
+                    self._write_json({"error": "bad_request", "detail": str(exc)}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                self._write_json({"llm": result})
+                return
+
             if parsed.path == "/api/tasks":
                 try:
                     task = app.start_task(payload)
+                except LLMGateError as exc:
+                    self._write_json({"error": "llm_not_ready", "detail": str(exc)}, status=HTTPStatus.PRECONDITION_FAILED)
+                    return
                 except ValueError as exc:
                     self._write_json({"error": "bad_request", "detail": str(exc)}, status=HTTPStatus.BAD_REQUEST)
                     return
@@ -525,6 +584,9 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
                 action = segments[4]
                 try:
                     result = app.perform_task_action(task_id, action, payload)
+                except LLMGateError as exc:
+                    self._write_json({"error": "llm_not_ready", "detail": str(exc)}, status=HTTPStatus.PRECONDITION_FAILED)
+                    return
                 except FileNotFoundError:
                     self._write_json({"error": "task_not_found"}, status=HTTPStatus.NOT_FOUND)
                     return
@@ -539,6 +601,9 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
 
             try:
                 launched = app.start_run(payload)
+            except LLMGateError as exc:
+                self._write_json({"error": "llm_not_ready", "detail": str(exc)}, status=HTTPStatus.PRECONDITION_FAILED)
+                return
             except ValueError as exc:
                 self._write_json({"error": "bad_request", "detail": str(exc)}, status=HTTPStatus.BAD_REQUEST)
                 return
@@ -583,6 +648,10 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
         def _handle_api_get(self, parsed) -> None:
             segments = [segment for segment in parsed.path.strip("/").split("/") if segment]
             query = parse_qs(parsed.query)
+            if segments == ["api", "llm", "config"] or segments == ["api", "llm", "status"]:
+                self._write_json({"llm": app.get_llm_config()})
+                return
+
             if segments == ["api", "tasks"]:
                 status = str(query.get("status", [""])[0] or "")
                 bucket = str(query.get("bucket", [""])[0] or "")

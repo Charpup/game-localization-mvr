@@ -130,10 +130,14 @@ def test_workspace_dashboard_serves_sections_and_drilldown_contract(tmp_path):
         html = urllib.request.urlopen(base_url + "/").read().decode("utf-8")
         assert "Loc-MVR 人类交付控制台" in html
         assert "Task Wizard" in html
+        assert "LLM Setup" in html
         assert "继续处理待办" in html
         assert "Case Board" in html
         assert "Runtime Peek" in html
         assert 'id="task-view"' in html
+        assert 'id="llm-setup-card"' in html
+        assert 'id="llm-base-url-input"' in html
+        assert 'id="llm-test-button"' in html
         assert 'id="mode-tasks"' in html
         assert 'id="lane-act"' in html
         assert 'id="inspector-runtime"' in html
@@ -144,13 +148,19 @@ def test_workspace_dashboard_serves_sections_and_drilldown_contract(tmp_path):
         assert ".board-stage" in styles
         assert ".board-grid" in styles
         assert ".inspector" in styles
+        assert ".llm-setup-card" in styles
+        assert ".llm-meta-strip" in styles
 
         app_js = urllib.request.urlopen(base_url + "/app.js").read().decode("utf-8")
         assert "/api/tasks" in app_js
+        assert "/api/llm/config" in app_js
+        assert "/api/llm/test" in app_js
         assert "/api/workspace/overview" in app_js
         assert "/api/workspace/cases" in app_js
         assert "/api/workspace/runs/" in app_js
         assert "loadRuntimePeek" in app_js
+        assert "llmTaskLaunchReady" in app_js
+        assert "llmRuntimeLaunchReady" in app_js
         assert "selectedCaseId" in app_js
         assert "localStorage" in app_js
         assert "LANG_STORAGE_KEY" in app_js

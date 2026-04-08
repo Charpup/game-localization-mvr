@@ -10,7 +10,9 @@ from pathlib import Path
 
 import pytest
 
+from scripts.operator_ui_launcher import PendingRunView
 import scripts.operator_ui_server as server
+import scripts.operator_ui_llm as llm_setup
 
 
 def _write_run_fixture(base_dir: Path, run_id: str) -> Path:
@@ -58,10 +60,11 @@ def _http_json(base_url: str, path: str, *, method: str = "GET", payload: dict |
 class _DummyLauncher:
     def __init__(self):
         self.calls = []
+        self.env_provider = lambda: {}
 
     def launch_run(self, input_path: str, target_lang: str, verify_mode: str):
         self.calls.append((input_path, target_lang, verify_mode))
-        return server.PendingRunView(
+        return PendingRunView(
             run_id="ui_run_started",
             run_dir="D:/tmp/ui_run_started",
             status="running",
@@ -80,9 +83,36 @@ class _DummyLauncher:
         return None
 
 
+def _seed_llm_ready(repo_root: Path) -> None:
+    credential_path = repo_root / "tmp_llm_credentials.env"
+    credential_path.write_text("LLM_API_KEY=test-secret-key\n", encoding="utf-8")
+    fingerprint = llm_setup._config_fingerprint(
+        "https://example.invalid/v1",
+        "gpt-4.1-mini",
+        llm_setup._api_key_digest("test-secret-key"),
+    )
+    payload = {
+        "base_url": "https://example.invalid/v1",
+        "model": "gpt-4.1-mini",
+        "credential_path": str(credential_path),
+        "credential_source": "saved_file",
+        "last_test_status": "pass",
+        "last_test_at": "2026-04-09T10:00:00+00:00",
+        "last_test_message": "Connection verified. Translation launch is now unlocked.",
+        "last_test_model": "gpt-4.1-mini",
+        "last_test_latency_ms": 42,
+        "verified_fingerprint": fingerprint,
+        "updated_at": "2026-04-09T10:00:00+00:00",
+    }
+    settings_path = repo_root / "data" / "operator_ui_settings" / "llm_setup.json"
+    settings_path.parent.mkdir(parents=True, exist_ok=True)
+    settings_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 @pytest.fixture()
 def live_server(tmp_path):
     _write_run_fixture(tmp_path, "ui_run_server")
+    _seed_llm_ready(tmp_path)
     app = server.OperatorUIApp(repo_root=tmp_path, launcher=_DummyLauncher())
     httpd = server.build_http_server("127.0.0.1", 0, app)
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
@@ -138,6 +168,83 @@ def test_invalid_runs_limit_returns_400(live_server):
     assert exc_info.value.code == 400
 
 
+def test_llm_setup_endpoints_and_run_gate(tmp_path, monkeypatch):
+    _write_run_fixture(tmp_path, "ui_run_server")
+
+    class _GateLauncher(_DummyLauncher):
+        pass
+
+    launcher = _GateLauncher()
+    app = server.OperatorUIApp(repo_root=tmp_path, launcher=launcher)
+    httpd = server.build_http_server("127.0.0.1", 0, app)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address
+    base_url = f"http://{host}:{port}"
+
+    class _FakeResult:
+        text = "PONG"
+        latency_ms = 37
+        model = "test-gate-model"
+
+    class _FakeClient:
+        def __init__(self, base_url=None, api_key=None, model=None, **_kwargs):
+            self.base_url = base_url
+            self.api_key = api_key
+            self.model = model
+
+        def chat(self, *_args, **_kwargs):
+            return _FakeResult()
+
+    monkeypatch.setattr("scripts.operator_ui_llm.LLMClient", _FakeClient)
+    monkeypatch.setattr("scripts.operator_ui_llm._default_credential_path", lambda: tmp_path / ".llm_credentials")
+
+    try:
+        with pytest.raises(urllib.error.HTTPError) as exc_info:
+            _http_json(
+                base_url,
+                "/api/runs",
+                method="POST",
+                payload={"input": "fixtures/input.csv", "target_lang": "en-US", "verify_mode": "preflight"},
+            )
+        assert exc_info.value.code == 412
+
+        status, current = _http_json(base_url, "/api/llm/config")
+        assert status == 200
+        assert current["llm"]["launch_ready"] is False
+
+        status, saved = _http_json(
+            base_url,
+            "/api/llm/config",
+            method="POST",
+            payload={"base_url": "https://example.invalid/v1", "api_key": "secret-test-key", "model": "gpt-4.1-mini"},
+        )
+        assert status == 200
+        assert saved["llm"]["has_api_key"] is True
+        assert saved["llm"]["launch_ready"] is False
+        assert saved["llm"]["api_key_masked"].endswith("t-key"[-4:])
+
+        status, tested = _http_json(base_url, "/api/llm/test", method="POST", payload={})
+        assert status == 200
+        assert tested["llm"]["launch_ready"] is True
+        assert tested["llm"]["last_test_status"] == "pass"
+
+        status, launched = _http_json(
+            base_url,
+            "/api/runs",
+            method="POST",
+            payload={"input": "fixtures/input.csv", "target_lang": "en-US", "verify_mode": "preflight"},
+        )
+        assert status == 202
+        assert launched["run"]["run_id"] == "ui_run_started"
+        assert launcher.env_provider()["LLM_BASE_URL"] == "https://example.invalid/v1"
+        assert launcher.env_provider()["LLM_MODEL"] == "gpt-4.1-mini"
+        assert launcher.env_provider()["LLM_API_KEY_FILE"].endswith(".llm_credentials")
+    finally:
+        httpd.shutdown()
+        thread.join(timeout=5)
+
+
 def test_server_script_entrypoint_supports_cli_help():
     repo_root = Path(__file__).resolve().parents[1]
     result = subprocess.run(
@@ -150,4 +257,4 @@ def test_server_script_entrypoint_supports_cli_help():
     )
 
     assert result.returncode == 0
-    assert "Run the Phase 5 operator UI server" in result.stdout
+    assert "Run the operator UI server" in result.stdout
