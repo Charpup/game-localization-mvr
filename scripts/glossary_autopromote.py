@@ -449,7 +449,15 @@ def main():
     print()
 
     start_time = time.time()
-    reporter = ProgressReporter("glossary_autopromote", len(candidate_rows), args.batch_size) if ProgressReporter else None
+    reporter = (
+        ProgressReporter(
+            "glossary_autopromote",
+            str(Path(args.out_proposals).resolve().parent),
+            len(candidate_rows),
+        )
+        if ProgressReporter
+        else None
+    )
 
     stats: Dict[Tuple[str, str], TermStats] = {}
     processed_batches = 0

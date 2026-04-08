@@ -35,6 +35,17 @@ entries:
     supersedes: "none"
     deprecated_by: "none"
     required_runtime_gate: false
+  - asset_id: "glossary-compiled-naruto-ui-art-refresh-ru"
+    asset_kind: "glossary"
+    asset_path: "glossary/compiled_naruto_ui_art_workbook_refresh.yaml"
+    target_locale: "ru-RU"
+    status: "approved"
+    approval_ref: "docs/project_lifecycle/roadmap_index.md"
+    adr_refs:
+      - "docs/decisions/ADR-0001-project-continuity-framework.md"
+    supersedes: "none"
+    deprecated_by: "none"
+    required_runtime_gate: false
   - asset_id: "style-governance-contract"
     asset_kind: "policy"
     asset_path: "workflow/style_governance_contract.yaml"
