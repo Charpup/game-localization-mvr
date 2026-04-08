@@ -1,13 +1,19 @@
 {
   "step": "translate",
-  "total_batches": 1,
+  "total_batches": 130,
   "failed_batches": [
     {
-      "batch_num": 1,
-      "start_idx": 0,
-      "end_idx": 1,
-      "error": "Upstream error HTTP 503: {\"error\":{\"message\":\"当前分组 default 下对于模型 claude-haiku-4-5-2025101 计费模式 [按量计费,按次计费] 无可用渠道 (request id: 202603181941585700998695170923)\",\"type\":\"shell_api_error\"}}"
+      "batch_num": 16,
+      "start_idx": 375,
+      "end_idx": 400,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1006)')))"
+    },
+    {
+      "batch_num": 17,
+      "start_idx": 400,
+      "end_idx": 425,
+      "error": "Network error: HTTPSConnectionPool(host='api.apiyi.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1006)')))"
     }
   ],
-  "timestamp": "2026-03-18T19:41:58.095567"
+  "timestamp": "2026-04-04T15:01:07.400531"
 }

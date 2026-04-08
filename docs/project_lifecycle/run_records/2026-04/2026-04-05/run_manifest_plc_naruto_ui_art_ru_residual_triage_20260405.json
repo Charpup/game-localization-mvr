@@ -1,0 +1,73 @@
+{
+  "manifest_version": "plc-run-manifest-v1",
+  "run_id": "plc_naruto_ui_art_ru_residual_triage_20260405",
+  "run_scope": "naruto_ui_art_ru_residual_triage",
+  "status": "warn",
+  "started_at": "2026-04-05T01:39:58+08:00",
+  "finished_at": "2026-04-05T02:13:18+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-04/2026-04-05/session_start_20260405_ui_art_ru_residual_triage.md",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-05/run_issue_plc_naruto_ui_art_ru_residual_triage_20260405.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-05/run_verify_plc_naruto_ui_art_ru_residual_triage_20260405.md",
+  "artifacts": [
+    "scripts/build_ui_art_residual_slice.py",
+    "scripts/run_ui_art_residual_triage.py",
+    "scripts/ui_art_residual_assess.py",
+    "tests/test_ui_art_residual_triage_contract.py",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/run_manifest.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_residual_candidates.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_residual_repair_tasks.jsonl",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_residual_patched_rows.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_translated_repaired.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_qa_hard_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_soft_qa_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_soft_tasks.jsonl",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_residual_review_queue.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_residual_review_queue.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_delivery_repaired.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_delivery_repaired_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_residual_assessment.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_residual_assessment.md"
+  ],
+  "blockers": [
+    "residual acceptance missed the remaining soft hard-gate target by three items: 503 vs <=500",
+    "title/headline leakage and creative-name residuals still dominate the remaining manual queue",
+    "promo_short, item_skill_name, and slogan_long still exceed their slice targets after this repair pass"
+  ],
+  "changed_files": [
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "task_plan.md",
+    "findings.md",
+    "progress.md",
+    "scripts/translate_llm.py",
+    "scripts/build_ui_art_residual_slice.py",
+    "scripts/run_ui_art_residual_triage.py",
+    "scripts/ui_art_residual_assess.py",
+    "tests/test_ui_art_residual_triage_contract.py",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-05/session_start_20260405_ui_art_ru_residual_triage.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-05/run_issue_plc_naruto_ui_art_ru_residual_triage_20260405.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-05/run_verify_plc_naruto_ui_art_ru_residual_triage_20260405.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-05/session_end_20260405_ui_art_ru_residual_triage.md"
+  ],
+  "evidence_refs": [
+    "command:.\\.venv\\Scripts\\python.exe -m pytest tests/test_ui_art_residual_triage_contract.py tests/test_translate_llm_contract.py tests/test_qa_hard.py tests/test_ui_art_full_rerun_assess_contract.py -q -s",
+    "command:.\\.venv\\Scripts\\python.exe scripts/style_sync_check.py",
+    "command:.\\.venv\\Scripts\\python.exe scripts/glossary_compile.py --approved glossary/approved.yaml --approved glossary/zhCN_ruRU/ip_naruto_ui_art_short.yaml --out_compiled data/incoming/naruto_ui_art_ru_20260404/glossary_ui_art_compiled.yaml --language_pair zh-CN->ru-RU --franchise naruto --resolve_by_scope",
+    "command:.\\.venv\\Scripts\\python.exe scripts/run_ui_art_residual_triage.py --base-run-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01 --slice-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01",
+    "command:.\\.venv\\Scripts\\python.exe scripts/ui_art_residual_assess.py --base-run-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01 --slice-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01 --out-json data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_residual_assessment.json --out-md data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/ui_art_residual_assessment.md"
+  ],
+  "adr_refs": [
+    "docs/decisions/ADR-0001-project-continuity-framework.md",
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "decision_refs": [
+    "repair the full-rerun output in a derived slice instead of paying for another full rerun",
+    "respect the existing single-process live job and do not launch a duplicate runner for the same slice",
+    "treat the repaired delivery as the new working baseline even though the slice still ends with a material manual queue"
+  ],
+  "evidence_ready": true,
+  "next_step_owner": "Codex",
+  "next_step_scope": "naruto_ui_art_ru_manual_queue_separation",
+  "gate_result": "warn"
+}

@@ -1,0 +1,29 @@
+# run_verify
+
+- run_id: `plc_naruto_ui_art_ru_live_20260404`
+- scope: `naruto_ui_art_ru_live_batch`
+- verification_result: `warn`
+- environment_result: `pass`
+- offline_validation_result: `pass`
+- live_execution_result: `pass_with_quality_blockers`
+- decision: `DELIVERY_READY_FOR_HUMAN_REVIEW_NOT_DIRECT_RELEASE`
+- verified:
+  - `.\\.venv\\Scripts\\python.exe -m pytest tests/test_ui_art_batch_contract.py tests/test_glossary_compile_contract.py -q -s` -> `6 passed`
+  - `.\\.venv\\Scripts\\python.exe scripts/style_sync_check.py` -> `pass`
+  - batch process inspection before launch found no active Python worker for `ui_art_live_20260404_run01`
+  - `source_ui_art.csv` decoded successfully as `GB18030/GBK`
+  - live prep preserved row counts: `3235 prepared / 3234 live-ready / 1 skipped_empty`
+  - model probe succeeded on `claude-haiku-4-5-20251001`
+  - `translate_llm` completed with batch-local checkpointing and no concurrent worker launch
+  - `qa_hard` initial report -> `3006` errors (`3002 length_overflow`, `4 forbidden_hit`)
+  - `qa_hard` recheck v2 -> `3002` errors, all `length_overflow`
+  - `soft_qa` completed -> `2909` rows processed, `2788` tasks, `2713 major`, `75 minor`
+  - `ui_art_length_review.py` -> `3189` review rows (`2839 critical`, `163 major`, `187 warning`)
+  - `restore_ui_art_delivery.py` -> `3235 delivery rows`, `row_count_match=true`
+- residual_risks:
+  - `soft_qa` hard gate failed, so the batch still carries major terminology/style/length issues
+  - `reports/soft_qa_failed_batches.json` records one failed soft-QA batch parse
+  - hard-QA error payloads are truncated in `errors[]`; recovery logic must trust `error_counts` and report metadata instead
+  - two rows were manually patched to clear forbidden-hit hard failures and should remain visible in human review:
+    - `UIART_000397`
+    - `UIART_002934`
