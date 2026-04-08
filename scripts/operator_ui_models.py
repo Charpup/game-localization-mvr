@@ -16,6 +16,8 @@ from scripts.operator_control_plane import derive_operator_artifacts
 TEXT_SUFFIXES = {".log", ".txt", ".md", ".py", ".yaml", ".yml", ".csv"}
 JSON_SUFFIXES = {".json", ".jsonl"}
 WORKSPACE_CARD_STATUSES = {"all", "open", "closed"}
+WORKSPACE_CASE_STATUSES = {"all", "open"}
+WORKSPACE_CASE_LANES = {"all", "act", "review", "watch", "done"}
 WORKSPACE_CARD_PRIORITIES = {"P0", "P1", "P2"}
 WORKSPACE_CARD_TYPES = {"review_ticket", "runtime_alert", "governance_drift", "kpi_watch", "decision_required"}
 
@@ -237,20 +239,60 @@ class WorkspaceCardView:
 @dataclass
 class WorkspaceOverview:
     open_card_count: int
+    open_case_count: int
     runs_with_open_cards: int
     open_review_tickets: int
     runs_with_drift: int
     runtime_health_counts: Dict[str, int]
+    case_counts_by_lane: Dict[str, int]
     recent_runs: List[RunSummary]
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "open_card_count": self.open_card_count,
+            "open_case_count": self.open_case_count,
             "runs_with_open_cards": self.runs_with_open_cards,
             "open_review_tickets": self.open_review_tickets,
             "runs_with_drift": self.runs_with_drift,
             "runtime_health_counts": dict(self.runtime_health_counts),
+            "case_counts_by_lane": dict(self.case_counts_by_lane),
             "recent_runs": [run.to_dict() for run in self.recent_runs],
+        }
+
+
+@dataclass
+class WorkspaceCaseView:
+    case_id: str
+    run_id: str
+    lane: str
+    status: str
+    priority: str
+    headline: str
+    summary: str
+    target_locale: str
+    runtime_status: str
+    open_card_count: int
+    card_type_counts: Dict[str, int]
+    next_action: str
+    started_at: str
+    has_persisted_operator_artifacts: bool
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "case_id": self.case_id,
+            "run_id": self.run_id,
+            "lane": self.lane,
+            "status": self.status,
+            "priority": self.priority,
+            "headline": self.headline,
+            "summary": self.summary,
+            "target_locale": self.target_locale,
+            "runtime_status": self.runtime_status,
+            "open_card_count": self.open_card_count,
+            "card_type_counts": dict(self.card_type_counts),
+            "next_action": self.next_action,
+            "started_at": self.started_at,
+            "has_persisted_operator_artifacts": self.has_persisted_operator_artifacts,
         }
 
 
@@ -540,8 +582,11 @@ def _load_or_derive_operator_payload(repo_root: Path, run_detail: RunDetail) -> 
             "open_card_count": int(persisted_summary.get("open_operator_cards", 0) or 0),
             "report": persisted_summary,
             "cards": persisted_cards,
+            "has_persisted_operator_artifacts": True,
         }
-    return derive_operator_artifacts(run_dir=run_detail.run_dir, repo_root=repo_root)
+    payload = derive_operator_artifacts(run_dir=run_detail.run_dir, repo_root=repo_root)
+    payload["has_persisted_operator_artifacts"] = False
+    return payload
 
 
 def _priority_rank(priority: str) -> int:
@@ -602,6 +647,93 @@ def _build_decision_context(cards: List[WorkspaceCardView], report: Dict[str, An
     }
 
 
+def _workspace_case_cards(cards: List[WorkspaceCardView]) -> List[WorkspaceCardView]:
+    open_cards = [card for card in cards if card.status == "open"]
+    return open_cards or cards
+
+
+def _workspace_case_primary_card(cards: List[WorkspaceCardView]) -> Optional[WorkspaceCardView]:
+    relevant = _workspace_case_cards(cards)
+    if not relevant:
+        return None
+    card_type_rank = {
+        "runtime_alert": 0,
+        "review_ticket": 1,
+        "governance_drift": 2,
+        "kpi_watch": 3,
+        "decision_required": 4,
+    }
+    return sorted(
+        relevant,
+        key=lambda card: (
+            card_type_rank.get(card.card_type, 99),
+            _priority_rank(card.priority),
+            _status_rank(card.status),
+            card.card_id,
+        ),
+    )[0]
+
+
+def _workspace_case_lane(cards: List[WorkspaceCardView], run_detail: RunDetail, report: Dict[str, Any]) -> str:
+    open_cards = [card for card in cards if card.status == "open"]
+    if not open_cards:
+        return "done"
+    if run_detail.overall_status in {"fail", "blocked"} or any(card.priority == "P0" for card in open_cards):
+        return "act"
+    pending_review_tickets = int(((report.get("open_review_workload") or {}).get("pending_review_tickets")) or 0)
+    if pending_review_tickets > 0 or any(card.card_type == "review_ticket" for card in open_cards):
+        return "review"
+    return "watch"
+
+
+def _workspace_case_summary(primary: WorkspaceCardView | None, report: Dict[str, Any], cards: List[WorkspaceCardView]) -> str:
+    if primary and primary.summary:
+        return primary.summary
+    open_card_count = len([card for card in cards if card.status == "open"])
+    if open_card_count:
+        return f"{open_card_count} open operator signals require follow-up."
+    return str((report.get("decision_context") or {}).get("summary") or "No open operator signals.")
+
+
+def _workspace_case_next_action(primary: WorkspaceCardView | None, report: Dict[str, Any]) -> str:
+    if primary and primary.recommended_actions:
+        return str(primary.recommended_actions[0])
+    report_actions = list(report.get("next_recommended_actions", []) or [])
+    return str(report_actions[0]) if report_actions else ""
+
+
+def _workspace_case_type_counts(cards: List[WorkspaceCardView]) -> Dict[str, int]:
+    relevant = _workspace_case_cards(cards)
+    counts: Counter[str] = Counter(card.card_type for card in relevant)
+    return dict(counts)
+
+
+def _build_workspace_case(run_detail: RunDetail, report: Dict[str, Any], cards: List[WorkspaceCardView], *, has_persisted_operator_artifacts: bool) -> Optional[WorkspaceCaseView]:
+    if not cards:
+        return None
+    primary = _workspace_case_primary_card(cards)
+    lane = _workspace_case_lane(cards, run_detail, report)
+    status = "closed" if lane == "done" else "open"
+    priority_source = _workspace_case_cards(cards)
+    priority = sorted(priority_source, key=lambda card: _priority_rank(card.priority))[0].priority if priority_source else "P2"
+    return WorkspaceCaseView(
+        case_id=f"case:{run_detail.run_id}",
+        run_id=run_detail.run_id,
+        lane=lane,
+        status=status,
+        priority=priority,
+        headline=primary.title if primary else run_detail.run_id,
+        summary=_workspace_case_summary(primary, report, cards),
+        target_locale=primary.target_locale if primary else (run_detail.target_lang or "unknown"),
+        runtime_status=run_detail.overall_status,
+        open_card_count=len([card for card in cards if card.status == "open"]),
+        card_type_counts=_workspace_case_type_counts(cards),
+        next_action=_workspace_case_next_action(primary, report),
+        started_at=run_detail.started_at,
+        has_persisted_operator_artifacts=has_persisted_operator_artifacts,
+    )
+
+
 def _validate_workspace_filters(status: str, card_type: str, priority: str) -> None:
     if status not in WORKSPACE_CARD_STATUSES:
         raise ValueError("status must be one of all/open/closed")
@@ -609,6 +741,13 @@ def _validate_workspace_filters(status: str, card_type: str, priority: str) -> N
         raise ValueError("card_type must be one of the operator_card contract enums")
     if priority and priority not in WORKSPACE_CARD_PRIORITIES:
         raise ValueError("priority must be one of P0/P1/P2")
+
+
+def _validate_workspace_case_filters(status: str, lane: str) -> None:
+    if status not in WORKSPACE_CASE_STATUSES:
+        raise ValueError("status must be one of all/open")
+    if lane not in WORKSPACE_CASE_LANES:
+        raise ValueError("lane must be one of all/act/review/watch/done")
 
 
 def load_workspace_run_detail(repo_root: Path | str, run_id: str) -> WorkspaceRunDetail:
@@ -627,6 +766,55 @@ def load_workspace_run_detail(repo_root: Path | str, run_id: str) -> WorkspaceRu
         decision_context=_build_decision_context(cards, report),
     )
     return workspace
+
+
+def load_workspace_cases(
+    repo_root: Path | str,
+    *,
+    status: str = "open",
+    lane: str = "all",
+    target_locale: str = "",
+    query: str = "",
+    limit: int = 50,
+) -> List[WorkspaceCaseView]:
+    _validate_workspace_case_filters(status, lane)
+    repo_root_path = Path(repo_root)
+    lowered_query = str(query or "").strip().lower()
+    lowered_target_locale = str(target_locale or "").strip().lower()
+    cases: List[WorkspaceCaseView] = []
+    for manifest_path in _list_manifest_paths(repo_root_path):
+        run_detail = load_run_detail(manifest_path, repo_root=repo_root_path)
+        payload = _load_or_derive_operator_payload(repo_root_path, run_detail)
+        cards = _sorted_workspace_cards([_normalize_workspace_card(card, run_detail) for card in payload["cards"]])
+        case = _build_workspace_case(
+            run_detail,
+            dict(payload["report"]),
+            cards,
+            has_persisted_operator_artifacts=bool(payload.get("has_persisted_operator_artifacts")),
+        )
+        if case is None:
+            continue
+        if status == "open" and case.status != "open":
+            continue
+        if lane != "all" and case.lane != lane:
+            continue
+        if lowered_target_locale and case.target_locale.lower() != lowered_target_locale:
+            continue
+        if lowered_query:
+            haystack = " ".join([case.run_id, case.headline, case.summary, case.target_locale]).lower()
+            if lowered_query not in haystack:
+                continue
+        cases.append(case)
+    return sorted(
+        cases,
+        key=lambda case: (
+            0 if case.status == "open" else 1,
+            {"act": 0, "review": 1, "watch": 2, "done": 3}.get(case.lane, 99),
+            _priority_rank(case.priority),
+            case.started_at,
+            case.case_id,
+        ),
+    )[: max(limit, 0)]
 
 
 def load_workspace_cards(
@@ -662,9 +850,11 @@ def load_workspace_overview(repo_root: Path | str, limit_runs: int = 10) -> Work
     repo_root_path = Path(repo_root)
     runtime_health_counts: Counter[str] = Counter()
     open_card_count = 0
+    open_case_count = 0
     runs_with_open_cards = 0
     runs_with_drift = 0
     open_review_tickets = 0
+    case_counts_by_lane: Counter[str] = Counter()
     for manifest_path in _list_manifest_paths(repo_root_path):
         run_detail = load_run_detail(manifest_path, repo_root=repo_root_path)
         runtime_health_counts[run_detail.overall_status] += 1
@@ -677,12 +867,24 @@ def load_workspace_overview(repo_root: Path | str, limit_runs: int = 10) -> Work
         if any(card.card_type == "governance_drift" and card.status == "open" for card in cards):
             runs_with_drift += 1
         open_review_tickets += sum(1 for card in open_cards if card.card_type == "review_ticket")
+        case = _build_workspace_case(
+            run_detail,
+            dict(payload["report"]),
+            _sorted_workspace_cards(cards),
+            has_persisted_operator_artifacts=bool(payload.get("has_persisted_operator_artifacts")),
+        )
+        if case is not None:
+            case_counts_by_lane[case.lane] += 1
+            if case.status == "open":
+                open_case_count += 1
     overview = WorkspaceOverview(
         open_card_count=open_card_count,
+        open_case_count=open_case_count,
         runs_with_open_cards=runs_with_open_cards,
         open_review_tickets=open_review_tickets,
         runs_with_drift=runs_with_drift,
         runtime_health_counts=dict(runtime_health_counts),
+        case_counts_by_lane=dict(case_counts_by_lane),
         recent_runs=load_run_summaries(repo_root_path, limit=limit_runs),
     )
     return overview
