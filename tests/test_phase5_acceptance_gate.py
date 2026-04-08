@@ -135,7 +135,7 @@ def test_phase5_acceptance_gate_real_entrypoint_and_http_contracts():
             assert response.status == 200
             assert "/api/runs" in response.read().decode("utf-8")
 
-        status, runs = _http_json(base_url, "/api/runs?limit=12")
+        status, runs = _http_json(base_url, "/api/runs?limit=50")
         assert status == 200
         fixture = next(run for run in runs["runs"] if run["run_id"] == run_id)
         assert fixture["overall_status"] == "pass"
