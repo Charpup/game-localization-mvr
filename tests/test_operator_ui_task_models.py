@@ -197,11 +197,115 @@ def test_request_changes_links_new_run_and_records_history(tmp_path):
     )
 
     assert detail.latest_run_id == "pending_run_01"
-    assert detail.status == "queued"
+    assert detail.status == "running"
     assert detail.latest_feedback_note == "Please tighten the product names and rerun."
     assert detail.metrics["request_changes_at"] == "2026-04-06T09:00:00+00:00"
     assert any(event["type"] == "changes_requested" for event in detail.history)
     assert any(event["type"] == "run_linked" for event in detail.history)
+
+
+def test_pending_failed_run_surfaces_failed_status(tmp_path):
+    _write_task_run_fixture(tmp_path, "ready_run", manifest_status="pass", verify_status="PASS", with_review_ticket=False)
+    task_models.create_human_task_record(
+        tmp_path,
+        task_id="task_custom_record",
+        title="April launch copy",
+        source_input="fixtures/input.csv",
+        source_input_label="April_launch.csv",
+        target_locale="ja-JP",
+        verify_mode="preflight",
+        linked_run_id="ready_run",
+        created_at="2026-04-06T08:30:00+00:00",
+    )
+
+    task_models.request_human_task_changes(
+        tmp_path,
+        "task_custom_record",
+        note="Please tighten the product names and rerun.",
+        new_run_id="pending_run_01",
+        at="2026-04-06T09:00:00+00:00",
+    )
+
+    detail = task_models.load_human_task_detail(
+        tmp_path,
+        "task_custom_record",
+        pending_runs=[
+            {
+                "run_id": "pending_run_01",
+                "run_dir": str(tmp_path / "data" / "operator_ui_runs" / "pending_run_01"),
+                "status": "failed",
+                "pid": 3456,
+                "started_at": "2026-04-06T09:00:00+00:00",
+                "command": [".venv\\Scripts\\python.exe", "scripts/run_smoke_pipeline.py"],
+                "input_csv": "fixtures/pending.csv",
+                "target_lang": "ja-JP",
+                "verify_mode": "preflight",
+            }
+        ],
+    )
+
+    assert detail.latest_run_id == "pending_run_01"
+    assert detail.status == "failed"
+
+
+def test_build_bundle_summary_prefers_downloadable_non_technical_delivery():
+    deliveries = [
+        task_models.HumanArtifactView(
+            artifact_key="operator_summary_md",
+            delivery_id="run_01__operator_summary_md",
+            label="Delivery summary",
+            description="Human-readable summary",
+            kind="markdown",
+            primary_use="Primary output",
+            group_id="primary_output",
+            group_label="Primary output",
+            openable=False,
+            downloadable=False,
+            source_run_id="run_01",
+            preview_url="/api/tasks/task_run_01/deliveries/run_01__operator_summary_md",
+            download_url="/api/tasks/task_run_01/deliveries/run_01__operator_summary_md/download",
+            technical_detail=False,
+            path="D:/missing/operator_summary.md",
+        ),
+        task_models.HumanArtifactView(
+            artifact_key="run_manifest",
+            delivery_id="run_01__run_manifest",
+            label="Execution manifest",
+            description="Technical details",
+            kind="json",
+            primary_use="Technical details",
+            group_id="supporting_files",
+            group_label="Supporting files",
+            openable=True,
+            downloadable=True,
+            source_run_id="run_01",
+            preview_url="/api/tasks/task_run_01/deliveries/run_01__run_manifest",
+            download_url="/api/tasks/task_run_01/deliveries/run_01__run_manifest/download",
+            technical_detail=True,
+            path="D:/artifacts/run_manifest.json",
+        ),
+        task_models.HumanArtifactView(
+            artifact_key="smoke_verify_report",
+            delivery_id="run_01__smoke_verify_report",
+            label="Verification report",
+            description="Quality check summary",
+            kind="json",
+            primary_use="Quality review",
+            group_id="validation_report",
+            group_label="Validation report",
+            openable=True,
+            downloadable=True,
+            source_run_id="run_01",
+            preview_url="/api/tasks/task_run_01/deliveries/run_01__smoke_verify_report",
+            download_url="/api/tasks/task_run_01/deliveries/run_01__smoke_verify_report/download",
+            technical_detail=False,
+            path="D:/artifacts/smoke_verify_report.json",
+        ),
+    ]
+
+    summary = task_models.build_bundle_summary(deliveries)
+
+    assert summary["primary_delivery_id"] == "run_01__smoke_verify_report"
 
 
 def test_approve_archive_and_download_move_task_between_buckets(tmp_path):

@@ -79,6 +79,16 @@ def _http_download(base_url: str, path: str):
         return response.status, response.read(), dict(response.headers)
 
 
+def _http_error_json(base_url: str, path: str, *, method: str = "GET", payload: dict | None = None):
+    data = None if payload is None else json.dumps(payload).encode("utf-8")
+    request = urllib.request.Request(base_url + path, data=data, method=method)
+    request.add_header("Content-Type", "application/json")
+    with pytest.raises(urllib.error.HTTPError) as exc_info:
+        urllib.request.urlopen(request)
+    body = exc_info.value.read().decode("utf-8")
+    return exc_info.value.code, json.loads(body)
+
+
 @dataclass
 class _PendingRun:
     run_id: str
@@ -182,6 +192,11 @@ def test_task_endpoints_surface_buckets_preview_download_and_archive(tmp_path):
         assert b"Delivery summary" in body
         assert "attachment" in headers["Content-Disposition"]
 
+        status, downloaded = _http_json(base_url, f"/api/tasks/{task_id}")
+        assert status == 200
+        assert downloaded["task"]["metrics"]["downloaded_at"]
+        assert any(event["type"] == "delivery_downloaded" for event in downloaded["task"]["history"])
+
         status, archived = _http_json(base_url, f"/api/tasks/{task_id}/actions/archive_task", method="POST", payload={})
         assert status == 202
         assert archived["task"]["bucket"] == "archived"
@@ -193,6 +208,47 @@ def test_task_endpoints_surface_buckets_preview_download_and_archive(tmp_path):
         status, archived_tasks = _http_json(base_url, "/api/tasks?bucket=archived&limit=10")
         assert status == 200
         assert archived_tasks["tasks"][0]["task_id"] == task_id
+    finally:
+        httpd.shutdown()
+        thread.join(timeout=5)
+
+
+def test_task_delivery_download_returns_structured_404_without_auditing_missing_file(tmp_path):
+    _write_task_run_fixture(tmp_path, "task_server_missing")
+    task_id = task_models.task_id_for_run("task_server_missing")
+    task_models.create_human_task_record(
+        tmp_path,
+        task_id=task_id,
+        title="Missing file task",
+        source_input="fixtures/input.csv",
+        source_input_label="launch_copy.csv",
+        target_locale="en-US",
+        verify_mode="full",
+        linked_run_id="task_server_missing",
+        created_at="2026-04-06T08:00:00+00:00",
+    )
+
+    app = server.OperatorUIApp(repo_root=tmp_path)
+    httpd = server.build_http_server("127.0.0.1", 0, app)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address
+    base_url = f"http://{host}:{port}"
+
+    try:
+        status, detail = _http_json(base_url, f"/api/tasks/{task_id}")
+        assert status == 200
+        delivery_id = detail["task"]["bundle_summary"]["primary_delivery_id"]
+        (tmp_path / "data" / "operator_ui_runs" / "task_server_missing" / "operator_summary.md").unlink()
+
+        status, error = _http_error_json(base_url, f"/api/tasks/{task_id}/deliveries/{delivery_id}/download")
+        assert status == 404
+        assert error["error"] == "delivery_file_missing"
+
+        status, unchanged = _http_json(base_url, f"/api/tasks/{task_id}")
+        assert status == 200
+        assert unchanged["task"]["metrics"]["downloaded_at"] == ""
+        assert not any(event["type"] == "delivery_downloaded" for event in unchanged["task"]["history"])
     finally:
         httpd.shutdown()
         thread.join(timeout=5)
@@ -230,7 +286,7 @@ def test_task_creation_supports_upload_and_request_changes_requires_note(tmp_pat
         assert task["input_mode"] == "upload"
         assert task["upload_id"] == upload["upload_id"]
         assert task["source_input_label"] == "new_input.csv"
-        assert task["status"] in {"queued", "running"}
+        assert task["status"] == "running"
         assert task["latest_run_id"].startswith("pending_task_run_")
 
         with pytest.raises(urllib.error.HTTPError) as exc_info:
@@ -244,7 +300,7 @@ def test_task_creation_supports_upload_and_request_changes_requires_note(tmp_pat
             payload={"note": "Please rerun after tightening the glossary choices."},
         )
         assert status == 202
-        assert changed["task"]["status"] == "queued"
+        assert changed["task"]["status"] == "running"
         assert changed["task"]["latest_feedback_note"] == "Please rerun after tightening the glossary choices."
         assert len(changed["task"]["linked_run_ids"]) == 2
         assert changed["linked_run_id"].startswith("pending_task_run_")

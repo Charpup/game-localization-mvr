@@ -769,7 +769,7 @@ def build_bundle_summary(deliveries: List[HumanArtifactView]) -> Dict[str, Any]:
         for group_id in VISIBLE_DELIVERY_GROUPS
         if grouped.get(group_id)
     ]
-    primary_delivery = next((delivery for delivery in deliveries if not delivery.technical_detail), None)
+    primary_delivery = next((delivery for delivery in deliveries if delivery.downloadable and not delivery.technical_detail), None)
     return {
         "groups": groups,
         "technical_details": [delivery.to_dict() for delivery in technical_details],
@@ -791,6 +791,11 @@ def _effective_task_status(
     if run_detail is None:
         return stored_status if stored_status in TASK_STATUSES else "draft"
     if run_detail.pending:
+        pending_status = run_detail.overall_status.strip().lower()
+        if pending_status in {"running", "pending"}:
+            return "running"
+        if pending_status in {"fail", "failed", "blocked"}:
+            return "failed"
         return "queued"
     if run_detail.overall_status in {"running", "pending"}:
         return "running"

@@ -155,7 +155,6 @@ class OperatorUIApp:
             delivery_id,
             pending_runs=pending_runs,
         )
-        mark_task_delivery_downloaded(self.repo_root, task_id, delivery_id=delivery_id)
         return {
             "delivery": delivery.to_dict(),
             "path": artifact.path,
@@ -653,7 +652,9 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
                 except FileNotFoundError:
                     self._write_json({"error": "delivery_not_found"}, status=HTTPStatus.NOT_FOUND)
                     return
-                self._write_file(Path(payload["path"]), filename=str(payload["filename"]), content_type=str(payload["content_type"]))
+                delivered = self._write_file(Path(payload["path"]), filename=str(payload["filename"]), content_type=str(payload["content_type"]))
+                if delivered:
+                    mark_task_delivery_downloaded(app.repo_root, task_id, delivery_id=delivery_id)
                 return
 
             if segments == ["api", "workspace", "overview"]:
@@ -776,14 +777,25 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
             self.end_headers()
             self.wfile.write(body)
 
-        def _write_file(self, path: Path, *, filename: str, content_type: str) -> None:
-            body = path.read_bytes()
+        def _write_file(self, path: Path, *, filename: str, content_type: str) -> bool:
+            try:
+                body = path.read_bytes()
+            except FileNotFoundError:
+                self._write_json(
+                    {
+                        "error": "delivery_file_missing",
+                        "detail": "The selected delivery file is no longer available on disk.",
+                    },
+                    status=HTTPStatus.NOT_FOUND,
+                )
+                return False
             self.send_response(HTTPStatus.OK)
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(body)))
             self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
             self.end_headers()
             self.wfile.write(body)
+            return True
 
     return ThreadingHTTPServer((host, port), Handler)
 
