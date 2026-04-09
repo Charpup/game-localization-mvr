@@ -30,6 +30,8 @@ def _write_run_fixture(base_dir: Path, run_id: str) -> None:
         encoding="utf-8",
     )
     review_tickets = run_dir / "smoke_review_tickets.jsonl"
+    operator_summary = run_dir / "operator_summary.md"
+    operator_summary.write_text("# Delivery summary\nReview-ready package.\n", encoding="utf-8")
     review_tickets.write_text(
         json.dumps(
             {
@@ -94,6 +96,10 @@ def _write_run_fixture(base_dir: Path, run_id: str) -> None:
             {"name": "Smoke Verify", "status": "warn", "required": True, "files": [{"path": str(verify_log), "required": True}]},
         ],
         "artifacts": {
+            "run_manifest": str(run_dir / "run_manifest.json"),
+            "smoke_verify_report": str(verify_report),
+            "smoke_issues_report": str(issue_file),
+            "operator_summary_md": str(operator_summary),
             "smoke_verify_log": str(verify_log),
             "smoke_review_tickets_jsonl": str(review_tickets),
             "smoke_feedback_log_jsonl": str(run_dir / "smoke_review_feedback_log.jsonl"),
@@ -122,31 +128,49 @@ def test_workspace_dashboard_serves_sections_and_drilldown_contract(tmp_path):
 
     try:
         html = urllib.request.urlopen(base_url + "/").read().decode("utf-8")
-        assert "运营工作台" in html
-        assert "运营收件箱" in html
-        assert "决策上下文" in html
-        assert "复核负载" in html
-        assert "KPI 快照" in html
-        assert "治理漂移" in html
+        assert "Loc-MVR 人类交付控制台" in html
+        assert "Task Wizard" in html
+        assert "继续处理待办" in html
+        assert "Case Board" in html
+        assert "Runtime Peek" in html
+        assert 'id="task-view"' in html
+        assert 'id="mode-tasks"' in html
+        assert 'id="lane-act"' in html
+        assert 'id="inspector-runtime"' in html
         assert 'id="lang-zh"' in html
         assert 'id="lang-en"' in html
 
+        styles = urllib.request.urlopen(base_url + "/styles.css").read().decode("utf-8")
+        assert ".board-stage" in styles
+        assert ".board-grid" in styles
+        assert ".inspector" in styles
+
         app_js = urllib.request.urlopen(base_url + "/app.js").read().decode("utf-8")
+        assert "/api/tasks" in app_js
         assert "/api/workspace/overview" in app_js
-        assert "/api/workspace/cards" in app_js
+        assert "/api/workspace/cases" in app_js
         assert "/api/workspace/runs/" in app_js
-        assert "recommended_actions" in app_js
-        assert "artifact_refs" in app_js
-        assert "evidence_refs" in app_js
-        assert "adr_refs" in app_js
+        assert "loadRuntimePeek" in app_js
+        assert "selectedCaseId" in app_js
         assert "localStorage" in app_js
         assert "LANG_STORAGE_KEY" in app_js
 
         overview = json.loads(urllib.request.urlopen(base_url + "/api/workspace/overview?limit_runs=5").read().decode("utf-8"))
         assert overview["overview"]["open_card_count"] >= 1
+        assert overview["overview"]["open_case_count"] >= 1
 
-        cards = json.loads(urllib.request.urlopen(base_url + "/api/workspace/cards?status=open").read().decode("utf-8"))
-        selected = cards["cards"][0]
+        tasks = json.loads(
+            urllib.request.urlopen(
+                base_url + "/api/tasks?bucket=waiting_on_ops&status=needs_operator_review&query=workspace_dashboard_acceptance&limit=5"
+            ).read().decode("utf-8")
+        )
+        assert len(tasks["tasks"]) == 1
+        assert tasks["tasks"][0]["task_id"] == "task_workspace_dashboard_acceptance"
+        assert tasks["tasks"][0]["bucket"] == "waiting_on_ops"
+        assert tasks["overview"]["counts_by_bucket"]["waiting_on_ops"] >= 1
+
+        cases = json.loads(urllib.request.urlopen(base_url + "/api/workspace/cases?status=open").read().decode("utf-8"))
+        selected = cases["cases"][0]
         assert selected["run_id"] == "workspace_dashboard_acceptance"
 
         detail = json.loads(urllib.request.urlopen(base_url + "/api/workspace/runs/workspace_dashboard_acceptance").read().decode("utf-8"))

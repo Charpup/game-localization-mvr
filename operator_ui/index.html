@@ -3,258 +3,495 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>运营工作台仪表盘</title>
+  <title>Loc-MVR 人类交付控制台</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="chrome-grid">
-    <aside class="chrome-rail">
-      <div class="rail-mark">GL-MVR</div>
-      <div class="rail-copy">
-        <span data-i18n="rail.operator">运营</span>
-        <span data-i18n="rail.controlSurface">控制台</span>
+  <div class="app-shell">
+    <!-- Legacy acceptance strings kept for runtime-shell compatibility: 运营工作台看板 / 运行态 Shell / 代表性 Smoke Run / 日志、报告与清单 -->
+    <header class="topbar surface">
+      <div class="topbar-copy">
+        <p class="eyebrow" data-i18n="brand.eyebrow">Loc-MVR Human Delivery</p>
+        <h1 data-i18n="brand.title">Loc-MVR 人类交付控制台</h1>
+        <p class="hero-copy" data-i18n="brand.copy">
+          先让人完成任务，再让专家看细节。普通用户从任务向导开始，运营在 Ops Monitor 里追踪，专家保留 Pro Runtime。
+        </p>
       </div>
-    </aside>
+      <div class="topbar-controls">
+        <div class="hero-status" id="hero-status">
+          <span class="status-dot status-unknown"></span>
+          <span data-i18n="hero.waiting">正在读取任务与运行态数据</span>
+        </div>
+        <div class="switch-row">
+          <div class="language-switch" role="tablist" aria-label="Language switch" data-i18n-aria-label="aria.languageSwitch">
+            <button type="button" id="lang-zh" class="lang-button active" aria-pressed="true">中文</button>
+            <button type="button" id="lang-en" class="lang-button" aria-pressed="false">EN</button>
+          </div>
+          <div class="mode-switch" role="tablist" aria-label="Surface switch" data-i18n-aria-label="aria.modeSwitch">
+            <button type="button" id="mode-tasks" class="mode-button active" data-i18n="mode.tasks">任务控制台</button>
+            <button type="button" id="mode-workspace" class="mode-button" data-i18n="mode.workspace">Ops Monitor</button>
+            <button type="button" id="mode-runtime" class="mode-button" data-i18n="mode.runtime">Pro Runtime</button>
+          </div>
+        </div>
+      </div>
+    </header>
 
-    <div class="shell">
-      <header class="masthead">
-        <div class="masthead-copy">
-          <p class="eyebrow" data-i18n="masthead.eyebrow">Phase 6 运营工作台仪表盘</p>
-          <h1 data-i18n="masthead.title">运营工作台与运行态 Shell</h1>
-          <p class="hero-copy" data-i18n="masthead.copy">
-            在同一个仪表化控制面中完成运营卡分诊、复核压力检查，以及运行证据审计。
+    <main id="task-view" class="mode-view task-view">
+      <section class="task-hero surface">
+        <div>
+          <p class="panel-kicker" data-i18n="task.heroKicker">Task Console</p>
+          <h2 data-i18n="task.heroTitle">先从一件能完成的事开始</h2>
+          <p class="panel-note" data-i18n="task.heroCopy">
+            这里回答三个问题：我能开始什么、我手上有哪些待办、做完后去哪里拿结果。
           </p>
         </div>
-        <div class="masthead-controls">
-          <div class="hero-status" id="hero-status">
-            <span class="status-dot status-unknown"></span>
-            <span data-i18n="hero.waiting">正在等待工作台数据</span>
+        <div class="hero-actions">
+          <button type="button" id="hero-start-task" class="hero-action primary" data-i18n="task.startCta">开始新本地化</button>
+          <button type="button" id="hero-continue-tasks" class="hero-action" data-i18n="task.continueCta">继续处理待办</button>
+        </div>
+      </section>
+
+      <section class="task-overview-grid">
+        <article class="surface task-overview-card">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="panel-kicker" data-i18n="task.overviewKicker">Queue Snapshot</p>
+              <h2 data-i18n="task.overviewTitle">任务收件箱概览</h2>
+            </div>
+            <button type="button" class="ghost-button" id="task-refresh-button" data-i18n="common.refresh">刷新</button>
           </div>
-          <div class="masthead-switches">
-            <div class="language-switch" role="tablist" aria-label="Language switch" data-i18n-aria-label="aria.languageSwitch">
-              <button type="button" id="lang-zh" class="lang-button active" aria-pressed="true">中文</button>
-              <button type="button" id="lang-en" class="lang-button" aria-pressed="false">EN</button>
+          <div id="task-overview" class="overview-ribbon">
+            <div class="empty-state" data-i18n="task.loading">正在读取任务列表...</div>
+          </div>
+        </article>
+
+        <article class="surface wizard-surface" id="task-wizard-surface">
+          <div class="section-heading">
+            <div>
+              <p class="panel-kicker" data-i18n="task.wizardKicker">Task Wizard</p>
+              <h2 data-i18n="task.wizardTitle">开始一个本地化任务</h2>
             </div>
-            <div class="mode-switch" role="tablist" aria-label="Operator surface mode" data-i18n-aria-label="aria.modeSwitch">
-              <button type="button" id="mode-workspace" class="mode-button active" data-i18n="mode.workspace">运营工作台</button>
-              <button type="button" id="mode-runtime" class="mode-button" data-i18n="mode.runtime">运行态 Shell</button>
+            <p class="panel-note" id="task-feedback" data-i18n="task.wizardHint">
+              先用现有 pipeline 跑通最小闭环，再决定是否需要更重的交互框架。
+            </p>
+          </div>
+
+          <form id="task-form" class="wizard-form" novalidate>
+            <div class="wizard-entry-switch" id="wizard-entry-switch" role="tablist" aria-label="Wizard entry mode" data-i18n-aria-label="aria.wizardEntry">
+              <button type="button" class="wizard-mode-button active" data-wizard-mode="upload" data-i18n="task.entryUpload">上传 CSV</button>
+              <button type="button" class="wizard-mode-button" data-wizard-mode="path" data-i18n="task.entryPath">高级路径输入</button>
             </div>
+
+            <div class="wizard-panel-grid">
+              <section class="wizard-entry-panel upload-panel" id="wizard-upload-panel">
+                <input id="task-file-input" class="sr-only" type="file" accept=".csv">
+                <button type="button" class="dropzone" id="task-dropzone" aria-label="Upload CSV" data-i18n-aria-label="aria.uploadDropzone">
+                  <span class="dropzone-badge" data-i18n="task.dropBadge">CSV Upload</span>
+                  <strong id="task-dropzone-title" data-i18n="task.dropTitle">拖拽 CSV 到这里，或点击选择文件</strong>
+                  <span class="panel-note" id="task-dropzone-copy" data-i18n="task.dropCopy">
+                    默认入口只接受 CSV，并会先把文件暂存到本地 staged 区。
+                  </span>
+                </button>
+
+                <div class="staged-upload-card" id="staged-upload-card">
+                  <div class="staged-upload-copy">
+                    <p class="panel-kicker" data-i18n="task.stagedKicker">Staged File</p>
+                    <strong id="task-staged-filename" data-i18n="task.noStagedFile">尚未暂存文件</strong>
+                    <p class="panel-note" id="task-staged-meta" data-i18n="task.stagedHint">选择 CSV 后会在这里显示文件名和暂存状态。</p>
+                  </div>
+                  <div class="wizard-inline-actions">
+                    <button type="button" class="ghost-button" id="task-choose-file-button" data-i18n="task.chooseFile">选择文件</button>
+                    <button type="button" class="ghost-button" id="task-clear-upload-button" data-i18n="task.clearUpload">清空</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="wizard-entry-panel path-panel hidden" id="wizard-path-panel">
+                <p class="panel-kicker" data-i18n="task.pathKicker">Advanced Input</p>
+                <h3 data-i18n="task.pathTitle">使用已有文件路径</h3>
+                <p class="panel-note" data-i18n="task.pathCopy">
+                  适合已经知道本地 CSV 路径的高级用户。默认流程仍建议直接上传。
+                </p>
+                <label class="full-span">
+                  <span data-i18n="task.formInput">输入文件</span>
+                  <input type="text" id="task-path-input" name="input_path" placeholder="例如 fixtures/input.csv" data-i18n-placeholder="task.formInputPlaceholder">
+                </label>
+              </section>
+            </div>
+
+            <div class="wizard-meta-grid">
+              <label>
+                <span data-i18n="task.formTitle">任务标题</span>
+                <input type="text" name="title" placeholder="例如：April launch copy" data-i18n-placeholder="task.formTitlePlaceholder">
+              </label>
+              <label>
+                <span data-i18n="task.formTarget">目标语言</span>
+                <input type="text" name="target_locale" value="en-US" required>
+              </label>
+              <label>
+                <span data-i18n="task.formVerify">验证模式</span>
+                <select name="verify_mode">
+                  <option value="preflight" data-i18n="runtime.verifyModePreflight">预检</option>
+                  <option value="full" selected data-i18n="runtime.verifyModeFull">完整</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="wizard-submit-row">
+              <button type="submit" id="task-submit-button" data-i18n="task.launchButton">创建任务并启动</button>
+              <p class="panel-note" id="task-submit-note" data-i18n="task.submitNote">
+                任务对象会先被创建，再由底层 pipeline 触发首个 run。
+              </p>
+            </div>
+          </form>
+        </article>
+      </section>
+
+      <section class="task-console">
+        <section class="surface task-inbox">
+          <div class="section-heading">
+            <div>
+              <p class="panel-kicker" data-i18n="task.inboxKicker">Task Inbox</p>
+              <h2 data-i18n="task.inboxTitle">继续处理待办</h2>
+            </div>
+          </div>
+
+          <div class="inbox-toolbar">
+            <div class="bucket-strip" id="task-bucket-tabs" role="tablist" aria-label="Task bucket filter" data-i18n-aria-label="aria.taskBuckets"></div>
+            <label class="search-field task-search-field">
+              <span data-i18n="task.searchLabel">搜索任务</span>
+              <input type="search" id="task-query-filter" placeholder="按任务标题、输入文件或 run 搜索" data-i18n-placeholder="task.searchPlaceholder">
+            </label>
+          </div>
+
+          <div id="task-list" class="task-list">
+            <div class="empty-state" data-i18n="task.loading">正在读取任务列表...</div>
+          </div>
+        </section>
+
+        <aside class="surface task-detail">
+          <div class="section-heading">
+            <div>
+              <p class="panel-kicker" data-i18n="task.detailKicker">Task Detail</p>
+              <h2 id="task-title" data-i18n="task.noTaskSelected">尚未选择任务</h2>
+            </div>
+            <p class="panel-note" id="task-meta" data-i18n="task.selectTaskHint">选择一个任务，查看当前阶段、为什么重要，以及接下来可执行的动作。</p>
+          </div>
+
+          <div id="task-metrics-strip" class="metric-strip"></div>
+
+          <div class="detail-section detail-grid">
+            <article class="detail-card">
+              <h4 data-i18n="task.summaryLabel">任务摘要</h4>
+              <p id="task-summary" class="detail-copy" data-i18n="task.emptySummary">尚未载入任务摘要。</p>
+            </article>
+            <article class="detail-card">
+              <h4 data-i18n="task.whyLabel">为什么值得现在处理</h4>
+              <p id="task-why" class="detail-copy" data-i18n="task.emptyWhy">尚未载入任务背景。</p>
+            </article>
+          </div>
+
+          <div class="detail-section detail-grid">
+            <article class="detail-card">
+              <h4 data-i18n="task.stepLabel">当前阶段</h4>
+              <p id="task-step" class="detail-copy" data-i18n="task.emptyStep">尚未载入阶段信息。</p>
+            </article>
+            <article class="detail-card">
+              <h4 data-i18n="task.requiredLabel">推荐动作</h4>
+              <p id="task-required" class="detail-copy" data-i18n="task.emptyRequired">尚未载入推荐动作。</p>
+            </article>
+          </div>
+
+          <div class="detail-section">
+            <h4 data-i18n="task.primaryActionLabel">接下来要做什么</h4>
+            <div id="task-primary-action" class="primary-action-panel">
+              <div class="empty-state" data-i18n="task.noActions">暂无可执行动作。</div>
+            </div>
+          </div>
+
+          <div class="detail-section hidden" id="task-note-section">
+            <h4 data-i18n="task.noteLabel">变更说明</h4>
+            <label class="note-composer">
+              <textarea id="task-note-input" rows="4" placeholder="说明希望修改什么、为什么修改，以及希望怎样处理。" data-i18n-placeholder="task.notePlaceholder"></textarea>
+            </label>
+            <p class="panel-note" id="task-note-hint" data-i18n="task.noteHint">只有在请求修改时才会提交这段说明。</p>
+          </div>
+
+          <div class="detail-section">
+            <h4 data-i18n="task.actionsLabel">更多动作</h4>
+            <div id="task-action-bar" class="action-bar">
+              <div class="empty-state" data-i18n="task.noActions">暂无可执行动作。</div>
+            </div>
+          </div>
+
+          <div class="detail-section hidden" id="task-feedback-section">
+            <h4 data-i18n="task.latestFeedbackLabel">上次人工决策</h4>
+            <p id="task-latest-feedback" class="detail-copy"></p>
+          </div>
+
+          <div class="detail-section">
+            <div class="subsection-heading">
+              <div>
+                <h4 data-i18n="task.bundleLabel">结果包</h4>
+                <p class="panel-note" id="task-bundle-copy" data-i18n="task.bundleCopy">只展示对人类有意义的结果、报告与说明，技术产物会折叠到技术细节里。</p>
+              </div>
+            </div>
+            <div id="task-bundle-groups" class="bundle-groups">
+              <div class="empty-state" data-i18n="task.noDeliveries">任务完成后会在这里出现可查看的结果包与报告。</div>
+            </div>
+            <details class="technical-panel" id="task-technical-panel">
+              <summary data-i18n="common.technicalDetails">技术细节</summary>
+              <div id="task-technical-details" class="technical-delivery-list">
+                <div class="empty-state" data-i18n="task.noTechnicalDetails">当前没有额外的技术细节。</div>
+              </div>
+            </details>
+          </div>
+
+          <div class="detail-section">
+            <h4 data-i18n="task.previewLabel">结果预览</h4>
+            <div id="task-preview" class="preview-panel empty-state" data-i18n="task.emptyPreview">选择一个结果项后会在这里预览。</div>
+          </div>
+
+          <div class="detail-section">
+            <h4 data-i18n="task.linkedRunsLabel">关联 Run 历史</h4>
+            <div id="task-linked-runs" class="linked-run-list">
+              <div class="empty-state" data-i18n="task.noLinkedRuns">任务还没有关联任何 run。</div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4 data-i18n="task.historyLabel">任务时间线</h4>
+            <div id="task-history" class="history-list">
+              <div class="empty-state" data-i18n="task.noHistory">任务动作和系统事件会在这里累积。</div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <main id="workspace-view" class="mode-view workspace-view hidden">
+      <section class="overview-section">
+        <div class="section-heading">
+          <div>
+            <p class="panel-kicker" data-i18n="workspace.kicker">Ops Monitor</p>
+            <h2 data-i18n="workspace.overviewTitle">Pipeline Monitor</h2>
+          </div>
+          <div class="context-actions">
+            <button type="button" class="ghost-button hidden" id="workspace-return-button" data-i18n="task.backToTask">返回任务控制台</button>
+            <button type="button" class="ghost-button" id="workspace-refresh-button" data-i18n="common.refresh">刷新</button>
           </div>
         </div>
-      </header>
+        <div id="overview-ribbon" class="overview-ribbon">
+          <div class="empty-state" data-i18n="workspace.emptyOverview">尚未载入监控概览。</div>
+        </div>
+      </section>
 
-      <main id="workspace-view" class="mode-view workspace-console">
-        <section class="surface signal-strip">
-          <div class="surface-heading compact-heading">
+      <section class="workspace-toolbar surface">
+        <div class="toolbar-copy">
+          <p class="panel-kicker" data-i18n="workspace.boardKicker">Case Board</p>
+          <h2 data-i18n="workspace.boardTitle">Ops Cases</h2>
+          <p class="panel-note" id="workspace-feedback" data-i18n="workspace.waiting">正在刷新监控看板...</p>
+        </div>
+
+        <form id="workspace-filters" class="workspace-filters">
+          <label>
+            <span data-i18n="filters.status">状态</span>
+            <select id="case-status-filter" name="status">
+              <option value="open" selected data-i18n="filters.status_open">打开</option>
+              <option value="all" data-i18n="filters.status_all">全部</option>
+            </select>
+          </label>
+          <label>
+            <span data-i18n="filters.targetLocale">目标语言区域</span>
+            <input type="text" id="case-locale-filter" name="target_locale" placeholder="如 en-US" data-i18n-placeholder="filters.targetLocalePlaceholder">
+          </label>
+          <label class="search-field">
+            <span data-i18n="filters.search">搜索</span>
+            <input type="search" id="case-query-filter" name="query" placeholder="按 run、摘要或动作搜索" data-i18n-placeholder="filters.searchPlaceholder">
+          </label>
+        </form>
+
+        <div class="lane-filter" id="lane-filter" role="tablist" aria-label="Lane filter" data-i18n-aria-label="aria.laneFilter">
+          <button type="button" class="lane-filter-button active" data-lane="all" data-i18n="workspace.laneAll">全部</button>
+          <button type="button" class="lane-filter-button" data-lane="act" data-i18n="workspace.laneAct">Act</button>
+          <button type="button" class="lane-filter-button" data-lane="review" data-i18n="workspace.laneReview">Review</button>
+          <button type="button" class="lane-filter-button" data-lane="watch" data-i18n="workspace.laneWatch">Watch</button>
+          <button type="button" class="lane-filter-button" data-lane="done" data-i18n="workspace.laneDone">Done</button>
+        </div>
+      </section>
+
+      <section class="board-stage">
+        <div class="board-grid">
+          <section class="lane" data-lane-section="act">
+            <header class="lane-header">
+              <div>
+                <h3 data-i18n="workspace.laneAct">Act</h3>
+                <p data-i18n="workspace.laneActCopy">失败或高优先级事项。</p>
+              </div>
+              <span class="lane-count" id="lane-count-act">0</span>
+            </header>
+            <div class="lane-list" id="lane-act"></div>
+          </section>
+
+          <section class="lane" data-lane-section="review">
+            <header class="lane-header">
+              <div>
+                <h3 data-i18n="workspace.laneReview">Review</h3>
+                <p data-i18n="workspace.laneReviewCopy">等待人工判断的事项。</p>
+              </div>
+              <span class="lane-count" id="lane-count-review">0</span>
+            </header>
+            <div class="lane-list" id="lane-review"></div>
+          </section>
+
+          <section class="lane" data-lane-section="watch">
+            <header class="lane-header">
+              <div>
+                <h3 data-i18n="workspace.laneWatch">Watch</h3>
+                <p data-i18n="workspace.laneWatchCopy">值得持续观察的信号。</p>
+              </div>
+              <span class="lane-count" id="lane-count-watch">0</span>
+            </header>
+            <div class="lane-list" id="lane-watch"></div>
+          </section>
+
+          <section class="lane" data-lane-section="done">
+            <header class="lane-header">
+              <div>
+                <h3 data-i18n="workspace.laneDone">Done</h3>
+                <p data-i18n="workspace.laneDoneCopy">仅在查看全部时显示。</p>
+              </div>
+              <span class="lane-count" id="lane-count-done">0</span>
+            </header>
+            <div class="lane-list" id="lane-done"></div>
+          </section>
+        </div>
+
+        <aside class="inspector surface">
+          <div class="section-heading inspector-heading">
             <div>
-              <p class="panel-kicker" data-i18n="workspace.kicker">运营工作台</p>
-              <h2 data-i18n="workspace.overviewTitle">总览信号带</h2>
+              <p class="panel-kicker" data-i18n="workspace.inspectorKicker">Case Details</p>
+              <h2 id="workspace-run-title" data-i18n="workspace.noCaseSelected">尚未选择 case</h2>
             </div>
-            <p class="panel-note" id="workspace-feedback" data-i18n="workspace.waiting">工作台正在等待运营数据。</p>
+            <div class="inspector-actions">
+              <p class="panel-note" id="workspace-run-meta" data-i18n="workspace.selectCaseHint">选择一个 ops case，查看上下文、证据和运行态预览。</p>
+              <button type="button" class="ghost-button" id="open-runtime-button" data-i18n="workspace.openRuntimeButton">打开 Pro Runtime</button>
+            </div>
           </div>
-          <div id="overview-ribbon" class="overview-ribbon">
-            <div class="empty-state" data-i18n="workspace.emptyOverview">尚未载入工作台总览。</div>
+
+          <div class="tab-strip" id="inspector-tabs" role="tablist" aria-label="Inspector tabs" data-i18n-aria-label="aria.inspectorTabs">
+            <button type="button" class="tab-button active" data-tab="decision" data-i18n="workspace.tabDecision">Case Brief</button>
+            <button type="button" class="tab-button" data-tab="signals" data-i18n="workspace.tabSignals">Signals</button>
+            <button type="button" class="tab-button" data-tab="evidence" data-i18n="workspace.tabEvidence">Evidence</button>
+            <button type="button" class="tab-button" data-tab="runtime" data-i18n="workspace.tabRuntime">Runtime Peek</button>
           </div>
-        </section>
 
-        <section class="workspace-stage">
-          <aside class="surface inbox-rail">
-            <div class="surface-heading">
-              <div>
-                <p class="panel-kicker" data-i18n="workspace.inboxKicker">运营收件箱</p>
-                <h2 data-i18n="workspace.inboxTitle">跨 Run 卡片</h2>
-              </div>
-              <button type="button" class="ghost-button" id="workspace-refresh-button" data-i18n="common.refresh">刷新</button>
-            </div>
-
-            <form id="workspace-filters" class="filter-grid">
-              <label>
-                <span data-i18n="filters.status">状态</span>
-                <select id="card-status-filter" name="status">
-                  <option value="open" selected data-i18n="filters.status_open">打开</option>
-                  <option value="all" data-i18n="filters.status_all">全部</option>
-                  <option value="closed" data-i18n="filters.status_closed">已关闭</option>
-                </select>
-              </label>
-              <label>
-                <span data-i18n="filters.cardType">卡片类型</span>
-                <select id="card-type-filter" name="card_type">
-                  <option value="" data-i18n="filters.all">全部</option>
-                  <option value="review_ticket" data-i18n="cardType.review_ticket">人工复核</option>
-                  <option value="runtime_alert" data-i18n="cardType.runtime_alert">运行告警</option>
-                  <option value="governance_drift" data-i18n="cardType.governance_drift">治理漂移</option>
-                  <option value="kpi_watch" data-i18n="cardType.kpi_watch">KPI 关注</option>
-                  <option value="decision_required" data-i18n="cardType.decision_required">运营决策</option>
-                </select>
-              </label>
-              <label>
-                <span data-i18n="filters.priority">优先级</span>
-                <select id="card-priority-filter" name="priority">
-                  <option value="" data-i18n="filters.all">全部</option>
-                  <option value="P0">P0</option>
-                  <option value="P1">P1</option>
-                  <option value="P2">P2</option>
-                </select>
-              </label>
-              <label>
-                <span data-i18n="filters.targetLocale">目标语言区域</span>
-                <input type="text" id="card-locale-filter" name="target_locale" placeholder="en-US">
-              </label>
-            </form>
-
-            <div id="workspace-cards" class="workspace-cards">
-              <div class="empty-state" data-i18n="workspace.emptyCardsLoaded">尚未载入运营卡片。</div>
-            </div>
-          </aside>
-
-          <section class="surface decision-deck">
-            <div class="surface-heading">
-              <div>
-                <p class="panel-kicker" data-i18n="workspace.selectedCardKicker">当前卡片</p>
-                <h2 id="workspace-run-title" data-i18n="workspace.noCardSelected">尚未选择运营卡片</h2>
-              </div>
-              <div class="workspace-actions">
-                <p class="panel-note" id="workspace-run-meta" data-i18n="workspace.selectCardHint">选择一张运营卡片以查看决策上下文。</p>
-                <button type="button" class="ghost-button" id="open-runtime-button" data-i18n="workspace.openRuntimeButton">打开 Runtime 通道</button>
-              </div>
-            </div>
-
-            <article class="focus-panel">
-              <h3 data-i18n="workspace.decisionTitle">决策上下文</h3>
-              <div id="decision-context" class="detail-body empty-state" data-i18n="workspace.emptyDecision">尚未载入决策上下文。</div>
-            </article>
-          </section>
-
-          <aside class="workspace-signal-stack">
-            <article class="surface signal-panel">
-              <div class="surface-heading compact-heading">
-                <div>
-                  <p class="panel-kicker" data-i18n="workspace.reviewKicker">复核负载</p>
-                  <h2 data-i18n="workspace.reviewTitle">复核负载</h2>
-                </div>
-              </div>
-              <div id="review-workload" class="detail-body empty-state" data-i18n="workspace.emptyReview">尚未载入复核负载。</div>
-            </article>
-
-            <article class="surface signal-panel">
-              <div class="surface-heading compact-heading">
-                <div>
-                  <p class="panel-kicker" data-i18n="workspace.kpiKicker">KPI 快照</p>
-                  <h2 data-i18n="workspace.kpiTitle">KPI 快照</h2>
-                </div>
-              </div>
-              <div id="kpi-snapshot" class="detail-body empty-state" data-i18n="workspace.emptyKpi">尚未载入 KPI 快照。</div>
-            </article>
-
-            <article class="surface signal-panel">
-              <div class="surface-heading compact-heading">
-                <div>
-                  <p class="panel-kicker" data-i18n="workspace.driftKicker">治理漂移</p>
-                  <h2 data-i18n="workspace.driftTitle">治理漂移</h2>
-                </div>
-              </div>
-              <div id="governance-drift" class="detail-body empty-state" data-i18n="workspace.emptyDrift">尚未载入治理漂移。</div>
-            </article>
-          </aside>
-        </section>
-      </main>
-
-      <main id="runtime-view" class="mode-view runtime-console hidden">
-        <aside class="runtime-left">
-          <section class="surface launcher-surface">
-            <div class="surface-heading">
-              <div>
-                <p class="panel-kicker" data-i18n="runtime.launcherKicker">启动器</p>
-                <h2 data-i18n="runtime.launcherTitle">代表性 Smoke Run</h2>
-              </div>
-              <p class="panel-note" id="launch-feedback" data-i18n="runtime.launcherHint">默认沿用当前 pipeline 的既有参数。</p>
-            </div>
-            <form id="launcher-form" class="launcher-form">
-              <label>
-                <span data-i18n="runtime.inputCsv">输入 CSV</span>
-                <input type="text" name="input" value="fixtures/input.csv" placeholder="输入 CSV 路径" data-i18n-placeholder="runtime.inputPlaceholder" required>
-              </label>
-              <label>
-                <span data-i18n="runtime.targetLanguage">目标语言</span>
-                <input type="text" name="target_lang" value="en-US" required>
-              </label>
-              <label>
-                <span data-i18n="runtime.verifyMode">验证模式</span>
-                <select name="verify_mode">
-                  <option value="full" selected data-i18n="runtime.verifyModeFull">完整</option>
-                  <option value="preflight" data-i18n="runtime.verifyModePreflight">预检</option>
-                </select>
-              </label>
-              <button type="submit" data-i18n="runtime.launchButton">启动 Run</button>
-            </form>
-          </section>
-
-          <section class="surface run-rail">
-            <div class="surface-heading">
-              <div>
-                <p class="panel-kicker" data-i18n="runtime.recentRunsKicker">最近 Run</p>
-                <h2 data-i18n="runtime.timelineTitle">Run 时间线</h2>
-              </div>
-              <button type="button" class="ghost-button" id="refresh-button" data-i18n="common.refresh">刷新</button>
-            </div>
-            <div id="runs-list" class="runs-list"></div>
-          </section>
+          <section id="inspector-decision" class="inspector-panel"></section>
+          <section id="inspector-signals" class="inspector-panel hidden"></section>
+          <section id="inspector-evidence" class="inspector-panel hidden"></section>
+          <section id="inspector-runtime" class="inspector-panel hidden"></section>
         </aside>
+      </section>
+    </main>
 
-        <section class="runtime-center">
-          <section class="surface timeline-surface">
-            <div class="surface-heading">
-              <div>
-                <p class="panel-kicker" data-i18n="runtime.selectedRunKicker">当前 Run</p>
-                <h2 id="run-title" data-i18n="runtime.noRunSelected">尚未选择 Run</h2>
-              </div>
+    <main id="runtime-view" class="mode-view runtime-view hidden">
+      <aside class="runtime-left">
+        <section class="surface launcher-surface">
+          <div class="section-heading">
+            <div>
+              <p class="panel-kicker" data-i18n="runtime.launcherKicker">Pro Runtime</p>
+              <h2 data-i18n="runtime.launcherTitle">启动 Run</h2>
+            </div>
+            <p class="panel-note" id="launch-feedback" data-i18n="runtime.launcherHint">默认沿用当前 pipeline 的既有参数。</p>
+          </div>
+          <form id="launcher-form" class="launcher-form">
+            <label>
+              <span data-i18n="runtime.inputCsv">输入 CSV</span>
+              <input type="text" name="input" value="fixtures/input.csv" placeholder="输入 CSV 路径" data-i18n-placeholder="runtime.inputPlaceholder" required>
+            </label>
+            <label>
+              <span data-i18n="runtime.targetLanguage">目标语言</span>
+              <input type="text" name="target_lang" value="en-US" required>
+            </label>
+            <label>
+              <span data-i18n="runtime.verifyMode">验证模式</span>
+              <select name="verify_mode">
+                <option value="full" selected data-i18n="runtime.verifyModeFull">完整</option>
+                <option value="preflight" data-i18n="runtime.verifyModePreflight">预检</option>
+              </select>
+            </label>
+            <button type="submit" id="runtime-launch-button" data-i18n="runtime.launchButton">启动 Run</button>
+          </form>
+        </section>
+
+        <section class="surface run-rail">
+          <div class="section-heading">
+            <div>
+              <p class="panel-kicker" data-i18n="runtime.recentRunsKicker">最近 Run</p>
+              <h2 data-i18n="runtime.timelineTitle">Run 时间线</h2>
+            </div>
+            <button type="button" class="ghost-button" id="refresh-button" data-i18n="common.refresh">刷新</button>
+          </div>
+          <div id="runs-list" class="runs-list"></div>
+        </section>
+      </aside>
+
+      <section class="runtime-center">
+        <section class="surface timeline-surface">
+          <div class="section-heading">
+            <div>
+              <p class="panel-kicker" data-i18n="runtime.selectedRunKicker">Selected Run</p>
+              <h2 id="run-title" data-i18n="runtime.noRunSelected">尚未选择 Run</h2>
+            </div>
+            <div class="context-actions">
               <p class="panel-note" id="run-meta" data-i18n="runtime.runHint">选择一个 run 以检查阶段状态和证据。</p>
+              <button type="button" class="ghost-button hidden" id="runtime-return-button" data-i18n="task.backToTask">返回任务控制台</button>
             </div>
-            <div id="timeline-panel" class="timeline-panel">
-              <div class="empty-state" data-i18n="runtime.emptyTimeline">尚未选择 run。</div>
-            </div>
-          </section>
-
-          <section class="runtime-summary-grid">
-            <article class="surface summary-surface">
-              <div class="surface-heading compact-heading">
-                <div>
-                  <p class="panel-kicker" data-i18n="runtime.verificationKicker">验证</p>
-                  <h2 data-i18n="runtime.verifyTitle">验证摘要</h2>
-                </div>
-              </div>
-              <div id="verify-summary" class="detail-body empty-state" data-i18n="runtime.emptyVerify">尚未载入验证报告。</div>
-            </article>
-
-            <article class="surface summary-surface">
-              <div class="surface-heading compact-heading">
-                <div>
-                  <p class="panel-kicker" data-i18n="runtime.issuesKicker">问题</p>
-                  <h2 data-i18n="runtime.issueTitle">问题摘要</h2>
-                </div>
-              </div>
-              <div id="issue-summary" class="detail-body empty-state" data-i18n="runtime.emptyIssue">尚未载入问题报告。</div>
-            </article>
-          </section>
+          </div>
+          <div id="timeline-panel" class="timeline-panel">
+            <div class="empty-state" data-i18n="runtime.emptyTimeline">尚未选择 run。</div>
+          </div>
         </section>
 
-        <aside class="runtime-right">
-          <section class="surface artifact-surface">
-            <div class="surface-heading">
+        <section class="runtime-summary-grid">
+          <article class="surface summary-surface">
+            <div class="section-heading compact-heading">
               <div>
-                <p class="panel-kicker" data-i18n="runtime.artifactsKicker">产物</p>
-                <h2 data-i18n="runtime.artifactsTitle">日志、报告与清单</h2>
+                <p class="panel-kicker" data-i18n="runtime.verificationKicker">Verification</p>
+                <h2 data-i18n="runtime.verifyTitle">验证摘要</h2>
               </div>
-              <p class="panel-note" data-i18n="runtime.artifactHint">产物预览受 allow-list 限制，并绑定到当前选中 run 的 manifest。</p>
             </div>
-            <div class="artifact-layout">
-              <div id="artifact-list" class="artifact-list"></div>
-              <div id="artifact-panel" class="artifact-panel empty-state" data-i18n="runtime.emptyArtifactPanel">选择一个产物后可在此预览。</div>
+            <div id="verify-summary" class="detail-body empty-state" data-i18n="runtime.emptyVerify">尚未载入验证报告。</div>
+          </article>
+
+          <article class="surface summary-surface">
+            <div class="section-heading compact-heading">
+              <div>
+                <p class="panel-kicker" data-i18n="runtime.issuesKicker">Issues</p>
+                <h2 data-i18n="runtime.issueTitle">问题摘要</h2>
+              </div>
             </div>
-          </section>
-        </aside>
-      </main>
-    </div>
+            <div id="issue-summary" class="detail-body empty-state" data-i18n="runtime.emptyIssue">尚未载入问题报告。</div>
+          </article>
+        </section>
+      </section>
+
+      <aside class="runtime-right">
+        <section class="surface artifact-surface">
+          <div class="section-heading">
+            <div>
+              <p class="panel-kicker" data-i18n="runtime.artifactsKicker">Artifacts</p>
+              <h2 data-i18n="runtime.artifactsTitle">产物</h2>
+            </div>
+            <p class="panel-note" data-i18n="runtime.artifactHint">Pro Runtime 会保留工程细节，但默认把路径折叠进技术说明里。</p>
+          </div>
+          <div class="artifact-layout">
+            <div id="artifact-list" class="artifact-list"></div>
+            <div id="artifact-panel" class="artifact-panel empty-state" data-i18n="runtime.emptyArtifactPanel">选择一个产物后可在此预览。</div>
+          </div>
+        </section>
+      </aside>
+    </main>
   </div>
 
   <script src="/app.js" defer></script>
