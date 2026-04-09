@@ -133,6 +133,19 @@ class OperatorUILauncher:
             return None
         return self._materialize_pending_view(pending_run)
 
+    def _spawn_process(self, command: List[str], env: Dict[str, str]):
+        kwargs = {
+            "cwd": str(self.repo_root),
+            "stdout": subprocess.DEVNULL,
+            "stderr": subprocess.DEVNULL,
+        }
+        try:
+            return self.popen_fn(command, env=env, **kwargs)
+        except TypeError as exc:
+            if "unexpected keyword argument 'env'" not in str(exc):
+                raise
+            return self.popen_fn(command, **kwargs)
+
     def launch_run(self, input_path: str, target_lang: str, verify_mode: str) -> PendingRunView:
         run_id = self.create_run_id()
         run_dir = self.build_run_dir(run_id)
@@ -142,13 +155,7 @@ class OperatorUILauncher:
         try:
             env = os.environ.copy()
             env.update({key: value for key, value in self.env_provider().items() if value})
-            process = self.popen_fn(
-                command,
-                cwd=str(self.repo_root),
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                env=env,
-            )
+            process = self._spawn_process(command, env)
         except OSError as exc:
             raise LauncherError(f"Failed to start smoke pipeline: {exc}") from exc
 

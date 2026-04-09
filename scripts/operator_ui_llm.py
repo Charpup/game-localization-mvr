@@ -173,23 +173,21 @@ def _serialize_view(record: Dict[str, Any]) -> Dict[str, Any]:
         and last_test_status == "pass"
         and record.get("verified_fingerprint", "") == fingerprint
     )
-    environment_ready = bool(
+    environment_configured = bool(
         not str(record.get("base_url", "")).strip()
         and not str(record.get("credential_path", "")).strip()
         and base_url
         and api_key
     )
-    launch_ready = saved_ready or environment_ready
+    launch_ready = saved_ready
     configured = bool(base_url and api_key)
     credential_path = str(record.get("credential_path", "")).strip() or discovered_path
-    display_test_status = "pass" if environment_ready else last_test_status
-    display_test_message = (
-        "Existing local runtime credentials are active."
-        if environment_ready
-        else record.get("last_test_message", "")
-    )
+    display_test_status = last_test_status
+    display_test_message = str(record.get("last_test_message", "")).strip()
+    if environment_configured and not saved_ready and not display_test_message:
+        display_test_message = "Existing local runtime credentials were detected. Run Test connection to unlock launch."
     return {
-        "source": "environment" if environment_ready else ("saved" if record["base_url"] or record["credential_path"] else "none"),
+        "source": "environment" if environment_configured else ("saved" if record["base_url"] or record["credential_path"] else "none"),
         "base_url": base_url,
         "model": model,
         "api_key_masked": _mask_api_key(api_key),
@@ -201,11 +199,7 @@ def _serialize_view(record: Dict[str, Any]) -> Dict[str, Any]:
         "can_launch_tasks": saved_ready,
         "can_launch_runtime": launch_ready,
         "launch_ready": launch_ready,
-        "status": (
-            "environment"
-            if environment_ready
-            else ("ready" if saved_ready else ("configured" if configured else "not_configured"))
-        ),
+        "status": "ready" if saved_ready else ("configured" if configured else "not_configured"),
         "last_test_status": display_test_status,
         "last_test_at": record.get("last_test_at", ""),
         "last_test_message": display_test_message,
@@ -369,7 +363,7 @@ def require_llm_runtime_gate(repo_root: Path | str) -> Dict[str, Any]:
 
 
 def require_llm_task_gate(repo_root: Path | str) -> Dict[str, Any]:
-    return ensure_llm_launch_ready(repo_root)
+    return ensure_llm_task_ready(repo_root)
 
 
 def llm_launch_env(repo_root: Path | str) -> Dict[str, str]:

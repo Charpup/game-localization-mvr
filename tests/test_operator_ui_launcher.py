@@ -77,3 +77,29 @@ def test_launch_run_generates_unique_ids_and_run_dirs_with_same_timestamp(tmp_pa
     assert first.run_dir != second.run_dir
     assert ui_launcher.get_pending_run(first.run_id).run_id == first.run_id
     assert ui_launcher.get_pending_run(second.run_id).run_id == second.run_id
+
+
+def test_launch_run_passes_env_to_popen_when_callback_supports_it(tmp_path, monkeypatch):
+    calls = {}
+
+    def fake_popen(cmd, cwd=None, stdout=None, stderr=None, env=None):
+        calls["cmd"] = cmd
+        calls["cwd"] = cwd
+        calls["env"] = env
+        return _DummyProcess()
+
+    monkeypatch.setenv("BASELINE_ONLY", "keep-me")
+    ui_launcher = launcher.OperatorUILauncher(
+        repo_root=tmp_path,
+        now_fn=lambda: datetime(2026, 3, 27, 1, 15, 0, tzinfo=timezone.utc),
+        popen_fn=fake_popen,
+        run_id_suffix_fn=lambda: "env1",
+        env_provider=lambda: {"LLM_BASE_URL": "https://example.invalid/v1", "LLM_MODEL": "gpt-4.1-mini"},
+    )
+
+    ui_launcher.launch_run("fixtures/input.csv", "en-US", "preflight")
+
+    assert calls["cwd"] == str(tmp_path)
+    assert calls["env"]["BASELINE_ONLY"] == "keep-me"
+    assert calls["env"]["LLM_BASE_URL"] == "https://example.invalid/v1"
+    assert calls["env"]["LLM_MODEL"] == "gpt-4.1-mini"

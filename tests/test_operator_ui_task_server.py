@@ -362,7 +362,7 @@ def test_task_filters_validate_bucket_and_status_and_404_missing_task(tmp_path):
         thread.join(timeout=5)
 
 
-def test_task_creation_requires_verified_llm_setup(tmp_path):
+def test_task_creation_requires_verified_llm_setup(tmp_path, monkeypatch):
     launcher = _StubLauncher(tmp_path)
     app = server.OperatorUIApp(repo_root=tmp_path, launcher=launcher)
     httpd = server.build_http_server("127.0.0.1", 0, app)
@@ -370,10 +370,16 @@ def test_task_creation_requires_verified_llm_setup(tmp_path):
     thread.start()
     host, port = httpd.server_address
     base_url = f"http://{host}:{port}"
+    monkeypatch.setenv("LLM_BASE_URL", "https://example.invalid/v1")
+    monkeypatch.setenv("LLM_API_KEY", "env-secret-key")
+    monkeypatch.setenv("LLM_MODEL", "gpt-4.1-mini")
 
     try:
         status, upload = _http_upload(base_url, "blocked_input.csv", b"id,source\n1,hello\n")
         assert status == 202
+
+        with pytest.raises(llm_setup.LLMGateError):
+            llm_setup.require_llm_task_gate(tmp_path)
 
         with pytest.raises(urllib.error.HTTPError) as exc_info:
             _http_json(

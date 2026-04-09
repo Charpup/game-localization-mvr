@@ -245,6 +245,49 @@ def test_llm_setup_endpoints_and_run_gate(tmp_path, monkeypatch):
         thread.join(timeout=5)
 
 
+def test_llm_environment_credentials_do_not_bypass_runtime_or_task_gates(tmp_path, monkeypatch):
+    _write_run_fixture(tmp_path, "ui_run_server")
+    launcher = _DummyLauncher()
+    app = server.OperatorUIApp(repo_root=tmp_path, launcher=launcher)
+    httpd = server.build_http_server("127.0.0.1", 0, app)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address
+    base_url = f"http://{host}:{port}"
+
+    monkeypatch.setenv("LLM_BASE_URL", "https://example.invalid/v1")
+    monkeypatch.setenv("LLM_API_KEY", "env-secret-key")
+    monkeypatch.setenv("LLM_MODEL", "gpt-4.1-mini")
+
+    try:
+        with pytest.raises(llm_setup.LLMGateError):
+            llm_setup.require_llm_runtime_gate(tmp_path)
+        with pytest.raises(llm_setup.LLMGateError):
+            llm_setup.require_llm_task_gate(tmp_path)
+
+        status, current = _http_json(base_url, "/api/llm/config")
+        assert status == 200
+        assert current["llm"]["source"] == "environment"
+        assert current["llm"]["configured"] is True
+        assert current["llm"]["verified"] is False
+        assert current["llm"]["can_launch_runtime"] is False
+        assert current["llm"]["can_launch_tasks"] is False
+        assert current["llm"]["launch_ready"] is False
+        assert "Run Test connection" in current["llm"]["last_test_message"]
+
+        with pytest.raises(urllib.error.HTTPError) as exc_info:
+            _http_json(
+                base_url,
+                "/api/runs",
+                method="POST",
+                payload={"input": "fixtures/input.csv", "target_lang": "en-US", "verify_mode": "preflight"},
+            )
+        assert exc_info.value.code == 412
+    finally:
+        httpd.shutdown()
+        thread.join(timeout=5)
+
+
 def test_server_script_entrypoint_supports_cli_help():
     repo_root = Path(__file__).resolve().parents[1]
     result = subprocess.run(
