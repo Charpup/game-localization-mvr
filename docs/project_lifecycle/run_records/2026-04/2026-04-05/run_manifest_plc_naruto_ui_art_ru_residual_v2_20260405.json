@@ -1,0 +1,71 @@
+{
+  "manifest_version": "plc-run-manifest-v1",
+  "run_id": "plc_naruto_ui_art_ru_residual_v2_20260405",
+  "run_scope": "naruto_ui_art_ru_residual_v2",
+  "status": "warn",
+  "started_at": "2026-04-05T03:04:36+08:00",
+  "finished_at": "2026-04-05T03:35:09+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-04/2026-04-05/session_start_20260405_ui_art_ru_residual_v2.md",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-05/run_issue_plc_naruto_ui_art_ru_residual_v2_20260405.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-05/run_verify_plc_naruto_ui_art_ru_residual_v2_20260405.md",
+  "artifacts": [
+    "scripts/build_ui_art_residual_v2_slice.py",
+    "scripts/run_ui_art_residual_v2.py",
+    "scripts/ui_art_residual_v2_assess.py",
+    "tests/test_ui_art_residual_v2_contract.py",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/run_manifest.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_manifest.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_review_queue_enriched.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_manual_creative_titles.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_manual_ambiguity_terms.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_auto_fixable_repeated_titles.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_family_coverage_diff.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_family_coverage_diff.md",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_delivery_repaired_v2.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_delivery_repaired_v2_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_assessment.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_assessment.md"
+  ],
+  "blockers": [
+    "the final narrow automatic pass improved soft hard-gate only from 503 to 500 and slightly worsened hard QA from 509 to 510",
+    "manual-only creative and ambiguity queues remain material even after queue separation",
+    "the remaining repeated residual families are small enough that further broad automatic slicing is no longer justified"
+  ],
+  "changed_files": [
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "task_plan.md",
+    "findings.md",
+    "progress.md",
+    "scripts/translate_llm.py",
+    "scripts/build_ui_art_residual_v2_slice.py",
+    "scripts/run_ui_art_residual_v2.py",
+    "scripts/ui_art_residual_v2_assess.py",
+    "tests/test_ui_art_residual_v2_contract.py",
+    "tests/test_translate_llm_contract.py",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-05/session_start_20260405_ui_art_ru_residual_v2.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-05/run_issue_plc_naruto_ui_art_ru_residual_v2_20260405.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-05/run_verify_plc_naruto_ui_art_ru_residual_v2_20260405.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-05/session_end_20260405_ui_art_ru_residual_v2.md"
+  ],
+  "evidence_refs": [
+    "command:.\\\\.venv\\\\Scripts\\\\python.exe -m pytest tests/test_ui_art_residual_v2_contract.py tests/test_ui_art_residual_triage_contract.py tests/test_translate_llm_contract.py tests/test_qa_hard.py tests/test_ui_art_full_rerun_assess_contract.py -q -s",
+    "command:.\\\\.venv\\\\Scripts\\\\python.exe scripts/style_sync_check.py",
+    "command:.\\\\.venv\\\\Scripts\\\\python.exe scripts/run_ui_art_residual_v2.py --base-run-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01 --base-slice-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01 --v2-slice-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02",
+    "command:.\\\\.venv\\\\Scripts\\\\python.exe scripts/ui_art_residual_v2_assess.py --base-slice-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01 --v2-slice-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02 --out-json data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_assessment.json --out-md data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/residual_triage_20260405_slice01/residual_v2_20260405_slice02/ui_art_residual_v2_assessment.md"
+  ],
+  "adr_refs": [
+    "docs/decisions/ADR-0001-project-continuity-framework.md",
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "decision_refs": [
+    "add queue separation and leakage visibility before deciding whether a final narrow auto slice is still justified",
+    "treat the repaired residual-triage delivery as the immutable base for residual v2",
+    "after the final narrow auto slice showed only marginal gains, stop broad automatic repair and move to manual review"
+  ],
+  "evidence_ready": true,
+  "next_step_owner": "Codex",
+  "next_step_scope": "naruto_ui_art_ru_manual_review_split_queue",
+  "gate_result": "warn"
+}

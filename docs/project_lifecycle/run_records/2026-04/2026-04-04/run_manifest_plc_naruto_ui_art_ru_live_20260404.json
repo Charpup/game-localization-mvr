@@ -1,0 +1,80 @@
+{
+  "manifest_version": "plc-run-manifest-v1",
+  "run_id": "plc_naruto_ui_art_ru_live_20260404",
+  "run_scope": "naruto_ui_art_ru_live_batch",
+  "status": "warn",
+  "started_at": "2026-04-04T14:47:00+08:00",
+  "finished_at": "2026-04-04T15:50:00+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_start_20260404_ui_art_ru_live.md",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_issue_plc_naruto_ui_art_ru_live_20260404.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_verify_plc_naruto_ui_art_ru_live_20260404.md",
+  "artifacts": [
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/run_manifest.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/source_ui_art_prepare_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/source_ui_art_prepared.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/source_ui_art_live_ready.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/model_selection.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_translated.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_qa_hard_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_repaired_hard_v2.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_qa_hard_report_recheck_v2.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_soft_qa_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_soft_tasks.jsonl",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_review_queue.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_review_queue.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_final_export.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_delivery.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_delivery_report.json",
+    "reports/translate_failed_batches.json",
+    "reports/soft_qa_failed_batches.json"
+  ],
+  "blockers": [
+    "soft QA hard gate failed",
+    "large review queue remains before release use"
+  ],
+  "changed_files": [
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "value-review.md",
+    "task_plan.md",
+    "findings.md",
+    "progress.md",
+    "scripts/prepare_ui_art_batch.py",
+    "scripts/ui_art_length_review.py",
+    "scripts/run_ui_art_live_batch.py",
+    "scripts/restore_ui_art_delivery.py",
+    "tests/test_glossary_compile_contract.py",
+    "tests/test_ui_art_batch_contract.py",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_start_20260404_ui_art_ru_live.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_issue_plc_naruto_ui_art_ru_live_20260404.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_verify_plc_naruto_ui_art_ru_live_20260404.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_end_20260404_ui_art_ru_live.md"
+  ],
+  "evidence_refs": [
+    "command:.\\.venv\\Scripts\\python.exe -m pytest tests/test_ui_art_batch_contract.py tests/test_glossary_compile_contract.py -q -s",
+    "command:.\\.venv\\Scripts\\python.exe scripts/style_sync_check.py",
+    "command:Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'python' -and $_.CommandLine -like '*ui_art_live_20260404_run01*' }",
+    "command:.\\.venv\\Scripts\\python.exe scripts/llm_ping.py",
+    "command:.\\.venv\\Scripts\\python.exe scripts/run_ui_art_live_batch.py --batch-root data/incoming/naruto_ui_art_ru_20260404 --run-id ui_art_live_20260404_run01",
+    "command:.\\.venv\\Scripts\\python.exe scripts/qa_hard.py data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_repaired_hard_v2.csv --out_report data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_qa_hard_report_recheck_v2.json",
+    "command:.\\.venv\\Scripts\\python.exe scripts/soft_qa_llm.py data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_repaired_hard_v2.csv --out_report data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_soft_qa_report.json --out_tasks data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_soft_tasks.jsonl --resume",
+    "command:.\\.venv\\Scripts\\python.exe scripts/ui_art_length_review.py --input data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_repaired_hard_v2.csv --output data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_review_queue.csv --report data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_review_queue.json",
+    "command:.\\.venv\\Scripts\\python.exe scripts/rehydrate_export.py data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_repaired_hard_v2.csv data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/placeholder_map.json data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_final_export.csv",
+    "command:.\\.venv\\Scripts\\python.exe scripts/restore_ui_art_delivery.py --prepared data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/source_ui_art_prepared.csv --translated data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_final_export.csv --output data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_delivery.csv --report data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01/ui_art_delivery_report.json",
+    "command:.\\.venv\\Scripts\\python.exe scripts/plc_validate_records.py --preset representative --preset templates"
+  ],
+  "adr_refs": [
+    "docs/decisions/ADR-0001-project-continuity-framework.md",
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "decision_refs": [
+    "keep the live batch single-process and process-scoped to control API 易 rate limits",
+    "preserve original duplicate string_id values only in delivery while using unique working ids inside the pipeline",
+    "treat 2.3x as the operating target and 2.5x as the human-review red line, not an auto-repair obligation"
+  ],
+  "evidence_ready": true,
+  "next_step_owner": "Codex",
+  "next_step_scope": "naruto_ui_art_ru_human_review",
+  "gate_result": "warn"
+}

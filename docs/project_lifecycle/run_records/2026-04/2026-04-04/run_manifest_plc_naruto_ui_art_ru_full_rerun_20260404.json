@@ -1,0 +1,64 @@
+{
+  "manifest_version": "plc-run-manifest-v1",
+  "run_id": "plc_naruto_ui_art_ru_full_rerun_20260404",
+  "run_scope": "naruto_ui_art_ru_full_rerun",
+  "status": "warn",
+  "started_at": "2026-04-05T00:11:35+08:00",
+  "finished_at": "2026-04-05T00:59:25+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_start_20260404_ui_art_ru_full_rerun.md",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_issue_plc_naruto_ui_art_ru_full_rerun_20260404.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_verify_plc_naruto_ui_art_ru_full_rerun_20260404.md",
+  "artifacts": [
+    "scripts/ui_art_full_rerun_assess.py",
+    "tests/test_ui_art_full_rerun_assess_contract.py",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/run_manifest.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/source_ui_art_prepared.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_qa_hard_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_soft_qa_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_soft_tasks.jsonl",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_review_queue.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_review_queue.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_delivery.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_delivery_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_full_rerun_assessment.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_full_rerun_assessment.md"
+  ],
+  "blockers": [
+    "soft-QA hard-gate remains failed after the rerun because true residual length and ambiguity issues still dominate the remaining violation set",
+    "review queue volume remains significant in promo_short, item_skill_name, and slogan_long families"
+  ],
+  "changed_files": [
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "task_plan.md",
+    "findings.md",
+    "progress.md",
+    "scripts/ui_art_full_rerun_assess.py",
+    "tests/test_ui_art_full_rerun_assess_contract.py",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_start_20260404_ui_art_ru_full_rerun.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_issue_plc_naruto_ui_art_ru_full_rerun_20260404.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_verify_plc_naruto_ui_art_ru_full_rerun_20260404.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_end_20260404_ui_art_ru_full_rerun.md"
+  ],
+  "evidence_refs": [
+    "command:.\\.venv\\Scripts\\python.exe -m pytest tests/test_ui_art_batch_contract.py tests/test_qa_hard.py tests/test_soft_qa_contract.py tests/test_ui_art_recovery_canary_contract.py tests/test_translate_llm_contract.py tests/test_ui_art_full_rerun_assess_contract.py -q -s",
+    "command:.\\.venv\\Scripts\\python.exe scripts/style_sync_check.py",
+    "command:.\\.venv\\Scripts\\python.exe scripts/glossary_compile.py --approved glossary/approved.yaml --approved glossary/zhCN_ruRU/ip_naruto_ui_art_short.yaml --out_compiled data/incoming/naruto_ui_art_ru_20260404/glossary_ui_art_compiled.yaml --language_pair zh-CN->ru-RU --franchise naruto --resolve_by_scope",
+    "command:.\\.venv\\Scripts\\python.exe scripts/run_ui_art_live_batch.py --batch-root data/incoming/naruto_ui_art_ru_20260404 --input data/incoming/naruto_ui_art_ru_20260404/source_ui_art.csv --run-id ui_art_full_rerun_20260404_run01",
+    "command:.\\.venv\\Scripts\\python.exe scripts/ui_art_full_rerun_assess.py --baseline-run-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01 --focused-run-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_slice2_20260404_run02 --rerun-run-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01 --out-json data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_full_rerun_assessment.json --out-md data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_full_rerun_20260404_run01/ui_art_full_rerun_assessment.md"
+  ],
+  "adr_refs": [
+    "docs/decisions/ADR-0001-project-continuity-framework.md",
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "decision_refs": [
+    "reuse the focused recovery slice as the runtime strategy baseline instead of reopening prompt or QA strategy design before the rerun",
+    "treat soft-QA hard-gate failure as assessment input rather than as a delivery blocker for this rerun slice",
+    "move directly into residual triage because the assessment shows the remaining blocker is mostly true residual, not compact-policy noise"
+  ],
+  "evidence_ready": true,
+  "next_step_owner": "Codex",
+  "next_step_scope": "naruto_ui_art_ru_residual_triage",
+  "gate_result": "warn"
+}

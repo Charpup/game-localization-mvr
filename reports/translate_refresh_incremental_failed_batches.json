@@ -1,0 +1,19 @@
+{
+  "step": "translate_refresh_incremental",
+  "total_batches": 75,
+  "failed_batches": [
+    {
+      "batch_num": 73,
+      "start_idx": 720,
+      "end_idx": 730,
+      "error": "PARSE_SCHEMA_MISMATCH: missing={'863', '843', '780'}, extra=set()"
+    },
+    {
+      "batch_num": 74,
+      "start_idx": 730,
+      "end_idx": 740,
+      "error": "PARSE_SCHEMA_MISMATCH: missing={'890', '896', '959', '893', '936'}, extra=set()"
+    }
+  ],
+  "timestamp": "2026-04-06T21:04:22.446799"
+}

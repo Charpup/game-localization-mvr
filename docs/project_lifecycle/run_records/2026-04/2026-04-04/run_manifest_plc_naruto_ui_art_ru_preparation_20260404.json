@@ -1,0 +1,76 @@
+{
+  "manifest_version": "plc-run-manifest-v1",
+  "run_id": "plc_naruto_ui_art_ru_preparation_20260404",
+  "run_scope": "naruto_ui_art_ru_preparation",
+  "status": "warn",
+  "started_at": "2026-04-04T13:25:00+08:00",
+  "finished_at": "2026-04-04T13:45:00+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_start_20260404_ui_art_ru_prep.md",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_issue_plc_naruto_ui_art_ru_preparation_20260404.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_verify_plc_naruto_ui_art_ru_preparation_20260404.md",
+  "artifacts": [
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/research_ru_ui_art_shortening_20260404.md",
+    "glossary/zhCN_ruRU/ip_naruto_ui_art_short.yaml",
+    "workflow/style_guide.md",
+    "workflow/style_guide.generated.md",
+    "workflow/style_profile.generated.yaml",
+    "scripts/prepare_ui_art_batch.py",
+    "scripts/ui_art_length_review.py",
+    "tests/test_glossary_compile_contract.py",
+    "tests/test_ui_art_batch_contract.py",
+    "data/incoming/naruto_ui_art_ru_20260404/source_ui_art.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/glossary_ui_art_compiled.yaml",
+    "data/incoming/naruto_ui_art_ru_20260404/glossary_ui_art_compiled.lock.json",
+    "data/incoming/naruto_ui_art_ru_20260404/source_ui_art_prepared.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/source_ui_art_prepare_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/ui_art_review_queue.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/ui_art_review_queue.json"
+  ],
+  "blockers": [
+    "real source rows not yet supplied",
+    "live LLM credentials not yet supplied"
+  ],
+  "changed_files": [
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "value-review.md",
+    "task_plan.md",
+    "findings.md",
+    "progress.md",
+    "scripts/glossary_compile.py",
+    "scripts/prepare_ui_art_batch.py",
+    "scripts/ui_art_length_review.py",
+    "tests/test_glossary_compile_contract.py",
+    "tests/test_ui_art_batch_contract.py",
+    "glossary/zhCN_ruRU/ip_naruto_ui_art_short.yaml",
+    "workflow/style_guide.md",
+    "workflow/style_guide.generated.md",
+    "workflow/style_profile.generated.yaml",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_start_20260404_ui_art_ru_prep.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_issue_plc_naruto_ui_art_ru_preparation_20260404.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_verify_plc_naruto_ui_art_ru_preparation_20260404.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_end_20260404_ui_art_ru_prep.md"
+  ],
+  "evidence_refs": [
+    "command:.\\.venv\\Scripts\\python.exe -m pytest tests/test_glossary_compile_contract.py tests/test_ui_art_batch_contract.py -q -s",
+    "command:.\\.venv\\Scripts\\python.exe scripts/style_sync_check.py",
+    "command:.\\.venv\\Scripts\\python.exe scripts/glossary_compile.py --approved glossary/approved.yaml --approved glossary/zhCN_ruRU/ip_naruto_ui_art_short.yaml --out_compiled data/incoming/naruto_ui_art_ru_20260404/glossary_ui_art_compiled.yaml --language_pair zh-CN->ru-RU --franchise naruto --resolve_by_scope",
+    "command:.\\.venv\\Scripts\\python.exe scripts/prepare_ui_art_batch.py --input data/incoming/naruto_ui_art_ru_20260404/source_ui_art.csv --output data/incoming/naruto_ui_art_ru_20260404/source_ui_art_prepared.csv --report data/incoming/naruto_ui_art_ru_20260404/source_ui_art_prepare_report.json",
+    "command:.\\.venv\\Scripts\\python.exe scripts/ui_art_length_review.py --input data/incoming/naruto_ui_art_ru_20260404/source_ui_art_prepared.csv --output data/incoming/naruto_ui_art_ru_20260404/ui_art_review_queue.csv --report data/incoming/naruto_ui_art_ru_20260404/ui_art_review_queue.json",
+    "command:.\\.venv\\Scripts\\python.exe scripts/plc_validate_records.py --preset representative --preset templates"
+  ],
+  "adr_refs": [
+    "docs/decisions/ADR-0001-project-continuity-framework.md",
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "decision_refs": [
+    "keep the retained translation chain unchanged and add a prep/review layer instead",
+    "target 2.3x of cleaned Chinese length and treat 2.5x as the human-review red line",
+    "keep controversial compact overrides in research guidance until a human confirms them"
+  ],
+  "evidence_ready": true,
+  "next_step_owner": "Codex",
+  "next_step_scope": "naruto_ui_art_ru_live_batch",
+  "gate_result": "passed"
+}

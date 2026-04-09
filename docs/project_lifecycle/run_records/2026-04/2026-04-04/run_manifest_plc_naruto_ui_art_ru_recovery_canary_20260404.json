@@ -1,0 +1,66 @@
+{
+  "manifest_version": "plc-run-manifest-v1",
+  "run_id": "plc_naruto_ui_art_ru_recovery_canary_20260404",
+  "run_scope": "naruto_ui_art_ru_recovery_canary",
+  "status": "warn",
+  "started_at": "2026-04-04T21:12:36+08:00",
+  "finished_at": "2026-04-04T21:26:43+08:00",
+  "owner": "Codex",
+  "input_manifest": "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_start_20260404_ui_art_ru_recovery_canary.md",
+  "issue_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_issue_plc_naruto_ui_art_ru_recovery_canary_20260404.md",
+  "verify_report_path": "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_verify_plc_naruto_ui_art_ru_recovery_canary_20260404.md",
+  "artifacts": [
+    "scripts/build_ui_art_recovery_canary.py",
+    "scripts/ui_art_canary_compare.py",
+    "scripts/run_ui_art_live_batch.py",
+    "tests/test_ui_art_recovery_canary_contract.py",
+    "data/incoming/naruto_ui_art_ru_20260404/source_ui_art_fresh_prepared.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/source_ui_art_fresh_prepare_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/source_ui_art_canary_prepared.csv",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/source_ui_art_canary_prepared.manifest.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/run_manifest.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/ui_art_soft_qa_report.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/ui_art_review_queue.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/ui_art_recovery_canary_compare.json",
+    "data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/ui_art_recovery_canary_compare.md"
+  ],
+  "blockers": [
+    "badge_micro_2c still lacks approved compact mappings for this batch family",
+    "slogan_long failed the promotion rule, so a full rerun remains blocked",
+    "promo_short and item_skill_name remain too overflow-heavy for immediate full rerun approval"
+  ],
+  "changed_files": [
+    ".triadev/state.json",
+    ".triadev/workflow.json",
+    "task_plan.md",
+    "findings.md",
+    "progress.md",
+    "scripts/build_ui_art_recovery_canary.py",
+    "scripts/ui_art_canary_compare.py",
+    "scripts/run_ui_art_live_batch.py",
+    "tests/test_ui_art_recovery_canary_contract.py",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_start_20260404_ui_art_ru_recovery_canary.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_issue_plc_naruto_ui_art_ru_recovery_canary_20260404.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/run_verify_plc_naruto_ui_art_ru_recovery_canary_20260404.md",
+    "docs/project_lifecycle/run_records/2026-04/2026-04-04/session_end_20260404_ui_art_ru_recovery_canary.md"
+  ],
+  "evidence_refs": [
+    "command:.\\.venv\\Scripts\\python.exe -m pytest tests/test_ui_art_recovery_canary_contract.py tests/test_qa_hard.py tests/test_soft_qa_contract.py -q -s",
+    "command:.\\.venv\\Scripts\\python.exe scripts/build_ui_art_recovery_canary.py --input data/incoming/naruto_ui_art_ru_20260404/source_ui_art_fresh_prepared.csv --output data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/source_ui_art_canary_prepared.csv --manifest data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/source_ui_art_canary_prepared.manifest.json",
+    "command:.\\.venv\\Scripts\\python.exe scripts/run_ui_art_live_batch.py --batch-root data/incoming/naruto_ui_art_ru_20260404 --input data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/source_ui_art_canary_prepared.csv --run-id ui_art_recovery_canary_20260404_run01",
+    "command:.\\.venv\\Scripts\\python.exe scripts/ui_art_canary_compare.py --sample-prepared data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/source_ui_art_canary_prepared.csv --baseline-run-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_live_20260404_run01 --canary-run-dir data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01 --out-json data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/ui_art_recovery_canary_compare.json --out-md data/incoming/naruto_ui_art_ru_20260404/runs/ui_art_recovery_canary_20260404_run01/ui_art_recovery_canary_compare.md"
+  ],
+  "adr_refs": [
+    "docs/decisions/ADR-0001-project-continuity-framework.md",
+    "docs/decisions/ADR-0002-skill-governance-framework.md"
+  ],
+  "decision_refs": [
+    "sample from fresh authoritative prep output instead of stale translated artifacts",
+    "keep the canary serial and process-scoped to avoid provider rate-limit spikes",
+    "hold the full rerun because the canary failed the explicit promotion rule"
+  ],
+  "evidence_ready": true,
+  "next_step_owner": "Codex",
+  "next_step_scope": "naruto_ui_art_ru_recovery_hold_after_canary",
+  "gate_result": "warn"
+}
