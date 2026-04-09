@@ -76,6 +76,46 @@
             </p>
           </div>
 
+          <section class="llm-setup-card" id="llm-setup-card" aria-labelledby="llm-setup-title">
+            <div class="section-heading compact">
+              <div>
+                <p class="panel-kicker" data-i18n="llm.kicker">LLM Setup</p>
+                <h3 id="llm-setup-title" data-i18n="llm.title">连接翻译模型</h3>
+              </div>
+              <div class="llm-status-pill-row">
+                <span id="llm-status-pill" class="status-pill status-unknown" data-i18n="llm.status.not_configured">未配置</span>
+              </div>
+            </div>
+            <p class="panel-note" id="llm-status-copy" data-i18n="llm.intro">
+              在开始正式翻译前，先录入本地可用的 base URL 和 API key，并执行一次连接测试。
+            </p>
+            <div class="llm-meta-strip" id="llm-meta-strip">
+              <div class="empty-state" data-i18n="llm.metaIdle">尚未读取本地模型配置。</div>
+            </div>
+            <form id="llm-setup-form" class="wizard-form llm-setup-form" novalidate>
+              <div class="wizard-meta-grid llm-grid">
+                <label class="full-span">
+                  <span data-i18n="llm.baseUrlLabel">Base URL</span>
+                  <input type="url" id="llm-base-url-input" name="base_url" placeholder="https://api.example.com/v1" data-i18n-placeholder="llm.baseUrlPlaceholder" inputmode="url" autocomplete="url">
+                </label>
+                <label>
+                  <span data-i18n="llm.apiKeyLabel">API Key</span>
+                  <input type="password" id="llm-api-key-input" name="api_key" placeholder="sk-..." data-i18n-placeholder="llm.apiKeyPlaceholder" autocomplete="off" spellcheck="false">
+                </label>
+                <label>
+                  <span data-i18n="llm.modelLabel">模型（可选）</span>
+                  <input type="text" id="llm-model-input" name="model" placeholder="例如 gpt-5.4-mini" data-i18n-placeholder="llm.modelPlaceholder" autocomplete="off" spellcheck="false">
+                </label>
+              </div>
+              <div class="wizard-submit-row llm-actions">
+                <button type="button" id="llm-test-button" data-i18n="llm.testButton">测试连接</button>
+                <p class="panel-note" id="llm-last-test" data-i18n="llm.lastTestIdle">
+                  通过测试后，任务入口和 Pro Runtime 的启动按钮才会解锁。
+                </p>
+              </div>
+            </form>
+          </section>
+
           <form id="task-form" class="wizard-form" novalidate>
             <div class="wizard-entry-switch" id="wizard-entry-switch" role="tablist" aria-label="Wizard entry mode" data-i18n-aria-label="aria.wizardEntry">
               <button type="button" class="wizard-mode-button active" data-wizard-mode="upload" data-i18n="task.entryUpload">上传 CSV</button>

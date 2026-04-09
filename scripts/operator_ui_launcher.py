@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from secrets import token_hex
@@ -55,12 +56,14 @@ class OperatorUILauncher:
         now_fn: Optional[Callable[[], datetime]] = None,
         popen_fn: Optional[Callable[..., object]] = None,
         run_id_suffix_fn: Optional[Callable[[], str]] = None,
+        env_provider: Optional[Callable[[], Dict[str, str]]] = None,
     ):
         self.repo_root = Path(repo_root)
         self.python_executable = python_executable or sys.executable
         self.now_fn = now_fn or (lambda: datetime.now(timezone.utc))
         self.popen_fn = popen_fn or subprocess.Popen
         self.run_id_suffix_fn = run_id_suffix_fn or (lambda: token_hex(2))
+        self.env_provider = env_provider or (lambda: {})
         self.pending_runs: Dict[str, Dict[str, object]] = {}
 
     def create_run_id(self, now: Optional[datetime] = None) -> str:
@@ -130,6 +133,19 @@ class OperatorUILauncher:
             return None
         return self._materialize_pending_view(pending_run)
 
+    def _spawn_process(self, command: List[str], env: Dict[str, str]):
+        kwargs = {
+            "cwd": str(self.repo_root),
+            "stdout": subprocess.DEVNULL,
+            "stderr": subprocess.DEVNULL,
+        }
+        try:
+            return self.popen_fn(command, env=env, **kwargs)
+        except TypeError as exc:
+            if "unexpected keyword argument 'env'" not in str(exc):
+                raise
+            return self.popen_fn(command, **kwargs)
+
     def launch_run(self, input_path: str, target_lang: str, verify_mode: str) -> PendingRunView:
         run_id = self.create_run_id()
         run_dir = self.build_run_dir(run_id)
@@ -137,12 +153,9 @@ class OperatorUILauncher:
         command = self.build_run_command(input_path, target_lang, verify_mode, run_id, run_dir)
 
         try:
-            process = self.popen_fn(
-                command,
-                cwd=str(self.repo_root),
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
+            env = os.environ.copy()
+            env.update({key: value for key, value in self.env_provider().items() if value})
+            process = self._spawn_process(command, env)
         except OSError as exc:
             raise LauncherError(f"Failed to start smoke pipeline: {exc}") from exc
 

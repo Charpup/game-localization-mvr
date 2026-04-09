@@ -11,6 +11,7 @@ import pytest
 
 import scripts.operator_ui_server as server
 import scripts.operator_ui_tasks as task_models
+import scripts.operator_ui_llm as llm_setup
 
 
 def _write_json(path: Path, payload: dict) -> None:
@@ -142,6 +143,32 @@ class _StubLauncher:
         return pending
 
 
+def _seed_llm_ready(repo_root: Path) -> None:
+    credential_path = repo_root / "tmp_llm_credentials.env"
+    credential_path.write_text("LLM_API_KEY=test-secret-key\n", encoding="utf-8")
+    fingerprint = llm_setup._config_fingerprint(
+        "https://example.invalid/v1",
+        "gpt-4.1-mini",
+        llm_setup._api_key_digest("test-secret-key"),
+    )
+    payload = {
+        "base_url": "https://example.invalid/v1",
+        "model": "gpt-4.1-mini",
+        "credential_path": str(credential_path),
+        "credential_source": "saved_file",
+        "last_test_status": "pass",
+        "last_test_at": "2026-04-09T10:00:00+00:00",
+        "last_test_message": "Connection verified. Translation launch is now unlocked.",
+        "last_test_model": "gpt-4.1-mini",
+        "last_test_latency_ms": 42,
+        "verified_fingerprint": fingerprint,
+        "updated_at": "2026-04-09T10:00:00+00:00",
+    }
+    settings_path = repo_root / "data" / "operator_ui_settings" / "llm_setup.json"
+    settings_path.parent.mkdir(parents=True, exist_ok=True)
+    settings_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def test_task_endpoints_surface_buckets_preview_download_and_archive(tmp_path):
     _write_task_run_fixture(tmp_path, "task_server_ready")
     task_id = task_models.task_id_for_run("task_server_ready")
@@ -255,6 +282,7 @@ def test_task_delivery_download_returns_structured_404_without_auditing_missing_
 
 
 def test_task_creation_supports_upload_and_request_changes_requires_note(tmp_path):
+    _seed_llm_ready(tmp_path)
     launcher = _StubLauncher(tmp_path)
     app = server.OperatorUIApp(repo_root=tmp_path, launcher=launcher)
     httpd = server.build_http_server("127.0.0.1", 0, app)
@@ -329,6 +357,44 @@ def test_task_filters_validate_bucket_and_status_and_404_missing_task(tmp_path):
         with pytest.raises(urllib.error.HTTPError) as exc_info:
             urllib.request.urlopen(urllib.request.Request(base_url + "/api/tasks/not-real", method="GET"))
         assert exc_info.value.code == 404
+    finally:
+        httpd.shutdown()
+        thread.join(timeout=5)
+
+
+def test_task_creation_requires_verified_llm_setup(tmp_path, monkeypatch):
+    launcher = _StubLauncher(tmp_path)
+    app = server.OperatorUIApp(repo_root=tmp_path, launcher=launcher)
+    httpd = server.build_http_server("127.0.0.1", 0, app)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address
+    base_url = f"http://{host}:{port}"
+    monkeypatch.setenv("LLM_BASE_URL", "https://example.invalid/v1")
+    monkeypatch.setenv("LLM_API_KEY", "env-secret-key")
+    monkeypatch.setenv("LLM_MODEL", "gpt-4.1-mini")
+
+    try:
+        status, upload = _http_upload(base_url, "blocked_input.csv", b"id,source\n1,hello\n")
+        assert status == 202
+
+        with pytest.raises(llm_setup.LLMGateError):
+            llm_setup.require_llm_task_gate(tmp_path)
+
+        with pytest.raises(urllib.error.HTTPError) as exc_info:
+            _http_json(
+                base_url,
+                "/api/tasks",
+                method="POST",
+                payload={
+                    "title": "Blocked task",
+                    "input_mode": "upload",
+                    "upload_id": upload["upload_id"],
+                    "target_locale": "en-US",
+                    "verify_mode": "full",
+                },
+            )
+        assert exc_info.value.code == 412
     finally:
         httpd.shutdown()
         thread.join(timeout=5)

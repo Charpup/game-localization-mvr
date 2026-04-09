@@ -473,6 +473,40 @@ Object.assign(TEXT.zh, {
   "task.action.request_changes": "请求修改",
   "task.action.archive_task": "归档任务",
   "task.action.download_delivery": "下载文件",
+  "llm.kicker": "LLM Setup",
+  "llm.title": "连接翻译模型",
+  "llm.intro": "在开始正式翻译前，先录入本地可用的 base URL 和 API key，并执行一次连接测试。",
+  "llm.baseUrlLabel": "Base URL",
+  "llm.baseUrlPlaceholder": "例如 https://api.example.com/v1",
+  "llm.apiKeyLabel": "API Key",
+  "llm.apiKeyPlaceholder": "输入你的本地 API key",
+  "llm.modelLabel": "模型（可选）",
+  "llm.modelPlaceholder": "例如 gpt-5.4-mini",
+  "llm.testButton": "测试连接",
+  "llm.testingButton": "测试中...",
+  "llm.lastTestIdle": "通过测试后，任务入口和 Pro Runtime 的启动按钮才会解锁。",
+  "llm.metaIdle": "尚未读取本地模型配置。",
+  "llm.metaEndpoint": "服务地址",
+  "llm.metaModel": "模型",
+  "llm.metaCredential": "凭证",
+  "llm.metaLastTest": "最近测试",
+  "llm.modelAuto": "自动选择",
+  "llm.credentialStored": "已保存到本机",
+  "llm.credentialEnvironment": "沿用现有环境",
+  "llm.credentialMissing": "尚未提供",
+  "llm.lastTestNever": "尚未测试",
+  "llm.status.not_configured": "未配置",
+  "llm.status.configured": "待测试",
+  "llm.status.testing": "测试中",
+  "llm.status.ready": "已就绪",
+  "llm.status.fail": "测试失败",
+  "llm.status.environment": "沿用现有环境",
+  "llm.testRequiredTask": "先完成 LLM 连接测试，任务入口才会解锁。",
+  "llm.testRequiredRuntime": "先完成 LLM 连接测试，Pro Runtime 才会解锁启动。",
+  "llm.retestRequired": "你已经修改了模型配置，请重新点击“测试连接”。",
+  "llm.loading": "正在读取 LLM 配置...",
+  "llm.baseUrlRequired": "请先填写可访问的 Base URL。",
+  "llm.apiKeyRequired": "请提供 API key，或沿用已有的本地凭证。",
 });
 
 Object.assign(TEXT.en, {
@@ -512,6 +546,40 @@ Object.assign(TEXT.en, {
   "task.action.request_changes": "Request changes",
   "task.action.archive_task": "Archive task",
   "task.action.download_delivery": "Download file",
+  "llm.kicker": "LLM Setup",
+  "llm.title": "Connect the translation model",
+  "llm.intro": "Before starting a real translation run, enter a local base URL and API key, then verify the connection once.",
+  "llm.baseUrlLabel": "Base URL",
+  "llm.baseUrlPlaceholder": "For example: https://api.example.com/v1",
+  "llm.apiKeyLabel": "API Key",
+  "llm.apiKeyPlaceholder": "Enter your local API key",
+  "llm.modelLabel": "Model (optional)",
+  "llm.modelPlaceholder": "For example: gpt-5.4-mini",
+  "llm.testButton": "Test connection",
+  "llm.testingButton": "Testing...",
+  "llm.lastTestIdle": "Task launch and Pro Runtime stay locked until this connection test passes.",
+  "llm.metaIdle": "No local model setup has been loaded yet.",
+  "llm.metaEndpoint": "Endpoint",
+  "llm.metaModel": "Model",
+  "llm.metaCredential": "Credential",
+  "llm.metaLastTest": "Last test",
+  "llm.modelAuto": "Automatic",
+  "llm.credentialStored": "Stored on this machine",
+  "llm.credentialEnvironment": "Using existing environment",
+  "llm.credentialMissing": "Missing",
+  "llm.lastTestNever": "Not tested yet",
+  "llm.status.not_configured": "Not configured",
+  "llm.status.configured": "Needs test",
+  "llm.status.testing": "Testing",
+  "llm.status.ready": "Ready",
+  "llm.status.fail": "Test failed",
+  "llm.status.environment": "Using environment",
+  "llm.testRequiredTask": "Run a successful LLM connection test before task launch is unlocked.",
+  "llm.testRequiredRuntime": "Run a successful LLM connection test before Pro Runtime launch is unlocked.",
+  "llm.retestRequired": "These settings changed. Run Test connection again before launch.",
+  "llm.loading": "Loading LLM setup...",
+  "llm.baseUrlRequired": "Enter a reachable base URL first.",
+  "llm.apiKeyRequired": "Provide an API key, or keep using the saved local credential.",
 });
 
 const state = { language: getStoredLanguage(), mode: "tasks", heroMessage: { status: "unknown", key: "hero.waiting", vars: {}, raw: false }, taskFeedbackMessage: { key: "task.wizardHint", vars: {}, raw: false }, workspaceFeedbackMessage: { key: "workspace.waiting", vars: {}, raw: false }, launchFeedbackMessage: { key: "runtime.launcherHint", vars: {}, raw: false }, taskOverview: null, tasks: [], selectedTaskId: null, selectedTask: null, taskDeliveries: [], selectedDeliveryId: null, selectedDeliveryPreview: null, taskLoading: false, workspaceOverview: null, workspaceCases: [], selectedCaseId: null, workspaceDetail: null, workspaceDetailLoadingRunId: null, workspaceFilters: { status: "open", targetLocale: "", query: "", lane: "all" }, inspectorTab: "decision", runtimePeekCache: {}, runtimePeekLoadingRunId: null, runs: [], selectedRunId: null, selectedRunDetail: null, selectedArtifactKey: null, selectedArtifact: null };
@@ -527,6 +595,10 @@ Object.assign(state, {
   taskQuery: "",
   wizardMode: "upload",
   stagedUpload: null,
+  llmSetup: null,
+  llmDraft: { base_url: "", api_key: "", model: "" },
+  llmLoading: false,
+  llmTesting: false,
   returnTaskId: null,
   taskLoadingTaskId: "",
   taskListRequestSeq: 0,
@@ -557,6 +629,16 @@ Object.assign(ui, {
   wizardModeButtons: Array.from(document.querySelectorAll("[data-wizard-mode]")),
   wizardUploadPanel: document.getElementById("wizard-upload-panel"),
   wizardPathPanel: document.getElementById("wizard-path-panel"),
+  llmSetupCard: document.getElementById("llm-setup-card"),
+  llmSetupForm: document.getElementById("llm-setup-form"),
+  llmStatusPill: document.getElementById("llm-status-pill"),
+  llmStatusCopy: document.getElementById("llm-status-copy"),
+  llmMetaStrip: document.getElementById("llm-meta-strip"),
+  llmBaseUrlInput: document.getElementById("llm-base-url-input"),
+  llmApiKeyInput: document.getElementById("llm-api-key-input"),
+  llmModelInput: document.getElementById("llm-model-input"),
+  llmTestButton: document.getElementById("llm-test-button"),
+  llmLastTest: document.getElementById("llm-last-test"),
   taskSubmitButton: document.getElementById("task-submit-button"),
   taskSubmitNote: document.getElementById("task-submit-note"),
   runtimeLaunchButton: document.getElementById("runtime-launch-button"),
@@ -587,18 +669,142 @@ function setTaskFeedback(key, vars = {}, options = {}) { state.taskFeedbackMessa
 function setWorkspaceFeedback(key, vars = {}, options = {}) { state.workspaceFeedbackMessage = { key, vars, raw: Boolean(options.raw) }; renderWorkspaceFeedback(); }
 function setLaunchFeedback(key, vars = {}, options = {}) { state.launchFeedbackMessage = { key, vars, raw: Boolean(options.raw) }; renderLaunchFeedback(); }
 function renderHeroStatus() { const message = state.heroMessage.raw ? state.heroMessage.key : t(state.heroMessage.key, state.heroMessage.vars); ui.heroStatus.innerHTML = `<span class="status-dot status-${escapeHtml(state.heroMessage.status)}"></span><span>${escapeHtml(message)}</span>`; }
+function normalizeLlmBaseUrl(value) { return String(value || "").trim().replace(/\/+$/, ""); }
+function normalizeLlmModel(value) { return String(value || "").trim(); }
+function syncLlmDraftFromInputs() {
+  state.llmDraft = {
+    base_url: normalizeLlmBaseUrl(ui.llmBaseUrlInput?.value || ""),
+    api_key: String(ui.llmApiKeyInput?.value || "").trim(),
+    model: normalizeLlmModel(ui.llmModelInput?.value || ""),
+  };
+  return state.llmDraft;
+}
+function applyLlmDraftToInputs() {
+  if (ui.llmBaseUrlInput) ui.llmBaseUrlInput.value = state.llmDraft.base_url || "";
+  if (ui.llmApiKeyInput) ui.llmApiKeyInput.value = state.llmDraft.api_key || "";
+  if (ui.llmModelInput) ui.llmModelInput.value = state.llmDraft.model || "";
+}
+function llmDraftMatchesSaved() {
+  const setup = state.llmSetup || {};
+  return !String(state.llmDraft.api_key || "").trim()
+    && normalizeLlmBaseUrl(state.llmDraft.base_url) === normalizeLlmBaseUrl(setup.base_url)
+    && normalizeLlmModel(state.llmDraft.model) === normalizeLlmModel(setup.model);
+}
+function llmTaskLaunchReady() { return Boolean(state.llmSetup?.can_launch_tasks) && llmDraftMatchesSaved() && !state.llmTesting; }
+function llmRuntimeLaunchReady() { return Boolean(state.llmSetup?.can_launch_runtime) && llmDraftMatchesSaved() && !state.llmTesting; }
+function llmGateReason(scope = "task") {
+  if (state.llmLoading) return t("llm.loading");
+  if (state.llmTesting) return t("llm.testingButton");
+  if (!llmDraftMatchesSaved()) return t("llm.retestRequired");
+  const setup = state.llmSetup || {};
+  const ready = scope === "runtime" ? setup.can_launch_runtime : setup.can_launch_tasks;
+  if (!setup.configured) return t(scope === "runtime" ? "llm.testRequiredRuntime" : "llm.testRequiredTask");
+  if (!ready) return setup.last_test_status === "fail" && setup.last_test_message ? setup.last_test_message : t(scope === "runtime" ? "llm.testRequiredRuntime" : "llm.testRequiredTask");
+  return "";
+}
+function llmVisualStatus() {
+  const setup = state.llmSetup || {};
+  if (state.llmTesting) return { key: "llm.status.testing", tone: "running" };
+  if (setup.status === "environment") return { key: "llm.status.environment", tone: "pass" };
+  if (setup.can_launch_tasks) return { key: "llm.status.ready", tone: "pass" };
+  if (setup.last_test_status === "fail") return { key: "llm.status.fail", tone: "fail" };
+  if (setup.configured) return { key: "llm.status.configured", tone: "warn" };
+  return { key: "llm.status.not_configured", tone: "unknown" };
+}
+function llmCredentialCopy(setup) {
+  if (!setup?.has_api_key) return t("llm.credentialMissing");
+  return setup.credential_source === "environment" ? t("llm.credentialEnvironment") : t("llm.credentialStored");
+}
+function llmLastTestSummary(setup) {
+  if (state.llmTesting) return t("llm.testingButton");
+  if (setup?.status === "environment") return t("llm.status.environment");
+  if (!setup?.last_test_at) return t("llm.lastTestNever");
+  const prefix = setup.last_test_status === "pass" ? t("llm.status.ready") : (setup.last_test_status === "fail" ? t("llm.status.fail") : t("llm.status.configured"));
+  return `${prefix} · ${formatStartedAt(setup.last_test_at)}`;
+}
+function renderLlmSetup() {
+  if (!ui.llmSetupCard) return;
+  const setup = state.llmSetup || {};
+  const status = llmVisualStatus();
+  const testDisabled = state.llmLoading || state.llmTesting || !normalizeLlmBaseUrl(state.llmDraft.base_url) || (!String(state.llmDraft.api_key || "").trim() && !setup.has_api_key);
+  ui.llmSetupCard.classList.toggle("ready", status.tone === "pass");
+  ui.llmSetupCard.classList.toggle("fail", status.tone === "fail");
+  ui.llmStatusPill.className = `status-pill status-${escapeHtml(status.tone)}`;
+  ui.llmStatusPill.textContent = t(status.key);
+  ui.llmStatusCopy.textContent = state.llmTesting ? t("llm.testingButton") : (setup.last_test_message || t("llm.intro"));
+  const metaCards = [
+    { label: t("llm.metaEndpoint"), value: setup.base_url || t("common.na"), copy: setup.source === "environment" ? t("llm.credentialEnvironment") : t("llm.intro") },
+    { label: t("llm.metaModel"), value: setup.model || t("llm.modelAuto"), copy: setup.model ? t("llm.metaModel") : t("llm.modelAuto") },
+    { label: t("llm.metaCredential"), value: setup.api_key_masked || t("llm.credentialMissing"), copy: llmCredentialCopy(setup) },
+    { label: t("llm.metaLastTest"), value: llmLastTestSummary(setup), copy: setup.last_test_message || t("llm.lastTestIdle") },
+  ];
+  ui.llmMetaStrip.innerHTML = metaCards.map((item) => `<article class="llm-meta-card"><p class="panel-kicker">${escapeHtml(item.label)}</p><strong>${escapeHtml(item.value)}</strong><span class="panel-note">${escapeHtml(item.copy)}</span></article>`).join("");
+  ui.llmTestButton.disabled = testDisabled;
+  ui.llmTestButton.textContent = state.llmTesting ? t("llm.testingButton") : t("llm.testButton");
+  ui.llmLastTest.textContent = state.llmTesting ? t("llm.testingButton") : (setup.last_test_message || t("llm.lastTestIdle"));
+  if (ui.taskSubmitButton) ui.taskSubmitButton.disabled = !llmTaskLaunchReady();
+  if (ui.runtimeLaunchButton) ui.runtimeLaunchButton.disabled = !llmRuntimeLaunchReady();
+  if (ui.taskSubmitNote) ui.taskSubmitNote.textContent = llmTaskLaunchReady() ? t("task.submitNote") : llmGateReason("task");
+}
+async function loadLlmSetup() {
+  state.llmLoading = true;
+  renderLlmSetup();
+  try {
+    const payload = await fetchJson("/api/llm/config");
+    state.llmSetup = payload.llm || {};
+    state.llmDraft = {
+      base_url: normalizeLlmBaseUrl(state.llmSetup.base_url || ""),
+      api_key: "",
+      model: normalizeLlmModel(state.llmSetup.model || ""),
+    };
+    applyLlmDraftToInputs();
+    renderLlmSetup();
+    return state.llmSetup;
+  } finally {
+    state.llmLoading = false;
+    renderLlmSetup();
+  }
+}
+async function testLlmSetupConnection() {
+  syncLlmDraftFromInputs();
+  if (!state.llmDraft.base_url) throw new Error(t("llm.baseUrlRequired"));
+  if (!state.llmDraft.api_key && !state.llmSetup?.has_api_key) throw new Error(t("llm.apiKeyRequired"));
+  state.llmTesting = true;
+  renderLlmSetup();
+  try {
+    const payload = await fetchJson("/api/llm/test", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ base_url: state.llmDraft.base_url, api_key: state.llmDraft.api_key, model: state.llmDraft.model }),
+    });
+    state.llmSetup = payload.llm || {};
+    state.llmDraft = {
+      base_url: normalizeLlmBaseUrl(state.llmSetup.base_url || ""),
+      api_key: "",
+      model: normalizeLlmModel(state.llmSetup.model || ""),
+    };
+    applyLlmDraftToInputs();
+    renderLlmSetup();
+    setHeroStatus(state.llmSetup.last_test_status === "pass" || state.llmSetup.status === "environment" ? "pass" : "fail", state.llmSetup.last_test_message || t("llm.lastTestIdle"), {}, { raw: true });
+    return state.llmSetup;
+  } finally {
+    state.llmTesting = false;
+    renderLlmSetup();
+  }
+}
 function renderTaskFeedback() {
   const message = state.taskFeedbackMessage.raw ? state.taskFeedbackMessage.key : t(state.taskFeedbackMessage.key, state.taskFeedbackMessage.vars);
-  ui.taskFeedback.textContent = message;
+  ui.taskFeedback.textContent = !state.taskFeedbackMessage.raw && state.taskFeedbackMessage.key === "task.wizardHint" && !llmTaskLaunchReady() ? llmGateReason("task") : message;
 }
 function renderWorkspaceFeedback() { ui.workspaceFeedback.textContent = state.workspaceFeedbackMessage.raw ? state.workspaceFeedbackMessage.key : t(state.workspaceFeedbackMessage.key, state.workspaceFeedbackMessage.vars); }
 function renderLaunchFeedback() {
   const message = state.launchFeedbackMessage.raw ? state.launchFeedbackMessage.key : t(state.launchFeedbackMessage.key, state.launchFeedbackMessage.vars);
-  ui.launchFeedback.textContent = message;
+  const shouldShowGate = !state.launchFeedbackMessage.raw && ["runtime.launcherHint", "runtime.inventoryRefreshed", "runtime.refreshingInventory"].includes(state.launchFeedbackMessage.key);
+  ui.launchFeedback.textContent = shouldShowGate && !llmRuntimeLaunchReady() ? llmGateReason("runtime") : message;
 }
 function setMode(mode) { state.mode = ["tasks", "workspace", "runtime"].includes(mode) ? mode : "tasks"; ui.taskView.classList.toggle("hidden", state.mode !== "tasks"); ui.workspaceView.classList.toggle("hidden", state.mode !== "workspace"); ui.runtimeView.classList.toggle("hidden", state.mode !== "runtime"); ui.modeTasksButton.classList.toggle("active", state.mode === "tasks"); ui.modeWorkspaceButton.classList.toggle("active", state.mode === "workspace"); ui.modeRuntimeButton.classList.toggle("active", state.mode === "runtime"); }
 function applyLanguage(language, options = {}) { state.language = language === "en" ? "en" : "zh"; if (options.persist !== false) persistLanguage(state.language); document.documentElement.lang = state.language === "zh" ? "zh-CN" : "en"; document.title = t("page.title"); document.querySelectorAll("[data-i18n]").forEach((element) => { element.textContent = t(element.getAttribute("data-i18n"), {}, element.textContent); }); document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => { element.setAttribute("placeholder", t(element.getAttribute("data-i18n-placeholder"), {}, element.getAttribute("placeholder") || "")); }); document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => { element.setAttribute("aria-label", t(element.getAttribute("data-i18n-aria-label"), {}, element.getAttribute("aria-label") || "")); }); ui.languageZhButton.classList.toggle("active", state.language === "zh"); ui.languageEnButton.classList.toggle("active", state.language === "en"); renderAll(); }
-function renderAll() { renderHeroStatus(); renderTaskFeedback(); renderWorkspaceFeedback(); renderLaunchFeedback(); renderTaskOverview(); renderTaskList(); renderTaskDetail(); renderWorkspaceOverview(); renderWorkspaceBoard(); renderWorkspaceDetail(); renderRunsRail(); renderRuntimeDetail(state.selectedRunDetail); }
+function renderAll() { renderHeroStatus(); renderLlmSetup(); renderTaskFeedback(); renderWorkspaceFeedback(); renderLaunchFeedback(); renderTaskOverview(); renderTaskList(); renderTaskDetail(); renderWorkspaceOverview(); renderWorkspaceBoard(); renderWorkspaceDetail(); renderRunsRail(); renderRuntimeDetail(state.selectedRunDetail); }
 function summarizeStageCounts(counts) { const rows = Object.entries(counts || {}); return rows.length ? rows.map(([key, value]) => `${displayStatusText(key)} ${value}`).join(" · ") : t("common.none"); }
 function preferredArtifactKey(run) { const artifacts = Array.isArray(run?.artifacts) ? run.artifacts : []; return artifacts.find((artifact) => artifact.previewable)?.key || run?.allowed_artifact_keys?.[0] || artifacts[0]?.key || null; }
 function artifactMetaLabel(key) { const map = { run_manifest: { label: "Execution manifest", use: "Technical record", description: "Technical record of the run inputs, status, and generated artifacts." }, smoke_verify_report: { label: "Verification report", use: "Quality review", description: "Quality check summary for the latest run." }, smoke_issues_report: { label: "Issue summary", use: "Risk review", description: "Structured issue list collected during verification." }, smoke_verify_log: { label: "Run log", use: "Debugging", description: "Plain-text execution log for the selected run." }, smoke_governance_kpi_json: { label: "Governance snapshot", use: "Monitoring", description: "Governance and KPI signal snapshot for the run." }, smoke_review_tickets_jsonl: { label: "Review queue", use: "Review planning", description: "Queued human review tickets generated by this run." }, smoke_feedback_log_jsonl: { label: "Feedback log", use: "Review history", description: "Recorded review feedback attached to this run." }, operator_cards: { label: "Operator cards", use: "Operator evidence", description: "Operator-facing cards linked to the selected run." }, operator_summary_json: { label: "Operator summary JSON", use: "Technical summary", description: "Machine-readable operator summary exported for the run." }, operator_summary_md: { label: "Operator summary Markdown", use: "Human-readable summary", description: "Readable operator summary for sharing and inspection." } }; const base = map[key] || { label: humanizeKey(key), use: t("labels.artifacts"), description: `${humanizeKey(key)} exported from the selected run.` }; if (state.language !== "zh") return base; const zhMap = { "Execution manifest": "执行清单", "Technical record": "技术记录", "Technical record of the run inputs, status, and generated artifacts.": "记录本次运行输入、状态与产物的技术清单。", "Verification report": "验证报告", "Quality review": "质量检查", "Quality check summary for the latest run.": "汇总最新 run 的验证结果。", "Issue summary": "问题清单", "Risk review": "风险排查", "Structured issue list collected during verification.": "结构化整理验证阶段收集到的问题。", "Run log": "运行日志", "Debugging": "排障", "Plain-text execution log for the selected run.": "查看当前 run 的纯文本执行日志。", "Governance snapshot": "治理快照", "Monitoring": "监控", "Governance and KPI signal snapshot for the run.": "查看本次 run 的治理与 KPI 信号。", "Review queue": "复核队列", "Review planning": "复核计划", "Queued human review tickets generated by this run.": "查看该 run 产出的人工复核队列。", "Feedback log": "反馈日志", "Review history": "复核历史", "Recorded review feedback attached to this run.": "查看已经记录到该 run 的复核反馈。", "Operator cards": "运营卡片", "Operator evidence": "运营证据", "Operator-facing cards linked to the selected run.": "查看该 run 关联的运营卡片。", "Operator summary JSON": "运营摘要 JSON", "Technical summary": "技术摘要", "Machine-readable operator summary exported for the run.": "查看机器可读的运营摘要。", "Operator summary Markdown": "运营摘要 Markdown", "Human-readable summary": "人工阅读", "Readable operator summary for sharing and inspection.": "查看适合分享和阅读的运营摘要。" }; return { label: zhMap[base.label] || base.label, use: zhMap[base.use] || base.use, description: zhMap[base.description] || base.description }; }
@@ -647,7 +853,7 @@ async function loadRuntimePeek(runId) { if (!runId) return null; if (state.runti
 async function loadRuns() { setLaunchFeedback("runtime.refreshingInventory"); const payload = await fetchJson("/api/runs?limit=12"); state.runs = payload.runs || []; renderRunsRail(); setLaunchFeedback("runtime.inventoryRefreshed"); if (!state.selectedRunId && state.runs.length) await showRunInRuntime(state.runs[0].run_id, { preserveMode: true }); }
 async function loadArtifact(runId, artifactKey, options = {}) { if (!artifactKey) { state.selectedArtifactKey = null; state.selectedArtifact = null; renderRuntimeDetail(state.selectedRunDetail); renderEmptyArtifactPreview(); return null; } if (!state.selectedRunDetail || state.selectedRunDetail.run_id !== runId) await showRunInRuntime(runId, { preserveMode: true }); state.selectedArtifactKey = artifactKey; const payload = await fetchJson(`/api/runs/${encodeURIComponent(runId)}/artifacts/${encodeURIComponent(artifactKey)}`); state.selectedArtifact = payload.artifact; renderRuntimeDetail(state.selectedRunDetail); renderArtifactPreview(state.selectedArtifact); if (!options.preserveMode) setMode("runtime"); return state.selectedArtifact; }
 async function showRunInRuntime(runId, options = {}) { const run = await loadRuntimePeek(runId); if (!run) return; state.selectedArtifactKey = null; state.selectedArtifact = null; renderRuntimeDetail(run); const artifactKey = preferredArtifactKey(run); if (artifactKey) await loadArtifact(run.run_id, artifactKey, { preserveMode: true }); else renderEmptyArtifactPreview(); if (!options.preserveMode) { setMode("runtime"); setHeroStatus(run.overall_status, "hero.runtimeSelected", { runId: run.run_id }); } }
-async function launchRunFromShell(event) { event.preventDefault(); const payload = Object.fromEntries(new FormData(ui.launcherForm).entries()); setLaunchFeedback("runtime.launchingRun"); const response = await fetchJson("/api/runs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); setLaunchFeedback("runtime.runLaunched", { runId: response.run.run_id }); await Promise.all([loadRuns(), loadWorkspace(), loadTaskOverviewAndList()]); await showRunInRuntime(response.run.run_id); }
+async function launchRunFromShell(event) { event.preventDefault(); syncLlmDraftFromInputs(); if (!llmRuntimeLaunchReady()) throw new Error(llmGateReason("runtime")); const payload = Object.fromEntries(new FormData(ui.launcherForm).entries()); setLaunchFeedback("runtime.launchingRun"); const response = await fetchJson("/api/runs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); setLaunchFeedback("runtime.runLaunched", { runId: response.run.run_id }); await Promise.all([loadRuns(), loadWorkspace(), loadTaskOverviewAndList()]); await showRunInRuntime(response.run.run_id); }
 function localizedBucketLabel(bucket) { const zh = { needs_your_action: "待你处理", running: "运行中", waiting_on_ops: "等待运营", ready_to_collect: "可领取结果", failed: "失败", archived: "已归档" }; const en = { needs_your_action: "Needs your action", running: "Running", waiting_on_ops: "Waiting on Ops", ready_to_collect: "Ready to collect", failed: "Failed", archived: "Archived" }; return (state.language === "zh" ? zh : en)[bucket] || humanizeKey(bucket); }
 function taskBucketOrder() { return ["needs_your_action", "running", "waiting_on_ops", "ready_to_collect", "failed", "archived"]; }
 function clearTaskSelection() { state.selectedTaskId = ""; state.selectedTask = null; state.taskDeliveries = []; state.selectedDeliveryId = ""; state.selectedDeliveryPreview = null; state.taskLoadingTaskId = ""; }
@@ -680,7 +886,7 @@ async function previewDelivery(delivery) { const taskId = state.selectedTaskId; 
 async function downloadDelivery(delivery) { const taskId = state.selectedTaskId; const link = document.createElement("a"); link.href = delivery.download_url; link.rel = "noopener"; document.body.appendChild(link); link.click(); document.body.removeChild(link); setTimeout(async () => { try { await loadTaskOverviewAndList(); if (taskId && findVisibleTask(taskId)) await loadTaskDetail(taskId, { loadDeliveries: true, preserveSelection: true }); } catch (error) { handleTaskError(error); } }, 250); }
 async function openTaskRunInMonitor(runId) { if (!runId) throw new Error(state.language === "zh" ? "这个任务还没有可打开的 run。" : "This task does not have a linked run yet."); const previousFilters = { ...state.workspaceFilters }; await loadWorkspace(); let nextCase = findCaseByRunId(runId); if (!nextCase) { state.workspaceFilters = { status: "all", lane: "all", targetLocale: "", query: runId }; ui.caseStatusFilter.value = "all"; ui.caseLocaleFilter.value = ""; ui.caseQueryFilter.value = runId; await loadWorkspace(); nextCase = findCaseByRunId(runId); } if (!nextCase) { state.workspaceFilters = previousFilters; ui.caseStatusFilter.value = previousFilters.status; ui.caseLocaleFilter.value = previousFilters.targetLocale; ui.caseQueryFilter.value = previousFilters.query; await loadWorkspace(); await showRunInRuntime(runId, { preserveMode: true }); setMode("runtime"); setTaskFeedback(state.language === "zh" ? "这个任务还没有形成 Ops case，已改为打开 Pro Runtime。" : "This task does not have an Ops case yet, so Pro Runtime was opened instead.", {}, { raw: true }); setHeroStatus("warn", "hero.runtimeSelected", { runId }); return null; } await selectWorkspaceCase(nextCase.case_id, { preserveMode: true }); setMode("workspace"); setHeroStatus(nextCase.runtime_status || "warn", "hero.workspaceSelected", { runId: nextCase.run_id }); return nextCase; }
 async function runTaskAction(action) { const actingTaskId = state.selectedTaskId; if (!actingTaskId) return; const payload = await fetchJson(`/api/tasks/${encodeURIComponent(actingTaskId)}/actions/${encodeURIComponent(action)}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(actionPayload(action)) }); if (action === "request_changes" || action === "archive_task" || action === "approve_delivery") { ui.taskNoteInput.value = ""; } await loadTaskOverviewAndList(); const preferredTaskId = payload.task?.task_id || payload.updated_task_ids?.[0] || actingTaskId; if (findVisibleTask(preferredTaskId)) { await loadTaskDetail(preferredTaskId, { loadDeliveries: true, resetPreview: action !== "approve_delivery" && action !== "view_deliveries" }); } else if (state.tasks[0]) { await selectTask(state.tasks[0].task_id, { preserveMode: true }); } else { clearTaskSelection(); renderTaskList(); renderTaskDetail(); } setTaskFeedback(payload.user_message || t("hero.taskActionDone"), {}, { raw: true }); setHeroStatus(payload.result_status || "pass", "hero.taskActionDone"); if (action === "approve_delivery" || action === "view_deliveries") { if (!state.taskDeliveries.length && state.selectedTaskId) await loadTaskDeliveries(state.selectedTaskId); const nextDeliveryId = state.selectedTask?.bundle_summary?.primary_delivery_id || state.taskDeliveries[0]?.delivery_id || ""; const nextDelivery = state.taskDeliveries.find((delivery) => delivery.delivery_id === nextDeliveryId) || state.taskDeliveries[0]; if (nextDelivery) await previewDelivery(nextDelivery); } if (action === "open_monitor") { state.returnTaskId = actingTaskId; await openTaskRunInMonitor(payload.linked_run_id || state.selectedTask?.latest_run_id); return; } if (action === "open_runtime") { const runId = payload.linked_run_id || state.selectedTask?.latest_run_id; if (runId) { state.returnTaskId = actingTaskId; await showRunInRuntime(runId, { preserveMode: true }); setMode("runtime"); setHeroStatus("running", "hero.runtimeSelected", { runId }); } return; } if (action === "rerun" && payload.linked_run_id) { await Promise.all([loadRuns(), loadWorkspace()]); state.returnTaskId = actingTaskId; await showRunInRuntime(payload.linked_run_id, { preserveMode: true }); setMode("runtime"); setHeroStatus("running", "hero.runtimeSelected", { runId: payload.linked_run_id }); } }
-async function createTaskFromForm(event) { event.preventDefault(); const form = new FormData(ui.taskForm); const payload = { title: String(form.get("title") || "").trim(), target_locale: String(form.get("target_locale") || "").trim(), verify_mode: String(form.get("verify_mode") || "").trim(), input_mode: state.wizardMode }; if (state.wizardMode === "upload") { if (!state.stagedUpload?.upload_id) throw new Error(state.language === "zh" ? "请先上传 CSV 文件。" : "Please upload a CSV file first."); payload.upload_id = state.stagedUpload.upload_id; } else { const inputPath = String(form.get("input_path") || "").trim(); if (!inputPath) throw new Error(state.language === "zh" ? "请填写本地 CSV 路径。" : "Please provide a local CSV path."); payload.input_path = inputPath; } const response = await fetchJson("/api/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); state.stagedUpload = null; ui.taskFileInput.value = ""; ui.taskNoteInput.value = ""; ui.taskForm.reset(); ui.taskForm.elements.target_locale.value = "en-US"; ui.taskForm.elements.verify_mode.value = "full"; setWizardMode("upload"); renderStagedUpload(); await Promise.all([loadTaskOverviewAndList(), loadRuns(), loadWorkspace()]); if (response.task?.task_id) { await selectTask(response.task.task_id, { preserveMode: true }); setHeroStatus(response.task.status || "queued", "hero.taskCreated", { title: response.task.title }); setTaskFeedback("task.startSuccess"); } }
+async function createTaskFromForm(event) { event.preventDefault(); syncLlmDraftFromInputs(); if (!llmTaskLaunchReady()) throw new Error(llmGateReason("task")); const form = new FormData(ui.taskForm); const payload = { title: String(form.get("title") || "").trim(), target_locale: String(form.get("target_locale") || "").trim(), verify_mode: String(form.get("verify_mode") || "").trim(), input_mode: state.wizardMode }; if (state.wizardMode === "upload") { if (!state.stagedUpload?.upload_id) throw new Error(state.language === "zh" ? "请先上传 CSV 文件。" : "Please upload a CSV file first."); payload.upload_id = state.stagedUpload.upload_id; } else { const inputPath = String(form.get("input_path") || "").trim(); if (!inputPath) throw new Error(state.language === "zh" ? "请填写本地 CSV 路径。" : "Please provide a local CSV path."); payload.input_path = inputPath; } const response = await fetchJson("/api/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); state.stagedUpload = null; ui.taskFileInput.value = ""; ui.taskNoteInput.value = ""; ui.taskForm.reset(); ui.taskForm.elements.target_locale.value = "en-US"; ui.taskForm.elements.verify_mode.value = "full"; setWizardMode("upload"); renderStagedUpload(); await Promise.all([loadTaskOverviewAndList(), loadRuns(), loadWorkspace()]); if (response.task?.task_id) { await selectTask(response.task.task_id, { preserveMode: true }); setHeroStatus(response.task.status || "queued", "hero.taskCreated", { title: response.task.title }); setTaskFeedback("task.startSuccess"); } }
 function handleTaskError(error) { setTaskFeedback(error.message, {}, { raw: true }); setHeroStatus("fail", "hero.loadFailed"); }
 function handleWorkspaceError(error) { setWorkspaceFeedback(error.message, {}, { raw: true }); setHeroStatus("fail", "hero.loadFailed"); }
 function handleRuntimeError(error) { setLaunchFeedback(error.message, {}, { raw: true }); setHeroStatus("fail", "hero.loadFailed"); }
@@ -694,6 +900,10 @@ ui.heroContinueTasksButton.addEventListener("click", () => document.getElementBy
 ui.taskRefreshButton.addEventListener("click", () => loadTaskOverviewAndList().catch(handleTaskError));
 ui.taskForm.addEventListener("submit", (event) => createTaskFromForm(event).catch(handleTaskError));
 ui.taskQueryFilter.addEventListener("input", () => { state.taskQuery = ui.taskQueryFilter.value.trim(); clearTimeout(taskQueryDebounce); taskQueryDebounce = setTimeout(() => loadTaskOverviewAndList().catch(handleTaskError), 220); });
+ui.llmBaseUrlInput?.addEventListener("input", () => { syncLlmDraftFromInputs(); renderLlmSetup(); renderTaskFeedback(); renderLaunchFeedback(); });
+ui.llmApiKeyInput?.addEventListener("input", () => { syncLlmDraftFromInputs(); renderLlmSetup(); renderTaskFeedback(); renderLaunchFeedback(); });
+ui.llmModelInput?.addEventListener("input", () => { syncLlmDraftFromInputs(); renderLlmSetup(); renderTaskFeedback(); renderLaunchFeedback(); });
+ui.llmTestButton?.addEventListener("click", () => testLlmSetupConnection().catch(handleTaskError));
 ui.wizardModeButtons.forEach((button) => button.addEventListener("click", () => setWizardMode(button.dataset.wizardMode)));
 ui.taskChooseFileButton.addEventListener("click", () => ui.taskFileInput.click());
 ui.taskClearUploadButton.addEventListener("click", () => { state.stagedUpload = null; ui.taskFileInput.value = ""; renderStagedUpload(); });
@@ -726,4 +936,4 @@ renderEmptyWorkspaceSelection();
 renderEmptyRuntimeSelection();
 setMode("tasks");
 activateInspectorTab(state.inspectorTab);
-Promise.all([loadTaskOverviewAndList(), loadWorkspace(), loadRuns()]).then(async () => { const firstTask = state.tasks[0]; if (firstTask) await selectTask(firstTask.task_id, { preserveMode: true }); setHeroStatus("pass", "hero.tasksReady"); }).catch((error) => { handleTaskError(error); handleWorkspaceError(error); handleRuntimeError(error); });
+Promise.all([loadLlmSetup(), loadTaskOverviewAndList(), loadWorkspace(), loadRuns()]).then(async () => { const firstTask = state.tasks[0]; if (firstTask) await selectTask(firstTask.task_id, { preserveMode: true }); setHeroStatus("pass", "hero.tasksReady"); }).catch((error) => { handleTaskError(error); handleWorkspaceError(error); handleRuntimeError(error); });
