@@ -343,6 +343,7 @@ def build_changed_rows(
 ) -> Tuple[int, int]:
     before_rows = {str(row.get("string_id") or ""): row for row in read_csv_rows(before_csv)}
     after_rows = {str(row.get("string_id") or ""): row for row in read_csv_rows(after_csv)}
+    normalized_focus_map = build_normalized_focus_map(focus_glossary)
     changed_rows: List[Dict[str, Any]] = []
     hit_rows: List[Dict[str, Any]] = []
     for string_id, after in after_rows.items():
@@ -350,7 +351,7 @@ def build_changed_rows(
         source_zh = str(after.get("source_zh") or "").strip()
         before_target = str(before.get("target_text") or before.get("target_ru") or before.get("target") or "").strip()
         after_target = str(after.get("target_text") or after.get("target_ru") or after.get("target") or "").strip()
-        glossary_target = focus_glossary.get(source_zh, "")
+        glossary_target = normalized_focus_map.get(normalize_focus_key(source_zh), "")
         changed = before_target != after_target
         if changed:
             changed_rows.append(
@@ -440,6 +441,15 @@ def normalize_focus_key(value: Any) -> str:
     return re.sub(r"\s+", "", str(value or "")).strip()
 
 
+def build_normalized_focus_map(focus_glossary: Dict[str, str]) -> Dict[str, str]:
+    normalized: Dict[str, str] = {}
+    for term_zh, term_ru in focus_glossary.items():
+        key = normalize_focus_key(term_zh)
+        if key and key not in normalized:
+            normalized[key] = str(term_ru or "").strip()
+    return normalized
+
+
 def filter_runtime_safe_delta_rows(
     *,
     raw_report_path: Path,
@@ -450,12 +460,12 @@ def filter_runtime_safe_delta_rows(
 ) -> Dict[str, Any]:
     raw_report = load_json(raw_report_path)
     raw_rows = read_jsonl_rows(raw_rows_path)
-    focus_map = load_glossary_map(focus_glossary_path)
+    focus_map = build_normalized_focus_map(load_glossary_map(focus_glossary_path))
     focus_terms = set(focus_map)
     filtered_rows = [
         row
         for row in raw_rows
-        if str(row.get("source_zh") or "").strip() in focus_terms
+        if normalize_focus_key(row.get("source_zh") or "") in focus_terms
     ]
     write_jsonl_rows(filtered_rows_path, filtered_rows)
     filtered_report = dict(raw_report)
@@ -479,7 +489,7 @@ def filter_execute_tasks_by_focus_glossary(
     focus_glossary_path: Path,
     out_path: Path,
 ) -> Dict[str, Any]:
-    focus_keys = {normalize_focus_key(term) for term in load_glossary_map(focus_glossary_path).keys() if normalize_focus_key(term)}
+    focus_keys = set(build_normalized_focus_map(load_glossary_map(focus_glossary_path)))
     input_tasks = read_jsonl_rows(tasks_path)
     filtered_tasks = [
         task
@@ -682,7 +692,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     ensure_registry_entry(Path(args.lifecycle_registry))
 
-    run_checked([args.python, str(REPO_ROOT / "scripts/llm_ping.py")], env=env)
+    if not args.stop_after_generate_only:
+        run_checked([args.python, str(REPO_ROOT / "scripts/llm_ping.py")], env=env)
 
     run_checked(
         [

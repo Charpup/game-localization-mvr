@@ -116,9 +116,11 @@ def test_orchestrator_generate_only_stop_builds_artifacts_without_mutating_base(
     )
     merged_approved = repo_root / "glossary" / "zhCN_ruRU" / "project_naruto_ui_art_workbook_refresh_approved.yaml"
     compiled_glossary = repo_root / "glossary" / "compiled_naruto_ui_art_workbook_refresh.yaml"
+    invoked_targets: list[str] = []
 
     def fake_run_checked(command, *, env, cwd=workflow.REPO_ROOT):
         target = Path(command[1]).name
+        invoked_targets.append(target)
         if target == "llm_ping.py":
             return None
         if target == "build_reviewed_workbook_glossary.py":
@@ -258,6 +260,7 @@ def test_orchestrator_generate_only_stop_builds_artifacts_without_mutating_base(
     assert merged_terms["兼容词"] == "Совместимое"
     assert merged_terms["木叶入口"] == "Коноха вход"
     assert base_full_csv.read_text(encoding="utf-8-sig") == base_snapshot
+    assert "llm_ping.py" not in invoked_targets
 
 
 def test_filter_execute_tasks_by_focus_glossary_keeps_only_exact_focus_hits(tmp_path):
@@ -290,6 +293,46 @@ def test_filter_execute_tasks_by_focus_glossary_keeps_only_exact_focus_hits(tmp_
     kept = [json.loads(line) for line in out_path.read_text(encoding="utf-8").splitlines() if line.strip()]
     assert stats["filtered_task_count"] == 2
     assert [row["string_id"] for row in kept] == ["1", "3"]
+
+
+def test_filter_runtime_safe_delta_rows_normalizes_focus_keys(tmp_path):
+    raw_report_path = tmp_path / "raw_report.json"
+    raw_rows_path = tmp_path / "raw_rows.jsonl"
+    focus_path = tmp_path / "focus.yaml"
+    filtered_report_path = tmp_path / "filtered_report.json"
+    filtered_rows_path = tmp_path / "filtered_rows.jsonl"
+
+    _write_json(raw_report_path, {"impacted_rows_total": 2, "impact_set": ["1", "2"]})
+    raw_rows_path.write_text(
+        "\n".join(
+            [
+                json.dumps({"string_id": "1", "source_zh": " 680 金币 ", "target_locale": "ru-RU"}, ensure_ascii=False),
+                json.dumps({"string_id": "2", "source_zh": "普通文本", "target_locale": "ru-RU"}, ensure_ascii=False),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    _write_yaml(
+        focus_path,
+        {
+            "entries": [
+                {"term_zh": "680金币", "term_ru": "680 золота"},
+            ]
+        },
+    )
+
+    report = workflow.filter_runtime_safe_delta_rows(
+        raw_report_path=raw_report_path,
+        raw_rows_path=raw_rows_path,
+        focus_glossary_path=focus_path,
+        filtered_report_path=filtered_report_path,
+        filtered_rows_path=filtered_rows_path,
+    )
+
+    kept = [json.loads(line) for line in filtered_rows_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert [row["string_id"] for row in kept] == ["1"]
+    assert report["runtime_safe_exact_match_filter"]["filtered_impacted_rows_total"] == 1
 
 
 def test_build_merged_approved_preserves_old_compiled_coverage_and_allows_runtime_override(tmp_path):
