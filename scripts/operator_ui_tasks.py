@@ -796,10 +796,10 @@ def _effective_task_status(
             return "running"
         if pending_status in {"fail", "failed", "blocked"}:
             return "failed"
-        return "queued"
+        return stored_status if stored_status in TASK_STATUSES else "queued"
     if run_detail.overall_status in {"running", "pending"}:
         return "running"
-    if run_detail.overall_status in {"fail", "blocked"}:
+    if run_detail.overall_status in {"fail", "failed", "blocked"}:
         return "failed"
     if workspace_case and workspace_case.status == "open":
         return "needs_operator_review"
