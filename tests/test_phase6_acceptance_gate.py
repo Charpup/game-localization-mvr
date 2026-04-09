@@ -273,6 +273,9 @@ def test_phase6_acceptance_gate_real_workspace_http_and_side_effect_free_reads()
         status, overview = _http_json(base_url, "/api/workspace/overview?limit_runs=10")
         assert status == 200
         assert overview["overview"]["open_card_count"] >= 1
+        assert overview["overview"]["open_case_count"] >= 1
+        assert overview["overview"]["case_counts_by_lane"]["review"] >= 1
+        assert overview["overview"]["case_counts_by_lane"]["done"] >= 1
         recent_run_ids = {run["run_id"] for run in overview["overview"]["recent_runs"]}
         assert derived_run_id in recent_run_ids
         assert persisted_run_id in recent_run_ids
@@ -282,6 +285,17 @@ def test_phase6_acceptance_gate_real_workspace_http_and_side_effect_free_reads()
         open_run_ids = {card["run_id"] for card in cards["cards"]}
         assert derived_run_id in open_run_ids
         assert persisted_run_id not in open_run_ids
+
+        status, cases = _http_json(base_url, "/api/workspace/cases?status=open&limit=20")
+        assert status == 200
+        open_case_run_ids = {case["run_id"] for case in cases["cases"]}
+        assert derived_run_id in open_case_run_ids
+        assert persisted_run_id not in open_case_run_ids
+
+        status, done_cases = _http_json(base_url, "/api/workspace/cases?status=all&lane=done&limit=20")
+        assert status == 200
+        done_case_run_ids = {case["run_id"] for case in done_cases["cases"]}
+        assert persisted_run_id in done_case_run_ids
 
         status, derived_workspace = _http_json(base_url, f"/api/workspace/runs/{derived_run_id}")
         assert status == 200
@@ -312,6 +326,9 @@ def test_phase6_acceptance_gate_real_workspace_http_and_side_effect_free_reads()
             ("/api/workspace/overview?limit_runs=bad", 400),
             ("/api/workspace/cards?status=todo", 400),
             ("/api/workspace/cards?priority=P9", 400),
+            ("/api/workspace/cases?status=closed", 400),
+            ("/api/workspace/cases?lane=triage", 400),
+            ("/api/workspace/cases?limit=bad", 400),
             ("/api/workspace/runs/not-a-real-run", 404),
         ]:
             request = urllib.request.Request(base_url + path, method="GET")

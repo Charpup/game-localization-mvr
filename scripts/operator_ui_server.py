@@ -20,6 +20,8 @@ if __package__ in {None, ""}:
 from scripts.operator_ui_launcher import LauncherError, OperatorUILaunchError, OperatorUILauncher, PendingRunView
 from scripts.operator_ui_models import (
     ArtifactRecord,
+    WORKSPACE_CASE_LANES,
+    WORKSPACE_CASE_STATUSES,
     WORKSPACE_CARD_PRIORITIES,
     WORKSPACE_CARD_STATUSES,
     WORKSPACE_CARD_TYPES,
@@ -27,6 +29,7 @@ from scripts.operator_ui_models import (
     find_run_manifest,
     load_run_detail,
     load_run_summaries,
+    load_workspace_cases,
     load_workspace_cards,
     load_workspace_overview,
     load_workspace_run_detail,
@@ -97,13 +100,34 @@ class OperatorUIApp:
         return [
             card.to_dict()
             for card in load_workspace_cards(
-            self.repo_root,
-            status=status,
-            card_type=card_type,
-            priority=priority,
-            target_locale=target_locale,
-            limit=limit,
-        )
+                self.repo_root,
+                status=status,
+                card_type=card_type,
+                priority=priority,
+                target_locale=target_locale,
+                limit=limit,
+            )
+        ]
+
+    def list_workspace_cases(
+        self,
+        *,
+        status: str = "open",
+        lane: str = "all",
+        target_locale: str = "",
+        query: str = "",
+        limit: int = 50,
+    ) -> list[dict[str, Any]]:
+        return [
+            case.to_dict()
+            for case in load_workspace_cases(
+                self.repo_root,
+                status=status,
+                lane=lane,
+                target_locale=target_locale,
+                query=query,
+                limit=limit,
+            )
         ]
 
     def get_workspace_run_detail(self, run_id: str) -> Dict[str, Any]:
@@ -236,6 +260,35 @@ def build_http_server(host: str, port: int, app: OperatorUIApp) -> ThreadingHTTP
                             card_type=card_type,
                             priority=priority,
                             target_locale=target_locale,
+                            limit=limit,
+                        )
+                    }
+                )
+                return
+
+            if segments == ["api", "workspace", "cases"]:
+                status = str(query.get("status", ["open"])[0] or "open")
+                lane = str(query.get("lane", ["all"])[0] or "all")
+                target_locale = str(query.get("target_locale", [""])[0] or "")
+                case_query = str(query.get("query", [""])[0] or "")
+                try:
+                    limit = int(query.get("limit", ["50"])[0])
+                except (TypeError, ValueError):
+                    self._write_json({"error": "bad_request", "detail": "limit must be an integer"}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                if status not in WORKSPACE_CASE_STATUSES:
+                    self._write_json({"error": "bad_request", "detail": "status must be one of all/open"}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                if lane not in WORKSPACE_CASE_LANES:
+                    self._write_json({"error": "bad_request", "detail": "lane must be one of all/act/review/watch/done"}, status=HTTPStatus.BAD_REQUEST)
+                    return
+                self._write_json(
+                    {
+                        "cases": app.list_workspace_cases(
+                            status=status,
+                            lane=lane,
+                            target_locale=target_locale,
+                            query=case_query,
                             limit=limit,
                         )
                     }
