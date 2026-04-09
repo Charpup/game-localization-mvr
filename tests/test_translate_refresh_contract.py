@@ -155,6 +155,25 @@ def _sample_task(
     }
 
 
+def test_run_refresh_llm_uses_exact_glossary_target_without_calling_model(monkeypatch):
+    task = _sample_task("refresh:s1", "s1", "refresh", "Старый магазин", "商店")
+
+    def fail_batch_llm_call(**_kwargs):
+        raise AssertionError("batch_llm_call should not run for exact glossary matches")
+
+    monkeypatch.setattr(translate_refresh, "batch_llm_call", fail_batch_llm_call)
+
+    updates, failures = translate_refresh.run_refresh_llm(
+        [task],
+        model="irrelevant",
+        style_text="style",
+        glossary_maps_by_locale={"ru-RU": {"商店": "Магазин"}},
+    )
+
+    assert failures == {}
+    assert updates == {"s1": "Магазин"}
+
+
 def _read_review_rows(path: Path) -> list[dict]:
     return list(csv.DictReader(path.open("r", encoding="utf-8-sig", newline="")))
 
